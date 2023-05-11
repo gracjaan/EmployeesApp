@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+<head>
+    <meta charset="UTF-8" />
+    <title>Earnit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./static/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body
+        class="bg-black flex justify-center overflow-x-hidden font-montserrat"
+>
+<div class="lg:max-w-5xl md:max-w-3xl w-full">
+    <header class="w-full relative">
+        <div
+                class="bg-secondary top-0 -left-full -right-full h-3/4 absolute -z-10"
+        ></div>
+        <h1 class="text-text text-2xl font-bold py-16 px-2 sm:px-0">
+            Welcome back, Gracjan
+        </h1>
+        <nav
+                class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
+        >
+            <a
+                    href="./hours"
+                    class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
+            >
+                <h2 class="text-text text-2xl font-bold">Week 10</h2>
+                <p class="text-text text-base">
+                    Fill in your hours for this week
+                </p>
+            </a>
+            <a
+                    href="./overview"
+                    class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
+            >
+                <h2 class="text-text text-2xl font-bold">Overview</h2>
+                <p class="text-text text-base">
+                    An overview of hours from previous weeks
+                </p>
+            </a>
+            <a
+                    href="./contracts"
+                    class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
+            >
+                <h2 class="text-text text-2xl font-bold">Contracts</h2>
+                <p class="text-text text-base">
+                    An overview of all your contracts
+                </p>
+            </a>
+        </nav>
+    </header>
+    <main
+            class="flex gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0"
+    >
+        <section class="w-full gap-2 flex flex-col">
+            <h2 class="text-text text-2xl font-bold">Dashboard</h2>
+            <div class="rounded-2xl bg-secondary">dsdfdsf</div>
+        </section>
+        <section class="w-full gap-2 flex flex-col">
+            <h2 class="text-text text-2xl font-bold">Notifications</h2>
+            <div
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+            >
+                <a
+                        href="./"
+                        class="rounded-2xl bg-primary p-4 relative"
+                >
+                    <div class="text-text font-bold uppercase">
+                        week 11 approved
+                    </div>
+                    <div class="text-text uppercase">23.04.2023</div>
+                    <div
+                            class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"
+                    ></div>
+                </a>
+                <a
+                        href="./"
+                        class="rounded-2xl bg-primary p-4 relative"
+                >
+                    <div class="text-text font-bold uppercase">
+                        week 10 approved
+                    </div>
+                    <div class="text-text uppercase">23.04.2023</div>
+                    <div
+                            class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"
+                    ></div>
+                </a>
+                <a
+                        href="./"
+                        class="rounded-2xl bg-primary p-4 relative"
+                >
+                    <div class="text-text font-bold uppercase">
+                        week 9 approved
+                    </div>
+                    <div class="text-text uppercase">23.04.2023</div>
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
