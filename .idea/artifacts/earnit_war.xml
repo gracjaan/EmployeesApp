@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="earnit:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>earnit</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="earnit.war">
+      <element id="artifact" artifact-name="earnit:war exploded" />
+    </root>
+  </artifact>
+</component>
