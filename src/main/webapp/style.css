@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+	--color-primary: #767676;
+	--color-secondary: #434343;
+	--color-background: #1f1f1f;
+
+	--color-text: #ffffff;
+	--color-accent-fail: #ed4c4c;
+	--color-accent-success: #339e4b;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+	scrollbar-width: 0px;
+}
+
+.font-montserrat {
+	font-family: "Montserrat", sans-serif;
+}
+
+.text-primary {
+	color: var(--color-primary);
+}
+
+.text-secondary {
+	color: var(--color-secondary);
+}
+
+.text-background {
+	color: var(--color-background);
+}
+
+.text-text {
+	color: var(--color-text);
+}
+
+.text-accent-fail {
+	color: var(--color-accent-fail);
+}
+
+.text-accent-success {
+	color: var(--color-accent-success);
+}
+
+.bg-primary {
+	background-color: var(--color-primary);
+}
+
+.bg-secondary {
+	background-color: var(--color-secondary);
+}
+
+.bg-background {
+	background-color: var(--color-background);
+}
+
+.bg-text {
+	background-color: var(--color-text);
+}
+
+.bg-accent-fail {
+	background-color: var(--color-accent-fail);
+}
+
+.bg-accent-success {
+	background-color: var(--color-accent-success);
+}
