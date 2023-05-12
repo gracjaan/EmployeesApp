@@ -11,12 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ef08d6d2-3f9d-4194-bf16-9dd84ef0c137" name="Changes" comment="Added error pages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/earnit/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/earnit/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/earnit/filters/RedirectFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/earnit/filters/RedirectFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/error/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/error/404.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/login/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/login/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/student/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/student/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +178,9 @@
       <workItem from="1683826268818" duration="1833000" />
       <workItem from="1683832049647" duration="488000" />
       <workItem from="1683832705006" duration="584000" />
-      <workItem from="1683834162013" duration="5981000" />
+      <workItem from="1683834162013" duration="6250000" />
+      <workItem from="1683842601398" duration="103000" />
+      <workItem from="1683884621741" duration="111000" />
     </task>
     <servers />
   </component>
