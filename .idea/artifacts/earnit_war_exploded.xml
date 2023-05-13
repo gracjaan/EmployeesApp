@@ -46,6 +46,11 @@
           <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-api:3.0.3" />
           <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-utils:3.0.3" />
           <element id="library" level="project" name="Maven: org.javassist:javassist:3.29.0-GA" />
+          <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.6.0" />
+          <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.31.0" />
+          <element id="library" level="project" name="Maven: com.auth0:java-jwt:4.4.0" />
+          <element id="library" level="project" name="Maven: at.favre.lib:bcrypt:0.10.2" />
+          <element id="library" level="project" name="Maven: at.favre.lib:bytes:1.5.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
