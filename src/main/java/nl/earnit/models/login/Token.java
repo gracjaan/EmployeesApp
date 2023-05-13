@@ -1,0 +1,22 @@
+package nl.earnit.models.login;
+
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Token {
+    private String token;
+
+    public Token() {}
+
+    public Token(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+}
