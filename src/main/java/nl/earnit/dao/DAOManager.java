@@ -52,6 +52,10 @@ public class DAOManager {
     public GenericDAO<?> getDAO(DAO dao) throws SQLException {
         this.open();
 
+        if (dao.equals(DAO.USER)) {
+            return new UserDAO(this.con);
+        }
+
         throw new SQLException("Trying to link to an nonexistent dao.");
 
     }
