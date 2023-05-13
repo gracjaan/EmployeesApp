@@ -12,9 +12,9 @@ import jakarta.ws.rs.core.Response;
 import nl.earnit.Constants;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
-import nl.earnit.models.login.Login;
+import nl.earnit.models.resource.login.Login;
 import nl.earnit.models.User;
-import nl.earnit.models.login.Token;
+import nl.earnit.models.resource.login.Token;
 
 import java.sql.SQLException;
 import java.time.Instant;
