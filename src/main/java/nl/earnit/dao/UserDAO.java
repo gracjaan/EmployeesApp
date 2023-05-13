@@ -17,9 +17,8 @@ public class UserDAO extends GenericDAO<User> {
     @Override
     public int count() throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM ?";
+        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\"";
         PreparedStatement counter = this.con.prepareStatement(query);
-        counter.setString(1, tableName);
 
         // Execute query
         ResultSet res = counter.executeQuery();
@@ -52,20 +51,17 @@ public class UserDAO extends GenericDAO<User> {
     private User getUser(String colum, String value) throws SQLException {
         // Create query
         String query =
-            "SELECT id, email, first_name, last_name, last_name_prefix, password, type FROM ? WHERE ? = ?";
+            "SELECT id, email, first_name, last_name, last_name_prefix, password, type FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
         PreparedStatement user = this.con.prepareStatement(query);
-        user.setString(1, tableName);
-        user.setString(2, colum);
-        user.setString(3, value);
+        user.setString(1, value);
 
         // Execute query
         ResultSet res = user.executeQuery();
 
         // None found
-        if (res.getFetchSize() < 1) return null;
+        if(!res.next()) return null;
 
         // Return User
-        res.next();
         return new User(res.getString("id"), res.getString("email"), res.getString("first_name"),
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
     }

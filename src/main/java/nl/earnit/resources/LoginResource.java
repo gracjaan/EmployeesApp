@@ -50,6 +50,6 @@ public class LoginResource {
             .withClaim("user_email", user.getEmail())
             .sign(algorithm);
 
-        return Response.ok(new Token(token)).build();
+        return Response.ok(new Token(token, System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME)).build();
     }
 }

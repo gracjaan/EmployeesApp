@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Earnit - Logout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script>
+        // load script and then run js after it
+        function loadScript(scriptUrl) {
+            const script = document.createElement('script');
+            script.src = scriptUrl;
+            document.head.appendChild(script);
+
+            return new Promise((res, rej) => {
+                script.onload = function () {
+                    res();
+                }
+                script.onerror = function () {
+                    rej();
+                }
+            });
+        }
+
+        // Load cookie lib and wait for it
+        loadScript('https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js')
+            .then(() => {
+                // Remove jwt token
+                Cookies.remove('earnit-token');
+                window.location.replace("/earnit/?nocache=" + new Date().getUTCMilliseconds());
+            })
+            .catch(() => {
+                window.location.replace("/earnit/error/500.html");
+            });
+    </script>
+</head>
+<body>
+</body>
+</html>

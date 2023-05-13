@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Earnit - Login</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<link rel="stylesheet" href="/earnit/static/style.css" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	</head>
-	<body
-		class="bg-black flex justify-center items-center h-full font-montserrat"
-	>
-		<form class="bg-secondary p-8 rounded-2xl flex flex-col gap-8">
-			<div class="flex flex-col gap-2 w-fit">
-				<h1 class="text-text text-2xl font-bold w-fit">Sign in</h1>
-				<div class="bg-accent-fail w-full h-2"></div>
-			</div>
-			<div class="flex flex-col gap-4">
-				<div class="flex flex-col gap-1">
-					<label for="email" class="font-bold text-text"
-						>E-mail</label
-					>
-					<input
-						type="email"
-						name="email"
-						id="email"
-						class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
-					/>
-					<a href="/earnit/signup" class="text-primary underline text-sm">No account? Sign up</a>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label for="password" class="font-bold text-text"
-						>Password</label
-					>
-					<input
-						type="password"
-						name="password"
-						id="password"
-						class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
-					/>
-					<a href="/earnit/" class="text-primary underline text-sm">Forgot password?</a>
-				</div>
-			</div>
-			<div class="flex w-full justify-end items-center">
-				<button class="px-4 py-2 bg-text rounded-xl text-background">
-					<img src="/earnit/static/icons/arrow-right.svg"  alt="right arrow"/>
-				</button>
-			</div>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Earnit - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/earnit/static/js/login.js" defer></script>
+    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
+<body class="bg-black flex justify-center items-center h-full font-montserrat">
+<div class="bg-secondary p-8 rounded-2xl flex flex-col gap-8">
+    <div class="flex flex-col gap-2 w-fit">
+        <h1 class="text-text text-2xl font-bold w-fit">Sign in</h1>
+        <div class="bg-accent-fail w-full h-2"></div>
+    </div>
+    <div id="error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <label for="email" class="font-bold text-text"
+            >E-mail</label
+            >
+            <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
+            />
+            <a href="/earnit/signup" class="text-primary underline text-sm">No account? Sign up</a>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="password" class="font-bold text-text"
+            >Password</label
+            >
+            <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
+            />
+            <a href="/earnit/" class="text-primary underline text-sm">Forgot password?</a>
+        </div>
+    </div>
+    <div class="flex w-full justify-end items-center">
+        <button id="submit" class="px-4 py-2 bg-text rounded-xl text-background">
+            <img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
+        </button>
+    </div>
 
-		</form>
-	</body>
+</div>
+</body>
 </html>

@@ -21,14 +21,14 @@ public class RedirectFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
 
-        // Do not redirect static content or api
-        if (req.getServletPath().startsWith("/static") || req.getServletPath().startsWith("/api")) {
+        // Do not redirect static content, error or api
+        if (req.getServletPath().startsWith("/static") || req.getServletPath().startsWith("/error") || req.getServletPath().startsWith("/api")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
 
         // Do not redirect login and signup page
-        if (req.getServletPath().startsWith("/login") || req.getServletPath().startsWith("/signup")) {
+        if (req.getServletPath().startsWith("/login") || req.getServletPath().startsWith("/logout") || req.getServletPath().startsWith("/signup")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
