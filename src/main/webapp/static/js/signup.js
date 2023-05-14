@@ -8,13 +8,12 @@ const validatePassword = (password) => /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[
 
 const validateConfirmPassword = (confirmPassword, password) => password === confirmPassword;
 
-// https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
+// https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression/14075810#14075810
 const validateEmail = (email) => {
     return String(email)
         .toLowerCase()
         .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+/([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"(\[]!#-[^-~ \t]|(\\[\t -~]))+")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+/        );
 };
 
 // State handler
@@ -193,8 +192,65 @@ function studentAccount() {
             return;
         }
 
-        // TODO: POST '/earnit/api/users', with email, password, first name, last name, last name prefix.
+        const firstName = document.getElementById("student-first").value.trim();
+        const lastName = document.getElementById("student-last").value.trim();
+        const lastNamePrefix = document.getElementById("student-last-prefix").value.trim();
 
+        document.getElementById("error").innerText = "";
+        document.getElementById("error").classList.add("hidden");
+
+        fetch('/earnit/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                firstName,
+                lastName,
+                lastNamePrefix,
+                password
+            })
+        }).then(async res => {
+            let error = null;
+
+            switch (res.status) {
+                case 400:
+                    error = "Request failed";
+                    break;
+                case 422:
+                    const field = (await res.json()).field;
+                    let fieldName = field;
+
+                    switch (field) {
+                        case "firstName":
+                            fieldName = "first name";
+                            break;
+                        case "lastName":
+                            fieldName = "last name";
+                            break;
+                        case "lastNamePrefix":
+                            fieldName = "last name prefix";
+                            break;
+                    }
+
+                    error = "Value for " + fieldName + " is invalid";
+                    break;
+                case 409:
+                    error = "There is already an account registered with this email address"
+                    break;
+            }
+
+            if (error != null) {
+                document.getElementById("error").innerText = error;
+                document.getElementById("error").classList.remove("hidden");
+                return;
+            }
+
+            // Account created goto login
+            window.location.replace("/earnit/login");
+        })
     });
 }
 
