@@ -1,11 +1,10 @@
 package nl.earnit.dao;
 
+import jakarta.annotation.Nullable;
 import nl.earnit.models.User;
+import org.postgresql.util.PGobject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class UserDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user";
@@ -35,7 +34,7 @@ public class UserDAO extends GenericDAO<User> {
      * @throws SQLException If a database error occurs.
      */
     public User getUserById(String id) throws SQLException {
-        return getUser("id", id);
+        return getUser("id", id, "uuid");
     }
 
     /**
@@ -45,18 +44,21 @@ public class UserDAO extends GenericDAO<User> {
      * @throws SQLException If a database error occurs.
      */
     public User getUserByEmail(String email) throws SQLException {
-        return getUser("email", email);
+        return getUser("email", email, "text");
     }
 
-    private User getUser(String colum, String value) throws SQLException {
+    private User getUser(String colum, String value, String type) throws SQLException {
         // Create query
         String query =
             "SELECT id, email, first_name, last_name, last_name_prefix, password, type FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
-        PreparedStatement user = this.con.prepareStatement(query);
-        user.setString(1, value);
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PGobject toInsert = new PGobject();
+        toInsert.setType(type);
+        toInsert.setValue(value);
+        statement.setObject(1, toInsert);
 
         // Execute query
-        ResultSet res = user.executeQuery();
+        ResultSet res = statement.executeQuery();
 
         // None found
         if(!res.next()) return null;
@@ -64,6 +66,29 @@ public class UserDAO extends GenericDAO<User> {
         // Return User
         return new User(res.getString("id"), res.getString("email"), res.getString("first_name"),
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
+    }
+
+    public User createUser(String email, String fistName, @Nullable String lastNamePrefix, String lastName, String password, String type)
+        throws SQLException {
+        // Create query
+        String query = "INSERT INTO \"" + tableName + "\" (id, email, first_name, last_name_prefix, last_name, password, type) VALUES (gen_random_uuid(), ?, ?, ?, ?, ?, ?) RETURNING id";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, email);
+        statement.setString(2, fistName);
+        statement.setString(3, lastNamePrefix == null || lastNamePrefix.length() < 1 ? null : lastNamePrefix);
+        statement.setString(4, lastName);
+        statement.setString(5, password);
+        statement.setString(6, type);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return user
+        return getUserById(res.getString("id"));
     }
 }
 
