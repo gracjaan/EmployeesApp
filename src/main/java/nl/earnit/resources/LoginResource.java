@@ -9,6 +9,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import nl.earnit.Auth;
 import nl.earnit.Constants;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
@@ -24,9 +25,16 @@ public class LoginResource {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public Response login(Login login) throws SQLException {
-        UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-        User user = userDAO.getUserByEmail(login.getEmail());
+    public Response login(Login login) {
+        UserDAO userDAO;
+        User user;
+
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            user = userDAO.getUserByEmail(login.getEmail());
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
 
         // User does not exist
         if (user == null) {
@@ -34,22 +42,12 @@ public class LoginResource {
         }
 
         // Check password
-        BCrypt.Result passwordResult = BCrypt.verifyer().verify(login.getPassword().toCharArray(), user.getPassword());
-        if (!passwordResult.verified) {
+        if (!Auth.validatePassword(login.getPassword(), user.getPassword())) {
             // Password incorrect
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
-        String token = JWT.create()
-            .withIssuer("earnit")
-            .withSubject(user.getEmail())
-            .withIssuedAt(Instant.ofEpochMilli(System.currentTimeMillis()))
-            .withExpiresAt(Instant.ofEpochMilli(System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME))
-            .withClaim("user_id", user.getId())
-            .withClaim("user_email", user.getEmail())
-            .sign(algorithm);
-
-        return Response.ok(new Token(token, System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME)).build();
+        long expiresAt = System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME;
+        return Response.ok(new Token(Auth.createJWT(user, expiresAt), expiresAt)).build();
     }
 }
