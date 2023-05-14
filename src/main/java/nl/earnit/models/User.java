@@ -2,6 +2,9 @@ package nl.earnit.models;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+/**
+ * User model.
+ */
 @XmlRootElement
 public class User {
     private String id;
@@ -12,8 +15,21 @@ public class User {
     private String type;
     private String password;
 
+    /**
+     * Creates a user model without values.
+     */
     public User() {}
 
+    /**
+     * Creates a user model.
+     * @param id The id of the user.
+     * @param email The email of the user.
+     * @param firstName The first name of the user.
+     * @param lastName The last name of the user.
+     * @param lastNamePrefix The last name prefix of the user.
+     * @param type The type of user: STUDENT, COMPANY, ADMINISTRATOR.
+     * @param password The hashed password of the user.
+     */
     public User(String id, String email, String firstName, String lastName, String lastNamePrefix,
                 String type, String password) {
         this.id = id;
