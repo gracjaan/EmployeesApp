@@ -1,3 +1,22 @@
+// Validation
+const validateFirstName = (firstName) => validateName(firstName);
+const validateLastName = (lastName) => validateName(lastName);
+const validateName = (name) => name.length > 2;
+
+// At least 8 characters, min 1: number, lowercase, uppercase and special character
+const validatePassword = (password) => /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/.test(password);
+
+const validateConfirmPassword = (confirmPassword, password) => password === confirmPassword;
+
+// https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
+
 // State handler
 const states = {
     'choose': choose,
@@ -12,6 +31,9 @@ updateContent(state);
 
 function updateContent(newState) {
     setTimeout(() => {
+        document.getElementById("error").innerText = "";
+        document.getElementById("error").classList.add("hidden");
+
         if (!(newState in states)) return;
 
         if (document.getElementById("cache-" + newState) !== null) {
@@ -121,7 +143,20 @@ function studentInfo() {
     submit.addEventListener("click", () => {
         if (state !== 'student-info') return;
 
-        // TODO: check if valid: first, last, prefix
+        const first = document.getElementById("student-first").value.trim();
+        if (!validateFirstName(first)) {
+            document.getElementById("error").innerText = "First name needs to be at least 3 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const last = document.getElementById("student-last").value.trim();
+        if (!validateLastName(last)) {
+            document.getElementById("error").innerText = "Last name needs to be at least 3 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
         updateContent("student-account");
     })
 }
@@ -134,7 +169,33 @@ function studentAccount() {
         updateContent("student-info");
     });
 
-    // TODO: submit and check if valid
+    submit.addEventListener("click", () => {
+        if (state !== 'student-account') return;
+
+        const email = document.getElementById("student-email").value.trim();
+        if (!validateEmail(email)) {
+            document.getElementById("error").innerText = "The email address is not valid";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const password = document.getElementById("student-password").value.trim();
+        if (!validatePassword(password)) {
+            document.getElementById("error").innerText = "The password is not valid. It needs to contain at least: an uppercase letter, a lowercase letter, a number and a special character";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const confirmPassword = document.getElementById("student-confirm-password").value.trim();
+        if (!validateConfirmPassword(confirmPassword, password)) {
+            document.getElementById("error").innerText = "The password and confirmed password do not match";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        // TODO: POST '/earnit/api/users', with email, password, first name, last name, last name prefix.
+
+    });
 }
 
 function companyInfo() {
@@ -148,7 +209,27 @@ function companyInfo() {
     submit.addEventListener("click", () => {
         if (state !== 'company-info') return;
 
-        // TODO: check if valid: name
+        const name = document.getElementById("company-name").value.trim();
+        if (!validateName(name)) {
+            document.getElementById("error").innerText = "Company name needs to be at least 3 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const first = document.getElementById("company-first").value.trim();
+        if (!validateFirstName(first)) {
+            document.getElementById("error").innerText = "First name needs to be at least 3 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const last = document.getElementById("company-last").value.trim();
+        if (!validateLastName(last)) {
+            document.getElementById("error").innerText = "Last name needs to be at least 3 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
         updateContent("company-account");
     })
 }
@@ -161,5 +242,31 @@ function companyAccount() {
         updateContent("company-info");
     });
 
-    // TODO: submit and check if valid
+    submit.addEventListener("click", () => {
+        if (state !== 'company-account') return;
+
+        const email = document.getElementById("company-email").value.trim();
+        if (!validateEmail(email)) {
+            document.getElementById("error").innerText = "The email address is not valid";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const password = document.getElementById("company-password").value.trim();
+        if (!validatePassword(password)) {
+            document.getElementById("error").innerText = "The password is not valid. It needs to contain at least: an uppercase letter, a lowercase letter, a number and a special character";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const confirmPassword = document.getElementById("company-confirm-password").value.trim();
+        if (!validateConfirmPassword(confirmPassword, password)) {
+            document.getElementById("error").innerText = "The password and confirmed password do not match";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        // TODO: POST '/earnit/api/users', with email, password, first name, last name, last name prefix.
+        // TODO: POST '/earnit/api/companies', with user, company name.
+    });
 }
