@@ -10,7 +10,7 @@ import java.util.*;
 
 import nl.earnit.Auth;
 import nl.earnit.Constants;
-import nl.earnit.models.User;
+import nl.earnit.models.db.User;
 
 public class RedirectFilter implements Filter {
     @Override

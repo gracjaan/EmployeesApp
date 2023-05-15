@@ -1,7 +1,7 @@
 package nl.earnit.models.resource.users;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-import nl.earnit.models.User;
+import nl.earnit.models.db.User;
 
 /**
  * User model without a password.

@@ -323,6 +323,107 @@ function companyAccount() {
         }
 
         // TODO: POST '/earnit/api/users', with email, password, first name, last name, last name prefix.
-        // TODO: POST '/earnit/api/companies', with user, company name.
+
+        document.getElementById("error").innerText = "";
+        document.getElementById("error").classList.add("hidden");
+
+        const firstName = document.getElementById("company-first").value.trim();
+        const lastName = document.getElementById("company-last").value.trim();
+        const lastNamePrefix = document.getElementById("company-last-prefix").value.trim();
+
+        fetch('/earnit/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                firstName,
+                lastName,
+                lastNamePrefix,
+                password
+            })
+        }).then(async res => {
+            let error = null;
+
+            switch (res.status) {
+                case 400:
+                    error = "Request failed";
+                    break;
+                case 422:
+                    const field = (await res.json()).field;
+                    let fieldName = field;
+
+                    switch (field) {
+                        case "firstName":
+                            fieldName = "first name";
+                            break;
+                        case "lastName":
+                            fieldName = "last name";
+                            break;
+                        case "lastNamePrefix":
+                            fieldName = "last name prefix";
+                            break;
+                    }
+
+                    error = "Value for " + fieldName + " is invalid";
+                    break;
+                case 409:
+                    error = "There is already an account registered with this email address"
+                    break;
+            }
+
+            if (error != null) {
+                document.getElementById("error").innerText = error;
+                document.getElementById("error").classList.remove("hidden");
+                return;
+            }
+
+            fetch('/earnit/api/companies', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    userId: (await res.json()).id
+                })
+            }).then(async res => {
+                error = null;
+
+                switch (res.status) {
+                    case 400:
+                        error = "Request failed";
+                        break;
+                    case 422:
+                        const field = (await res.json()).field;
+
+                        switch (field) {
+                            case "name":
+                                error = "Value for name is invalid";
+                                break;
+                            case "userId":
+                                error = "Failed to create company with user";
+                                break;
+                        }
+
+                        break;
+                    case 403:
+                        error = "Forbidden"
+                        break;
+                }
+
+                if (error != null) {
+                    document.getElementById("error").innerText = error;
+                    document.getElementById("error").classList.remove("hidden");
+                    return;
+                }
+
+                // Account created goto login
+                window.location.replace("/earnit/login");
+            });
+        })
     });
 }

@@ -1,4 +1,4 @@
-package nl.earnit.models;
+package nl.earnit.models.db;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 

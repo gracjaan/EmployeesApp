@@ -1,8 +1,5 @@
 package nl.earnit.resources;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -14,11 +11,10 @@ import nl.earnit.Constants;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.models.resource.login.Login;
-import nl.earnit.models.User;
+import nl.earnit.models.db.User;
 import nl.earnit.models.resource.login.Token;
 
 import java.sql.SQLException;
-import java.time.Instant;
 
 @Path("/login")
 public class LoginResource {

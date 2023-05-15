@@ -8,7 +8,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
-import nl.earnit.models.User;
+import nl.earnit.models.db.User;
 
 import java.sql.SQLException;
 import java.time.Instant;

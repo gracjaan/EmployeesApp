@@ -1,4 +1,4 @@
-package nl.earnit.resources;
+package nl.earnit.resources.users;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
-import nl.earnit.models.User;
+import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.CreateUser;
 import nl.earnit.models.resource.users.UserResponse;
@@ -23,9 +23,6 @@ public class UsersResource {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createUser(CreateUser createUser) {
-        UserDAO userDAO;
-        User user;
-
         // Validate create user
         if (createUser == null || createUser.getEmail() == null || createUser.getFirstName() == null || createUser.getLastName() == null || createUser.getPassword() == null) {
             return Response.status(400).build();
@@ -51,6 +48,8 @@ public class UsersResource {
             return Response.status(422).entity(new InvalidEntry("password")).build();
         }
 
+        UserDAO userDAO;
+        User user;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
 
@@ -68,7 +67,6 @@ public class UsersResource {
                 createUser.getLastNamePrefix(), createUser.getLastName(), passwordHash,
                 "STUDENT"); // Make user student by default
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             return Response.serverError().build();
         }
 
