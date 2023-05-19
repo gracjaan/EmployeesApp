@@ -1,11 +1,7 @@
 package nl.earnit.resources.users;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
 import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
@@ -19,6 +15,17 @@ import java.util.regex.Pattern;
 
 @Path("/users")
 public class UsersResource {
+    @Context
+    UriInfo uriInfo;
+    @Context
+    Request request;
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getUsers() {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -77,5 +84,10 @@ public class UsersResource {
 
         // Return user without password
         return Response.ok(new UserResponse(user)).build();
+    }
+
+    @Path("/{userId}")
+    public UserResource getUser(@PathParam("userId") String userId) {
+        return new UserResource(uriInfo, request, userId);
     }
 }

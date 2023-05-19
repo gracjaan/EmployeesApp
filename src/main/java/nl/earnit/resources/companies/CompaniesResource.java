@@ -1,10 +1,7 @@
 package nl.earnit.resources.companies;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
 import nl.earnit.dao.CompanyDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
@@ -13,11 +10,23 @@ import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateCompany;
+import nl.earnit.resources.users.UserResource;
 
 import java.sql.SQLException;
 
 @Path("/companies")
 public class CompaniesResource {
+    @Context
+    UriInfo uriInfo;
+    @Context
+    Request request;
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getCompanies() {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createCompany(CreateCompany createCompany) {
@@ -78,5 +87,10 @@ public class CompaniesResource {
         }
 
         return Response.ok().entity(company).build();
+    }
+
+    @Path("/{companyId}")
+    public CompanyResource getUser(@PathParam("companyId") String companyId) {
+        return new CompanyResource(uriInfo, request, companyId);
     }
 }
