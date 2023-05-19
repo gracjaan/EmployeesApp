@@ -322,8 +322,6 @@ function companyAccount() {
             return;
         }
 
-        // TODO: POST '/earnit/api/users', with email, password, first name, last name, last name prefix.
-
         document.getElementById("error").innerText = "";
         document.getElementById("error").classList.add("hidden");
 
