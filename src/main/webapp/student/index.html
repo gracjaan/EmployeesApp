@@ -4,6 +4,8 @@
 		<meta charset="UTF-8" />
 		<title>Earnit</title>
 		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="/earnit/static/js/student/index.js" defer></script>
 		<link rel="stylesheet" href="/earnit/static/style.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
@@ -55,7 +57,9 @@
 			>
 				<section class="w-full gap-2 flex flex-col">
 					<h2 class="text-text text-2xl font-bold">Dashboard</h2>
-					<div class="rounded-2xl bg-secondary">dsdfdsf</div>
+					<div class="rounded-2xl bg-secondary">
+						<canvas id="myChart"></canvas>
+					</div>
 				</section>
 				<section class="w-full gap-2 flex flex-col">
 					<h2 class="text-text text-2xl font-bold">Notifications</h2>
