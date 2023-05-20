@@ -26,7 +26,7 @@ public class PostgresJDBCHelper {
 
     public static void setBoolean(PreparedStatement statement, int index, Boolean value) throws SQLException {
         PGobject toInsert = new PGobject();
-        toInsert.setType("boolean");
+        toInsert.setType("bool");
         toInsert.setValue(value == null ? "NULL" : value ? "TRUE" : "FALSE");
         statement.setObject(index, toInsert);
     }
