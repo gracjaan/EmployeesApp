@@ -1,4 +1,4 @@
-package nl.earnit.dao;
+package nl.earnit.helpers;
 
 import org.postgresql.util.PGobject;
 

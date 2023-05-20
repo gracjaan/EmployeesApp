@@ -5,6 +5,8 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.exceptions.ForbiddenException;
+import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.CreateUser;
@@ -22,7 +24,10 @@ public class UsersResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getUsers() {
+    public Response getUsers(@Context HttpHeaders httpHeaders) {
+        User user = RequestHelper.validateUser(httpHeaders);
+        RequestHelper.handleAccessToStaff(user);
+
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
@@ -87,7 +92,11 @@ public class UsersResource {
     }
 
     @Path("/{userId}")
-    public UserResource getUser(@PathParam("userId") String userId) {
+    public UserResource getUser(@Context HttpHeaders httpHeaders, @PathParam("userId") String userId) {
+        RequestHelper.validateUUID(userId);
+        User user = RequestHelper.validateUser(httpHeaders);
+        RequestHelper.handleAccessToUser(userId, user);
+
         return new UserResource(uriInfo, request, userId);
     }
 }

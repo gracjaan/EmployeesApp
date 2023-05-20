@@ -96,4 +96,8 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public enum Type {
+        ADMINISTRATOR, STUDENT, COMPANY
+    }
 }

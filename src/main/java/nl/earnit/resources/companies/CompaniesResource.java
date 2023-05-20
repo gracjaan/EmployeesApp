@@ -6,11 +6,11 @@ import nl.earnit.dao.CompanyDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateCompany;
-import nl.earnit.resources.users.UserResource;
 
 import java.sql.SQLException;
 
@@ -23,7 +23,10 @@ public class CompaniesResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getCompanies() {
+    public Response getCompanies(@Context HttpHeaders httpHeaders) {
+        User user = RequestHelper.validateUser(httpHeaders);
+        RequestHelper.handleAccessToStaff(user);
+
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
@@ -90,7 +93,11 @@ public class CompaniesResource {
     }
 
     @Path("/{companyId}")
-    public CompanyResource getUser(@PathParam("companyId") String companyId) {
+    public CompanyResource getCompany(@Context HttpHeaders httpHeaders, @PathParam("companyId") String companyId) {
+        RequestHelper.validateUUID(companyId);
+        User user = RequestHelper.validateUser(httpHeaders);
+        RequestHelper.handleAccessToCompany(companyId, user);
+
         return new CompanyResource(uriInfo, request, companyId);
     }
 }
