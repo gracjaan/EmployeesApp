@@ -46,7 +46,11 @@ public class DAOManager {
     }
 
     public enum DAO {
+<<<<<<< Updated upstream
         COMPANY, USER_CONTRACT, USER
+=======
+        COMPANY, USER_CONTRACT, USER, COMPANY_USER, WORKED_WEEK
+>>>>>>> Stashed changes
     }
 
     public GenericDAO<?> getDAO(DAO dao) throws SQLException {
@@ -58,6 +62,13 @@ public class DAOManager {
             return new CompanyDAO(this.con);
         } else if (dao.equals(DAO.USER_CONTRACT)) {
             return new UserContractDAO(this.con);
+<<<<<<< Updated upstream
+=======
+        } else if (dao.equals(DAO.WORKED_WEEK)) {
+            return new WorkedWeekDAO(this.con);
+        } else if (dao.equals(DAO.COMPANY_USER)) {
+            return new CompanyUserDAO(this.con);
+>>>>>>> Stashed changes
         }
 
         throw new SQLException("Trying to link to an nonexistent dao.");

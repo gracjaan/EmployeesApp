@@ -5,6 +5,8 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.exceptions.ForbiddenException;
+import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.CreateUser;
@@ -22,7 +24,10 @@ public class StaffResource {
     Request request;
 
     @GET
-    public Response getStaff() {
+    public Response getStaff(@Context HttpHeaders httpHeaders) {
+        User user = RequestHelper.validateUser(httpHeaders);
+        RequestHelper.handleAccessToStaff(user);
+
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
