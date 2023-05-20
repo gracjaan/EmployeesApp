@@ -1,5 +1,6 @@
 package nl.earnit.dao;
 
+import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.WorkedWeek;
 
