@@ -2,7 +2,6 @@ package nl.earnit.dao;
 
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.WorkedWeek;
-import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
