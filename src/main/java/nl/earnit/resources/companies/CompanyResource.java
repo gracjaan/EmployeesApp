@@ -116,7 +116,6 @@ public class CompanyResource {
 
             return Response.ok(workedWeekDAO.approveWorkedWeek(workedWeekId)).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
