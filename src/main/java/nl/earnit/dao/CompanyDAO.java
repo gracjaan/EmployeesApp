@@ -41,10 +41,7 @@ public class CompanyDAO extends GenericDAO<User> {
         String query =
             "SELECT id, name FROM \"" + tableName + "\" WHERE \"id\" = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        PGobject toInsert = new PGobject();
-        toInsert.setType("uuid");
-        toInsert.setValue(id);
-        statement.setObject(1, toInsert);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         // Execute query
         ResultSet res = statement.executeQuery();

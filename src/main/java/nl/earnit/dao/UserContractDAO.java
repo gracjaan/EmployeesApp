@@ -1,6 +1,5 @@
 package nl.earnit.dao;
 
-import jakarta.annotation.Nullable;
 import nl.earnit.models.db.User;
 import org.postgresql.util.PGobject;
 
@@ -39,11 +38,7 @@ public class UserContractDAO extends GenericDAO<User> {
         // Create query
         String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ?";
         PreparedStatement counter = this.con.prepareStatement(query);
-
-        PGobject forUser = new PGobject();
-        forUser.setType("uuid");
-        forUser.setValue(userId);
-        counter.setObject(1, forUser);
+        PostgresJDBCHelper.setUuid(counter, 1, userId);
 
         // Execute query
         ResultSet res = counter.executeQuery();
