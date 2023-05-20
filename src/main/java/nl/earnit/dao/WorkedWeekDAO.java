@@ -114,7 +114,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         // Create query
         // Checks if user has access to user contract either via company user or directly. Then checks if the worked week belongs to it
         String query = """
-            SELECT DISTINCT ww.* AS count FROM "%s" ww
+            SELECT DISTINCT ww.* FROM "%s" ww
                         
                 JOIN user_contract uc ON uc.id = ww.contract_id
                 JOIN contract c ON c.id = uc.contract_id
@@ -153,7 +153,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         // Checks if user has access to user contract either via company user or directly. Then checks if the worked week belongs to it
         // TODO: Don't immediately add when confirmed wait until x date has passed.
         String query = """
-            SELECT DISTINCT ww.* AS count FROM "%s" ww
+            SELECT DISTINCT ww.* FROM "%s" ww
                         
                 JOIN user_contract uc ON uc.id = ww.contract_id
                 JOIN contract c ON c.id = uc.contract_id
@@ -192,7 +192,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         // Checks if user has access to user contract either via company user or directly. Then checks if the worked week belongs to it
         // TODO: Don't immediately add when confirmed wait until x date has passed.
         String query = """
-            SELECT DISTINCT ww.* AS count FROM "%s" ww
+            SELECT DISTINCT ww.* FROM "%s" ww
                         
                 JOIN user_contract uc ON uc.id = ww.contract_id
                 JOIN contract c ON c.id = uc.contract_id
@@ -218,6 +218,32 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return workedWeeks;
     }
 
+    public boolean hasCompanyAccessToWorkedWeek(String companyId, String workedWeekId) throws SQLException {
+        // Create query
+        // Checks if user has access to user contract either via company user or directly. Then checks if the worked week belongs to it
+        String query = """
+            SELECT COUNT(DISTINCT ww.id) as count FROM "%s" ww
+                        
+                JOIN user_contract uc ON uc.id = ww.contract_id
+                JOIN contract c ON c.id = uc.contract_id
+                JOIN company cy ON cy.id = c.company_id
+                
+                WHERE cy.id = ? AND ww.id = ?
+            """.formatted(tableName);
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return
+        res.next();
+        return res.getInt("count") > 0;
+    }
+
 
     public WorkedWeek updateWorkedWeek(WorkedWeek workedWeek) throws SQLException {
         // Create query
@@ -229,6 +255,47 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setBoolean(statement, 2, workedWeek.getConfirmed());
         PostgresJDBCHelper.setBoolean(statement, 3, workedWeek.getApproved());
         PostgresJDBCHelper.setBoolean(statement, 4, workedWeek.getSolved());
+        PostgresJDBCHelper.setUuid(statement, 5, workedWeek.getId());
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return worked week
+        return getWorkedWeekById(res.getString("id"));
+    }
+
+    public WorkedWeek approveWorkedWeek(String workedWeekId) throws SQLException {
+        // Create query
+        String query = """
+        UPDATE "%s" ww SET approved = ?
+            WHERE "id" = ? RETURNING id""".formatted(tableName);
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setBoolean(statement, 1, true);
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return worked week
+        return getWorkedWeekById(res.getString("id"));
+    }
+
+    public WorkedWeek rejectWorkedWeek(String workedWeekId) throws SQLException {
+        // Create query
+        String query = """
+        UPDATE "%s" ww SET approved = ?
+            WHERE "id" = ? RETURNING id""".formatted(tableName);
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setBoolean(statement, 1, false);
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
 
         // Execute query
         ResultSet res = statement.executeQuery();
