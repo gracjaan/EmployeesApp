@@ -28,6 +28,12 @@ public class Auth {
         return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
+    /**
+     * Creates the JSON Web Token
+     * @param user the user who the token is created for
+     * @param expiresAt the time that it takes
+     * @return
+     */
     public static String createJWT(User user, long expiresAt) {
         Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
         return JWT.create()
