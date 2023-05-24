@@ -6,7 +6,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class WorkedWeek {
     private String id;
     private String contractId;
-    private int week;
+    private String year;
+    private String week;
     private String note;
     private boolean confirmed;
     private boolean approved;
@@ -16,9 +17,10 @@ public class WorkedWeek {
 
     }
 
-    public WorkedWeek(String id, String contractId, int week, String note, boolean confirmed, boolean approved, boolean solved) {
+    public WorkedWeek(String id, String contractId,String year, String week, String note, boolean confirmed, boolean approved, boolean solved) {
         this.id = id;
         this.contractId = contractId;
+        this.year = year;
         this.week = week;
         this.note = note;
         this.confirmed = confirmed;
@@ -42,11 +44,19 @@ public class WorkedWeek {
         this.contractId = contractId;
     }
 
-    public int getWeek() {
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getWeek() {
         return week;
     }
 
-    public void setWeek(int week) {
+    public void setWeek(String week) {
         this.week = week;
     }
 

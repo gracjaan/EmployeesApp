@@ -2,6 +2,12 @@ package nl.earnit.resources.users;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.WorkedDAO;
+import nl.earnit.models.db.Worked;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class UserContractWorkedResource {
     @Context
@@ -39,10 +45,23 @@ public class UserContractWorkedResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getWorkedWeek() {
-        // check which values are null, so what is filtered by
-        // access the corresponding function in the DAO
-        // return all the entries for the week
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        WorkedDAO workedDAO;
+        List<Worked> workedList;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            if (this.weekId!=null) {
+                workedList = workedDAO.getWorkedWeekById(userContractId, weekId);
+            } else if (this.year!=null&&this.week!=null) {
+                workedList = workedDAO.getWorkedWeek(userContractId, year, week);
+            }
+            else {
+                return Response.serverError().build();
+            }
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok(workedList).build();
     }
 
     @PUT

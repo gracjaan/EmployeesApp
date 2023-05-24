@@ -51,12 +51,12 @@ public class WorkedDAO extends GenericDAO<User> {
         return list;
     }
 
-    public List<Worked> getWorkedWeek(String userContractId, int year, int week) throws SQLException {
+    public List<Worked> getWorkedWeek(String userContractId, String year, String week) throws SQLException {
         String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.year=? AND ww.week=?";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
-        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(year));
-        PostgresJDBCHelper.setUuid(counter, 3, String.valueOf(week));
+        PostgresJDBCHelper.setUuid(counter, 2, year);
+        PostgresJDBCHelper.setUuid(counter, 3, week);
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
@@ -69,11 +69,11 @@ public class WorkedDAO extends GenericDAO<User> {
         return list;
     }
 
-    public List<Worked> getWorkedWeekById(String userContractId, int weekId) throws SQLException {
+    public List<Worked> getWorkedWeekById(String userContractId, String weekId) throws SQLException {
         String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.id=?";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
-        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(weekId));
+        PostgresJDBCHelper.setUuid(counter, 2, weekId);
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
