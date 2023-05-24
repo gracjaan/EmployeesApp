@@ -3,7 +3,7 @@ package nl.earnit.models.db;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class worked_week {
+public class WorkedWeek {
     private int id;
     private int contractId;
     private int week;
@@ -12,7 +12,11 @@ public class worked_week {
     private boolean approved;
     private boolean solved;
 
-    public worked_week(int id, int contractId, int week, String note, boolean confirmed, boolean approved, boolean solved) {
+    public WorkedWeek() {
+
+    }
+
+    public WorkedWeek(int id, int contractId, int week, String note, boolean confirmed, boolean approved, boolean solved) {
         this.id = id;
         this.contractId = contractId;
         this.week = week;
