@@ -41,6 +41,7 @@ public class UserContractWorkedResource {
 
     @GET
     public Response getWorkedWeek() {
+
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 

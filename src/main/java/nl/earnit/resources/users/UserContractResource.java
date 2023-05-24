@@ -3,10 +3,10 @@ package nl.earnit.resources.users;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.*;
+
+import javax.print.attribute.standard.Media;
 
 public class UserContractResource {
     @Context
@@ -30,7 +30,9 @@ public class UserContractResource {
 
     @GET
     @Path("/worked")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getWorked() {
+        // access DAO
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
