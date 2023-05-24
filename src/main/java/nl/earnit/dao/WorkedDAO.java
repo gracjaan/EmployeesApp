@@ -19,8 +19,6 @@ public class WorkedDAO extends GenericDAO<User> {
         super(con, TABLE_NAME);
     }
 
-
-
     // counts how many rows worked has
     @Override
     public int count() throws SQLException {
