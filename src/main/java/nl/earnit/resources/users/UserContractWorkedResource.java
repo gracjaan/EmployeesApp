@@ -1,10 +1,7 @@
 package nl.earnit.resources.users;
 
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
 
 public class UserContractWorkedResource {
     @Context
@@ -40,8 +37,11 @@ public class UserContractWorkedResource {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getWorkedWeek() {
-
+        // check which values are null, so what is filtered by
+        // access the corresponding function in the DAO
+        // return all the entries for the week
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
