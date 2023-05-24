@@ -15,6 +15,7 @@ import nl.earnit.models.resource.users.UserResponse;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
+
 @Path("/users")
 public class UsersResource {
     @Context
