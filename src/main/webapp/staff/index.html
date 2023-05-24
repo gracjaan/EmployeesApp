@@ -9,92 +9,79 @@
     <link rel="stylesheet" href="/earnit/static/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body class="bg-black flex justify-center overflow-x-hidden font-montserrat"
->
+<body class="bg-black flex justify-center overflow-x-hidden font-montserrat">
 <div class="lg:max-w-5xl md:max-w-3xl w-full">
     <header class="w-full relative">
-        <div
-                class="bg-secondary top-0 -left-full -right-full h-3/4 absolute -z-10"
-        ></div>
+        <div class="bg-secondary top-0 -left-full -right-full h-3/4 absolute -z-10"></div>
         <h1 class="text-text text-2xl font-bold py-16 px-4 sm:px-0">
-            Welcome back, EarnIt staff
+            Welcome back, Gracjan
         </h1>
+
+
         <nav
-                class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
-        >
-            <a
-                    href="/earnit/staff/requests"
-                    class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
-            >
+                class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0">
+            <a href="/earnit/requests" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
                 <h2 class="text-text text-2xl font-bold">Requests</h2>
                 <p class="text-text text-base">
                     Process rejected requests
                 </p>
             </a>
-            <a
-                    href="/earnit/staff/links"
-                    class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
-            >
+            <a href="/earnit/links" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
                 <h2 class="text-text text-2xl font-bold">Create links</h2>
                 <p class="text-text text-base">
-                    Create link between users and company via contracts
+                    Create links between users and companies via contracts
                 </p>
             </a>
-            <a
-                    href="/earnit/staff/overview"
-                    class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
-            >
+            <a href="/earnit/overview" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
                 <h2 class="text-text text-2xl font-bold">Overview</h2>
                 <p class="text-text text-base">
                     An overview of all companies and users
                 </p>
             </a>
         </nav>
+
+
     </header>
-    <main
-            class="flex gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0"
-    >
+    <main class="flex gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
+
+<!--        This is the section for the dashboard graph-->
         <section class="w-full gap-2 flex flex-col">
             <h2 class="text-text text-2xl font-bold">Dashboard</h2>
             <div class="rounded-2xl bg-secondary">
                 <canvas id="myChart"></canvas>
             </div>
         </section>
+
+<!--        This is the section for the notifications-->
         <section class="w-full gap-2 flex flex-col">
             <h2 class="text-text text-2xl font-bold">Notifications</h2>
-            <div
-                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
-            >
-                <a
-                        href="/earnit/"
-                        class="rounded-2xl bg-primary p-4 relative"
-                >
+            <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
+
+<!--     This is a sample notification, later to be replaced by real notifcations with JS&ndash;&gt;-->
+                <a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
                     <div class="text-text font-bold uppercase">
-                        Amazon rejected request
+                        week 11 approved
+                    </div>
+                    <div class="text-text uppercase">23.04.2023</div>
+                    <div
+                            class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"></div>
+                </a>
+
+<!--   This is a sample notification, later to be replaced by real notifcations with JS&ndash;&gt;-->
+                <a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
+                    <div class="text-text font-bold uppercase">
+                        week 10 approved
                     </div>
                     <div class="text-text uppercase">23.04.2023</div>
                     <div
                             class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"
                     ></div>
                 </a>
-                <a
-                        href="/earnit/"
-                        class="rounded-2xl bg-primary p-4 relative"
-                >
+
+<!--     This is a sample notification, later to be replaced by real notifcations with JS-->
+                <a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
                     <div class="text-text font-bold uppercase">
-                        UT rejected request
-                    </div>
-                    <div class="text-text uppercase">23.04.2023</div>
-                    <div
-                            class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"
-                    ></div>
-                </a>
-                <a
-                        href="/earnit/"
-                        class="rounded-2xl bg-primary p-4 relative"
-                >
-                    <div class="text-text font-bold uppercase">
-                        Saxion linked with Tom Hansult
+                        week 9 approved
                     </div>
                     <div class="text-text uppercase">23.04.2023</div>
                 </a>
@@ -102,7 +89,5 @@
         </section>
     </main>
 </div>
-
-
 </body>
 </html>

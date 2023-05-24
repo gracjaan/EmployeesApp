@@ -21,51 +21,51 @@ public class RedirectFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) servletRequest;
-
-        // Do not redirect static content, error or api
-        if (req.getServletPath().startsWith("/static") || req.getServletPath().startsWith("/error") || req.getServletPath().startsWith("/api")) {
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-
-        if (req.getServletPath().startsWith("/logout")) {
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-
-        User user = validateJWT(req);
-
-        // Do not redirect login and signup page
-        if (req.getServletPath().startsWith("/login") || req.getServletPath().startsWith("/signup")) {
-            if (user == null) {
-                filterChain.doFilter(servletRequest, servletResponse);
-                return;
-            }
-
-            redirectHome(servletResponse);
-            return;
-        }
-
-
-        if (user == null) {
-            redirectLogin(servletResponse);
-            return;
-        }
-
-        // Redirect for user
-        String path = switch (user.getType()) {
-            case "COMPANY" -> "/company";
-            case "ADMINISTRATOR" -> "/staff";
-            default -> "/student";
-        };
-
-        if (!req.getServletPath().startsWith(path)) {
-            RequestDispatcher dispatcher = servletRequest.getServletContext()
-                .getRequestDispatcher(path + req.getServletPath());
-            dispatcher.forward(servletRequest, servletResponse);
-            return;
-        }
+//        HttpServletRequest req = (HttpServletRequest) servletRequest;
+//
+//        // Do not redirect static content, error or api
+//        if (req.getServletPath().startsWith("/static") || req.getServletPath().startsWith("/error") || req.getServletPath().startsWith("/api")) {
+//            filterChain.doFilter(servletRequest, servletResponse);
+//            return;
+//        }
+//
+//        if (req.getServletPath().startsWith("/logout")) {
+//            filterChain.doFilter(servletRequest, servletResponse);
+//            return;
+//        }
+//
+//        User user = validateJWT(req);
+//
+//        // Do not redirect login and signup page
+//        if (req.getServletPath().startsWith("/login") || req.getServletPath().startsWith("/signup")) {
+//            if (user == null) {
+//                filterChain.doFilter(servletRequest, servletResponse);
+//                return;
+//            }
+//
+//            redirectHome(servletResponse);
+//            return;
+//        }
+//
+//
+//        if (user == null) {
+//            redirectLogin(servletResponse);
+//            return;
+//        }
+//
+//        // Redirect for user
+//        String path = switch (user.getType()) {
+//            case "COMPANY" -> "/company";
+//            case "ADMINISTRATOR" -> "/staff";
+//            default -> "/student";
+//        };
+//
+//        if (!req.getServletPath().startsWith(path)) {
+//            RequestDispatcher dispatcher = servletRequest.getServletContext()
+//                .getRequestDispatcher(path + req.getServletPath());
+//            dispatcher.forward(servletRequest, servletResponse);
+//            return;
+//        }
 
         filterChain.doFilter(servletRequest, servletResponse);
     }
