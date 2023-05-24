@@ -95,6 +95,7 @@ public class DAOManager {
 
         static {
             // Create thread instance
+            // This makes sure that only one DAOManager can exist per thread
 
             ThreadLocal<DAOManager> dm;
 

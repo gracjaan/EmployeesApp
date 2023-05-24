@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Token {
     private String token;
+
     private Long expires;
 
     public Token() {}
