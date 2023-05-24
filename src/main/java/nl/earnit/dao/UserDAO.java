@@ -5,6 +5,8 @@ import nl.earnit.models.db.User;
 import org.postgresql.util.PGobject;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user";
@@ -66,6 +68,28 @@ public class UserDAO extends GenericDAO<User> {
         // Return User
         return new User(res.getString("id"), res.getString("email"), res.getString("first_name"),
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
+    }
+
+    public List<User> getAllUsers() throws SQLException {
+        ArrayList<User> userList = new ArrayList<>();
+        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\"";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return all users
+        while(res.next()) {
+            User user = new User();
+            user.setId(res.getString("id"));
+            user.setFirstName(res.getString("first_name"));
+            user.setLastName(res.getString("last_name"));
+            user.setLastNamePrefix(res.getString("last_name_prefix"));
+            userList.add(user);
+        }
+        return userList;
+
     }
 
     public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type)
