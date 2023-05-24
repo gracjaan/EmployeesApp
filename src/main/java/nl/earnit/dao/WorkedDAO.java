@@ -3,6 +3,7 @@ package nl.earnit.dao;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.Worked;
+import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -84,5 +85,20 @@ public class WorkedDAO extends GenericDAO<User> {
             list.add(w);
         }
         return list;
+    }
+
+    public boolean updateWorkedWeekTaskById(String weekId, Worked worked) throws SQLException{
+        String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.id=?";
+        PreparedStatement counter = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(counter, 1, weekId);
+        // Execute query
+        ResultSet res = counter.executeQuery();
+        // Return count
+        res.next();
+        return false;
+    }
+
+    public boolean updateWorkedWeekTask(String year, String week, Worked worked) {
+        return false;
     }
 }

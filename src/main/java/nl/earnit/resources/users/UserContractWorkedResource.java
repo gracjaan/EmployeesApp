@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
 import nl.earnit.models.db.Worked;
+import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -65,8 +66,28 @@ public class UserContractWorkedResource {
     }
 
     @PUT
-    public Response updateWorkedWeekTask() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateWorkedWeekTask(Worked entry) {
+        WorkedDAO workedDAO;
+        boolean flag;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            if (this.weekId!=null) {
+                flag = workedDAO.updateWorkedWeekTaskById(this.weekId, entry);
+            } else if (this.year!=null&&this.week!=null) {
+                flag = workedDAO.updateWorkedWeekTask(this.year, this.week, entry);
+            }
+            else {
+                flag = false;
+            }
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        if (flag) {
+            return Response.ok().build();
+        } else {
+            return Response.serverError().build();
+        }
     }
 
     @POST
