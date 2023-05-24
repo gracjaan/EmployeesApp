@@ -1,11 +1,13 @@
 package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
+import nl.earnit.dao.ContractDAO;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
 import nl.earnit.resources.users.UserCompanyResource;
+
+import java.sql.SQLException;
 
 public class CompanyResource {
     @Context
@@ -55,8 +57,23 @@ public class CompanyResource {
 
     @GET
     @Path("/contracts")
-    public Response getContracts() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getContracts(@Context HttpHeaders httpHeaders) {
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            contractDAO.getAllContractsByCompanyId(companyId);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+
+        return Response.ok().build();
+
+
+
     }
 
     @POST
