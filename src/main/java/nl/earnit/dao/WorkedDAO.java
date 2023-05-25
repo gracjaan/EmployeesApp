@@ -129,6 +129,14 @@ public class WorkedDAO extends GenericDAO<User> {
         res.next();
     }
 
+    public void deleteWorkedWeekTask(String workedId) throws SQLException {
+        String query = "DELETE FROM \"" + tableName + "\" WHERE id = ?;";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedId);
+        statement.executeUpdate();
+    }
+
+
 
 
 }

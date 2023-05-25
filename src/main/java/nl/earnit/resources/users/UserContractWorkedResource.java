@@ -4,6 +4,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
+import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.models.db.Worked;
 import nl.earnit.models.db.WorkedWeek;
 
@@ -61,7 +62,6 @@ public class UserContractWorkedResource {
         } catch (SQLException e) {
             return Response.serverError().build();
         }
-
         return Response.ok(workedList).build();
     }
 
@@ -92,21 +92,45 @@ public class UserContractWorkedResource {
     }
 
     @DELETE
-    public Response deleteWorkedWeekTask() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response deleteWorkedWeekTask(String workedId) {
+        WorkedDAO workedDAO;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            workedDAO.deleteWorkedWeekTask(workedId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
 
     @POST
     @Path("/confirm")
-    public Response confirmWorkedWeek() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response confirmWorkedWeek(String workedWeekId) {
+        WorkedWeekDAO workedWeekDAO;
+        try {
+            workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.confirmWorkedWeekById(workedWeekId);
+        }catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @DELETE
     @Path("/confirm")
-    public Response removeConfirmWorkedWeek() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response removeConfirmWorkedWeek(String workedWeekId) {
+        WorkedWeekDAO workedWeekDAO;
+        try {
+            workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.removeConfirmWorkedWeekById(workedWeekId);
+        }catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @PUT
