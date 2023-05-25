@@ -1,5 +1,30 @@
+window.addEventListener("load", () => {
+    obtainContractsForUser()
+    fetchSheet()
+})
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    })
+        .join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+function obtainContractsForUser(uid) {
+    return fetch("/users/" + uid + "/contracts")
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(e => console.error(e));
+}
+
 function fetchSheet(uid, ucid, year, week) {
-    fetch("/users/"+ uid + "/contracts/" + ucid + "/worked/" + year + "/" + week)
+    return fetch("/users/"+ uid + "/contracts/" + ucid + "/worked/" + year + "/" + week)
         .then (response => response.json())
         .then (data => {
             html = "<div className=\"rounded-xl bg-primary p-4 relative flex justify-between\">";
