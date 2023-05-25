@@ -135,7 +135,15 @@ public class UserContractWorkedResource {
 
     @PUT
     @Path("/note")
-    public Response updateWorkedWeekNote() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateWorkedWeekNote(WorkedWeek workedWeek) {
+        WorkedWeekDAO workedWeekDAO;
+        try {
+            workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.updateWorkedWeekNote(workedWeek);
+        }catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 }

@@ -1,6 +1,8 @@
 package nl.earnit.dao;
 
+import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,23 +38,22 @@ public class WorkedWeekDAO extends GenericDAO<User>{
     public void confirmWorkedWeekById(String workedWeekId) throws SQLException {
         String query = "UPDATE worked_week SET confirmed = true WHERE id = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        try {
-            statement.setInt(1, Integer.parseInt(workedWeekId));
-        } catch(NumberFormatException e) {
-            throw new NumberFormatException("invalid workedWeekId");
-        }
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
         statement.executeUpdate();
     }
 
     public void removeConfirmWorkedWeekById(String workedWeekId) throws SQLException {
         String query = "UPDATE worked_week SET confirmed = false WHERE id = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        try {
-            statement.setInt(1, Integer.parseInt(workedWeekId));
-        } catch(NumberFormatException e) {
-            throw new NumberFormatException("invalid workedWeekId");
-        }
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
         statement.executeUpdate();
+    }
+
+    public void updateWorkedWeekNote(WorkedWeek workedWeek) throws SQLException {
+        String query = "UPDATE worked_week SET note = ? WHERE id = ?";
+        PreparedStatement statement = con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeek.getNote());
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeek.getId());
     }
 
 }
