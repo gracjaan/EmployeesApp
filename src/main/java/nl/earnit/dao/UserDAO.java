@@ -104,33 +104,6 @@ public class UserDAO extends GenericDAO<User> {
 
     }
 
-    public List<Company> getAllCompaniesUsers(String order) throws SQLException {
-        ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name FROM \"" + tableName + "\" ORDER BY ? " ;
-        PreparedStatement statement = this.con.prepareStatement(query);
-
-
-        if(order.equals("name")) {
-            statement.setString(1, order);
-        } else {
-            statement.setString(1, "id");
-        }
-
-        ResultSet res = statement.executeQuery();
-
-        // None found
-        if(!res.next()) return null;
-
-        // Return all users
-        while(res.next()) {
-            Company company = new Company();
-            company.setId(res.getString("id"));
-            company.setName(res.getString("name"));
-            companyList.add(company);
-        }
-        return companyList;
-
-    }
 
     public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type)
         throws SQLException {

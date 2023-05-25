@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company";
@@ -53,6 +55,23 @@ public class CompanyDAO extends GenericDAO<User> {
         return new Company(res.getString("id"), res.getString("name"));
     }
 
+    public Company getCompanyByName(String name) throws SQLException {
+        // Create query
+        String query =
+                "SELECT id, name FROM \"" + tableName + "\" WHERE \"name\" = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        statement.setString(1, name);
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return Company
+        return new Company(res.getString("id"), res.getString("name"));
+    }
+
     public Company createCompany(String name)
         throws SQLException {
         // Create query
@@ -69,6 +88,33 @@ public class CompanyDAO extends GenericDAO<User> {
 
         // Return company
         return getCompanyById(res.getString("id"));
+    }
+
+    public List<Company> getAllCompaniesUsers(String order) throws SQLException {
+        ArrayList<Company> companyList = new ArrayList<>();
+        String query = "SELECT id, name FROM \"" + tableName + "\" ORDER BY ? " ;
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+
+        if(order.equals("name")) {
+            statement.setString(1, order);
+        } else {
+            statement.setString(1, "id");
+        }
+
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        while(res.next()) {
+            Company company = new Company();
+            company.setId(res.getString("id"));
+            company.setName(res.getString("name"));
+            companyList.add(company);
+        }
+        return companyList;
+
     }
 }
 
