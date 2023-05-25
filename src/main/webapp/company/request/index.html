@@ -18,51 +18,23 @@
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
   <header class="w-full relative">
     <nav
-      class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
+      class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0 justify-between"
     >
-      <div
-              class="rounded-2xl bg-secondary p-8 w-full drop-shadow-md mt-2"
-      >
-        <h2 class="text-text text-2xl font-regular">27.04.2023 - 31.04.2023</h2>
-        <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
-        <div class="flex">
-          <div class="rounded-xl bg-primary px-4 py-2 flex mr-5">
-            <button class="text-white text-left mr-5">Week 10</button>
-            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
-          </div>
-          <div class="rounded-xl bg-accent-success p-2">
-            <button class="text-white text-left">
-              <img src="/earnit/static/icons/checkmark.svg"  alt="checkmark"/>
-            </button>
-          </div>
-        </div>
+      <div class="w-full mt-6 md-0">
+        <h2 class="text-text text-4xl font-bold">Pepijn</h2>
+        <h2 class="text-text text-4xl font-bold">Meijer</h2>
       </div>
-      <div class="rounded-2xl min-w-[20rem] sm:min-w-0 w-full drop-shadow-md">
+
+      <div class="items-end flex">
         <div class="flex flex-col gap-2">
           <div class="flex flex-row gap-2">
-            <div class="flex-1">
-              <input type="text" name="student-last-prefix" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full" />
+            <div class="py-4 px-4 bg-primary rounded-lg aspect-square">
+              <img src="/earnit/static/icons/checkmark_green.svg" alt="checkmark" class="aspect-square object-contain"/>
             </div>
-            <div class="flex-1">
-              <input type="text" name="student-last-prefix" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full" />
+            <div class="py-4 px-4 bg-primary rounded-lg aspect-square group hover:px-8 relative">
+              <img src="/earnit/static/icons/red-cross.svg" alt="decline" class="aspect-square object-contain"/>
+              <div class="invisible group-hover:visible group-hover:relative text-text text-md font-bold absolute pt-1">Rapport request</div>
             </div>
-          </div>
-          <input
-                  type="text"
-                  name="student-last-prefix"
-                  id="position"
-                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
-          />
-          <input
-                  type="text"
-                  name="description"
-                  id="student-last-prefix"
-                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
-          />
-          <div class="rounded-xl bg-text py-2 px-4 justify-center items-center">
-            <button class="self-center w-full">
-              <div class="text-background text-center font-bold">Submit</div>
-            </button>
           </div>
         </div>
       </div>
@@ -72,7 +44,6 @@
           class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0"
   >
     <section class="w-full h-full gap-2 flex flex-col">
-      <h2 class="text-text text-2xl font-bold">Sheet</h2>
       <div
               class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
       >
