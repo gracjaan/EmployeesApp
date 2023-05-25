@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import nl.earnit.dao.UserDAO;
 
 public class UserResource {
     @Context
@@ -20,8 +21,9 @@ public class UserResource {
     }
 
     @GET
-    public Response getUser() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Path("/users/{userId}")
+    public UserResource getUser(@PathParam("userId") String userId) {
+        return new UserResource(uriInfo, request, userId);
     }
 
     @PUT
@@ -30,7 +32,8 @@ public class UserResource {
     }
 
     @DELETE
-    public Response deleteUser() {
+    @Path("/users/{userId}")
+    public Response deleteUser(@PathParam("userId") String userId) {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 

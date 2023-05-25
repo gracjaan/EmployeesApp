@@ -149,5 +149,14 @@ public class UserDAO extends GenericDAO<User> {
         // Return user
         return getUserById(res.getString("id"));
     }
+
+    public void deleteUserById(String id) throws SQLException {
+        String query = "DELETE FROM" + tableName + "WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, id);
+
+        statement.executeQuery();
+
+    }
 }
 
