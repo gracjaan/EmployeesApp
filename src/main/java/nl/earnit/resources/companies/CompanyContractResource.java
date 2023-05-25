@@ -1,10 +1,17 @@
 package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
+import nl.earnit.Auth;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
+import nl.earnit.dao.UserDAO;
+import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.companies.AddUserToContract;
+import nl.earnit.models.resource.users.UserResponse;
+
+import java.sql.SQLException;
 
 public class CompanyContractResource {
     @Context
@@ -44,8 +51,25 @@ public class CompanyContractResource {
 
     @POST
     @Path("/employees")
-    public Response addEmployee() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response addEmployee(AddUserToContract addUserToContract) {
+
+        if (addUserToContract == null || addUserToContract.getHourlyWage() <= 0 || addUserToContract.getUserId() == null) {
+            return Response.status(400).build();
+        }
+
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            userContractDAO.addNewUserContract(addUserToContract.getUserId(), companyId, addUserToContract.getHourlyWage());
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+
+        return Response.ok().build();
     }
 
     @GET

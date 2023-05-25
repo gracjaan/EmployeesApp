@@ -2,6 +2,7 @@ package nl.earnit.dao;
 
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,6 +47,49 @@ public class UserContractDAO extends GenericDAO<User> {
         // Return count
         res.next();
         return res.getInt("count");
+    }
+
+    public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {
+        String query = "INSERT INTO" + tableName + "(id, contract_id, user_id, hourly_wage, active) " +
+                "VALUES + (gen_random_uuid(), ?, ?, ?, True RETURNING id" ;
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, user_id);
+        statement.setString(2, contract_id);
+        statement.setInt(3, hourly_wage);
+
+        ResultSet res = statement.executeQuery();
+
+        return getUserContractById(res.getString("id"));
+    }
+
+    public void disableUserContract(String id) throws SQLException {
+
+        String query = "UPDATE" + tableName + "SET active = False WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, id);
+
+        statement.executeQuery();
+    }
+
+    public void changeHourlyWage(String id, int hourlyWage) throws SQLException {
+        String query = "UPDATE" + tableName + "SET hourly_wage = ? WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setInt(1, hourlyWage);
+        statement.setString(2, id);
+
+        statement.executeQuery();
+    }
+
+    public UserContract getUserContractById( String id) throws SQLException {
+        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, id);
+
+        ResultSet res = statement.executeQuery();
+        return new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active") );
     }
 }
 

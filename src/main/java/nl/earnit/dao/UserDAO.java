@@ -1,6 +1,7 @@
 package nl.earnit.dao;
 
 import jakarta.annotation.Nullable;
+import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import org.postgresql.util.PGobject;
 
@@ -70,10 +71,21 @@ public class UserDAO extends GenericDAO<User> {
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
     }
 
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers(String order) throws SQLException {
         ArrayList<User> userList = new ArrayList<>();
-        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\"";
+
+
+        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\" ORDER BY ? " ;
+
         PreparedStatement statement = this.con.prepareStatement(query);
+
+
+        if(order.equals("name")) {
+            statement.setString(1, "last_name");
+        } else {
+            statement.setString(1, "id");
+        }
+
         ResultSet res = statement.executeQuery();
 
         // None found
@@ -89,6 +101,34 @@ public class UserDAO extends GenericDAO<User> {
             userList.add(user);
         }
         return userList;
+
+    }
+
+    public List<Company> getAllCompaniesUsers(String order) throws SQLException {
+        ArrayList<Company> companyList = new ArrayList<>();
+        String query = "SELECT id, name FROM \"" + tableName + "\" ORDER BY ? " ;
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+
+        if(order.equals("name")) {
+            statement.setString(1, order);
+        } else {
+            statement.setString(1, "id");
+        }
+
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return all users
+        while(res.next()) {
+            Company company = new Company();
+            company.setId(res.getString("id"));
+            company.setName(res.getString("name"));
+            companyList.add(company);
+        }
+        return companyList;
 
     }
 
@@ -108,7 +148,7 @@ public class UserDAO extends GenericDAO<User> {
         // Execute query
         ResultSet res = statement.executeQuery();
 
-        // None found
+        // None foundA
         if(!res.next()) return null;
 
         // Return user
