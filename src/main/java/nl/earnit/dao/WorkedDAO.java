@@ -104,7 +104,7 @@ public class WorkedDAO extends GenericDAO<User> {
         return contractList;
     }
 
-    public boolean addWorkedWeekTask(Worked worked) throws SQLException{
+    public void addWorkedWeekTask(Worked worked) throws SQLException{
         String query = "INSERT INTO \"" + tableName + "\" (id, worked_week_id, day, minutes, work)\n" +
                 "VALUES (gen_random_uuid(), ?, ?, ?, ?) RETURNING id";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -116,7 +116,19 @@ public class WorkedDAO extends GenericDAO<User> {
         ResultSet res = counter.executeQuery();
         // Return count
         res.next();
-        return true;
     }
+
+    public void updateWorkedWeekTask(Worked worked) throws SQLException {
+        String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?;";
+        PreparedStatement counter = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(counter, 1, String.valueOf(worked.getDay()));
+        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getMinutes()));
+        PostgresJDBCHelper.setUuid(counter, 3, worked.getWork());
+        PostgresJDBCHelper.setUuid(counter, 4, worked.getId());
+        ResultSet res = counter.executeQuery();
+        res.next();
+    }
+
+
 
 }

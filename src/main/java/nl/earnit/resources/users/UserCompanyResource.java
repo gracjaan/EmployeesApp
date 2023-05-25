@@ -3,10 +3,8 @@ package nl.earnit.resources.users;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
 import nl.earnit.models.db.UserContract;
@@ -36,6 +34,7 @@ public class UserCompanyResource {
 
     @GET
     @Path("/contracts")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContracts() {
         WorkedDAO workedDAO;
         List<UserContract> userContracts;

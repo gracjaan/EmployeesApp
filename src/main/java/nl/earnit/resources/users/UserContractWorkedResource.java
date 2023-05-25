@@ -68,25 +68,27 @@ public class UserContractWorkedResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateWorkedWeekTask(Worked entry) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        WorkedDAO workedDAO;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            workedDAO.updateWorkedWeekTask(entry);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response addWorkedWeekTask(Worked entry) {
         WorkedDAO workedDAO;
-        boolean flag;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            flag = workedDAO.addWorkedWeekTask(entry);
+            workedDAO.addWorkedWeekTask(entry);
         } catch (SQLException e) {
             return Response.serverError().build();
         }
-        if (flag) {
-            return Response.ok().build();
-        } else {
-            return Response.serverError().build();
-        }
+        return Response.ok().build();
     }
 
     @DELETE
