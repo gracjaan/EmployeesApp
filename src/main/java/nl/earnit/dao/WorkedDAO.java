@@ -2,6 +2,7 @@ package nl.earnit.dao;
 
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
 import nl.earnit.models.db.WorkedWeek;
 
@@ -87,13 +88,30 @@ public class WorkedDAO extends GenericDAO<User> {
         return list;
     }
 
-    public boolean updateWorkedWeekTaskById(String weekId, Worked worked) throws SQLException{
-        //todo should the id be created by the server or client?
-        String query = "INSERT INTO \"" + tableName + "\" (id, worked_week_id, day, minutes, work)\n" +
-                "VALUES (" + worked.getId() + ", " + worked.getWorkedWeekId() + ", '" + worked.getDay() + "', " + worked.getMinutes() + ", '" + worked.getWork() + "');\n";
-
+    public List<UserContract> getUserContracts(String userId) throws SQLException {
+        String query = "SELECT * AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ?";
         PreparedStatement counter = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(counter, 1, weekId);
+        PostgresJDBCHelper.setUuid(counter, 1, userId);
+        // Execute query
+        ResultSet res = counter.executeQuery();
+        // Return count
+        res.next();
+        List<UserContract> contractList = new ArrayList<>();
+        while (res.next()) {
+            UserContract userContract = new UserContract(res.getString("id"), res.getString("contract_id"), res.getFloat("hourly_wage"), res.getBoolean("active"));
+            contractList.add(userContract);
+        }
+        return contractList;
+    }
+
+    public boolean addWorkedWeekTask(Worked worked) throws SQLException{
+        String query = "INSERT INTO \"" + tableName + "\" (id, worked_week_id, day, minutes, work)\n" +
+                "VALUES (gen_random_uuid(), ?, ?, ?, ?) RETURNING id";
+        PreparedStatement counter = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(counter, 1, worked.getWorkedWeekId());
+        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getDay()));
+        PostgresJDBCHelper.setUuid(counter, 3, String.valueOf(worked.getMinutes()));
+        PostgresJDBCHelper.setUuid(counter, 4, worked.getWork());
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
@@ -101,8 +119,4 @@ public class WorkedDAO extends GenericDAO<User> {
         return true;
     }
 
-    public boolean updateWorkedWeekTask(String year, String week, Worked worked) {
-        //todo can the id be created from year+week
-        return false;
-    }
 }

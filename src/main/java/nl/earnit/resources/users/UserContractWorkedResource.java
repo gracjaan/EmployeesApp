@@ -68,18 +68,17 @@ public class UserContractWorkedResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateWorkedWeekTask(Worked entry) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response addWorkedWeekTask(Worked entry) {
         WorkedDAO workedDAO;
         boolean flag;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            if (this.weekId!=null) {
-                flag = workedDAO.updateWorkedWeekTaskById(this.weekId, entry);
-            } else if (this.year!=null&&this.week!=null) {
-                flag = workedDAO.updateWorkedWeekTask(this.year, this.week, entry);
-            }
-            else {
-                flag = false;
-            }
+            flag = workedDAO.addWorkedWeekTask(entry);
         } catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -88,11 +87,6 @@ public class UserContractWorkedResource {
         } else {
             return Response.serverError().build();
         }
-    }
-
-    @POST
-    public Response addWorkedWeekTask() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
     @DELETE
