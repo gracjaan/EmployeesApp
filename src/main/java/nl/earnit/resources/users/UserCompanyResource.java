@@ -7,6 +7,12 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.WorkedDAO;
+import nl.earnit.models.db.UserContract;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class UserCompanyResource {
     @Context
@@ -31,7 +37,15 @@ public class UserCompanyResource {
     @GET
     @Path("/contracts")
     public Response getContracts() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        WorkedDAO workedDAO;
+        List<UserContract> userContracts;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            userContracts = workedDAO.getUserContracts(this.userId);
+        } catch (SQLException e){
+            return Response.serverError().build();
+        }
+        return Response.ok(userContracts).build();
     }
 
     @GET
