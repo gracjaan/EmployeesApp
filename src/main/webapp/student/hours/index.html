@@ -12,10 +12,12 @@
 <body
         class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
 >
+<a href="javascript:history.back()" class="flex items-center">
 <header class="flex bg-primary w-fit p-2 rounded-br-lg">
   <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
   <div class="text-text">Back</div>
 </header>
+</a>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
   <header class="w-full relative">
     <nav
@@ -42,10 +44,10 @@
         <div class="flex flex-col gap-2">
           <div class="flex flex-row gap-2">
             <div class="flex-1">
-              <input placeholder="Date" type="text" name="student-last-prefix" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full" />
+              <input placeholder="Date" type="text" name="student-last-prefix" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
             <div class="flex-1">
-              <input placeholder="Hours" type="text" name="student-last-prefix" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full" />
+              <input placeholder="Hours" type="text" name="student-last-prefix" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
           </div>
           <input
@@ -53,14 +55,14 @@
                   type="text"
                   name="student-last-prefix"
                   id="position"
-                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
+                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white"
           />
           <input
                   placeholder="Description"
                   type="text"
                   name="description"
                   id="student-last-prefix"
-                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
+                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white"
           />
           <button class="rounded-xl bg-text py-2 px-4 justify-center items-center">
               <div class="text-background text-center font-bold" id="submit-button" onclick="submitForm()">Submit</div>
@@ -77,7 +79,7 @@
       <div
               class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
       >
-        <div class="flex">
+        <div class="flex mb-2">
           <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
             <div class="text-black text-left mr-5">Date</div>
             <img src="/earnit/static/icons/arrow-down-black.svg"  alt="right arrow"/>
