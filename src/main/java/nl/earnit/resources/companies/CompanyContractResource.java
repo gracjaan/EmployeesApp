@@ -14,7 +14,10 @@ import nl.earnit.models.resource.contracts.DescriptionRole;
 import java.sql.SQLException;
 import java.util.List;
 
-/// TODO: 5/31/2023 Change delete methods to disable when the database schema is updated
+/* TODO: 5/31/2023 Change delete methods to disable when the database schema is updated
+                   Add @Produces to relevant methods after merge
+ */
+
 public class CompanyContractResource {
     @Context
     UriInfo uriInfo;
@@ -120,7 +123,7 @@ public class CompanyContractResource {
 
     @GET
     @Path("{contractId}/employees")
-    public List<UserContract> getEmployees(@PathParam("contractId") String contractId) {
+    public List<UserContract> getUserContracts(@PathParam("contractId") String contractId) {
         if (contractId == null) {
             return null;
         }
