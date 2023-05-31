@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+<head>
+  <meta charset="UTF-8" />
+  <title>Request</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/earnit/static/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat">
+<header class="flex bg-primary w-fit p-2 rounded-br-lg">
+  <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
+  <div class="text-text">Back</div>
+</header>
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
+  <header class="px-6 w-full relative">
+    <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0 justify-between">
+      <div class="w-full mt-6 md-0">
+        <h2 class="text-text text-4xl font-bold">Requests</h2>
+      </div>
+
+      <div class="items-end flex">
+        <div class="flex flex-col gap-2">
+          <div class="flex flex-row gap-2">
+            <button class="p-4 bg-primary rounded-lg aspect-square">
+              <img src="/earnit/static/icons/checkmark_green.svg" alt="checkmark" class="aspect-square object-contain"/>
+            </button>
+            <button class="p-4 bg-primary rounded-lg aspect-square group relative">
+              <img src="/earnit/static/icons/red-cross.svg" alt="decline" class="aspect-square object-contain"/>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="gap-8 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
+    <section class="w-full h-full gap-2 flex flex-col px-6">
+      <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
+        <div class="flex">
+<!--          dropdown for the date-->
+          <div class="dropdown relative">
+            <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
+              <div class="text-black text-left mr-5">Date</div>
+              <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class="ml-2"/>
+            </button>
+            <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+              <!-- Dropdown options -->
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+            </div>
+          </div>
+<!--          dropdown for the contract options-->
+          <div class="dropdown relative">
+            <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
+              <div class="text-black text-left mr-5">Contract</div>
+              <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class="ml-2"/>
+            </button>
+            <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+              <!-- Dropdown options -->
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+            </div>
+          </div>
+<!--          dropdown for the hours options-->
+
+          <div class="dropdown relative">
+            <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
+              <div class="text-black text-left mr-5">Hours</div>
+              <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class="ml-2"/>
+            </button>
+            <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+              <!-- Dropdown options -->
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+            </div>
+          </div>
+        </div>
+        <!--        This will list the different students-->
+        <ol class="overflow-y-auto gap-2">
+          <li class="w-full">
+            <a href="" class="hover:border-2 hover:color-color-text block columns-2 bg-primary  rounded-xl w-full p-2 pl-4">
+              <p class="text-text">Gracjan Chmielnicki</p>
+              <div class="block columns-2">
+                <p class="text-text">160H</p>
+                <p class="text-text">WEEK 10</p>
+              </div>
+            </a>
+          </li>
+        </ol>
+
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
