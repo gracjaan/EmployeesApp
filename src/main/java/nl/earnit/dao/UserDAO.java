@@ -9,6 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/// TODO: 5/31/2023 Change delete methods to disable when the database schema is updated 
+
 public class UserDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user";
 

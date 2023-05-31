@@ -11,9 +11,9 @@ import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.contracts.DescriptionRole;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+/// TODO: 5/31/2023 Change delete methods to disable when the database schema is updated
 public class CompanyContractResource {
     @Context
     UriInfo uriInfo;
