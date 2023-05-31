@@ -19,15 +19,23 @@
 </a>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
   <header class="w-full relative">
-    <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0">
-      <div class="rounded-2xl bg-secondary p-8 w-full drop-shadow-md">
+    <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0 overflow-y-visible">
+      <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md">
         <h2 class="text-text text-2xl font-regular">27.04.2023 - 31.04.2023</h2>
         <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
-        <div class="flex">
-          <button class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center">
-            <div class="text-white text-left mr-5">Week 10</div>
-            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
-          </button>
+        <div class="flex relative">
+          <div class="dropdown">
+            <button class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center">
+              <div class="text-white text-left mr-5">Week 10</div>
+              <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
+            </button>
+            <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+              <!-- Dropdown options -->
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+            </div>
+          </div>
           <button class="rounded-xl bg-accent-success p-2 items-center">
             <div class="text-white text-left">
               <img src="/earnit/static/icons/checkmark.svg" alt="checkmark"/>
@@ -35,7 +43,7 @@
           </button>
         </div>
       </div>
-      <div class="rounded-2xl min-w-[20rem] sm:min-w-0 w-full drop-shadow-md">
+      <div class="flex-1 rounded-2xl min-w-[20rem] sm:min-w-0 w-full drop-shadow-md">
         <div class="flex flex-col gap-2">
           <div class="flex flex-row gap-2">
             <div class="flex-1">
@@ -94,5 +102,20 @@
     </section>
   </main>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dropdowns = document.getElementsByClassName('dropdown');
+
+    for (let i = 0; i < dropdowns.length; i++) {
+      const dropdown = dropdowns[i];
+      const button = dropdown.querySelector('button');
+      const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+      button.addEventListener('click', function() {
+        dropdownContent.classList.toggle('hidden');
+      });
+    }
+  });
+</script>
 </body>
 </html>
