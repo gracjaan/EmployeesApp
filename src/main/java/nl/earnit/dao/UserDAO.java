@@ -1,10 +1,14 @@
 package nl.earnit.dao;
 
 import jakarta.annotation.Nullable;
+import nl.earnit.helpers.PostgresJDBCHelper;
+import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import org.postgresql.util.PGobject;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user";
@@ -111,6 +115,14 @@ public class UserDAO extends GenericDAO<User> {
 
         // Return user
         return getUserById(res.getString("id"));
+    }
+
+    public List<Company> getCompanies(String userId) throws SQLException {
+        List<Company> companies = new ArrayList<>();
+        String query = "SELECT c.* FROM company c, company_user u WHERE c.id=u.company_id AND u.user_id=?;";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, userId);
+        return companies;
     }
 }
 

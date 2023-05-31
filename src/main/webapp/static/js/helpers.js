@@ -39,6 +39,10 @@ function getUserEmail() {
     return getJWT().user_email;
 }
 
+function getUserCompany() {
+    return getJWT().user_company;
+}
+
 function getUser() {
     return fetch("/earnit/api/users/" + getUserId(), {
         headers: {

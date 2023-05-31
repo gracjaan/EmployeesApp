@@ -2,6 +2,7 @@ package nl.earnit.dao;
 
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,6 +47,16 @@ public class UserContractDAO extends GenericDAO<User> {
         // Return count
         res.next();
         return res.getInt("count");
+    }
+
+    public UserContract getUserContract(String userId, String userContractId) throws SQLException {
+        String query = "SELECT contract_id, hourly_wage FROM user_contract WHERE id=?;";
+        PreparedStatement counter = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(counter, 1, userContractId);
+        ResultSet res = counter.executeQuery();
+        res.next();
+        UserContract uc = new UserContract(userContractId, res.getString("contract_id"),res.getFloat("hourly_wage"), res.getBoolean("active"));
+        return uc;
     }
 }
 
