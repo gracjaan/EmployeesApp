@@ -34,7 +34,7 @@ public class Auth {
      * @param expiresAt the time that it takes
      * @return
      */
-    public static String createJWT(User user, long expiresAt) {
+    public static String createJWT(User user, String companyId, long expiresAt) {
         Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
         return JWT.create()
             .withIssuer("earnit")
