@@ -8,12 +8,12 @@ import java.math.BigInteger;
 public class UserContract {
     private String id;
     private String contractId;
-    private BigInteger hourlyWage;
+    private Integer hourlyWage;
     private boolean active;
 
     public UserContract() {}
 
-    public UserContract(String id, String contractId, BigInteger hourlyWage, boolean active) {
+    public UserContract(String id, String contractId, Integer hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
         this.hourlyWage = hourlyWage;
@@ -36,11 +36,11 @@ public class UserContract {
         this.contractId = contractId;
     }
 
-    public BigInteger getHourlyWage() {
+    public Integer getHourlyWage() {
         return hourlyWage;
     }
 
-    public void setHourlyWage(BigInteger hourlyWage) {
+    public void setHourlyWage(Integer hourlyWage) {
         this.hourlyWage = hourlyWage;
     }
 

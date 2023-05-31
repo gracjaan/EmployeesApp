@@ -73,13 +73,22 @@ public class CompanyResource {
     @GET
     @Path("/approves")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public Response getToApprove() {
+    public Response getToApprove(@QueryParam("company") @DefaultValue("false") boolean company,
+                                 @QueryParam("contract") @DefaultValue("false") boolean contract,
+                                 @QueryParam("user_contract") @DefaultValue("false") boolean userContract,
+                                 @QueryParam("user") @DefaultValue("false") boolean user,
+                                 @QueryParam("order") @DefaultValue("asc") String order) {
+        if (!order.equalsIgnoreCase("asc") && !order.equalsIgnoreCase("desc")) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
 
-            return Response.ok(workedWeekDAO.getWorkedWeeksToApproveForCompany(companyId)).build();
+            return Response.ok(workedWeekDAO.getWorkedWeeksToApproveForCompany(companyId, company, contract, userContract, user, order.equalsIgnoreCase("asc"))).build();
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

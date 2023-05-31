@@ -51,3 +51,6 @@ function getUser() {
     }).then((res) => res.json()).catch(() => null);
 }
 
+function getName(firstName, lastName, lastNamePrefix, separator = " ") {
+    return [firstName, lastNamePrefix, lastName].filter(Boolean).join(separator);
+}
