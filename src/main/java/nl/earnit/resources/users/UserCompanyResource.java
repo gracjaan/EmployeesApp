@@ -5,8 +5,11 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.*;
+import nl.earnit.dao.CompanyDAO;
 import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.WorkedDAO;
+import nl.earnit.models.db.Company;
 import nl.earnit.models.db.UserContract;
 
 import java.sql.SQLException;
@@ -28,8 +31,17 @@ public class UserCompanyResource {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getCompany() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        CompanyDAO companyDAO;
+        Company company;
+        try {
+            companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            company = companyDAO.getCompanyById(this.companyId);
+        } catch (SQLException e){
+            return Response.serverError().build();
+        }
+        return Response.ok(company).build();
     }
 
     @GET
@@ -49,7 +61,16 @@ public class UserCompanyResource {
 
     @GET
     @Path("/contracts/{userContractId}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContract(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        UserContractDAO userContractDAO;
+        UserContract uc;
+        try {
+            userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            uc = userContractDAO.getUserContract(this.userId, userContractId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(uc).build();
     }
 }
