@@ -9,8 +9,5 @@
         <module name="earnit" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="earnit" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>

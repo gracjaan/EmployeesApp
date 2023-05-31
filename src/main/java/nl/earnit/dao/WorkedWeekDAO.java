@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkedWeekDAO extends GenericDAO<User> {
+
     private final static String TABLE_NAME = "worked_week";
 
     public WorkedWeekDAO(Connection con) {
@@ -33,6 +34,32 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         // Return count
         res.next();
         return res.getInt("count");
+    }
+
+    public void confirmWorkedWeek(String year, String week) {
+
+
+    }
+
+    public void confirmWorkedWeekById(String workedWeekId) throws SQLException {
+        String query = "UPDATE worked_week SET confirmed = true WHERE id = ?";
+        PreparedStatement statement = con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        statement.executeUpdate();
+    }
+
+    public void removeConfirmWorkedWeekById(String workedWeekId) throws SQLException {
+        String query = "UPDATE worked_week SET confirmed = false WHERE id = ?";
+        PreparedStatement statement = con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        statement.executeUpdate();
+    }
+
+    public void updateWorkedWeekNote(WorkedWeek workedWeek) throws SQLException {
+        String query = "UPDATE worked_week SET note = ? WHERE id = ?";
+        PreparedStatement statement = con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeek.getNote());
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeek.getId());
     }
 
     /**
