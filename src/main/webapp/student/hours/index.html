@@ -21,7 +21,7 @@
   <header class="w-full">
     <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 px-2 sm:px-0 ">
       <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md">
-        <h2 class="text-text text-2xl font-regular">27.04.2023 - 31.04.2023</h2>
+        <h2 class="text-text text-2xl font-regular" id="dropdown-range">Date range</h2>
         <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
         <div class="flex">
           <div class="dropdown relative">
@@ -29,11 +29,11 @@
               <div class="text-white text-left mr-5" id="dropdown-header">Week 10</div>
               <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
             </button>
-            <div id="dropdown-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+            <div id="dropdown-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
               <!-- Dropdown options -->
-              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)">Week 10</div>
-              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectOption(this)">Week 9</div>
-              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)">Week 8</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)" data-week-number="10">Week 10</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectOption(this)" data-week-number="9">Week 9</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)" data-week-number="8">Week 8</div>
             </div>
           </div>
           <button class="rounded-xl bg-accent-success p-2 items-center">
@@ -81,19 +81,23 @@
           </button>
         </div>
         <div class="rounded-xl bg-primary p-4 relative flex justify-between">
-          <div class="text-text font-bold uppercase">21.04</div>
-          <div class="text-text">10H</div>
-          <div class="text-text">Janitor-UT</div>
-          <div class="text-text">I cleaned the first floor in Carre</div>
+          <div class="w-full grid grid-cols-[1fr_1fr_2fr_5fr]">
+            <div class="text-text font-bold uppercase">21.04</div>
+            <div class="text-text">10H</div>
+            <div class="text-text">Janitor-UT</div>
+            <div class="text-text">I cleaned the first floor in Carre</div>
+          </div>
           <button class="edit-button" onclick="toggleEdit(this)">
             <img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />
           </button>
         </div>
         <div class="rounded-xl bg-primary p-4 relative flex justify-between">
-          <div class="text-text font-bold uppercase">21.04</div>
-          <div class="text-text">8H</div>
-          <div class="text-text">Janitor-Saxion</div>
-          <div class="text-text">I cleaned the first floor in the main building</div>
+          <div class="w-full grid grid-cols-[1fr_1fr_2fr_5fr]">
+            <div class="text-text font-bold uppercase">21.04</div>
+            <div class="text-text">8H</div>
+            <div class="text-text">Janitor-Saxion</div>
+            <div class="text-text">I cleaned the first floor in the main building</div>
+          </div>
           <button class="edit-button" onclick="toggleEdit(this)">
             <img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />
           </button>
@@ -104,20 +108,50 @@
 </div>
 <script>
   function toggleDropdown() {
-    var dropdown = document.getElementById("dropdown-content");
+    const dropdown = document.getElementById("dropdown-content");
     dropdown.classList.toggle("hidden");
   }
 
   function selectOption(option) {
-    var header = document.getElementById("dropdown-header");
+    const header = document.getElementById("dropdown-header");
+    const range = document.getElementById("dropdown-range")
+    const weekNumber = parseInt(option.dataset.weekNumber);
+    const dateRange = getWeekDateRange(weekNumber);
     header.textContent = option.textContent;
+    range.textContent = dateRange;
     toggleDropdown();
   }
 
+  function getWeekDateRange(weekNumber) {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+
+    // Find the first day of the year
+    const firstDayOfYear = new Date(year, 0, 1);
+    const dayOfWeek = firstDayOfYear.getDay();
+    const startDate = new Date(firstDayOfYear.getTime() - dayOfWeek * 24 * 60 * 60 * 1000);
+
+    // Calculate the start and end dates of the selected week
+    const startOfWeek = new Date(startDate.getTime() + (weekNumber - 1) * 7 * 24 * 60 * 60 * 1000);
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+    // Format the date range
+    const startDateFormatted = formatDate(startOfWeek);
+    const endDateFormatted = formatDate(endOfWeek);
+    return startDateFormatted + " - " + endDateFormatted;
+  }
+
+  function formatDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return day + "." + month + "." + year;
+  }
+
   document.addEventListener("click", function(event) {
-    var dropdown = document.getElementById("dropdown-content");
-    var button = document.getElementById("dropdown-button");
-    var targetElement = event.target;
+    const dropdown = document.getElementById("dropdown-content");
+    const button = document.getElementById("dropdown-button");
+    const targetElement = event.target;
 
     if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
       dropdown.classList.add("hidden");
