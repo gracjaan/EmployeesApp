@@ -94,4 +94,13 @@ public class ContractDAO extends GenericDAO<User> {
 
     }
 
+    public void deleteContract(String contractId) throws SQLException {
+        String query = "DELETE * FROM" + tableName + " WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, contractId);
+
+        statement.executeQuery();
+    }
+
 }
