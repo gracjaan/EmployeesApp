@@ -6,12 +6,15 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.dao.WorkedDAO;
+import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
 
 import javax.print.attribute.standard.Media;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +35,17 @@ public class UserContractResource {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        UserContractDAO userContractDAO;
+        UserContract uc;
+        try {
+            userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            uc = userContractDAO.getUserContract(this.userId, this.userContractId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(uc).build();
     }
 
     @GET

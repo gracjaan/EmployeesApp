@@ -37,6 +37,7 @@ public class UserResource {
     @GET
     @Path("/companies")
     public Response getCompanies() {
+
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
