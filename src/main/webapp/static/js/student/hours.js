@@ -1,18 +1,7 @@
-window.addEventListener("load", () => {
-    obtainContractsForUser()
-    fetchSheet()
+window.addEventListener("helpersLoaded", async () => {
+    const contracts = await obtainContractsForUser(getUserId())
+    fetchSheet(getUserId(), contracts)
 })
-
-function parseJwt (token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    })
-        .join(''));
-
-    return JSON.parse(jsonPayload);
-}
 
 function obtainContractsForUser(uid) {
     return fetch("/users/" + uid + "/contracts")
@@ -23,8 +12,13 @@ function obtainContractsForUser(uid) {
         .catch(e => console.error(e));
 }
 
-function fetchSheet(uid, ucid, year, week) {
-    return fetch("/users/"+ uid + "/contracts/" + ucid + "/worked/" + year + "/" + week)
+function getSelectedWeek () {
+
+}
+
+function fetchSheet(userid, contracts) {
+    const promises = contracts.map((contract) => {
+    return fetch("/users/"+ userid + "/contracts/" + contract.id + "/worked/" + contract.year + "/" + contract.week)
         .then (response => response.json())
         .then (data => {
             html = "<div className=\"rounded-xl bg-primary p-4 relative flex justify-between\">";
@@ -39,24 +33,65 @@ function fetchSheet(uid, ucid, year, week) {
             document.getElementById("items").innerHTML = html;
         })
         .catch(e => console.error(e))
+    });
+
+    Promise.all(promises)
+        .then (results => {
+            const combinedHtml = results.join("");
+            document.getElementById("items").innerHTML = combinedHtml;
+        })
+        .catch(e => console.error(e))
 }
 
-function submitForm (uid, ucid, year, week, date, hours, position, description) {
+function submitForm () {
+    const dateInput = document.getElementById('date');
+    const hoursInput = document.getElementById('hours');
+    const positionInput = document.getElementById('position');
+    const descriptionInput = document.getElementById('description');
 
-    if (validateForm() == false){
+    const formData = {
+        date: dateInput.value,
+        hours: hoursInput.value,
+        position: positionInput.value,
+        description: descriptionInput.value
+    };
+
+    console.log(formData)
+
+    if (validateForm(formData) == false){
         return;
     }
 
-    let json = {date: date, hours: hours, position: position, description: description}
-    fetch ("/users/"+ uid + "/contracts/" + ucid + "/worked/" + year + "/" + week,
+    sendFormDataToServer(formData, getUserId(), );
+}
+
+function getCurrentYear () {
+    const currentDate = new Date();
+    return currentDate.getFullYear();
+}
+
+function getCurrentWeek () {
+    const currentDate = new Date();
+    const startDate = new Date(currentDate.getFullYear(), 0, 1);
+    const days = Math.floor((currentDate - startDate) /
+        (24 * 60 * 60 * 1000));
+
+    const weekNumber = Math.ceil(days / 7);
+
+    return weekNumber;
+}
+
+function sendFormDataToServer (formData, uid, ucid) {
+    fetch ("/users/"+ uid + "/contracts/" + ucid + "/worked/" + getCurrentYear() + "/" + getCurrentWeek(),
         {
             method: "POST",
-            body: JSON.stringify(json),
+            body: JSON.stringify(formData),
             headers: {
                 "Content-type" : "application/json",
                 "Accept" : "application/json"
             }
         })
+        .then (response => console.log("Form submitted successfully"))
         .catch(e => console.error(e))
 }
 
@@ -79,13 +114,8 @@ function submitEdittedForm (uid, ucid, year, week, date, hours, position, descri
         .catch(e => console.error(e))
 }
 
-function validateForm () {
-    const dateInput = document.getElementById('date').value;
-    const hoursInput = document.getElementById('hours').value;
-    const positionInput = document.getElementById('position').value;
-    const descriptionInput = document.getElementById('student-last-prefix').value;
-
-    if (dateInput === '' || hoursInput === '' || positionInput === '' || descriptionInput === '') {
+function validateForm (formData) {
+    if (formData.date === '' || formData.hours === '' || formData.position === '' || formData.description === '') {
         alert('Please fill in all the fields.');
         return false;
     }
@@ -118,6 +148,6 @@ function toggleEdit(button) {
         };
 
         // Send the updatedData to the server or perform any necessary actions
-        submitEdittedForm();
+        console.log(updatedData);
     }
 }

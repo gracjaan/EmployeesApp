@@ -25,15 +25,15 @@
         <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
         <div class="flex">
           <div class="dropdown relative">
-            <button class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center">
-              <div class="text-white text-left mr-5">Week 10</div>
+            <button id="dropdown-button" class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center" onclick="toggleDropdown()">
+              <div class="text-white text-left mr-5" id="dropdown-header">Week 10</div>
               <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
             </button>
-            <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+            <div id="dropdown-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
               <!-- Dropdown options -->
-              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
-              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
-              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)">Week 10</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectOption(this)">Week 9</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)">Week 8</div>
             </div>
           </div>
           <button class="rounded-xl bg-accent-success p-2 items-center">
@@ -47,14 +47,14 @@
         <div class="flex flex-col gap-2">
           <div class="flex flex-row gap-2">
             <div class="flex-1">
-              <input placeholder="Date" type="text" name="student-last-prefix" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
+              <input placeholder="Date" type="text" name="date" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
             <div class="flex-1">
-              <input placeholder="Hours" type="text" name="student-last-prefix" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
+              <input placeholder="Hours" type="text" name="hours" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
           </div>
-          <input placeholder="Position" type="text" name="student-last-prefix" id="position" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
-          <input placeholder="Description" type="text" name="description" id="student-last-prefix" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
+          <input placeholder="Position" type="text" name="position" id="position" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
+          <input placeholder="Description" type="text" name="description" id="description" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
           <button class="rounded-xl bg-text py-2 px-4 justify-center items-center">
             <div class="text-background text-center font-bold" id="submit-button" onclick="submitForm()">Submit</div>
           </button>
@@ -103,19 +103,27 @@
   </main>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const dropdowns = document.getElementsByClassName('dropdown');
+  function toggleDropdown() {
+    var dropdown = document.getElementById("dropdown-content");
+    dropdown.classList.toggle("hidden");
+  }
 
-    for (let i = 0; i < dropdowns.length; i++) {
-      const dropdown = dropdowns[i];
-      const button = dropdown.querySelector('button');
-      const dropdownContent = dropdown.querySelector('.dropdown-content');
+  function selectOption(option) {
+    var header = document.getElementById("dropdown-header");
+    header.textContent = option.textContent;
+    toggleDropdown();
+  }
 
-      button.addEventListener('click', function() {
-        dropdownContent.classList.toggle('hidden');
-      });
+  document.addEventListener("click", function(event) {
+    var dropdown = document.getElementById("dropdown-content");
+    var button = document.getElementById("dropdown-button");
+    var targetElement = event.target;
+
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+      dropdown.classList.add("hidden");
     }
   });
+
 </script>
 </body>
 </html>
