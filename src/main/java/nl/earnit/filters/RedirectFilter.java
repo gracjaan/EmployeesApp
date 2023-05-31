@@ -33,7 +33,7 @@ public class RedirectFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
+        //validates the JSON Web token (JWT)
         User user = validateJWT(req);
 
         // Do not redirect login and signup page
@@ -42,7 +42,7 @@ public class RedirectFilter implements Filter {
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
             }
-
+            //redirect to the home after login and signup has been done
             redirectHome(servletResponse);
             return;
         }
