@@ -2,16 +2,17 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.Auth;
+import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
-import nl.earnit.dao.UserDAO;
-import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.resource.companies.AddUserToContract;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.resource.contracts.Contract;
+import nl.earnit.models.resource.contracts.DescriptionRole;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyContractResource {
     @Context
@@ -29,24 +30,103 @@ public class CompanyContractResource {
     }
 
     @GET
-    public Response getContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
+    @PathParam("/companies/{companyId}/contracts")
+    public List<Contract> getContracts(@PathParam("companyId") String companyId) {
+        if (companyId == null) {
+            return null;
+        }
 
-    @PUT
-    public Response updateContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
+        List<Contract> result;
 
-    @DELETE
-    public Response deleteContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            ContractDAO ContractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            result = ContractDAO.getAllContractsByCompanyId(companyId);
+
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+
     }
 
     @GET
-    @Path("/employees")
-    public Response getEmployees() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @PathParam("/companies/{companyId}/contracts/{contractId}")
+    public DescriptionRole getContract(@PathParam("contractId") String contractId) {
+        DescriptionRole result = new DescriptionRole();
+
+        if (contractId == null) {
+            return null;
+        }
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            result.setDescription(contractDAO.getContract(contractId).getDescription());
+            result.setRole(contractDAO.getContract(contractId).getRole());
+
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+    }
+
+    @PUT
+    @PathParam("/companies/{companyId}/contracts/{contractId}{description}{role}")
+    public Response updateContract(@PathParam("contractId") String contractId, @PathParam("description") String description, @PathParam("role") String role ) {
+        if (contractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if(description!=null) {
+                contractDAO.updateContractDescription(contractId, description);
+            }
+            if(role!=null) {
+                contractDAO.updateContractRole(contractId, role);
+            }
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @PathParam("/companies/{companyId}/contracts/{contractId}")
+    public Response deleteContract(@PathParam("contractId") String contractId) {
+        if (contractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+            contractDAO.deleteContract(contractId);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("{contractId}/employees")
+    public List<UserContract> getEmployees(@PathParam("contractId") String contractId) {
+        if (contractId == null) {
+            return null;
+        }
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+             return userContractDAO.getUserContractByContractId(contractId);
+
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     @POST
@@ -73,20 +153,60 @@ public class CompanyContractResource {
     }
 
     @GET
-    @Path("/employees/{userContractId}")
-    public Response getEmployee(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Path("/contracts/{userContractId}")
+    public UserContract getUserContract(@PathParam("userContractId") String userContractId) {
+        if (userContractId == null) {
+            return null;
+        }
+
+        UserContract result;
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            result = userContractDAO.getUserContractById(userContractId);
+
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+
     }
 
     @PUT
-    @Path("/employees/{userContractId}")
-    public Response updateEmployee(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Path("/employees/{userContractId}{hourlyWage}")
+    public Response updateUserContract(@PathParam("userContractId") String userContractId, @PathParam("hourlyWage") int hourlyWage) {
+        if (userContractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            userContractDAO.changeHourlyWage(userContractId, hourlyWage);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
     }
 
     @DELETE
     @Path("/employees/{userContractId}")
-    public Response deleteEmployee(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response deleteUserContract(@PathParam("userContractId") String userContractId) {
+        if (userContractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            userContractDAO.disableUserContract(userContractId);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
     }
 }
