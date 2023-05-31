@@ -2,6 +2,7 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import jakarta.xml.bind.JAXBElement;
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
@@ -72,11 +73,15 @@ public class CompanyContractResource {
     }
 
     @PUT
-    @PathParam("/companies/{companyId}/contracts/{contractId}{description}{role}")
-    public Response updateContract(@PathParam("contractId") String contractId, @PathParam("description") String description, @PathParam("role") String role ) {
+    @Path("/companies/{companyId}/contracts/{contractId}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response updateContract(@PathParam("contractId") String contractId, JAXBElement<DescriptionRole> descriptionRole ) {
         if (contractId == null) {
             return Response.status(400).build();
         }
+
+        String description = descriptionRole.getValue().getDescription();
+        String role = descriptionRole.getValue().getRole();
 
         try {
             ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
@@ -173,11 +178,14 @@ public class CompanyContractResource {
     }
 
     @PUT
-    @Path("/employees/{userContractId}{hourlyWage}")
-    public Response updateUserContract(@PathParam("userContractId") String userContractId, @PathParam("hourlyWage") int hourlyWage) {
+    @Path("/employees/{userContractId}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateUserContract(@PathParam("userContractId") String userContractId, JAXBElement<UserContract> userContractJAXBElement) {
         if (userContractId == null) {
             return Response.status(400).build();
         }
+
+        int hourlyWage = userContractJAXBElement.getValue().getHourlyWage();
 
         try {
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
