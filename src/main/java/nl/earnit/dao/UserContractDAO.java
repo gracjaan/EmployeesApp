@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserContractDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user_contract";
@@ -90,6 +92,29 @@ public class UserContractDAO extends GenericDAO<User> {
 
         ResultSet res = statement.executeQuery();
         return new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active") );
+    }
+
+    public List<UserContract> getUserContractByContractId(String contractId) throws SQLException {
+        List<UserContract> result = new ArrayList<>();
+        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, contractId);
+
+        ResultSet res = statement.executeQuery();
+
+
+        while(res.next()) {
+            UserContract userContract = new UserContract();
+            userContract.setContractId(res.getString("contract_id"));
+            userContract.setUserId(res.getString("user_id"));
+            userContract.setId(res.getString("id"));
+            userContract.setActive(res.getBoolean("active"));
+            userContract.setHourlyWage(res.getInt("hourly_wage"));
+            result.add(userContract);
+        }
+
+        return result;
+
     }
 }
 

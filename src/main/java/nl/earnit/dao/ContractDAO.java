@@ -1,6 +1,5 @@
 package nl.earnit.dao;
 
-import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.contracts.Contract;
 
@@ -60,7 +59,48 @@ public class ContractDAO extends GenericDAO<User> {
         }
         return result;
 
+    }
 
+    public void updateContractDescription(String contractId, String description) throws SQLException {
+        String query = "UPDATE" + tableName + "SET description = ? WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, description);
+        statement.setString(2, contractId);
+
+        statement.executeQuery();
+    }
+
+    public void updateContractRole(String contractId, String role) throws SQLException {
+        String query = "UPDATE" + tableName + "SET role = ? WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, role);
+        statement.setString(2, contractId);
+
+        statement.executeQuery();
+    }
+
+    public Contract getContract(String contractId) throws SQLException {
+        String query = "GET description, role FROM" + tableName + " WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, contractId);
+
+        ResultSet res = statement.executeQuery();
+
+        if(!res.next()) return null;
+        return new Contract(contractId, res.getString("description"), res.getString("role") );
 
     }
+
+    public void deleteContract(String contractId) throws SQLException {
+        String query = "DELETE * FROM" + tableName + " WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, contractId);
+
+        statement.executeQuery();
+    }
+
 }
