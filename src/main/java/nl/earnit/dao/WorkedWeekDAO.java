@@ -191,10 +191,12 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         // Create query
         // Checks if user has access to user contract either via company user or directly. Then checks if the worked week belongs to it
         // TODO: Don't immediately add when confirmed wait until x date has passed.
+        // TODO: Add user and contract information
         String query = """
             SELECT DISTINCT ww.* FROM "%s" ww
-                        
+            
                 JOIN user_contract uc ON uc.id = ww.contract_id
+                JOIN user u ON u.id = uc.user_id
                 JOIN contract c ON c.id = uc.contract_id
                 JOIN company cy ON cy.id = c.company_id
                 

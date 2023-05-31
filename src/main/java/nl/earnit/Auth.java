@@ -28,7 +28,7 @@ public class Auth {
         return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
-    public static String createJWT(User user, long expiresAt) {
+    public static String createJWT(User user, String companyId, long expiresAt) {
         Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
         return JWT.create()
             .withIssuer("earnit")
@@ -37,6 +37,7 @@ public class Auth {
             .withExpiresAt(Instant.ofEpochMilli(expiresAt))
             .withClaim("user_id", user.getId())
             .withClaim("user_email", user.getEmail())
+            .withClaim("user_company", companyId)
             .sign(algorithm);
     }
 

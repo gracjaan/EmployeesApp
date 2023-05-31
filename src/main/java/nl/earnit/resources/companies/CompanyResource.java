@@ -1,10 +1,7 @@
 package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
 
@@ -75,6 +72,7 @@ public class CompanyResource {
 
     @GET
     @Path("/approves")
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getToApprove() {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
