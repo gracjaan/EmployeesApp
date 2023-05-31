@@ -43,6 +43,7 @@ public class Auth {
             .withExpiresAt(Instant.ofEpochMilli(expiresAt))
             .withClaim("user_id", user.getId())
             .withClaim("user_email", user.getEmail())
+            .withClaim("user_company", companyId)
             .sign(algorithm);
     }
 

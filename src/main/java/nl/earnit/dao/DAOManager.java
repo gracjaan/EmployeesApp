@@ -46,7 +46,7 @@ public class DAOManager {
     }
 
     public enum DAO {
-        COMPANY, USER_CONTRACT, USER, COMPANY_USER
+        COMPANY, USER_CONTRACT, USER, WORKED_WEEK, COMPANY_USER
     }
 
     public GenericDAO<?> getDAO(DAO dao) throws SQLException {
@@ -60,6 +60,8 @@ public class DAOManager {
             return new UserContractDAO(this.con);
         } else if (dao.equals(DAO.COMPANY_USER)) {
             return new CompanyUserDAO(this.con);
+        } else if (dao.equals(DAO.WORKED_WEEK)) {
+            return new WorkedWeekDAO(this.con);
         }
 
         throw new SQLException("Trying to link to an nonexistent dao.");
