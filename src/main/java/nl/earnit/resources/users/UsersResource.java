@@ -5,7 +5,6 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
-import nl.earnit.exceptions.ForbiddenException;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
@@ -14,6 +13,7 @@ import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
 import java.util.regex.Pattern;
+
 
 @Path("/users")
 public class UsersResource {

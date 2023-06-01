@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Earnit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/earnit/static/js/staff/overview.js" defer></script>
+    <link rel="stylesheet" href="/earnit/static/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+</head>
+<body class="bg-black flex flex-col justify-center overflow-x-hidden font-montserrat h-screen">
+
+<a href="javascript:history.back()" class="flex items-center">
+    <header class="flex bg-primary w-fit p-2 rounded-br-lg">
+        <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
+        <div class="text-text">Back</div>
+    </header>
+</a>
+
+<div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
+    <main class="flex gap-8 mt-8 w-full">
+        <section class="w-full gap-2 flex flex-col">
+<!--            dropdown menu for the name of the student you want to link-->
+            <div class="p-4 bg-text space-y-4">
+                <div class="dropdown relative">
+                    <button class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between">
+                        <div class="text-text font-bold">Gracjan Chmielnicki</div>
+                        <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
+                    </button>
+                    <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+                        <!-- Dropdown options -->
+                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
+                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+                    </div>
+                </div>
+
+                <div class="bg-secondary rounded-xl flex flex-col gap-4 p-4">
+                    <div class="flex items-center">
+                        <img class="h-14 mr-8" src="/earnit/static/icons/kid-picture.svg" alt="company logo">
+                        <p class="text-text font-bold text-2xl">Gracjan Chmielnicki</p>
+                    </div>
+                    <div>
+                        <p class="text-text font-bold text-2xl">Software Engineer II</p>
+                        <p class="text-text"> Part - time</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+<!--        the switch button section-->
+        <section class="flex">
+            <button class="justify-center">
+                <img class="object-scale-down h-24" src="/earnit/static/icons/arrows-both-ways.svg" alt="both way arrow">
+            </button>
+        </section>
+
+        <!--        This is the section for companie overview-->
+        <section class="w-full gap-2 flex flex-col">
+            <!--            dropdown menu for the name of the company you want to link-->
+            <div class="p-4 bg-text space-y-4">
+<!--                company dropdown menu-->
+                <div class="dropdown relative">
+                    <button class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between">
+                        <div class="text-text font-bold">Amazon</div>
+                        <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
+                    </button>
+                    <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+                        <!-- Dropdown options -->
+                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
+                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+                    </div>
+                </div>
+<!--                company diplay-->
+                <div class="bg-secondary rounded-xl p-4 flex flex-col gap-4">
+                    <div class="flex items-center">
+                        <img class="h-14 mr-8" src="/earnit/static/icons/amazon-logo.svg" alt="company logo">
+                        <p class="text-text font-bold text-2xl">Amazon</p>
+                    </div>
+                    <div>
+                        <p class="text-text font-bold text-2xl">Software Engineer II</p>
+                        <p class="text-text"> Part - time</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class Auth {
@@ -34,7 +33,7 @@ public class Auth {
      * @param expiresAt the time that it takes
      * @return
      */
-    public static String createJWT(User user, long expiresAt) {
+    public static String createJWT(User user, String companyId, long expiresAt) {
         Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
         return JWT.create()
             .withIssuer("earnit")
@@ -43,6 +42,7 @@ public class Auth {
             .withExpiresAt(Instant.ofEpochMilli(expiresAt))
             .withClaim("user_id", user.getId())
             .withClaim("user_email", user.getEmail())
+            .withClaim("user_company", companyId)
             .sign(algorithm);
     }
 

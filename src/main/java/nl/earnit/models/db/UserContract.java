@@ -2,20 +2,20 @@ package nl.earnit.models.db;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.math.BigInteger;
-
 @XmlRootElement
 public class UserContract {
     private String id;
     private String contractId;
-    private BigInteger hourlyWage;
+    private String userId;
+    private int hourlyWage;
     private boolean active;
 
     public UserContract() {}
 
-    public UserContract(String id, String contractId, BigInteger hourlyWage, boolean active) {
+    public UserContract(String id, String contractId, String userId, int hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
+        this.userId = userId;
         this.hourlyWage = hourlyWage;
         this.active = active;
     }
@@ -36,11 +36,11 @@ public class UserContract {
         this.contractId = contractId;
     }
 
-    public BigInteger getHourlyWage() {
+    public int getHourlyWage() {
         return hourlyWage;
     }
 
-    public void setHourlyWage(BigInteger hourlyWage) {
+    public void setHourlyWage(int hourlyWage) {
         this.hourlyWage = hourlyWage;
     }
 
@@ -50,5 +50,13 @@ public class UserContract {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

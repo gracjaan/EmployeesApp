@@ -1,10 +1,22 @@
 package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
+import jakarta.xml.bind.JAXBElement;
+import nl.earnit.dao.ContractDAO;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
+import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.companies.AddUserToContract;
+import nl.earnit.models.resource.contracts.Contract;
+import nl.earnit.models.resource.contracts.DescriptionRole;
+
+import java.sql.SQLException;
+import java.util.List;
+
+/* TODO: 5/31/2023 Change delete methods to disable when the database schema is updated
+                   Add @Produces to relevant methods after merge
+ */
 
 public class CompanyContractResource {
     @Context
@@ -22,47 +34,194 @@ public class CompanyContractResource {
     }
 
     @GET
-    public Response getContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
+    @PathParam("/companies/{companyId}/contracts")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Contract> getContracts(@PathParam("companyId") String companyId) {
+        if (companyId == null) {
+            return null;
+        }
 
-    @PUT
-    public Response updateContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
+        List<Contract> result;
 
-    @DELETE
-    public Response deleteContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            ContractDAO ContractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            result = ContractDAO.getAllContractsByCompanyId(companyId);
+
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+
     }
 
     @GET
-    @Path("/employees")
-    public Response getEmployees() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @PathParam("/companies/{companyId}/contracts/{contractId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public DescriptionRole getContract(@PathParam("contractId") String contractId) {
+        DescriptionRole result = new DescriptionRole();
+
+        if (contractId == null) {
+            return null;
+        }
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            result.setDescription(contractDAO.getContract(contractId).getDescription());
+            result.setRole(contractDAO.getContract(contractId).getRole());
+
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+    }
+
+    @PUT
+    @Path("/companies/{companyId}/contracts/{contractId}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response updateContract(@PathParam("contractId") String contractId, JAXBElement<DescriptionRole> descriptionRole ) {
+        if (contractId == null) {
+            return Response.status(400).build();
+        }
+
+        String description = descriptionRole.getValue().getDescription();
+        String role = descriptionRole.getValue().getRole();
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if(description!=null) {
+                contractDAO.updateContractDescription(contractId, description);
+            }
+            if(role!=null) {
+                contractDAO.updateContractRole(contractId, role);
+            }
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @PathParam("/companies/{companyId}/contracts/{contractId}")
+    public Response disableContract(@PathParam("contractId") String contractId) {
+        if (contractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+            contractDAO.disableContract(contractId);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("{contractId}/employees")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<UserContract> getUserContracts(@PathParam("contractId") String contractId) {
+        if (contractId == null) {
+            return null;
+        }
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+             return userContractDAO.getUserContractsByContractId(contractId);
+
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     @POST
     @Path("/employees")
-    public Response addEmployee() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response addEmployee(AddUserToContract addUserToContract) {
+
+        if (addUserToContract == null || addUserToContract.getHourlyWage() <= 0 || addUserToContract.getUserId() == null) {
+            return Response.status(400).build();
+        }
+
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            userContractDAO.addNewUserContract(addUserToContract.getUserId(), companyId, addUserToContract.getHourlyWage());
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+
+        return Response.ok().build();
     }
 
     @GET
-    @Path("/employees/{userContractId}")
-    public Response getEmployee(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Path("/contracts/{userContractId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public UserContract getUserContract(@PathParam("userContractId") String userContractId) {
+        if (userContractId == null) {
+            return null;
+        }
+
+        UserContract result;
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            result = userContractDAO.getUserContractById(userContractId);
+
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+
     }
 
     @PUT
     @Path("/employees/{userContractId}")
-    public Response updateEmployee(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateUserContract(@PathParam("userContractId") String userContractId, JAXBElement<UserContract> userContractJAXBElement) {
+        if (userContractId == null) {
+            return Response.status(400).build();
+        }
+
+        int hourlyWage = userContractJAXBElement.getValue().getHourlyWage();
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            userContractDAO.changeHourlyWage(userContractId, hourlyWage);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
     }
 
     @DELETE
     @Path("/employees/{userContractId}")
-    public Response deleteEmployee(@PathParam("userContractId") String userContractId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response deleteUserContract(@PathParam("userContractId") String userContractId) {
+        if (userContractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            userContractDAO.disableUserContract(userContractId);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
     }
 }

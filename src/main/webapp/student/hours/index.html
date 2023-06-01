@@ -3,110 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <title>Earnit</title>
+  <script src="/earnit/static/js/helpers.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/earnit/static/js/student/hours.js"></script>
   <link rel="stylesheet" href="/earnit/static/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body
-        class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
->
-<header class="flex bg-primary w-fit p-2 rounded-br-lg">
-  <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
-  <div class="text-text">Back</div>
-</header>
-<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
-  <header class="w-full relative">
-    <nav
-            class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
-    >
-      <div
-              class="rounded-2xl bg-secondary p-8 w-full drop-shadow-md"
-      >
-        <h2 class="text-text text-2xl font-regular">27.04.2023 - 31.04.2023</h2>
+<body class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat">
+<a href="javascript:history.back()" class="flex items-center">
+  <header class="flex bg-primary w-fit p-2 rounded-br-lg">
+    <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
+    <div class="text-text">Back</div>
+  </header>
+</a>
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
+  <header class="w-full">
+    <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 px-2 sm:px-0 ">
+      <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md">
+        <h2 class="text-text text-2xl font-regular" id="dropdown-range">Date range</h2>
         <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
         <div class="flex">
-          <div class="rounded-xl bg-primary px-4 py-2 flex mr-5">
-            <button class="text-white text-left mr-5">Week 10</button>
-            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
-          </div>
-          <div class="rounded-xl bg-accent-success p-2">
-            <button class="text-white text-left">
-              <img src="/earnit/static/icons/checkmark.svg"  alt="checkmark"/>
+          <div class="dropdown relative">
+            <button id="dropdown-button" class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center" onclick="toggleDropdown()">
+              <div class="text-white text-left mr-5" id="dropdown-header">Week 10</div>
+              <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
             </button>
+            <div id="dropdown-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
+              <!-- Dropdown options -->
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)" data-week-number="10">Week 10</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectOption(this)" data-week-number="9">Week 9</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)" data-week-number="8">Week 8</div>
+            </div>
           </div>
+          <button class="rounded-xl bg-accent-success p-2 items-center">
+            <div class="text-white text-left">
+              <img src="/earnit/static/icons/checkmark.svg" alt="checkmark"/>
+            </div>
+          </button>
         </div>
       </div>
-      <div class="rounded-2xl min-w-[20rem] sm:min-w-0 w-full drop-shadow-md">
+      <div class="flex-1 rounded-2xl min-w-[20rem] sm:min-w-0 w-full drop-shadow-md">
         <div class="flex flex-col gap-2">
           <div class="flex flex-row gap-2">
             <div class="flex-1">
-              <input type="text" name="student-last-prefix" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full" />
+              <input placeholder="Date" type="text" name="date" id="date" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
             <div class="flex-1">
-              <input type="text" name="student-last-prefix" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full" />
+              <input placeholder="Hours" type="text" name="hours" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
           </div>
-          <input
-                  type="text"
-                  name="student-last-prefix"
-                  id="position"
-                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
-          />
-          <input
-                  type="text"
-                  name="description"
-                  id="student-last-prefix"
-                  class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
-          />
-          <div class="rounded-xl bg-text py-2 px-4 justify-center items-center">
-            <button class="self-center w-full">
-              <div class="text-background text-center font-bold">Submit</div>
-            </button>
-          </div>
+          <input placeholder="Position" type="text" name="position" id="position" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
+          <input placeholder="Description" type="text" name="description" id="description" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
+          <button class="rounded-xl bg-text py-2 px-4 justify-center items-center">
+            <div class="text-background text-center font-bold" id="submit-button" onclick="submitForm()">Submit</div>
+          </button>
         </div>
       </div>
     </nav>
   </header>
-  <main
-          class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0"
-  >
+  <main class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
     <section class="w-full h-full gap-2 flex flex-col">
       <h2 class="text-text text-2xl font-bold">Sheet</h2>
-      <div
-              class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
-      >
-        <div class="flex">
-          <div class="rounded-xl bg-text px-4 py-2 flex mr-5">
-            <button class="text-black text-left mr-5">Date</button>
-            <img src="/earnit/static/icons/arrow-down-black.svg"  alt="right arrow"/>
-          </div>
-          <div class="rounded-xl bg-text px-4 py-2 flex mr-5">
-            <button class="text-black text-left mr-5">Contract</button>
-            <img src="/earnit/static/icons/arrow-down-black.svg"  alt="right arrow"/>
-          </div>
-          <div class="rounded-xl bg-text px-4 py-2 flex mr-5">
-            <button class="text-black text-left mr-5">Hours</button>
-            <img src="/earnit/static/icons/arrow-down-black.svg"  alt="right arrow"/>
-          </div>
+      <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
+        <div class="flex mb-2">
+          <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
+            <div class="text-black text-left mr-5">Date</div>
+            <img src="/earnit/static/icons/arrow-down-black.svg" alt="right arrow"/>
+          </button>
+          <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
+            <div class="text-black text-left mr-5">Contract</div>
+            <img src="/earnit/static/icons/arrow-down-black.svg" alt="right arrow"/>
+          </button>
+          <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
+            <div class="text-black text-left mr-5">Hours</div>
+            <img src="/earnit/static/icons/arrow-down-black.svg" alt="right arrow"/>
+          </button>
         </div>
         <div class="rounded-xl bg-primary p-4 relative flex justify-between">
-          <div class="text-text font-bold uppercase">21.04</div>
-          <div class="text-text">10H</div>
-          <div class="text-text">Janitor-UT</div>
-          <div class="text-text">I cleaned first floor in Carre</div>
+          <div class="w-full grid grid-cols-[1fr_1fr_2fr_5fr]">
+            <div class="text-text font-bold uppercase">21.04</div>
+            <div class="text-text">10H</div>
+            <div class="text-text">Janitor-UT</div>
+            <div class="text-text">I cleaned the first floor in Carre</div>
+          </div>
+          <button class="edit-button" onclick="toggleEdit(this)">
+            <img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />
+          </button>
         </div>
         <div class="rounded-xl bg-primary p-4 relative flex justify-between">
-          <div class="text-text font-bold uppercase">21.04</div>
-          <div class="text-text">8H</div>
-          <div class="text-text">Janitor-Saxion</div>
-          <div class="text-text">I cleaned first floor in main building</div>
+          <div class="w-full grid grid-cols-[1fr_1fr_2fr_5fr]">
+            <div class="text-text font-bold uppercase">21.04</div>
+            <div class="text-text">8H</div>
+            <div class="text-text">Janitor-Saxion</div>
+            <div class="text-text">I cleaned the first floor in the main building</div>
+          </div>
+          <button class="edit-button" onclick="toggleEdit(this)">
+            <img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />
+          </button>
         </div>
       </div>
     </section>
   </main>
 </div>
+<script>
+  function toggleDropdown() {
+    const dropdown = document.getElementById("dropdown-content");
+    dropdown.classList.toggle("hidden");
+  }
+
+  function selectOption(option) {
+    const header = document.getElementById("dropdown-header");
+    const range = document.getElementById("dropdown-range")
+    const weekNumber = parseInt(option.dataset.weekNumber);
+    const dateRange = getWeekDateRange(weekNumber);
+    header.textContent = option.textContent;
+    range.textContent = dateRange;
+    toggleDropdown();
+  }
+
+  function getWeekDateRange(weekNumber) {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+
+    // Find the first day of the year
+    const firstDayOfYear = new Date(year, 0, 1);
+    const dayOfWeek = firstDayOfYear.getDay();
+    const startDate = new Date(firstDayOfYear.getTime() - dayOfWeek * 24 * 60 * 60 * 1000);
+
+    // Calculate the start and end dates of the selected week
+    const startOfWeek = new Date(startDate.getTime() + (weekNumber - 1) * 7 * 24 * 60 * 60 * 1000);
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+    // Format the date range
+    const startDateFormatted = formatDate(startOfWeek);
+    const endDateFormatted = formatDate(endOfWeek);
+    return startDateFormatted + " - " + endDateFormatted;
+  }
+
+  function formatDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return day + "." + month + "." + year;
+  }
+
+  document.addEventListener("click", function(event) {
+    const dropdown = document.getElementById("dropdown-content");
+    const button = document.getElementById("dropdown-button");
+    const targetElement = event.target;
+
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+      dropdown.classList.add("hidden");
+    }
+  });
+
+</script>
 </body>
 </html>
-
-

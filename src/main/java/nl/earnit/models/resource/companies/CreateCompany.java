@@ -7,7 +7,9 @@ public class CreateCompany {
     private String name;
     private String userId;
 
-    public CreateCompany() {}
+    public CreateCompany() {
+
+    }
 
     public CreateCompany(String name, String userId) {
         this.name = name;

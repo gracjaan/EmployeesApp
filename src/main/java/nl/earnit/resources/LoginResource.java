@@ -8,13 +8,16 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import nl.earnit.Auth;
 import nl.earnit.Constants;
+import nl.earnit.dao.CompanyUserDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
-import nl.earnit.models.resource.login.Login;
+import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.login.Login;
 import nl.earnit.models.resource.login.Token;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Path("/login")
 public class LoginResource {
@@ -44,6 +47,23 @@ public class LoginResource {
         }
 
         long expiresAt = System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME;
-        return Response.ok(new Token(Auth.createJWT(user, expiresAt), expiresAt)).build();
+
+        // TODO: Make user choose what company to use
+        String companyId = null;
+
+        if (user.getType().equals("COMPANY")) {
+            try {
+                CompanyUserDAO companyUserDAO = (CompanyUserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY_USER);
+                List<Company> companies = companyUserDAO.getCompaniesUserIsWorkingFor(user.getId());
+
+                if (!companies.isEmpty()) {
+                    companyId = companies.get(0).getId();
+                }
+            } catch (SQLException e) {
+                return Response.serverError().build();
+            }
+        }
+
+        return Response.ok(new Token(Auth.createJWT(user, companyId, expiresAt), expiresAt)).build();
     }
 }

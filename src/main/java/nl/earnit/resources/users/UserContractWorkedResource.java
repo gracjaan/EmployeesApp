@@ -1,10 +1,15 @@
 package nl.earnit.resources.users;
 
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.WorkedDAO;
+import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.models.db.Worked;
+import nl.earnit.models.db.WorkedWeek;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class UserContractWorkedResource {
     @Context
@@ -40,41 +45,107 @@ public class UserContractWorkedResource {
     }
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getWorkedWeek() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        WorkedDAO workedDAO;
+        List<Worked> workedList;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            if (this.weekId!=null) {
+                workedList = workedDAO.getWorkedWeekById(userContractId, weekId);
+            } else if (this.year!=null&&this.week!=null) {
+                workedList = workedDAO.getWorkedWeek(userContractId, year, week);
+            }
+            else {
+                return Response.serverError().build();
+            }
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(workedList).build();
     }
 
     @PUT
-    public Response updateWorkedWeekTask() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateWorkedWeekTask(Worked entry) {
+        WorkedDAO workedDAO;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            workedDAO.updateWorkedWeekTask(entry);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @POST
-    public Response addWorkedWeekTask() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response addWorkedWeekTask(Worked entry) {
+        WorkedDAO workedDAO;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            workedDAO.addWorkedWeekTask(entry);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @DELETE
-    public Response deleteWorkedWeekTask() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response deleteWorkedWeekTask(String workedId) {
+        WorkedDAO workedDAO;
+        try {
+            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
+            workedDAO.deleteWorkedWeekTask(workedId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
 
     @POST
     @Path("/confirm")
-    public Response confirmWorkedWeek() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response confirmWorkedWeek(String workedWeekId) {
+        WorkedWeekDAO workedWeekDAO;
+        try {
+            workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.confirmWorkedWeekById(workedWeekId);
+        }catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
+
+
 
     @DELETE
     @Path("/confirm")
-    public Response removeConfirmWorkedWeek() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response removeConfirmWorkedWeek(String workedWeekId) {
+        WorkedWeekDAO workedWeekDAO;
+        try {
+            workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.removeConfirmWorkedWeekById(workedWeekId);
+        }catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @PUT
     @Path("/note")
-    public Response updateWorkedWeekNote() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateWorkedWeekNote(WorkedWeek workedWeek) {
+        WorkedWeekDAO workedWeekDAO;
+        try {
+            workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.updateWorkedWeekNote(workedWeek);
+        }catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 }
