@@ -70,23 +70,6 @@ public class WorkedDAO extends GenericDAO<User> {
         return list;
     }
 
-    public List<Worked> getWorkedWeekById(String userContractId, String weekId) throws SQLException {
-        String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.id=?";
-        PreparedStatement counter = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(counter, 1, userContractId);
-        PostgresJDBCHelper.setUuid(counter, 2, weekId);
-        // Execute query
-        ResultSet res = counter.executeQuery();
-        // Return count
-        res.next();
-        List<Worked> list = new ArrayList<>();
-        while (res.next()) {
-            Worked w = new Worked(res.getString("id"), res.getString("worked_week_id"), res.getInt("day"), res.getInt("minutes"), res.getString("work"));
-            list.add(w);
-        }
-        return list;
-    }
-
     public List<UserContract> getUserContracts(String userId) throws SQLException {
         String query = "SELECT * AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ?";
         PreparedStatement counter = this.con.prepareStatement(query);
