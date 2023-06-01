@@ -2,18 +2,16 @@ package nl.earnit.models.db;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.math.BigInteger;
-
 @XmlRootElement
 public class UserContract {
     private String id;
     private String contractId;
-    private Float hourlyWage;
+    private Integer hourlyWage;
     private boolean active;
 
     public UserContract() {}
 
-    public UserContract(String id, String contractId, Float hourlyWage, boolean active) {
+    public UserContract(String id, String contractId, Integer hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
         this.hourlyWage = hourlyWage;
@@ -36,11 +34,11 @@ public class UserContract {
         this.contractId = contractId;
     }
 
-    public Float getHourlyWage() {
+    public Integer getHourlyWage() {
         return hourlyWage;
     }
 
-    public void setHourlyWage(Float hourlyWage) {
+    public void setHourlyWage(Integer hourlyWage) {
         this.hourlyWage = hourlyWage;
     }
 
