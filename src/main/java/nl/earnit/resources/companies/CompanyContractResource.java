@@ -35,6 +35,7 @@ public class CompanyContractResource {
 
     @GET
     @PathParam("/companies/{companyId}/contracts")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Contract> getContracts(@PathParam("companyId") String companyId) {
         if (companyId == null) {
             return null;
@@ -56,6 +57,7 @@ public class CompanyContractResource {
 
     @GET
     @PathParam("/companies/{companyId}/contracts/{contractId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public DescriptionRole getContract(@PathParam("contractId") String contractId) {
         DescriptionRole result = new DescriptionRole();
 
@@ -105,14 +107,14 @@ public class CompanyContractResource {
 
     @DELETE
     @PathParam("/companies/{companyId}/contracts/{contractId}")
-    public Response deleteContract(@PathParam("contractId") String contractId) {
+    public Response disableContract(@PathParam("contractId") String contractId) {
         if (contractId == null) {
             return Response.status(400).build();
         }
 
         try {
             ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
-            contractDAO.deleteContract(contractId);
+            contractDAO.disableContract(contractId);
 
         } catch (SQLException e) {
             return Response.serverError().build();
@@ -123,6 +125,7 @@ public class CompanyContractResource {
 
     @GET
     @Path("{contractId}/employees")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<UserContract> getUserContracts(@PathParam("contractId") String contractId) {
         if (contractId == null) {
             return null;
@@ -130,7 +133,7 @@ public class CompanyContractResource {
 
         try {
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
-             return userContractDAO.getUserContractByContractId(contractId);
+             return userContractDAO.getUserContractsByContractId(contractId);
 
         } catch (SQLException e) {
             return null;
@@ -162,6 +165,7 @@ public class CompanyContractResource {
 
     @GET
     @Path("/contracts/{userContractId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public UserContract getUserContract(@PathParam("userContractId") String userContractId) {
         if (userContractId == null) {
             return null;

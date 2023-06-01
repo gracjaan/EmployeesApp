@@ -21,7 +21,7 @@ public class UserDAO extends GenericDAO<User> {
     @Override
     public int count() throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\"";
+        String query = "SELECT COUNT(*) AS count FROM  " + tableName + "WHERE active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
 
         // Execute query
@@ -77,7 +77,7 @@ public class UserDAO extends GenericDAO<User> {
         ArrayList<User> userList = new ArrayList<>();
 
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\" ORDER BY ? " ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\" WHERE active = true ORDER BY ? " ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
@@ -152,8 +152,17 @@ public class UserDAO extends GenericDAO<User> {
         return getUserById(res.getString("id"));
     }
 
-    public void deleteUserById(String id) throws SQLException {
-        String query = "DELETE FROM" + tableName + "WHERE id = ?";
+    public void disableUserById(String id) throws SQLException {
+        String query = "UPDATE" + tableName + "SET active = false WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, id);
+
+        statement.executeQuery();
+
+    }
+
+    public void renableUserById(String id) throws SQLException {
+        String query = "UPDATE" + tableName + "SET active = true WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, id);
 
