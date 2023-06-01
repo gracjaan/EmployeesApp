@@ -97,7 +97,7 @@ public class WorkedDAO extends GenericDAO<User> {
         res.next();
         List<UserContract> contractList = new ArrayList<>();
         while (res.next()) {
-            UserContract userContract = new UserContract(res.getString("id"), res.getString("contract_id"), res.getFloat("hourly_wage"), res.getBoolean("active"));
+            UserContract userContract = new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
             contractList.add(userContract);
         }
         return contractList;
