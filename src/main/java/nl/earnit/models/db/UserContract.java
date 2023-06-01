@@ -6,14 +6,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class UserContract {
     private String id;
     private String contractId;
+    private String userId;
     private Integer hourlyWage;
     private boolean active;
 
     public UserContract() {}
 
-    public UserContract(String id, String contractId, Integer hourlyWage, boolean active) {
+    public UserContract(String id, String contractId, String userId, Integer hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
+        this.userId = userId;
         this.hourlyWage = hourlyWage;
         this.active = active;
     }
@@ -48,5 +50,13 @@ public class UserContract {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -46,7 +46,7 @@ public class DAOManager {
     }
 
     public enum DAO {
-        COMPANY, USER_CONTRACT, USER, COMPANY_USER, WORKED, WORKED_WEEK
+        COMPANY, USER_CONTRACT, USER, COMPANY_USER, WORKED, WORKED_WEEK, CONTRACT
     }
 
     public GenericDAO<?> getDAO(DAO dao) throws SQLException {
@@ -64,6 +64,8 @@ public class DAOManager {
             return new WorkedWeekDAO(this.con);
         } else if (dao.equals(DAO.WORKED)) {
             return new WorkedDAO(this.con);
+        } else if (dao.equals(DAO.CONTRACT)) {
+            return new ContractDAO(this.con);
         }
 
         throw new SQLException("Trying to link to an nonexistent dao.");
@@ -97,7 +99,6 @@ public class DAOManager {
 
         static {
             // Create thread instance
-            // This makes sure that only one DAOManager can exist per thread
 
             ThreadLocal<DAOManager> dm;
 

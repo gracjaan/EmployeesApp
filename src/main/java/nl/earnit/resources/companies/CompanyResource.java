@@ -6,6 +6,12 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
 
 import java.sql.SQLException;
+import jakarta.ws.rs.core.*;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
+import nl.earnit.resources.users.UserCompanyResource;
+
+import java.sql.SQLException;
 
 public class CompanyResource {
     @Context
@@ -55,8 +61,23 @@ public class CompanyResource {
 
     @GET
     @Path("/contracts")
-    public Response getContracts() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getContracts(@Context HttpHeaders httpHeaders) {
+
+        try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            contractDAO.getAllContractsByCompanyId(companyId);
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+
+
+        return Response.ok().build();
+
+
+
     }
 
     @POST
@@ -66,6 +87,7 @@ public class CompanyResource {
     }
 
     @Path("/contracts/{contractId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public CompanyContractResource getCompany(@PathParam("contractId") String contractId) {
         return new CompanyContractResource(uriInfo, request, companyId, contractId);
     }
