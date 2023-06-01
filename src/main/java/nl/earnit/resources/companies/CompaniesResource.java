@@ -93,6 +93,7 @@ public class CompaniesResource {
     }
 
     @Path("/{companyId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public CompanyResource getCompany(@Context HttpHeaders httpHeaders, @PathParam("companyId") String companyId) {
         RequestHelper.validateUUID(companyId);
         User user = RequestHelper.validateUser(httpHeaders);

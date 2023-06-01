@@ -83,6 +83,7 @@ public class CompanyResource {
     }
 
     @Path("/contracts/{contractId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public CompanyContractResource getCompany(@PathParam("contractId") String contractId) {
         return new CompanyContractResource(uriInfo, request, companyId, contractId);
     }

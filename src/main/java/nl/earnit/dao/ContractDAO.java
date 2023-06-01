@@ -41,7 +41,7 @@ public class ContractDAO extends GenericDAO<User> {
 
         List<Contract> result = new ArrayList<>();
 
-        String query = "SELECT role, description  FROM  " + tableName + "WHERE id = ?";
+        String query = "SELECT role, description  FROM  " + tableName + "WHERE id = ? and active = true";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, companyId);
@@ -94,8 +94,17 @@ public class ContractDAO extends GenericDAO<User> {
 
     }
 
-    public void deleteContract(String contractId) throws SQLException {
-        String query = "DELETE * FROM" + tableName + " WHERE id = ?";
+    public void disableContract(String contractId) throws SQLException {
+        String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, contractId);
+
+        statement.executeQuery();
+    }
+
+    public void renableContract(String contractId) throws SQLException {
+        String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, contractId);

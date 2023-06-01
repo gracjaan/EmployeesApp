@@ -39,7 +39,7 @@ public class UserContractDAO extends GenericDAO<User> {
      */
     public int countContractsForUser(String userId) throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ?";
+        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ? and active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -94,9 +94,9 @@ public class UserContractDAO extends GenericDAO<User> {
         return new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active") );
     }
 
-    public List<UserContract> getUserContractByContractId(String contractId) throws SQLException {
+    public List<UserContract> getUserContractsByContractId(String contractId) throws SQLException {
         List<UserContract> result = new ArrayList<>();
-        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE id = ?";
+        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE contract_id = ? and active = true ";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, contractId);
 

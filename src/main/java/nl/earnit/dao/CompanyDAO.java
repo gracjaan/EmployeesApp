@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: change database so it makes the active attribute true by default
+
 public class CompanyDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company";
 
@@ -21,7 +23,7 @@ public class CompanyDAO extends GenericDAO<User> {
     @Override
     public int count() throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\"";
+        String query = "SELECT COUNT(*) AS count FROM  " + tableName + "WHERE active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
 
         // Execute query
@@ -75,7 +77,7 @@ public class CompanyDAO extends GenericDAO<User> {
     public Company createCompany(String name)
         throws SQLException {
         // Create query
-        String query = "INSERT INTO \"" + tableName + "\" (name) VALUES (?) RETURNING id";
+        String query = "INSERT INTO " + tableName + " (name) VALUES (?) RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, name);
@@ -92,7 +94,7 @@ public class CompanyDAO extends GenericDAO<User> {
 
     public List<Company> getAllCompaniesUsers(String order) throws SQLException {
         ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name FROM \"" + tableName + "\" ORDER BY ? " ;
+        String query = "SELECT id, name FROM " + tableName + "WHERE active = true ORDER BY ? " ;
         PreparedStatement statement = this.con.prepareStatement(query);
 
 
