@@ -4,7 +4,6 @@ import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
-import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

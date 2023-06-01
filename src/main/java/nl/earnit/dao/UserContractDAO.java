@@ -56,9 +56,10 @@ public class UserContractDAO extends GenericDAO<User> {
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
         ResultSet res = counter.executeQuery();
-        res.next();
-        UserContract uc = new UserContract(userContractId, res.getString("contract_id"),res.getFloat("hourly_wage"), res.getBoolean("active"));
-        return uc;
+
+        if (res.next()) return null;
+
+        return new UserContract(userContractId, res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
     }
 
     public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {

@@ -2,19 +2,8 @@ package nl.earnit.resources.staff;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.Auth;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.UserDAO;
-import nl.earnit.exceptions.ForbiddenException;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
-import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.users.CreateUser;
-import nl.earnit.models.resource.users.UserResponse;
-import nl.earnit.resources.users.UserResource;
-
-import java.sql.SQLException;
-import java.util.regex.Pattern;
 
 @Path("/staff")
 public class StaffResource {

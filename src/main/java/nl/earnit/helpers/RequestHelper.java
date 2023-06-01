@@ -8,9 +8,7 @@ import nl.earnit.exceptions.ForbiddenException;
 import nl.earnit.exceptions.UnauthorizedException;
 import nl.earnit.models.db.User;
 
-import java.sql.SQLException;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class RequestHelper {

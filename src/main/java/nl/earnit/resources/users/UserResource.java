@@ -9,11 +9,6 @@ import nl.earnit.models.db.User;
 
 import java.sql.SQLException;
 import java.util.List;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Request;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
-import nl.earnit.dao.UserDAO;
 
 public class UserResource {
     @Context

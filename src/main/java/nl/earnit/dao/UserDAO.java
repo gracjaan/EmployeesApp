@@ -3,13 +3,13 @@ package nl.earnit.dao;
 import jakarta.annotation.Nullable;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import org.postgresql.util.PGobject;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

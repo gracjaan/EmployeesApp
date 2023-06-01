@@ -7,12 +7,12 @@ public class UserContract {
     private String id;
     private String contractId;
     private String userId;
-    private Integer hourlyWage;
+    private int hourlyWage;
     private boolean active;
 
     public UserContract() {}
 
-    public UserContract(String id, String contractId, String userId, Integer hourlyWage, boolean active) {
+    public UserContract(String id, String contractId, String userId, int hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
         this.userId = userId;
@@ -36,11 +36,11 @@ public class UserContract {
         this.contractId = contractId;
     }
 
-    public Integer getHourlyWage() {
+    public int getHourlyWage() {
         return hourlyWage;
     }
 
-    public void setHourlyWage(Integer hourlyWage) {
+    public void setHourlyWage(int hourlyWage) {
         this.hourlyWage = hourlyWage;
     }
 

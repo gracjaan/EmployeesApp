@@ -12,8 +12,8 @@ import nl.earnit.dao.CompanyUserDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.resource.login.Login;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.login.Login;
 import nl.earnit.models.resource.login.Token;
 
 import java.sql.SQLException;

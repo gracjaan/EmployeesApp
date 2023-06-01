@@ -7,16 +7,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
-import nl.earnit.dao.UserDAO;
 import nl.earnit.dao.WorkedDAO;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
 
-import javax.print.attribute.standard.Media;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserContractResource {

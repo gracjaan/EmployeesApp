@@ -4,13 +4,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.*;
-
 import nl.earnit.Auth;
 import nl.earnit.Constants;
 import nl.earnit.models.db.User;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class RedirectFilter implements Filter {
     @Override
