@@ -30,9 +30,12 @@ public class WorkedWeekDAO extends GenericDAO<User>{
         return res.getInt("count");
     }
 
-    public void confirmWorkedWeek(String year, String week) {
-
-
+    public void confirmWorkedWeek(String year, String week) throws SQLException {
+        String query = "UPDATE worked_week SET confirmed = true WHERE year=? AND week=?";
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setString(1, year);
+        statement.setString(2, week);
+        statement.executeUpdate();
     }
 
     public void confirmWorkedWeekById(String workedWeekId) throws SQLException {
@@ -52,7 +55,7 @@ public class WorkedWeekDAO extends GenericDAO<User>{
     public void updateWorkedWeekNote(WorkedWeek workedWeek) throws SQLException {
         String query = "UPDATE worked_week SET note = ? WHERE id = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeek.getNote());
+        statement.setString(1, workedWeek.getNote());
         PostgresJDBCHelper.setUuid(statement, 2, workedWeek.getId());
     }
 

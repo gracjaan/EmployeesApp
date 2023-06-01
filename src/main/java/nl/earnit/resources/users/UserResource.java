@@ -4,9 +4,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserResource {
     @Context
@@ -58,8 +60,15 @@ public class UserResource {
     @GET
     @Path("/companies")
     public Response getCompanies() {
-
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        UserDAO userDAO;
+        List<Company> companies;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            companies = userDAO.getCompanies(this.userId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(companies).build();
     }
 
     @Path("/companies/{companyId}")

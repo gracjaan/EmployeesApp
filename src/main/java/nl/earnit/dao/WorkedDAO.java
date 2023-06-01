@@ -57,8 +57,8 @@ public class WorkedDAO extends GenericDAO<User> {
         String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.year=? AND ww.week=?";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
-        PostgresJDBCHelper.setUuid(counter, 2, year);
-        PostgresJDBCHelper.setUuid(counter, 3, week);
+        counter.setString(2, year);
+        counter.setString(3, week);
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
