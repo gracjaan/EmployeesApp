@@ -119,6 +119,8 @@ public class UserContractWorkedResource {
         return Response.ok().build();
     }
 
+
+
     @DELETE
     @Path("/confirm")
     @Consumes({MediaType.TEXT_PLAIN})

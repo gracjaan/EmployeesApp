@@ -122,6 +122,12 @@ public class UserDAO extends GenericDAO<User> {
         String query = "SELECT c.* FROM company c, company_user u WHERE c.id=u.company_id AND u.user_id=?;";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, userId);
+        ResultSet res = statement.executeQuery();
+        res.next();
+        while (res.next()) {
+            Company c = new Company(res.getString("id"), res.getString("name"));
+            companies.add(c);
+        }
         return companies;
     }
 }

@@ -1,24 +1,32 @@
 window.addEventListener("helpersLoaded", async () => {
     const contracts = await obtainContractsForUser(getUserId())
-    fetchSheet(getUserId(), contracts)
+
+    if (contracts === null){
+      return;
+    }
+
+    for (const contract of contracts) {
+        fetchSheet(getUserId(), contract)
+
+    }
+
 })
 
 function obtainContractsForUser(uid) {
     return fetch("/users/" + uid + "/contracts")
         .then(response => response.json())
-        .then(data => {
-            return data;
-        })
-        .catch(e => console.error(e));
+        .catch(e => null);
 }
 
 function getSelectedWeek () {
-
+    const header = document.getElementById("dropdown-header");
+    const weekNumber = parseInt(header.dataset.weekNumber);
+    return weekNumber;
 }
 
-function fetchSheet(userid, contracts) {
+function fetchSheet(userid, contract, week, ) {
     const promises = contracts.map((contract) => {
-    return fetch("/users/"+ userid + "/contracts/" + contract.id + "/worked/" + contract.year + "/" + contract.week)
+    return fetch("/users/"+ userid + "/contracts/" + contract.id + "/worked/" + getCurrentYear() + "/" + getSelectedWeek())
         .then (response => response.json())
         .then (data => {
             html = "<div className=\"rounded-xl bg-primary p-4 relative flex justify-between\">";
