@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
 import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.models.db.Worked;
 import nl.earnit.models.db.WorkedWeek;
 
@@ -46,23 +47,29 @@ public class UserContractWorkedResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getWorkedWeek() {
-        WorkedDAO workedDAO;
-        List<Worked> workedList;
+    public Response getWorkedWeek(@QueryParam("company") @DefaultValue("false") boolean company,
+                                  @QueryParam("contract") @DefaultValue("false") boolean contract,
+                                  @QueryParam("user_contract") @DefaultValue("false")
+                                      boolean userContract,
+                                  @QueryParam("user") @DefaultValue("false") boolean user,
+                                  @QueryParam("hours") @DefaultValue("false") boolean hours) {
+        WorkedWeekDTO workedWeek = null;
         try {
-            workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            if (this.weekId!=null) {
-                workedList = workedDAO.getWorkedWeekById(userContractId, weekId);
-            } else if (this.year!=null&&this.week!=null) {
-                workedList = workedDAO.getWorkedWeek(userContractId, year, week);
-            }
-            else {
-                return Response.serverError().build();
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            if (this.weekId != null) {
+                workedWeek = workedWeekDAO.getWorkedWeekById(weekId);
+            } else if (this.year != null && this.week != null) {
+                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(year), company, contract, userContract, user, hours);
             }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
-        return Response.ok(workedList).build();
+
+        if (workedWeek == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        return Response.ok(workedWeek).build();
     }
 
     @PUT
