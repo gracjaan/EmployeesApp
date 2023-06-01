@@ -88,14 +88,18 @@ public class CompanyResource {
 
             return Response.ok(workedWeekDAO.getWorkedWeeksToApproveForCompany(companyId, company, contract, userContract, user, order.equalsIgnoreCase("asc"))).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GET
     @Path("/approves/{workedWeekId}")
-    public Response getApproveDetails(@PathParam("workedWeekId") String workedWeekId) {
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    public Response getApproveDetails(@PathParam("workedWeekId") String workedWeekId, @QueryParam("company") @DefaultValue("false") boolean company,
+                                      @QueryParam("contract") @DefaultValue("false") boolean contract,
+                                      @QueryParam("user_contract") @DefaultValue("false") boolean userContract,
+                                      @QueryParam("user") @DefaultValue("false") boolean user,
+                                      @QueryParam("hours") @DefaultValue("false") boolean hours) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
@@ -104,8 +108,9 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.getWorkedWeekById(workedWeekId)).build();
+            return Response.ok(workedWeekDAO.getWorkedWeekById(workedWeekId, company, contract, userContract, user, hours)).build();
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

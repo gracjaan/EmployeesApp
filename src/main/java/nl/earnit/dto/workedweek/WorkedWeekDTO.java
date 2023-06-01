@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.UserContract;
+import nl.earnit.models.db.Worked;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 
+import java.util.List;
+
 @XmlRootElement
-public class WorkedWeekToApproveDTO {
+public class WorkedWeekDTO {
     private String id;
     private String contractId;
     private Integer year;
@@ -26,12 +29,14 @@ public class WorkedWeekToApproveDTO {
     private UserContract userContract;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Contract contract;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<Worked> hours;
 
-    public WorkedWeekToApproveDTO(String id, String contractId, Integer year, Integer week,
-                                  String note,
-                                  Boolean confirmed, Boolean approved, Boolean solved,
-                                  UserResponse user, Company company, UserContract userContract,
-                                  Contract contract) {
+    public WorkedWeekDTO(String id, String contractId, Integer year, Integer week,
+                         String note,
+                         Boolean confirmed, Boolean approved, Boolean solved,
+                         UserResponse user, Company company, UserContract userContract,
+                         Contract contract, List<Worked> hours) {
         this.id = id;
         this.contractId = contractId;
         this.year = year;
@@ -44,9 +49,10 @@ public class WorkedWeekToApproveDTO {
         this.company = company;
         this.userContract = userContract;
         this.contract = contract;
+        this.hours = hours;
     }
 
-    public WorkedWeekToApproveDTO() {}
+    public WorkedWeekDTO() {}
 
     public String getId() {
         return id;
@@ -142,5 +148,13 @@ public class WorkedWeekToApproveDTO {
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public List<Worked> getHours() {
+        return hours;
+    }
+
+    public void setHours(List<Worked> hours) {
+        this.hours = hours;
     }
 }
