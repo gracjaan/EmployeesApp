@@ -4,18 +4,21 @@ date.addEventListener("click", () => select("date"));
 const hours = document.getElementById("hours");
 hours.addEventListener("click", () => select("hours"));
 
+const acceptButton = document.getElementById("accept");
+acceptButton.addEventListener("click", () => approve(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
+
+const rejectButton = document.getElementById("reject");
+rejectButton.addEventListener("click", () => reject(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
+
+const undoButton = document.getElementById("undo");
+undoButton.addEventListener("click", () => undo(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
+
 window.addEventListener("helpersLoaded", async () => {
     await updateHours();
 });
 
 async function updateHours() {
-    const search = new URLSearchParams(location.search);
-    if (!search.has("worked_week")) {
-        location.replace("/earnit/requests");
-        return;
-    }
-
-    const request = await getRequestForCompany(getUserCompany(), search.get("worked_week"), getJWTCookie());
+    const request = await getRequestForCompany(getUserCompany(), getWorkedWeekId(), getJWTCookie());
     if (request === null) {
         location.replace("/earnit/requests");
         return;
@@ -42,7 +45,57 @@ function getOrder() {
     return order;
 }
 
-// @TODO approve and reject click
+function approve(companyId, workedWeekId, token) {
+    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+        method: 'POST',
+        headers: {
+            'authorization': `token ${token}`,
+            'accept-type': 'application/json'
+        }
+    })
+        .then(async (res) => await res.json())
+        .then((request) => {
+            // @TODO check if updated
+            updatePage(request);
+        })
+        .catch(() => null);
+}
+
+function reject(companyId, workedWeekId, token) {
+    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+        method: 'DELETE',
+        headers: {
+            'authorization': `token ${token}`,
+            'accept-type': 'application/json'
+        }
+    })
+        .then(async (res) => await res.json())
+        .then((request) => {
+            // @TODO check if updated
+            updatePage(request);
+        })
+        .catch(() => null);
+}
+
+function undo(companyId, workedWeekId, token) {
+    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+        method: 'PUT',
+        headers: {
+            'authorization': `token ${token}`,
+            'accept-type': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            approve: null
+        })
+    })
+        .then(async (res) => await res.json())
+        .then((request) => {
+            // @TODO check if updated
+            updatePage(request);
+        })
+        .catch(() => null);
+}
 
 function updatePage(request) {
     document.getElementById("name").innerHTML = getName(request.user.firstName, request.user.lastName, request.user.lastNamePrefix, "<br />");
@@ -51,6 +104,28 @@ function updatePage(request) {
     entries.innerHTML = "";
     for (const hour of request.hours) {
         entries.appendChild(createEntry(request.year, request.week, request.contract, hour));
+    }
+
+    if (request.approved !== null) {
+        document.getElementById("accept").classList.add("hidden");
+        document.getElementById("reject").classList.add("hidden");
+        document.getElementById("undo").classList.remove("hidden");
+
+        if (request.approved) {
+            document.getElementById("rejected").classList.add("hidden");
+            document.getElementById("accepted").classList.remove("hidden");
+        } else {
+            document.getElementById("rejected").classList.remove("hidden");
+            document.getElementById("accepted").classList.add("hidden");
+        }
+    } else {
+        document.getElementById("accept").classList.remove("hidden");
+        document.getElementById("reject").classList.remove("hidden");
+
+        document.getElementById("rejected").classList.add("hidden");
+        document.getElementById("accepted").classList.add("hidden");
+
+        document.getElementById("undo").classList.add("hidden");
     }
 }
 
@@ -87,9 +162,13 @@ function createEntry(year, week, contract, entry) {
     return entryContainer;
 }
 
-function getRequestForCompany(companyId, workedWeekId, token) {
+function getQueryParams() {
     const order = getOrder();
-    return fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}`: ""}`, {
+    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}`: ""}`
+}
+
+function getRequestForCompany(companyId, workedWeekId, token) {
+    return fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'
@@ -150,4 +229,14 @@ function formatNumber(number) {
         minimumIntegerDigits: 2,
         useGrouping: false
     });
+}
+
+function getWorkedWeekId() {
+    const search = new URLSearchParams(location.search);
+    if (!search.has("worked_week")) {
+        location.replace("/earnit/requests");
+        return;
+    }
+
+    return search.get("worked_week");
 }

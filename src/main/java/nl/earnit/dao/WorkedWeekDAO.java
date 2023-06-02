@@ -417,14 +417,16 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(res.getString("id"));
     }
 
-    public WorkedWeekDTO approveWorkedWeek(String workedWeekId) throws SQLException {
+    public WorkedWeekDTO setApproveWorkedWeek(String workedWeekId, Boolean status, boolean withCompany,
+                                              boolean withContract, boolean withUserContract,
+                                              boolean withUser, boolean withHours, String order) throws SQLException {
         // Create query
         String query = """
             UPDATE "%s" ww SET approved = ?
                 WHERE "id" = ? RETURNING id""".formatted(tableName);
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setBoolean(statement, 1, true);
+        PostgresJDBCHelper.setBoolean(statement, 1, status);
         PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
 
         // Execute query
@@ -436,29 +438,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         }
 
         // Return worked week
-        return getWorkedWeekById(res.getString("id"));
-    }
-
-    public WorkedWeekDTO rejectWorkedWeek(String workedWeekId) throws SQLException {
-        // Create query
-        String query = """
-            UPDATE "%s" ww SET approved = ?
-                WHERE "id" = ? RETURNING id""".formatted(tableName);
-
-        PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setBoolean(statement, 1, false);
-        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
-
-        // Execute query
-        ResultSet res = statement.executeQuery();
-
-        // None found
-        if (!res.next()) {
-            return null;
-        }
-
-        // Return worked week
-        return getWorkedWeekById(res.getString("id"));
+        return getWorkedWeekById(res.getString("id"), withCompany, withContract, withUserContract, withUser, withHours, order);
     }
 
     private WorkedWeekDTO getWorkedWeekFromRow(ResultSet res) throws SQLException {
