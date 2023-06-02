@@ -10,7 +10,6 @@ import nl.earnit.models.db.Worked;
 import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class UserContractWorkedResource {
     @Context
@@ -52,14 +51,15 @@ public class UserContractWorkedResource {
                                   @QueryParam("user_contract") @DefaultValue("false")
                                       boolean userContract,
                                   @QueryParam("user") @DefaultValue("false") boolean user,
-                                  @QueryParam("hours") @DefaultValue("false") boolean hours) {
+                                  @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                  @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
         WorkedWeekDTO workedWeek = null;
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             if (this.weekId != null) {
                 workedWeek = workedWeekDAO.getWorkedWeekById(weekId);
             } else if (this.year != null && this.week != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(year), company, contract, userContract, user, hours);
+                workedWeek = workedWeekDAO.getWorkedWeekByDate(Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, order);
             }
         } catch (SQLException e) {
             return Response.serverError().build();

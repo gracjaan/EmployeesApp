@@ -1,6 +1,7 @@
 package nl.earnit.dao;
 
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
+import nl.earnit.exceptions.InvalidOrderByException;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.*;
 import nl.earnit.models.resource.contracts.Contract;
@@ -12,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class WorkedWeekDAO extends GenericDAO<User> {
@@ -100,13 +102,18 @@ public class WorkedWeekDAO extends GenericDAO<User> {
     }
 
     public WorkedWeekDTO getWorkedWeekById(String id) throws SQLException {
-        return getWorkedWeekById(id, false, false, false, false, false);
+        return getWorkedWeekById(id, false, false, false, false, false, "hours.day:asc");
     }
 
-    public WorkedWeekDTO getWorkedWeekByDate(String userContractId, int year, int week, boolean withCompany,
+    public WorkedWeekDTO getWorkedWeekByDate(int year, int week, boolean withCompany,
                                              boolean withContract, boolean withUserContract,
-                                             boolean withUser, boolean withHours)
+                                             boolean withUser, boolean withHours, String order)
         throws SQLException {
+        OrderBy orderBy = new OrderBy(new HashMap<>() {{
+            put("hours.day", "w.day");
+            put("hours.minutes", "w.minutes");
+        }});
+
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
                 ww.contract_id as worked_week_contract_id,
@@ -147,11 +154,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 JOIN contract c ON c.id = uc.contract_id
                 JOIN company cy ON cy.id = c.company_id
                 
-                LEFT JOIN (select w.worked_week_id, array_agg(w.*) as hours FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
+                LEFT JOIN (select w.worked_week_id, array_agg(w.* ORDER BY %2$s) as hours FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                 
                 WHERE ww.year = ? AND ww.week = ?
                 LIMIT 1
-            """.formatted(tableName);
+            """.formatted(tableName, orderBy.getSQLOrderBy(order));
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
@@ -214,7 +221,12 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      */
     public WorkedWeekDTO getWorkedWeekById(String workedWeekId, boolean withCompany,
                                                  boolean withContract, boolean withUserContract,
-                                                 boolean withUser, boolean withHours) throws SQLException {
+                                                 boolean withUser, boolean withHours, String order) throws SQLException {
+        OrderBy orderBy = new OrderBy(new HashMap<>() {{
+            put("hours.day", "w.day");
+            put("hours.minutes", "w.minutes");
+        }});
+
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
                 ww.contract_id as worked_week_contract_id,
@@ -255,11 +267,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 JOIN contract c ON c.id = uc.contract_id
                 JOIN company cy ON cy.id = c.company_id
                 
-                LEFT JOIN (select w.worked_week_id, array_agg(w.*) as hours FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
+                LEFT JOIN (select w.worked_week_id, array_agg(w.* ORDER BY %2$s) as hours FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                 
                 WHERE ww.id = ?
                 LIMIT 1
-            """.formatted(tableName);
+            """.formatted(tableName, orderBy.getSQLOrderBy(order));
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
@@ -286,9 +298,15 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                                                                  boolean withCompany,
                                                                  boolean withContract,
                                                                  boolean withUserContract,
-                                                                 boolean withUser, boolean asc)
-        throws SQLException {
+                                                                 boolean withUser, String order)
+        throws SQLException, InvalidOrderByException {
         // TODO: Don't immediately add when confirmed wait until x date has passed.
+
+        OrderBy orderBy = new OrderBy(new HashMap<>() {{
+            put("worked_week.year", "ww.year");
+            put("worked_week.week", "ww.week");
+        }});
+
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
                 ww.contract_id as worked_week_contract_id,
@@ -328,8 +346,8 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 JOIN company cy ON cy.id = c.company_id
                 
                 WHERE cy.id = ? AND ww.confirmed IS TRUE AND ww.approved IS NULL AND ww.solved IS NULL
-                ORDER BY ww.year %2$s, ww.week %2$s
-            """.formatted(tableName, asc ? "ASC" : "DESC");
+                ORDER BY %2$s
+            """.formatted(tableName, orderBy.getSQLOrderBy(order));
 
         PreparedStatement statement = this.con.prepareStatement(query);
 

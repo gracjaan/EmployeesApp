@@ -1,84 +1,118 @@
 <!DOCTYPE html>
 <html lang="en" class="overflow-x-hidden">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Request</title>
-    <script src="/earnit/static/js/helpers.js"></script>
-    <script src="/earnit/static/js/company/request.js" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="/earnit/static/style.css"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-</head>
-<body
-        class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
->
-<header class="flex bg-primary w-fit p-2 rounded-br-lg cursor-pointer" onclick="history.back()">
-    <img
-            src="/earnit/static/icons/arrow-left.svg"
-            alt="arrow down"
-            class="mr-3"
-    />
-    <div class="text-text">Back</div>
-</header>
-<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
-    <main
-            class="flex gap-4 my-8 flex-col px-2 sm:px-0"
-    >
-        <header class="w-full flex justify-between items-end">
-            <h2 class="text-text text-4xl font-bold" id="name">Pepijn <br /> Meijer</h2>
-            <div class="flex gap-2">
-                <div id="accept" class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group">
-                    <img src="/earnit/static/icons/checkmark_green.svg" alt="checkmark" />
-                    <div class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap">
-                        Approves week
-                    </div>
-                </div>
-                <div id="reject" class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group">
-                    <img src="/earnit/static/icons/red-cross.svg" alt="checkmark" />
-                    <div class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap">
-                        Reject week
-                    </div>
-                </div>
-            </div>
-        </header>
-        <section class="w-full h-full gap-2 flex flex-col">
-            <h2 class="text-text text-2xl font-bold">Sheet</h2>
-            <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
-                <div class="flex mb-2">
-                    <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
-                        <div class="text-black text-left mr-5">Date</div>
-                        <img src="/earnit/static/icons/arrow-down-black.svg" alt="right arrow"/>
-                    </button>
-                    <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
-                        <div class="text-black text-left mr-5">Contract</div>
-                        <img src="/earnit/static/icons/arrow-down-black.svg" alt="right arrow"/>
-                    </button>
-                    <button class="rounded-xl bg-text px-4 py-2 flex mr-5 items-center">
-                        <div class="text-black text-left mr-5">Hours</div>
-                        <img src="/earnit/static/icons/arrow-down-black.svg" alt="right arrow"/>
-                    </button>
-                </div>
-                <div class="rounded-xl bg-primary p-4 relative flex justify-between">
-                    <div class="w-full grid grid-cols-[1fr_1fr_2fr_5fr]">
-                        <div class="text-text font-bold uppercase">21.04</div>
-                        <div class="text-text">10H</div>
-                        <div class="text-text">Janitor-UT</div>
-                        <div class="text-text">I cleaned the first floor in Carre</div>
-                    </div>
-                </div>
-                <div class="rounded-xl bg-primary p-4 relative flex justify-between">
-                    <div class="w-full grid grid-cols-[1fr_1fr_2fr_5fr]">
-                        <div class="text-text font-bold uppercase">21.04</div>
-                        <div class="text-text">8H</div>
-                        <div class="text-text">Janitor-Saxion</div>
-                        <div class="text-text">I cleaned the first floor in the main building</div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-    </main>
-</div>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Request</title>
+		<script src="/earnit/static/js/helpers.js"></script>
+		<script src="/earnit/static/js/company/request.js" defer></script>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<link rel="stylesheet" href="/earnit/static/style.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body
+		class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
+	>
+		<header
+			class="flex bg-primary w-fit p-2 rounded-br-lg cursor-pointer"
+			onclick="history.back()"
+		>
+			<img
+				src="/earnit/static/icons/arrow-left.svg"
+				alt="arrow down"
+				class="mr-3"
+			/>
+			<div class="text-text">Back</div>
+		</header>
+		<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
+			<main class="flex gap-4 my-8 flex-col px-2 sm:px-0">
+				<header class="w-full flex justify-between items-end">
+					<h2 class="text-text text-4xl font-bold" id="name"></h2>
+					<div class="flex gap-2">
+						<div
+							id="accept"
+							class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+						>
+							<img
+								src="/earnit/static/icons/checkmark_green.svg"
+								alt="checkmark"
+							/>
+							<div
+								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Approves week
+							</div>
+						</div>
+						<div
+							id="reject"
+							class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+						>
+							<img
+								src="/earnit/static/icons/red-cross.svg"
+								alt="checkmark"
+							/>
+							<div
+								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Reject week
+							</div>
+						</div>
+					</div>
+				</header>
+				<section class="w-full h-full gap-2 flex flex-col">
+					<div
+						class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+					>
+						<div class="flex gap-2">
+							<button
+								class="rounded-xl bg-text px-4 py-2 flex gap-4 items-center group"
+								data-selected="1"
+                                id="date"
+							>
+								<span class="text-black text-left">Date</span>
+								<img
+									src="/earnit/static/icons/arrow-down-black.svg"
+									class="group-data-[selected='1']:block hidden"
+									alt="down arrow"
+								/>
+								<img
+									src="/earnit/static/icons/arrow-up-black.svg"
+									class="group-data-[selected='2']:block hidden"
+									alt="up arrow"
+								/>
+								<img
+									src="/earnit/static/icons/line-black.svg"
+									class="group-data-[selected='0']:block hidden"
+									alt="line"
+								/>
+							</button>
+							<button
+								class="rounded-xl bg-text px-4 py-2 flex gap-4 items-center group"
+								data-selected="0"
+                                id="hours"
+							>
+								<span class="text-black text-left">Hours</span>
+								<img
+									src="/earnit/static/icons/arrow-down-black.svg"
+									class="group-data-[selected='1']:block hidden"
+									alt="down arrow"
+								/>
+								<img
+									src="/earnit/static/icons/arrow-up-black.svg"
+									class="group-data-[selected='2']:block hidden"
+									alt="up arrow"
+								/>
+								<img
+									src="/earnit/static/icons/line-black.svg"
+									class="group-data-[selected='0']:block hidden"
+									alt="line"
+								/>
+							</button>
+						</div>
+						<div class="flex flex-col gap-2" id="entries"></div>
+					</div>
+				</section>
+			</main>
+		</div>
+	</body>
 </html>

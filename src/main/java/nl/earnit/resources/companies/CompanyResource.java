@@ -95,18 +95,14 @@ public class CompanyResource {
                                  @QueryParam("user_contract") @DefaultValue("false")
                                  boolean userContract,
                                  @QueryParam("user") @DefaultValue("false") boolean user,
-                                 @QueryParam("order") @DefaultValue("asc") String order) {
-        if (!order.equalsIgnoreCase("asc") && !order.equalsIgnoreCase("desc")) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
+                                 @QueryParam("order") @DefaultValue("worked_week.year:asc,worked_week.week:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
 
             return Response.ok(
                 workedWeekDAO.getWorkedWeeksToApproveForCompany(companyId, company, contract,
-                    userContract, user, order.equalsIgnoreCase("asc"))).build();
+                    userContract, user, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -122,7 +118,8 @@ public class CompanyResource {
                                       @QueryParam("user_contract") @DefaultValue("false")
                                       boolean userContract,
                                       @QueryParam("user") @DefaultValue("false") boolean user,
-                                      @QueryParam("hours") @DefaultValue("false") boolean hours) {
+                                      @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                      @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
@@ -133,7 +130,7 @@ public class CompanyResource {
 
             return Response.ok(
                 workedWeekDAO.getWorkedWeekById(workedWeekId, company, contract, userContract, user,
-                    hours)).build();
+                    hours, order)).build();
         } catch (SQLException e) {
             System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
