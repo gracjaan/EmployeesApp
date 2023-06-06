@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
@@ -85,7 +86,7 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContracts() {
         UserContractDAO userContractDAO;
-        List<UserContract> userContracts;
+        List<UserContractDTO> userContracts;
         try {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             userContracts = userContractDAO.getUserContractsByUserId(this.userId);

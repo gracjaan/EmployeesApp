@@ -1,8 +1,10 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.contracts.Contract;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -51,8 +53,8 @@ public class UserContractDAO extends GenericDAO<User> {
         return res.getInt("count");
     }
 
-    public List<UserContract> getUserContractsByUserId(String userId) throws SQLException {
-        String query = "SELECT u.*, c.role FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
+    public List<UserContractDTO> getUserContractsByUserId(String userId) throws SQLException {
+        String query = "SELECT u.*, c.* FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -60,10 +62,11 @@ public class UserContractDAO extends GenericDAO<User> {
         ResultSet res = counter.executeQuery();
 
         // Return count
-        List<UserContract> userContracts = new ArrayList<>();
+        List<UserContractDTO> userContracts = new ArrayList<>();
         res.next();
         while (res.next()) {
-            UserContract uc = new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
+            Contract c = new Contract(res.getString("id"), res.getString("role"), res.getString("description"));
+            UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"), c);
             userContracts.add(uc);
         }
         return userContracts;
