@@ -39,7 +39,7 @@ public class UserContractDAO extends GenericDAO<User> {
      */
     public int countContractsForUser(String userId) throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ? and active = true";
+        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"u.user_id\" = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -52,7 +52,7 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     public List<UserContract> getUserContractsByUserId(String userId) throws SQLException {
-        String query = "SELECT * FROM  \"" + tableName + "\" WHERE \"user_id\" = ? and active = true";
+        String query = "SELECT u.*, c.role FROM  \"" + tableName + "\" u, contract c WHERE \"u.user_id\" = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
