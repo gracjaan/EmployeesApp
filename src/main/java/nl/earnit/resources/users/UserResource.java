@@ -90,7 +90,7 @@ public class UserResource {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             userContracts = userContractDAO.getUserContractsByUserId(this.userId);
         } catch (SQLException e) {
-            return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.ok(userContracts).build();
     }

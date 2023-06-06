@@ -52,7 +52,7 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     public List<UserContract> getUserContractsByUserId(String userId) throws SQLException {
-        String query = "SELECT u.*, c.role FROM  \"" + tableName + "\" u, contract c WHERE \"u.user_id\" = ? and u.active = true";
+        String query = "SELECT u.*, c.role FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -63,7 +63,7 @@ public class UserContractDAO extends GenericDAO<User> {
         List<UserContract> userContracts = new ArrayList<>();
         res.next();
         while (res.next()) {
-            UserContract uc = new UserContract(res.getString("id"), res.getString("contractId"), res.getString("userId"), res.getInt("hourly_wage"), res.getBoolean("active"));
+            UserContract uc = new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
             userContracts.add(uc);
         }
         return userContracts;
