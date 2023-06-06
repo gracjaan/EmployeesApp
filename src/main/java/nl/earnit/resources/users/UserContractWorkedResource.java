@@ -57,7 +57,7 @@ public class UserContractWorkedResource {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             if (this.weekId != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekById(weekId);
+                workedWeek = workedWeekDAO.getWorkedWeekById(weekId, company, contract, userContract, user, hours, order);
             } else if (this.year != null && this.week != null) {
                 workedWeek = workedWeekDAO.getWorkedWeekByDate(Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, order);
             }
