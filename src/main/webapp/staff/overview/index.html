@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Earnit</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/earnit/static/js/helpers.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="/earnit/static/js/staff/overview.js" defer></script>
   <link rel="stylesheet" href="/earnit/static/style.css" />
@@ -32,28 +33,8 @@
         </div>
 
         <!--        This will list the different students-->
-        <ol class="overflow-y-auto gap-2">
-          <li>
-            <a href="">
-              <div class="bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2">
-                <p class="text-text">Gracjan Chmielnicki</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="">
-              <div class="bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2">
-                <p class="text-text">Gracjan Chmielnicki</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="">
-              <div class="bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2">
-                <p class="text-text">Gracjan Chmielnicki</p>
-              </div>
-            </a>
-          </li>
+        <ol class="overflow-y-auto gap-2" id="users" >
+
         </ol>
 
       </div>

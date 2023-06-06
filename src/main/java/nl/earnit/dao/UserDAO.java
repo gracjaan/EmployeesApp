@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserDAO extends GenericDAO<User> {
@@ -75,35 +77,33 @@ public class UserDAO extends GenericDAO<User> {
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
     }
 
-    public List<User> getAllUsers(String order) throws SQLException {
-        ArrayList<User> userList = new ArrayList<>();
+    public List<UserResponse> getAllUsers(String order) throws SQLException {
+        OrderBy orderBy = new OrderBy(new HashMap<>() {{
+            put("user.first_name", "first_name");
+            put("user.last_name", "last_name");
+            put("user.last_name_prefix", "last_name_prefix");
+            put("user.email", "email");
+            put("user.id", "id");
+        }});
 
+        ArrayList<UserResponse> userList = new ArrayList<>();
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\" WHERE active = true ORDER BY ? " ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true ORDER BY " + orderBy.getSQLOrderBy(order) ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
-
-
-        if(order.equals("name")) {
-            statement.setString(1, "last_name");
-        } else {
-            statement.setString(1, "id");
-        }
-
         ResultSet res = statement.executeQuery();
-
-        // None found
-        if(!res.next()) return null;
 
         // Return all users
         while(res.next()) {
-            User user = new User();
+            UserResponse user = new UserResponse();
             user.setId(res.getString("id"));
+            user.setEmail(res.getString("email"));
             user.setFirstName(res.getString("first_name"));
             user.setLastName(res.getString("last_name"));
             user.setLastNamePrefix(res.getString("last_name_prefix"));
             userList.add(user);
         }
+
         return userList;
 
     }
@@ -155,7 +155,7 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     public void disableUserById(String id) throws SQLException {
-        String query = "UPDATE" + tableName + "SET active = false WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, id);
 
@@ -164,7 +164,7 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     public void renableUserById(String id) throws SQLException {
-        String query = "UPDATE" + tableName + "SET active = true WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, id);
 
