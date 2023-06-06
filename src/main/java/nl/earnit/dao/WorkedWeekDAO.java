@@ -105,7 +105,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(id, false, false, false, false, false, "hours.day:asc");
     }
 
-    public WorkedWeekDTO getWorkedWeekByDate(int year, int week, boolean withCompany,
+    public WorkedWeekDTO getWorkedWeekByDate(String userContractId, int year, int week, boolean withCompany,
                                              boolean withContract, boolean withUserContract,
                                              boolean withUser, boolean withHours, String order)
         throws SQLException {
@@ -156,7 +156,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 LEFT JOIN (select w.worked_week_id, array_agg(w.* ORDER BY %2$s) as hours FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                 
-                WHERE ww.year = ? AND ww.week = ?
+                WHERE ww.year = ? AND ww.week = ? AND uc.id = ?
                 LIMIT 1
             """.formatted(tableName, orderBy.getSQLOrderBy(order));
 
@@ -164,6 +164,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
         statement.setInt(1, year);
         statement.setInt(2, week);
+        statement.setString(3, userContractId);
 
         // Execute query
         ResultSet res = statement.executeQuery();

@@ -59,7 +59,7 @@ public class UserContractWorkedResource {
             if (this.weekId != null) {
                 workedWeek = workedWeekDAO.getWorkedWeekById(weekId, company, contract, userContract, user, hours, order);
             } else if (this.year != null && this.week != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekByDate(Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, order);
+                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, order);
             }
         } catch (SQLException e) {
             return Response.serverError().build();
