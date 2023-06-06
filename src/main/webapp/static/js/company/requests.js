@@ -22,7 +22,7 @@ function getRequestsForCompany(uid, token) {
 
 function createRequestCard(workedWeek) {
     const container = document.createElement("a");
-    container.classList.add("bg-primary", "block", "rounded", "py-4", "pl-4", "pr-8", "w-full", "break-inside-avoid-column");
+    container.classList.add("bg-primary", "block", "rounded-xl", "py-4", "pl-4", "pr-8", "w-full", "break-inside-avoid-column");
     container.href = "/earnit/request?worked_week=" + workedWeek.id;
 
     const name = document.createElement("h3");

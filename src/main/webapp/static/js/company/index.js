@@ -36,3 +36,26 @@ new Chart(ctx, {
         }
     }
 });
+
+const name = document.getElementById("name");
+window.addEventListener("helpersLoaded", async () => {
+fetch("/earnit/api/users/"+getUserId(), {
+        method: "GET",
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+    }
+)
+    .then(async res => {
+        const json = await res.json();
+        console.log(json);
+        name.innerHTML = "Welcome back, " + json.firstName;
+})
+});
+
+
+
+
+
