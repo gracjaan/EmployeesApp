@@ -112,7 +112,7 @@ public class UserDAO extends GenericDAO<User> {
     public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type)
         throws SQLException {
         // Create query
-        String query = "INSERT INTO \"" + tableName + "\" (id, email, first_name, last_name_prefix, last_name, password, type) VALUES (gen_random_uuid(), ?, ?, ?, ?, ?, ?) RETURNING id";
+        String query = "INSERT INTO \"" + tableName + "\" (email, first_name, last_name_prefix, last_name, password, type) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, email);

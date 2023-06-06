@@ -63,8 +63,8 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {
-        String query = "INSERT INTO" + tableName + "(id, contract_id, user_id, hourly_wage, active) " +
-                "VALUES + (gen_random_uuid(), ?, ?, ?, True RETURNING id" ;
+        String query = "INSERT INTO" + tableName + "(contract_id, user_id, hourly_wage, active) " +
+                "VALUES + (?, ?, ?, True RETURNING id" ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, user_id);
