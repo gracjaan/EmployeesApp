@@ -11,7 +11,11 @@ window.addEventListener("helpersLoaded", async () => {
 })
 
 function obtainContractsForUser(uid) {
-    return fetch("/users/" + uid + "/contracts")
+    return fetch("/earnit/api/users/" + uid + "/contracts", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
         .then(response => response.json())
         .catch(e => null);
 }

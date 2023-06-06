@@ -63,7 +63,6 @@ public class UserContractDAO extends GenericDAO<User> {
 
         // Return count
         List<UserContractDTO> userContracts = new ArrayList<>();
-        res.next();
         while (res.next()) {
             Contract c = new Contract(res.getString("id"), res.getString("role"), res.getString("description"));
             UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"), c);
