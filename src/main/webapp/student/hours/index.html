@@ -25,15 +25,15 @@
         <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
         <div class="flex">
           <div class="dropdown relative">
-            <button id="dropdown-button" class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center" onclick="toggleDropdown()">
+            <button id="dropdown-button" class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center" onclick="toggleWeek()">
               <div class="text-white text-left mr-5" id="dropdown-header">Week 10</div>
               <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
             </button>
             <div id="dropdown-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
               <!-- Dropdown options -->
-              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)" data-week-number="10">Week 10</div>
-              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectOption(this)" data-week-number="9">Week 9</div>
-              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectOption(this)" data-week-number="8">Week 8</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectWeek(this)" data-week-number="10">Week 10</div>
+              <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectWeek(this)" data-week-number="9">Week 9</div>
+              <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="selectWeek(this)" data-week-number="8">Week 8</div>
             </div>
           </div>
           <button class="rounded-xl bg-accent-success p-2 items-center">
@@ -53,7 +53,18 @@
               <input placeholder="Hours" type="text" name="hours" id="hours" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white" />
             </div>
           </div>
-          <input placeholder="Position" type="text" name="position" id="position" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
+          <div class="dropdown relative">
+            <button id="position-button" class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white flex-row" onclick="togglePosition()">
+              <div class="flex items-center justify-between">
+                <div class="text-white text-left mr-2" id="position-header">Position</div>
+                <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
+              </div>
+            </button>
+            <div id="position-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
+              <!-- Dropdown options -->
+
+            </div>
+          </div>
           <input placeholder="Description" type="text" name="description" id="description" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white" />
           <button class="rounded-xl bg-text py-2 px-4 justify-center items-center">
             <div class="text-background text-center font-bold" id="submit-button" onclick="submitForm()">Submit</div>
@@ -106,58 +117,5 @@
     </section>
   </main>
 </div>
-<script>
-  function toggleDropdown() {
-    const dropdown = document.getElementById("dropdown-content");
-    dropdown.classList.toggle("hidden");
-  }
-
-  function selectOption(option) {
-    const header = document.getElementById("dropdown-header");
-    const range = document.getElementById("dropdown-range")
-    const weekNumber = parseInt(option.dataset.weekNumber);
-    const dateRange = getWeekDateRange(weekNumber);
-    header.textContent = option.textContent;
-    range.textContent = dateRange;
-    toggleDropdown();
-  }
-
-  function getWeekDateRange(weekNumber) {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-
-    // Find the first day of the year
-    const firstDayOfYear = new Date(year, 0, 1);
-    const dayOfWeek = firstDayOfYear.getDay();
-    const startDate = new Date(firstDayOfYear.getTime() - dayOfWeek * 24 * 60 * 60 * 1000);
-
-    // Calculate the start and end dates of the selected week
-    const startOfWeek = new Date(startDate.getTime() + (weekNumber - 1) * 7 * 24 * 60 * 60 * 1000);
-    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
-
-    // Format the date range
-    const startDateFormatted = formatDate(startOfWeek);
-    const endDateFormatted = formatDate(endOfWeek);
-    return startDateFormatted + " - " + endDateFormatted;
-  }
-
-  function formatDate(date) {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return day + "." + month + "." + year;
-  }
-
-  document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-content");
-    const button = document.getElementById("dropdown-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-      dropdown.classList.add("hidden");
-    }
-  });
-
-</script>
 </body>
 </html>

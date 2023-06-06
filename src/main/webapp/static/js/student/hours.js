@@ -8,6 +8,20 @@ window.addEventListener("helpersLoaded", async () => {
       return;
     }
 
+    const positionContent = document.getElementById('position-content');
+
+    contracts.forEach(c => {
+        const option = document.createElement('div');
+        option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
+        option.textContent = c.contract.role;
+        option.setAttribute('data-role', c.contract.role);
+        option.addEventListener('click', () => selectPosition(option));
+        console.log(option)
+        positionContent.appendChild(option);
+    });
+
+    //fetchSheet(getUserId(), contracts)
+
 })
 
 function obtainContractsForUser(uid) {
@@ -161,3 +175,79 @@ function toggleEdit(button) {
         console.log(updatedData);
     }
 }
+
+
+
+//______________________________________________DROPDOWNS______________________________________________________________
+
+function toggleWeek() {
+    const dropdown = document.getElementById("dropdown-content");
+    dropdown.classList.toggle("hidden");
+}
+
+function togglePosition() {
+    const dropdown = document.getElementById("position-content");
+    dropdown.classList.toggle("hidden");
+}
+
+function selectWeek(option) {
+    const header = document.getElementById("dropdown-header");
+    const range = document.getElementById("dropdown-range")
+    const weekNumber = parseInt(option.dataset.weekNumber);
+    const dateRange = getWeekDateRange(weekNumber);
+    header.textContent = option.textContent;
+    range.textContent = dateRange;
+    toggleWeek();
+}
+
+function selectPosition(option) {
+    const header = document.getElementById("position-header");
+    header.textContent = option.textContent;
+    togglePosition();
+}
+
+function getWeekDateRange(weekNumber) {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+
+    // Find the first day of the year
+    const firstDayOfYear = new Date(year, 0, 1);
+    const dayOfWeek = firstDayOfYear.getDay();
+    const startDate = new Date(firstDayOfYear.getTime() - dayOfWeek * 24 * 60 * 60 * 1000);
+
+    // Calculate the start and end dates of the selected week
+    const startOfWeek = new Date(startDate.getTime() + (weekNumber - 1) * 7 * 24 * 60 * 60 * 1000);
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+    // Format the date range
+    const startDateFormatted = formatDate(startOfWeek);
+    const endDateFormatted = formatDate(endOfWeek);
+    return startDateFormatted + " - " + endDateFormatted;
+}
+
+function formatDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return day + "." + month + "." + year;
+}
+
+document.addEventListener("click", function(event) {
+    const dropdown = document.getElementById("dropdown-content");
+    const button = document.getElementById("dropdown-button");
+    const targetElement = event.target;
+
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+        dropdown.classList.add("hidden");
+    }
+});
+
+document.addEventListener("click", function(event) {
+    const dropdown = document.getElementById("position-content");
+    const button = document.getElementById("position-button");
+    const targetElement = event.target;
+
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+        dropdown.classList.add("hidden");
+    }
+});
