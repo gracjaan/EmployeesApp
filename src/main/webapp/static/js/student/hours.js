@@ -1,13 +1,11 @@
 window.addEventListener("helpersLoaded", async () => {
+    console.log(getUserId())
     const contracts = await obtainContractsForUser(getUserId())
+
+    console.log(contracts)
 
     if (contracts === null){
       return;
-    }
-
-    for (const contract of contracts) {
-        fetchSheet(getUserId(), contract)
-
     }
 
 })
@@ -24,7 +22,7 @@ function getSelectedWeek () {
     return weekNumber;
 }
 
-function fetchSheet(userid, contract, week, ) {
+function fetchSheet(userid, contracts) {
     const promises = contracts.map((contract) => {
     return fetch("/users/"+ userid + "/contracts/" + contract.id + "/worked/" + getCurrentYear() + "/" + getSelectedWeek())
         .then (response => response.json())
