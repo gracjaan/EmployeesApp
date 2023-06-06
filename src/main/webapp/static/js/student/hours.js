@@ -1,8 +1,11 @@
 window.addEventListener("helpersLoaded", async () => {
-    console.log(getUserId())
-    const contracts = await obtainContractsForUser(getUserId())
+    const date = document.getElementById("date");
+    date.addEventListener("click", () => select("date"));
 
-    console.log(contracts)
+    const hours = document.getElementById("hours");
+    hours.addEventListener("click", () => select("hours"));
+
+    const contracts = await obtainContractsForUser(getUserId())
 
     if (contracts === null){
       return;
@@ -15,6 +18,7 @@ window.addEventListener("helpersLoaded", async () => {
         option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
         option.textContent = c.contract.role;
         option.setAttribute('data-role', c.contract.role);
+        option.setAttribute('data-id', c.contract.id);
         option.addEventListener('click', () => selectPosition(option));
         console.log(option)
         positionContent.appendChild(option);
@@ -68,15 +72,15 @@ function fetchSheet(userid, contracts) {
 }
 
 function submitForm () {
-    const dateInput = document.getElementById('date');
-    const hoursInput = document.getElementById('hours');
-    const positionInput = document.getElementById('position');
-    const descriptionInput = document.getElementById('description');
+    const dateInput = document.getElementById('date-input');
+    const hoursInput = document.getElementById('hours-input');
+    const positionInput = document.getElementById("position-header")
+    const descriptionInput = document.getElementById('description-input');
 
     const formData = {
         date: dateInput.value,
         hours: hoursInput.value,
-        position: positionInput.value,
+        position: positionInput.getAttribute("data-id").toString(),
         description: descriptionInput.value
     };
 
@@ -86,7 +90,7 @@ function submitForm () {
         return;
     }
 
-    sendFormDataToServer(formData, getUserId(), );
+    sendFormDataToServer(getUserId(), formData );
 }
 
 function getCurrentYear () {
@@ -105,12 +109,13 @@ function getCurrentWeek () {
     return weekNumber;
 }
 
-function sendFormDataToServer (formData, uid, ucid) {
-    fetch ("/users/"+ uid + "/contracts/" + ucid + "/worked/" + getCurrentYear() + "/" + getCurrentWeek(),
+function sendFormDataToServer (uid, formData) {
+    fetch ("/earnit/api/users/"+ uid + "/contracts/" + formData.position + "/worked/" + getCurrentYear() + "/" + getCurrentWeek(),
         {
             method: "POST",
             body: JSON.stringify(formData),
             headers: {
+                'authorization': `token ${getJWTCookie()}`,
                 "Content-type" : "application/json",
                 "Accept" : "application/json"
             }
@@ -202,6 +207,8 @@ function selectWeek(option) {
 
 function selectPosition(option) {
     const header = document.getElementById("position-header");
+    header.setAttribute('data-role', option.getAttribute("data-role"));
+    header.setAttribute('data-id', option.getAttribute("data-id"));
     header.textContent = option.textContent;
     togglePosition();
 }
@@ -251,3 +258,28 @@ document.addEventListener("click", function(event) {
         dropdown.classList.add("hidden");
     }
 });
+
+
+
+//__________________________________FILTERS___________________________________________
+async function select(type) {
+    const date = document.getElementById("date");
+    const dateSelected = date.getAttribute("data-selected");
+
+    const hours = document.getElementById("hours");
+    const hoursSelected = hours.getAttribute("data-selected");
+
+    if (type === "date") {
+        hours.setAttribute("data-selected", "0");
+
+        let state = Number.parseInt(dateSelected ?? "0") + 1;
+        if (state > 2) state = 0;
+        date.setAttribute("data-selected", state + "");
+    } else {
+        date.setAttribute("data-selected", "0");
+
+        let state = Number.parseInt(hoursSelected ?? "0") + 1;
+        if (state > 2) state = 0;
+        hours.setAttribute("data-selected", state + "");
+    }
+}
