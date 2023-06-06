@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 
 import java.sql.SQLException;
 
@@ -95,18 +96,14 @@ public class CompanyResource {
                                  @QueryParam("user_contract") @DefaultValue("false")
                                  boolean userContract,
                                  @QueryParam("user") @DefaultValue("false") boolean user,
-                                 @QueryParam("order") @DefaultValue("asc") String order) {
-        if (!order.equalsIgnoreCase("asc") && !order.equalsIgnoreCase("desc")) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
+                                 @QueryParam("order") @DefaultValue("worked_week.year:asc,worked_week.week:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
 
             return Response.ok(
                 workedWeekDAO.getWorkedWeeksToApproveForCompany(companyId, company, contract,
-                    userContract, user, order.equalsIgnoreCase("asc"))).build();
+                    userContract, user, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -122,7 +119,8 @@ public class CompanyResource {
                                       @QueryParam("user_contract") @DefaultValue("false")
                                       boolean userContract,
                                       @QueryParam("user") @DefaultValue("false") boolean user,
-                                      @QueryParam("hours") @DefaultValue("false") boolean hours) {
+                                      @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                      @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
@@ -133,16 +131,26 @@ public class CompanyResource {
 
             return Response.ok(
                 workedWeekDAO.getWorkedWeekById(workedWeekId, company, contract, userContract, user,
-                    hours)).build();
+                    hours, order)).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @POST
+    @PUT
     @Path("/approves/{workedWeekId}")
-    public Response acceptWorkedWeek(@PathParam("workedWeekId") String workedWeekId) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response undoApprovalWorkedWeek(@PathParam("workedWeekId") String workedWeekId,
+                                           @QueryParam("company") @DefaultValue("false") boolean company,
+                                           @QueryParam("contract") @DefaultValue("false")
+                                               boolean contract,
+                                           @QueryParam("user_contract") @DefaultValue("false")
+                                               boolean userContract,
+                                           @QueryParam("user") @DefaultValue("false") boolean user,
+                                           @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                           @QueryParam("order") @DefaultValue("hours.day:asc") String order,
+                                           WorkedWeekUndoApprovalDTO workedWeekUndoApprovalDTO) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
@@ -151,7 +159,36 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.approveWorkedWeek(workedWeekId)).build();
+            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, workedWeekUndoApprovalDTO.getApprove(), company, contract, userContract, user,
+                hours, order)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
+    @Path("/approves/{workedWeekId}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response acceptWorkedWeek(@PathParam("workedWeekId") String workedWeekId,
+                                     @QueryParam("company") @DefaultValue("false") boolean company,
+                                     @QueryParam("contract") @DefaultValue("false")
+                                         boolean contract,
+                                     @QueryParam("user_contract") @DefaultValue("false")
+                                         boolean userContract,
+                                     @QueryParam("user") @DefaultValue("false") boolean user,
+                                     @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                     @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED_WEEK);
+
+            if (!workedWeekDAO.hasCompanyAccessToWorkedWeek(companyId, workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, true, company, contract, userContract, user,
+                hours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -159,7 +196,17 @@ public class CompanyResource {
 
     @DELETE
     @Path("/approves/{workedWeekId}")
-    public Response rejectWorkedWeek(@PathParam("workedWeekId") String workedWeekId) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response rejectWorkedWeek(@PathParam("workedWeekId") String workedWeekId,
+                                     @QueryParam("company") @DefaultValue("false") boolean company,
+                                     @QueryParam("contract") @DefaultValue("false")
+                                         boolean contract,
+                                     @QueryParam("user_contract") @DefaultValue("false")
+                                         boolean userContract,
+                                     @QueryParam("user") @DefaultValue("false") boolean user,
+                                     @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                     @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
@@ -168,7 +215,8 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.rejectWorkedWeek(workedWeekId)).build();
+            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, false, company, contract, userContract, user,
+                hours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

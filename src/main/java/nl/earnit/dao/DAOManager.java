@@ -82,6 +82,8 @@ public class DAOManager {
         PGSimpleDataSource ds = new PGSimpleDataSource();
 
         // Get connection info from system environment variables
+        ds.setServerNames(new String[] {System.getenv("DB_HOST")});
+        ds.setPortNumbers(new int[] {Integer.parseInt(System.getenv("DB_PORT"))});
         ds.setDatabaseName(System.getenv("DB_NAME"));
         ds.setUser(System.getenv("DB_USER"));
         ds.setPassword(System.getenv("DB_PASS"));

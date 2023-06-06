@@ -10,7 +10,7 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 function getRequestsForCompany(uid, token) {
-    return fetch(`/earnit/api/companies/${uid}/approves?user=true&contract=true&order=desc`, {
+    return fetch(`/earnit/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'
