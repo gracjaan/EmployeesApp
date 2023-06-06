@@ -32,6 +32,7 @@ public class LoginResource {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             user = userDAO.getUserByEmail(login.getEmail());
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
 

@@ -87,8 +87,8 @@ public class WorkedDAO extends GenericDAO<User> {
     }
 
     public void addWorkedWeekTask(Worked worked) throws SQLException{
-        String query = "INSERT INTO \"" + tableName + "\" (id, worked_week_id, day, minutes, work)\n" +
-                "VALUES (gen_random_uuid(), ?, ?, ?, ?) RETURNING id";
+        String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) "+
+                "VALUES (?, ?, ?, ?) RETURNING id";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, worked.getWorkedWeekId());
         PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getDay()));
