@@ -8,6 +8,7 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class CompanyResource {
     @Path("/students")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getStudents() {
-        List<User> users;
+        List<UserResponse> users;
         try {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             users = companyDAO.getStudentsForCompany(companyId);

@@ -3,6 +3,7 @@ package nl.earnit.dao;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -117,14 +118,14 @@ public class CompanyDAO extends GenericDAO<User> {
 
     }
 
-    public List<User> getStudentsForCompany(String companyId) throws SQLException {
+    public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
         String query = "SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email FROM user u, company_user c WHERE u.id = c.user_id AND c.company_id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         ResultSet resultSet = statement.executeQuery();
-        List<User> users = new ArrayList<>();
+        List<UserResponse> users = new ArrayList<>();
         while (resultSet.next()) {
-            User user = new User(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), null);
+            UserResponse user = new UserResponse(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"));
             users.add(user);
         }
         return users;
