@@ -3,10 +3,10 @@ const ctx = document.getElementById('myChart');
 new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Pepijn", "Tom", "Thomas", "Dirck"],
+        labels: ["Pepijn", "Tom", "Thomas", "Dirck", "Test", "Test2"],
         datasets: [{
-            label: 'My First Dataset',
-            data: [12, 35, 21, 30],
+            label: 'Hours worked last week per student',
+            data: [12, 35, 21, 30, 23, 40],
             backgroundColor: ["lightgoldenrodyellow"],
             color: "white",
             borderColor: 'rgb(75, 192, 192)',
@@ -36,6 +36,7 @@ new Chart(ctx, {
         }
     }
 });
+
 
 const name = document.getElementById("name");
 window.addEventListener("helpersLoaded", async () => {

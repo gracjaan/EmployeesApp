@@ -1,5 +1,6 @@
 package nl.earnit.dao;
 
+import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.contracts.Contract;
 
@@ -41,16 +42,14 @@ public class ContractDAO extends GenericDAO<User> {
 
         List<Contract> result = new ArrayList<>();
 
-        String query = "SELECT role, description  FROM  " + tableName + "WHERE id = ? and active = true";
+        String query = "SELECT role, description  FROM  " + tableName + " WHERE company_id = ? and active = true";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, companyId);
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
 
         ResultSet res = statement.executeQuery();
 
         // None foundA
-        if(!res.next()) return null;
-
         while(res.next()) {
             Contract contract = new Contract();
             contract.setDescription(res.getString("description"));

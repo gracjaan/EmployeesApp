@@ -64,14 +64,13 @@ public class CompanyResource {
             ContractDAO contractDAO =
                 (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
 
-            contractDAO.getAllContractsByCompanyId(companyId);
+            return Response.ok(contractDAO.getAllContractsByCompanyId(companyId)).build();
 
         } catch (SQLException e) {
             return Response.serverError().build();
         }
 
 
-        return Response.ok().build();
 
 
     }
