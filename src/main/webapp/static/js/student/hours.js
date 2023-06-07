@@ -5,9 +5,72 @@ window.addEventListener("helpersLoaded", async () => {
     const hours = document.getElementById("hours");
     hours.addEventListener("click", () => select("hours"));
 
-    const contracts = await updateContracts();
-    await updatePage(contracts);
-})
+    setupWeeks();
+});
+
+function setupWeeks() {
+    const dropdown = document.getElementById("dropdown-content");
+    dropdown.addEventListener("click", async (e) => {
+        const element = e.target;
+        if (!element.hasAttribute("data-week-number")) return;
+
+        await selectWeek(element);
+    });
+    dropdown.addEventListener("scroll", () => {
+        if (Math.abs(dropdown.scrollHeight - dropdown.scrollTop - dropdown.clientHeight) < 1) {
+            let last = dropdown.lastElementChild;
+            while (!last.hasAttribute("data-week-number")) {
+                const index = Array.from(dropdown.children).indexOf(last);
+                if (index === 0) return;
+
+                last = dropdown.children.item(index - 1);
+            }
+
+            const year = parseInt(last.getAttribute("data-year"))
+            const week = parseInt(last.getAttribute("data-week-number"))
+
+            addWeeks(5, year, week);
+        }
+    })
+
+    dropdown.innerText = "";
+    addWeeks(5, getCurrentYear(), getCurrentWeek() + 1);
+    dropdown.children.item(0).click();
+}
+
+function addWeeks(amount, lastYear, lastWeek) {
+    const dropdown = document.getElementById("dropdown-content");
+
+    while (amount-- > 0) {
+        lastWeek--;
+
+        if (lastWeek < 1) {
+            lastYear--;
+            lastWeek = weeksInYear(lastYear);
+            dropdown.appendChild(createYearItem(lastYear));
+        }
+
+        dropdown.appendChild(createWeekItem(lastYear, lastWeek));
+    }
+}
+
+function createYearItem(year) {
+    const container = document.createElement("div");
+    container.classList.add("py-2", "px-4", "font-bold");
+    container.innerText = year;
+
+    return container;
+}
+
+function createWeekItem(year, week) {
+    const container = document.createElement("div");
+    container.classList.add("py-2", "px-4", "hover:bg-gray-100", "rounded-t-lg", "cursor-pointer");
+    container.innerText = "Week " + week;
+    container.setAttribute("data-year", year);
+    container.setAttribute("data-week-number", week);
+
+    return container;
+}
 
 async function updateContracts() {
     const contracts = await obtainContractsForUser(getUserId())
@@ -26,7 +89,6 @@ async function updateContracts() {
         option.setAttribute('data-role', c.contract.role);
         option.setAttribute('data-id', c.contract.id);
         option.addEventListener('click', () => selectPosition(option));
-        console.log(option)
         positionContent.appendChild(option);
     });
 
@@ -42,7 +104,7 @@ async function updatePage(contracts) {
         if (workedHours === null) continue;
 
         for (const hour of workedHours.hours) {
-            entries.appendChild(createEntry(hour, contract.contract, getSelectedWeek(), getCurrentYear()))
+            entries.appendChild(createEntry(hour, contract.contract, getSelectedWeek(), getSelectedYear()))
         }
     }
 }
@@ -102,12 +164,16 @@ function obtainContractsForUser(uid) {
 
 function getSelectedWeek() {
     const header = document.getElementById("dropdown-header");
-    const weekNumber = header.getAttribute("data-week-number").toString();
-    return weekNumber;
+    return header.getAttribute("data-week-number").toString();
+}
+
+function getSelectedYear() {
+    const header = document.getElementById("dropdown-header");
+    return header.getAttribute("data-year").toString();
 }
 
 function fetchSheet(userid, contract) {
-    return fetch("/earnit/api/users/" + userid + "/contracts/" + contract.id + "/worked/" + getCurrentYear() + "/" + getSelectedWeek() + "?hours=true", {
+    return fetch("/earnit/api/users/" + userid + "/contracts/" + contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "?hours=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -152,7 +218,7 @@ function getCurrentWeek() {
 }
 
 function sendFormDataToServer(uid, ucid, formData) {
-    fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getCurrentYear() + "/" + getCurrentWeek(),
+    fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
         {
             method: "POST",
             body: JSON.stringify(formData),
@@ -243,11 +309,15 @@ async function selectWeek(option) {
     const header = document.getElementById("dropdown-header");
     const range = document.getElementById("dropdown-range")
     const weekNumber = parseInt(option.dataset.weekNumber);
-    const dateRange = getWeekDateRange(weekNumber);
+    const year = parseInt(option.dataset.year);
+    const dateRange = getWeekDateRange(weekNumber, year);
     header.textContent = option.textContent;
     header.setAttribute("data-week-number", option.getAttribute("data-week-number"))
+    header.setAttribute("data-year", option.getAttribute("data-year"))
     range.textContent = dateRange;
-    console.log(header);
+
+    const dropdown = document.getElementById("dropdown-content");
+    dropdown.classList.add("hidden");
 
     const contracts = await updateContracts();
     await updatePage(contracts);
@@ -261,18 +331,12 @@ function selectPosition(option) {
     togglePosition();
 }
 
-function getWeekDateRange(weekNumber) {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-
+function getWeekDateRange(weekNumber, year) {
     // Find the first day of the year
-    const firstDayOfYear = new Date(year, 0, 1);
-    const dayOfWeek = firstDayOfYear.getDay();
-    const startDate = new Date(firstDayOfYear.getTime() - dayOfWeek * 24 * 60 * 60 * 1000);
+    const startOfWeek = getDateOfISOWeek(weekNumber, year);
 
     // Calculate the start and end dates of the selected week
-    const startOfWeek = new Date(startDate.getTime() + (weekNumber - 1) * 7 * 24 * 60 * 60 * 1000);
-    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+    const endOfWeek = addDays(getDateOfISOWeek(weekNumber, year), 6);
 
     // Format the date range
     const startDateFormatted = formatDate(startOfWeek);
@@ -292,7 +356,7 @@ document.addEventListener("click", function (event) {
     const button = document.getElementById("dropdown-button");
     const targetElement = event.target;
 
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+    if (!dropdown.classList.contains("hidden") && !dropdown.contains(targetElement) && !button.contains(targetElement)) {
         dropdown.classList.add("hidden");
     }
 });
@@ -359,4 +423,23 @@ function formatNumber(number) {
         minimumIntegerDigits: 2,
         useGrouping: false
     });
+}
+
+function weeksInYear(year) {
+    return Math.max(
+        getWeek(new Date(year, 11, 31))
+        , getWeek(new Date(year, 11, 31-7))
+    );
+}
+
+function getWeek(ofDate) {
+    const date = new Date(ofDate);
+    date.setHours(0, 0, 0, 0);
+    // Thursday in current week decides the year.
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    // January 4 is always in week 1.
+    const week1 = new Date(date.getFullYear(), 0, 4);
+    // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
+        - 3 + (week1.getDay() + 6) % 7) / 7);
 }

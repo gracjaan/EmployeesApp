@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat">
+<body class="bg-black flex flex-col w-full font-montserrat">
 <header
         class="flex bg-primary w-fit p-2 rounded-br-lg cursor-pointer"
         onclick="history.back()"
@@ -25,7 +25,7 @@
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
     <header class="w-full">
         <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 px-2 sm:px-0 ">
-            <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md">
+            <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md z-10">
                 <h2 class="text-text text-2xl font-regular" id="dropdown-range">Date range</h2>
                 <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
                 <div class="flex">
@@ -36,16 +36,29 @@
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
                         </button>
                         <div id="dropdown-content"
-                             class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
+                             class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
                             <!-- Dropdown options -->
-                            <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer"
-                                 onclick="selectWeek(this)" data-week-number="23">Week 23
+                            <div class="py-2 px-4 hover:bg-gray-100 rounded-t-lg cursor-pointer"
+                                  data-week-number="23" data-year="2023">Week 23
                             </div>
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="selectWeek(this)"
-                                 data-week-number="22">Week 22
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" 
+                                 data-week-number="22" data-year="2023">Week 22
                             </div>
-                            <div class="py-2 px-4 hover:bg-gray-100 rounded-lg cursor-pointer"
-                                 onclick="selectWeek(this)" data-week-number="21">Week 21
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                                  data-week-number="21" data-year="2023">Week 21
+                            </div>
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                                  data-week-number="21" data-year="2023">Week 21
+                            </div>
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                                  data-week-number="1" data-year="2023">Week 1
+                            </div>
+                            <div class="pt-4 px-4 font-bold">2022</div>
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                                  data-week-number="52" data-year="2022">Week 52
+                            </div>
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                                  data-week-number="21" data-year="2022">Week 21
                             </div>
                         </div>
                     </div>
