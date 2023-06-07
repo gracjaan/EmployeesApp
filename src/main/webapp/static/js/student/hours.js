@@ -173,7 +173,7 @@ function getSelectedYear() {
 }
 
 function fetchSheet(userid, contract) {
-    return fetch("/earnit/api/users/" + userid + "/contracts/" + contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "?hours=true", {
+    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getSelectedYear()}/${getSelectedWeek()}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -182,7 +182,29 @@ function fetchSheet(userid, contract) {
         .catch(e => null);
 }
 
-function submitForm() {
+function getQueryParams() {
+    const order = getOrder();
+    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}`: ""}`
+}
+
+function getOrder() {
+    const date = document.getElementById("date");
+    const dateSelected = date.getAttribute("data-selected");
+
+    const hours = document.getElementById("hours");
+    const hoursSelected = hours.getAttribute("data-selected");
+
+    let order = "";
+    if (dateSelected > 0) {
+        order += "hours.day:" + (dateSelected === "1" ? "asc" : "desc");
+    } else if (hoursSelected > 0) {
+        order += "hours.minutes:" + (hoursSelected === "1" ? "asc" : "desc");
+    }
+
+    return order;
+}
+
+async function submitForm() {
     const dateInput = document.getElementById('date-input');
     const hoursInput = document.getElementById('hours-input');
     const positionInput = document.getElementById("position-header")
@@ -195,6 +217,8 @@ function submitForm() {
     };
 
     if (validateForm(formData, positionInput.getAttribute("data-id")) === false) {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
         return;
     }
 
@@ -231,6 +255,8 @@ function sendFormDataToServer(uid, ucid, formData) {
         .then(async response => {
             const contracts = await updateContracts();
             await updatePage(contracts);
+
+            if (!response.ok) throw new Error();
         })
         .catch(e => alert("Could not submit hours"))
 }
