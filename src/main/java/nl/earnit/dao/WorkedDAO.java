@@ -91,8 +91,10 @@ public class WorkedDAO extends GenericDAO<User> {
         try {
             WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
+            if (ww == null) {
+                wwDao.addWorkedWeek(userContractId, year, week);
+            }
             worked.setWorkedWeekId(ww.getId());
-            System.out.println(ww.getId());
             String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) " +
                     "VALUES (?, ?, ?, ?) RETURNING id";
             PreparedStatement counter = this.con.prepareStatement(query);
@@ -102,7 +104,6 @@ public class WorkedDAO extends GenericDAO<User> {
             counter.setString(4, worked.getWork());
             // Execute query
             ResultSet res = counter.executeQuery();
-            System.out.println(counter.toString());
             // Return count
             res.next();
         } catch (Exception e) {

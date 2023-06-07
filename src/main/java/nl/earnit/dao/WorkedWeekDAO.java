@@ -494,4 +494,18 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             withHours ? hours : null
         );
     }
+
+    public void addWorkedWeek(String contractId, String year, String week) throws SQLException {
+        String query = "INSERT INTO \"" + tableName + "\" (contract_id, year, week, confirmed) " +
+            "VALUES (?, ?, ?, ?) RETURNING id";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
+        statement.setString(2, year);
+        statement.setString(3, week);
+        statement.setBoolean(4, false);
+
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+
+    }
 }
