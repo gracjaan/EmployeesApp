@@ -5,27 +5,8 @@ window.addEventListener("helpersLoaded", async () => {
     const hours = document.getElementById("hours");
     hours.addEventListener("click", () => select("hours"));
 
-    const contracts = await obtainContractsForUser(getUserId())
-
-    if (contracts === null){
-      return;
-    }
-
-    const positionContent = document.getElementById('position-content');
-
-    contracts.forEach(c => {
-        const option = document.createElement('div');
-        option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
-        option.textContent = c.contract.role;
-        option.setAttribute('data-role', c.contract.role);
-        option.setAttribute('data-id', c.contract.id);
-        option.addEventListener('click', () => selectPosition(option));
-        console.log(option)
-        positionContent.appendChild(option);
-    });
-
-    //fetchSheet(getUserId(), contracts)
-
+    const contracts = await updateContracts();
+    await updatePage(contracts);
 })
 
 function obtainContractsForUser(uid) {
@@ -38,67 +19,49 @@ function obtainContractsForUser(uid) {
         .catch(e => null);
 }
 
-function getSelectedWeek () {
+function getSelectedWeek() {
     const header = document.getElementById("dropdown-header");
-    const weekNumber = parseInt(header.dataset.weekNumber);
+    const weekNumber = header.getAttribute("data-week-number").toString();
     return weekNumber;
 }
 
-function fetchSheet(userid, contracts) {
-    const promises = contracts.map((contract) => {
-    return fetch("/users/"+ userid + "/contracts/" + contract.id + "/worked/" + getCurrentYear() + "/" + getSelectedWeek())
-        .then (response => response.json())
-        .then (data => {
-            html = "<div className=\"rounded-xl bg-primary p-4 relative flex justify-between\">";
-            for (const item of data){
-                html+=
-                    "<div className=\"text-text font-bold uppercase\">" + item.day + "</div>" +
-                    "<div className=\"text-text\">" + item.minutes + "</div>" +
-                    "<div className=\"text-text\">" + item.position + "</div>" +
-                    "<div className=\"text-text\">" + item.work + "</div>";
-            }
-            html += "</div>";
-            document.getElementById("items").innerHTML = html;
-        })
-        .catch(e => console.error(e))
-    });
-
-    Promise.all(promises)
-        .then (results => {
-            const combinedHtml = results.join("");
-            document.getElementById("items").innerHTML = combinedHtml;
-        })
-        .catch(e => console.error(e))
+function fetchSheet(userid, contract) {
+    return fetch("/earnit/api/users/" + userid + "/contracts/" + contract.id + "/worked/" + getCurrentYear() + "/" + getSelectedWeek() + "?hours=true", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(e => null);
 }
 
-function submitForm () {
+function submitForm() {
     const dateInput = document.getElementById('date-input');
     const hoursInput = document.getElementById('hours-input');
     const positionInput = document.getElementById("position-header")
     const descriptionInput = document.getElementById('description-input');
 
     const formData = {
-        date: dateInput.value,
-        hours: hoursInput.value,
-        position: positionInput.getAttribute("data-id").toString(),
-        description: descriptionInput.value
+        day: dateInput.value,
+        minutes: hoursInput.value * 60,
+        work: descriptionInput.value
     };
 
     console.log(formData)
 
-    if (validateForm(formData) == false){
+    if (validateForm(formData, positionInput.getAttribute("data-id")) === false) {
         return;
     }
 
-    sendFormDataToServer(getUserId(), formData );
+    sendFormDataToServer(getUserId(), positionInput.getAttribute("data-id").toString(), formData);
 }
 
-function getCurrentYear () {
+function getCurrentYear() {
     const currentDate = new Date();
     return currentDate.getFullYear();
 }
 
-function getCurrentWeek () {
+function getCurrentWeek() {
     const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
     const days = Math.floor((currentDate - startDate) /
@@ -109,42 +72,45 @@ function getCurrentWeek () {
     return weekNumber;
 }
 
-function sendFormDataToServer (uid, formData) {
-    fetch ("/earnit/api/users/"+ uid + "/contracts/" + formData.position + "/worked/" + getCurrentYear() + "/" + getCurrentWeek(),
+function sendFormDataToServer(uid, ucid, formData) {
+    fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getCurrentYear() + "/" + getCurrentWeek(),
         {
             method: "POST",
             body: JSON.stringify(formData),
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
-                "Content-type" : "application/json",
-                "Accept" : "application/json"
+                "Content-type": "application/json",
+                "Accept": "application/json"
             }
         })
-        .then (response => console.log("Form submitted successfully"))
-        .catch(e => console.error(e))
+        .then(async response => {
+            const contracts = await updateContracts();
+            await updatePage(contracts);
+        })
+        .catch(e => alert("Could not submit hours"))
 }
 
-function submitEdittedForm (uid, ucid, year, week, date, hours, position, description) {
+function submitEdittedForm(uid, ucid, year, week, date, hours, position, description) {
 
-    if (validateForm() == false){
+    if (validateForm() === false) {
         return;
     }
 
     let json = {date: date, hours: hours, position: position, description: description}
-    fetch ("/users/"+ uid + "/contracts/" + ucid + "/worked/" + year + "/" + week,
+    fetch("/users/" + uid + "/contracts/" + ucid + "/worked/" + year + "/" + week,
         {
             method: "PUT",
             body: JSON.stringify(json),
             headers: {
-                "Content-type" : "application/json",
-                "Accept" : "application/json"
+                "Content-type": "application/json",
+                "Accept": "application/json"
             }
         })
         .catch(e => console.error(e))
 }
 
-function validateForm (formData) {
-    if (formData.date === '' || formData.hours === '' || formData.position === '' || formData.description === '') {
+function validateForm(formData, position) {
+    if (formData.day === '' || formData.minutes === '' || formData.work === '' || position === null) {
         alert('Please fill in all the fields.');
         return false;
     }
@@ -182,7 +148,6 @@ function toggleEdit(button) {
 }
 
 
-
 //______________________________________________DROPDOWNS______________________________________________________________
 
 function toggleWeek() {
@@ -201,8 +166,12 @@ function selectWeek(option) {
     const weekNumber = parseInt(option.dataset.weekNumber);
     const dateRange = getWeekDateRange(weekNumber);
     header.textContent = option.textContent;
+    header.setAttribute("data-week-number", option.getAttribute("data-week-number"))
     range.textContent = dateRange;
-    toggleWeek();
+    console.log(header);
+
+    const contracts = await updateContracts();
+    await updatePage(contracts);
 }
 
 function selectPosition(option) {
@@ -239,7 +208,7 @@ function formatDate(date) {
     return day + "." + month + "." + year;
 }
 
-document.addEventListener("click", function(event) {
+document.addEventListener("click", function (event) {
     const dropdown = document.getElementById("dropdown-content");
     const button = document.getElementById("dropdown-button");
     const targetElement = event.target;
@@ -249,7 +218,7 @@ document.addEventListener("click", function(event) {
     }
 });
 
-document.addEventListener("click", function(event) {
+document.addEventListener("click", function (event) {
     const dropdown = document.getElementById("position-content");
     const button = document.getElementById("position-button");
     const targetElement = event.target;
@@ -258,7 +227,6 @@ document.addEventListener("click", function(event) {
         dropdown.classList.add("hidden");
     }
 });
-
 
 
 //__________________________________FILTERS___________________________________________
