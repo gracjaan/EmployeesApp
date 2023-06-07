@@ -5,7 +5,8 @@
     <title>Earnit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/earnit/static/js/staff/overview.js" defer></script>
+    <script src="/earnit/static/js/staff/links.js" defer></script>
+    <script src="/earnit/static/js/helpers.js" defer></script>
     <link rel="stylesheet" href="/earnit/static/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -26,27 +27,29 @@
                 <!--            dropdown menu for the name of the student you want to link-->
                 <div class="p-4 space-y-4">
                     <div class="dropdown relative">
-                        <button class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between">
-                            <div class="text-text font-bold">Gracjan Chmielnicki</div>
-                            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
+                        <button id="dropdown-student-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
+                        onclick="toggleStudent()">
+                            <div id="user" class="text-text font-bold">Choose user</div>
+                            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
                         </button>
-                        <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+                        <div id="dropdown-student-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute mt-2 hidden w-full">
                             <!-- Dropdown options -->
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+
                         </div>
                     </div>
 
                     <div class="bg-secondary rounded-xl flex flex-col gap-4 p-4">
-                        <div class="flex items-center">
-                            <img class="h-14 mr-8" src="/earnit/static/icons/kid-picture.svg" alt="company logo">
-                            <p class="text-text font-bold text-2xl">Gracjan Chmielnicki</p>
+                        <div class="flex flex-center">
+                            <p class="text-text font-bold text-2xl">Select A User</p>
                         </div>
-                        <div>
-                            <p class="text-text font-bold text-2xl">Software Engineer II</p>
-                            <p class="text-text"> Part - time</p>
-                        </div>
+<!--                        <div class="flex items-center">-->
+<!--                            <img class="h-14 mr-8" src="/earnit/static/icons/user.svg" alt="company logo">-->
+<!--                            <p id="user-name-display"class="text-text font-bold text-2xl">Select A User</p>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <p class="text-text font-bold text-2xl">Software Engineer II</p>-->
+<!--                            <p class="text-text"> Part - time</p>-->
+<!--                        </div>-->
                     </div>
 
                 </div>
@@ -65,13 +68,14 @@
                 <div class="p-4 space-y-4">
                     <!--                company dropdown menu-->
                     <div class="dropdown relative">
-                        <button class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between">
-                            <div class="text-text font-bold">Amazon</div>
+                        <button id="dropdown-company-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
+                        onclick="toggleCompany()">
+                            <div id="company" class="text-text font-bold">Choose company</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
                         </button>
-                        <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+                        <div id="dropdown-company-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
                             <!-- Dropdown options -->
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
+                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer" onclick="obtainUser()">Option 1</div>
                             <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
                             <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
                         </div>
@@ -95,11 +99,12 @@
 <!--            this is for the filtering options-->
             <div class="flex flex-row gap-4">
                 <div class="dropdown relative">
-                    <button class="rounded-xl bg-white px-4 py-4 flex mr-5 items-center w-full justify-between">
+                    <button id="dropdown-position-button" class="rounded-xl bg-white px-4 py-4 flex mr-5 items-center w-full justify-between"
+                        onclick="togglePosition()">
                         <div class="text-black font-bold">Position</div>
                         <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class=""/>
                     </button>
-                    <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+                    <div id="dropdown-position-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
                         <!-- Dropdown options -->
                         <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
                         <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
@@ -107,11 +112,12 @@
                     </div>
                 </div>
                 <div class="dropdown relative">
-                    <button class="rounded-xl bg-white px-4 py-4 flex mr-5 items-center w-full justify-between">
+                    <button id="dropdown-type-button" class="rounded-xl bg-white px-4 py-4 flex mr-5 items-center w-full justify-between"
+                    onclick="toggleType()">
                         <div class="text-black font-bold">Type</div>
                         <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class=""/>
                     </button>
-                    <div class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
+                    <div id="dropdown-type-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
                         <!-- Dropdown options -->
                         <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
                         <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
