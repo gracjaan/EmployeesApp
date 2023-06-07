@@ -118,7 +118,7 @@ public class UserContractWorkedResource {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.confirmWorkedWeekById(userContractId, year, week);
+            workedWeekDAO.confirmWorkedWeek(userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -133,7 +133,7 @@ public class UserContractWorkedResource {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.removeConfirmWorkedWeekById(userContractId, year, week);
+            workedWeekDAO.removeConfirmWorkedWeek(userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -142,12 +142,12 @@ public class UserContractWorkedResource {
 
     @PUT
     @Path("/note")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateWorkedWeekNote(WorkedWeek workedWeek) {
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response updateWorkedWeekNote(String note) {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.updateWorkedWeekNote(workedWeek);
+            workedWeekDAO.updateWorkedWeekNote(note, userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }

@@ -41,15 +41,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return res.getInt("count");
     }
 
-    public void confirmWorkedWeek(String year, String week) throws SQLException {
-        String query = "UPDATE worked_week SET confirmed = true WHERE year=? AND week=?";
-        PreparedStatement statement = con.prepareStatement(query);
-        statement.setString(1, year);
-        statement.setString(2, week);
-        statement.executeUpdate();
-    }
-
-    public void confirmWorkedWeekById(String userContractId, String year, String week) throws SQLException {
+    public void confirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
         String query = "UPDATE worked_week SET confirmed = true WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, userContractId);
@@ -58,7 +50,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.executeUpdate();
     }
 
-    public void removeConfirmWorkedWeekById(String userContractId, String year, String week) throws SQLException {
+    public void removeConfirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
         String query = "UPDATE worked_week SET confirmed = false WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, userContractId);
@@ -67,11 +59,13 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.executeUpdate();
     }
 
-    public void updateWorkedWeekNote(WorkedWeek workedWeek) throws SQLException {
-        String query = "UPDATE worked_week SET note = ? WHERE id = ?";
+    public void updateWorkedWeekNote(String note, String userContractId, String year, String week) throws SQLException {
+        String query = "UPDATE worked_week SET note = ? WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        statement.setString(1, workedWeek.getNote());
-        PostgresJDBCHelper.setUuid(statement, 2, workedWeek.getId());
+        statement.setString(1, note);
+        PostgresJDBCHelper.setUuid(statement, 2, userContractId);
+        statement.setInt(3, Integer.parseInt(year));
+        statement.setInt(4, Integer.parseInt(week));
     }
 
     /**
