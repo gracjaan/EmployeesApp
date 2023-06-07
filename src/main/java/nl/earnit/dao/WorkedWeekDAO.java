@@ -500,8 +500,8 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             "VALUES (?, ?, ?, ?) RETURNING id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, contractId);
-        statement.setString(2, year);
-        statement.setString(3, week);
+        statement.setInt(2, Integer.parseInt(year));
+        statement.setInt(3, Integer.parseInt(week));
         statement.setBoolean(4, false);
 
         ResultSet resultSet = statement.executeQuery();
