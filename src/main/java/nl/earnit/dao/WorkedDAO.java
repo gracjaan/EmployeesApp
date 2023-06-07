@@ -116,12 +116,12 @@ public class WorkedDAO extends GenericDAO<User> {
 
     public void updateWorkedWeekTask(Worked worked) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?;";
-        PreparedStatement counter = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(counter, 1, String.valueOf(worked.getDay()));
-        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getMinutes()));
-        PostgresJDBCHelper.setUuid(counter, 3, worked.getWork());
-        PostgresJDBCHelper.setUuid(counter, 4, worked.getId());
-        ResultSet res = counter.executeQuery();
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setInt(1, worked.getDay());
+        statement.setInt(2, worked.getMinutes());
+        statement.setString(3, worked.getWork());
+        PostgresJDBCHelper.setUuid(statement, 4, worked.getId());
+        ResultSet res = statement.executeQuery();
         res.next();
     }
 
