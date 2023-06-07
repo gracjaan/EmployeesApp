@@ -55,7 +55,6 @@ function approve(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .then((request) => {
-            // @TODO check if updated
             updatePage(request);
         })
         .catch(() => null);
@@ -71,7 +70,6 @@ function reject(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .then((request) => {
-            // @TODO check if updated
             updatePage(request);
         })
         .catch(() => null);
@@ -91,7 +89,6 @@ function undo(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .then((request) => {
-            // @TODO check if updated
             updatePage(request);
         })
         .catch(() => null);

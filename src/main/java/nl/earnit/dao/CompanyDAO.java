@@ -3,6 +3,7 @@ package nl.earnit.dao;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-//TODO: change database so it makes the active attribute true by default
 
 public class CompanyDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company";
@@ -118,5 +117,20 @@ public class CompanyDAO extends GenericDAO<User> {
         return companyList;
 
     }
+
+    public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
+        String query = "SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email FROM user u, company_user c WHERE u.id = c.user_id AND c.company_id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
+        ResultSet resultSet = statement.executeQuery();
+        List<UserResponse> users = new ArrayList<>();
+        while (resultSet.next()) {
+            UserResponse user = new UserResponse(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"));
+            users.add(user);
+        }
+        return users;
+    }
+
+
 }
 

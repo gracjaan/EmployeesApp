@@ -2,12 +2,17 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import nl.earnit.dao.CompanyDAO;
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
+import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyResource {
     @Context
@@ -73,6 +78,20 @@ public class CompanyResource {
 
 
 
+    }
+
+    @GET
+    @Path("/students")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getStudents() {
+        List<UserResponse> users;
+        try {
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            users = companyDAO.getStudentsForCompany(companyId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(users).build();
     }
 
     @POST
