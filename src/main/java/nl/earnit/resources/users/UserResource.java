@@ -54,8 +54,15 @@ public class UserResource {
 
     @DELETE
     @Path("/users/{userId}")
-    public Response deleteUser(@PathParam("userId") String userId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response disableUser(@PathParam("userId") String userId) {
+        UserDAO userDAO;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            userDAO.disableUserById(userId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @GET

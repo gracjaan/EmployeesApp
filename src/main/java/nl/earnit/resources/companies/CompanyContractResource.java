@@ -208,7 +208,7 @@ public class CompanyContractResource {
 
     @DELETE
     @Path("/employees/{userContractId}")
-    public Response deleteUserContract(@PathParam("userContractId") String userContractId) {
+    public Response disableUserContract(@PathParam("userContractId") String userContractId) {
         if (userContractId == null) {
             return Response.status(400).build();
         }
