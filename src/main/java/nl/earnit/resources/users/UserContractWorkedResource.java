@@ -66,7 +66,7 @@ public class UserContractWorkedResource {
         }
 
         if (workedWeek == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         return Response.ok(workedWeek).build();
@@ -114,12 +114,11 @@ public class UserContractWorkedResource {
 
     @POST
     @Path("/confirm")
-    @Consumes({MediaType.TEXT_PLAIN})
-    public Response confirmWorkedWeek(String workedWeekId) {
+    public Response confirmWorkedWeek() {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.confirmWorkedWeekById(workedWeekId);
+            workedWeekDAO.confirmWorkedWeekById(userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -130,12 +129,11 @@ public class UserContractWorkedResource {
 
     @DELETE
     @Path("/confirm")
-    @Consumes({MediaType.TEXT_PLAIN})
-    public Response removeConfirmWorkedWeek(String workedWeekId) {
+    public Response removeConfirmWorkedWeek() {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.removeConfirmWorkedWeekById(workedWeekId);
+            workedWeekDAO.removeConfirmWorkedWeekById(userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }

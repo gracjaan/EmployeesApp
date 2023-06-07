@@ -49,17 +49,21 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.executeUpdate();
     }
 
-    public void confirmWorkedWeekById(String workedWeekId) throws SQLException {
-        String query = "UPDATE worked_week SET confirmed = true WHERE id = ?";
+    public void confirmWorkedWeekById(String userContractId, String year, String week) throws SQLException {
+        String query = "UPDATE worked_week SET confirmed = true WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        statement.setInt(2, Integer.parseInt(year));
+        statement.setInt(3, Integer.parseInt(week));
         statement.executeUpdate();
     }
 
-    public void removeConfirmWorkedWeekById(String workedWeekId) throws SQLException {
-        String query = "UPDATE worked_week SET confirmed = false WHERE id = ?";
+    public void removeConfirmWorkedWeekById(String userContractId, String year, String week) throws SQLException {
+        String query = "UPDATE worked_week SET confirmed = false WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        statement.setInt(2, Integer.parseInt(year));
+        statement.setInt(3, Integer.parseInt(week));
         statement.executeUpdate();
     }
 
