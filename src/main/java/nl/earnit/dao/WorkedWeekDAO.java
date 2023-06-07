@@ -505,6 +505,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.setBoolean(4, false);
 
         ResultSet resultSet = statement.executeQuery();
+
         resultSet.next();
 
     }

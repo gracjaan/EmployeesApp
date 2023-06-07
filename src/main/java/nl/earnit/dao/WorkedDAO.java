@@ -93,6 +93,7 @@ public class WorkedDAO extends GenericDAO<User> {
             WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
             if (ww == null) {
                 wwDao.addWorkedWeek(userContractId, year, week);
+                addWorkedWeekTask(worked, userContractId, year, week);
             }
             worked.setWorkedWeekId(ww.getId());
             String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) " +
