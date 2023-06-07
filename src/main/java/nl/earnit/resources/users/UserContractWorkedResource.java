@@ -91,7 +91,7 @@ public class UserContractWorkedResource {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.addWorkedWeekTask(entry);
+            workedDAO.addWorkedWeekTask(entry,userContractId, year, week);
         } catch (SQLException e) {
             return Response.serverError().build();
         }

@@ -1,5 +1,6 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
@@ -86,19 +87,23 @@ public class WorkedDAO extends GenericDAO<User> {
         return contractList;
     }
 
-    public void addWorkedWeekTask(Worked worked) throws SQLException{
+    public void addWorkedWeekTask(Worked worked, String userContractId,  String year, String week) throws SQLException{
+        WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+        WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
+        worked.setWorkedWeekId(ww.getId());
         String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) "+
                 "VALUES (?, ?, ?, ?) RETURNING id";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, worked.getWorkedWeekId());
-        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getDay()));
-        PostgresJDBCHelper.setUuid(counter, 3, String.valueOf(worked.getMinutes()));
-        PostgresJDBCHelper.setUuid(counter, 4, worked.getWork());
+        counter.setInt(2, worked.getDay());
+        counter.setInt(3, worked.getMinutes());
+        counter.setString(4, worked.getWork());
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
         res.next();
     }
+
 
     public void updateWorkedWeekTask(Worked worked) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?;";
