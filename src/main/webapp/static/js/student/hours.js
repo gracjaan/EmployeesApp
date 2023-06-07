@@ -39,6 +39,7 @@ async function updatePage(contracts) {
 
     for (const contract of contracts) {
         const workedHours = await fetchSheet(getUserId(), contract);
+        if (workedHours === null) continue;
 
         for (const hour of workedHours.hours) {
             entries.appendChild(createEntry(hour, contract.contract, getSelectedWeek(), getCurrentYear()))
