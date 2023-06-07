@@ -11,8 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: change database so it makes the active attribute true by default
-
 public class CompanyDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company";
 
