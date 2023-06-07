@@ -78,7 +78,10 @@ public class UserContractWorkedResource {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.updateWorkedWeekTask(entry);
+            boolean flag = workedDAO.updateWorkedWeekTask(entry);
+            if (!flag) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -91,7 +94,10 @@ public class UserContractWorkedResource {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.addWorkedWeekTask(entry,userContractId, year, week);
+            boolean flag = workedDAO.addWorkedWeekTask(entry,userContractId, year, week);
+            if (!flag) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -99,12 +105,15 @@ public class UserContractWorkedResource {
     }
 
     @DELETE
-    @Consumes({MediaType.TEXT_PLAIN})
-    public Response deleteWorkedWeekTask(String workedId) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response deleteWorkedWeekTask(Worked entry) {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.deleteWorkedWeekTask(workedId);
+            boolean flag = workedDAO.deleteWorkedWeekTask(entry);
+            if (!flag) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
         } catch (SQLException e) {
             return Response.serverError().build();
         }

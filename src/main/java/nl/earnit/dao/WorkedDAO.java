@@ -87,8 +87,10 @@ public class WorkedDAO extends GenericDAO<User> {
         return contractList;
     }
 
-    public void addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
-        try {
+    public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
+            if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+                return false;
+            }
             WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
             if (ww == null) {
@@ -107,14 +109,14 @@ public class WorkedDAO extends GenericDAO<User> {
             ResultSet res = counter.executeQuery();
             // Return count
             res.next();
-        } catch (Exception e) {
-            System.out.println(e);
-            return;
-        }
+            return true;
     }
 
 
-    public void updateWorkedWeekTask(Worked worked) throws SQLException {
+    public boolean updateWorkedWeekTask(Worked worked) throws SQLException {
+        if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+            return false;
+        }
         String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?;";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setInt(1, worked.getDay());
@@ -123,13 +125,26 @@ public class WorkedDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 4, worked.getId());
         ResultSet res = statement.executeQuery();
         res.next();
+        return true;
     }
 
-    public void deleteWorkedWeekTask(String workedId) throws SQLException {
+    public boolean deleteWorkedWeekTask(Worked worked) throws SQLException {
+        if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+            return false;
+        }
         String query = "DELETE FROM \"" + tableName + "\" WHERE id = ?;";
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedId);
+        PostgresJDBCHelper.setUuid(statement, 1, worked.getId());
         statement.executeUpdate();
+        return true;
+    }
+
+    public boolean isWorkedWeekConfirmed(String workedWeekId) throws SQLException {
+        String query = "SELECT confirmed FROM worked_week WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        ResultSet resultSet = statement.executeQuery();
+        return resultSet.getBoolean("confirmed");
     }
 
 
