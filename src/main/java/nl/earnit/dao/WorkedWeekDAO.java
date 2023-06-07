@@ -164,7 +164,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
         statement.setInt(1, year);
         statement.setInt(2, week);
-        statement.setString(3, userContractId);
+        PostgresJDBCHelper.setUuid(statement, 3, userContractId);
 
         // Execute query
         ResultSet res = statement.executeQuery();

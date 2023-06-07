@@ -87,21 +87,28 @@ public class WorkedDAO extends GenericDAO<User> {
         return contractList;
     }
 
-    public void addWorkedWeekTask(Worked worked, String userContractId,  String year, String week) throws SQLException{
-        WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-        WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
-        worked.setWorkedWeekId(ww.getId());
-        String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) "+
-                "VALUES (?, ?, ?, ?) RETURNING id";
-        PreparedStatement counter = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(counter, 1, worked.getWorkedWeekId());
-        counter.setInt(2, worked.getDay());
-        counter.setInt(3, worked.getMinutes());
-        counter.setString(4, worked.getWork());
-        // Execute query
-        ResultSet res = counter.executeQuery();
-        // Return count
-        res.next();
+    public void addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
+        try {
+            WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
+            worked.setWorkedWeekId(ww.getId());
+            System.out.println(ww.getId());
+            String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) " +
+                    "VALUES (?, ?, ?, ?) RETURNING id";
+            PreparedStatement counter = this.con.prepareStatement(query);
+            PostgresJDBCHelper.setUuid(counter, 1, ww.getId());
+            counter.setInt(2, worked.getDay());
+            counter.setInt(3, worked.getMinutes());
+            counter.setString(4, worked.getWork());
+            // Execute query
+            ResultSet res = counter.executeQuery();
+            System.out.println(counter.toString());
+            // Return count
+            res.next();
+        } catch (Exception e) {
+            System.out.println(e);
+            return;
+        }
     }
 
 
@@ -122,8 +129,6 @@ public class WorkedDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 1, workedId);
         statement.executeUpdate();
     }
-
-
 
 
 }
