@@ -158,8 +158,10 @@ function createEntry(entry, contract, week, year) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
     entryContainer.setAttribute("contract-id", contract.id)
+    entryContainer.setAttribute("data-id", entry.id)
     entryContainer.setAttribute("data-week", week)
     entryContainer.setAttribute("data-year", year)
+    entryContainer.setAttribute("data-day", entry.day)
 
     const entryInfo = document.createElement("div");
     entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_2fr_5fr]", "grid");
@@ -348,7 +350,9 @@ function submitEdittedForm(data) {
         return;
     }
 
-    let json = {day: data.day, minutes: data.minutes, position: data.position, work: data.work}
+    let json = {day: data.day, minutes: data.minutes, work: data.work, id: data.id
+            //position: data.position
+        }
     fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
         {
             method: "PUT",
@@ -400,9 +404,10 @@ function toggleEdit(button) {
     if (isEditing) {
         // Submission logic here
         const updatedData = {
-            day: textElements[0].textContent,
-            minutes: textElements[1].textContent,
-            position: textElements[2].textContent,
+            id: entry.getAttribute("data-id"),
+            day: entry.getAttribute("data-day"),
+            minutes: parseInt(textElements[1].textContent) * 60,
+            // position: textElements[2].textContent,
             work: textElements[3].textContent,
             ucid: entry.getAttribute("contract-id"),
             week: entry.getAttribute("data-week"),

@@ -121,14 +121,14 @@ public class WorkedDAO extends GenericDAO<User> {
             return false;
         }
 
-        String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?;";
+        String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setInt(1, worked.getDay());
         statement.setInt(2, worked.getMinutes());
         statement.setString(3, worked.getWork());
         PostgresJDBCHelper.setUuid(statement, 4, worked.getId());
-        ResultSet res = statement.executeQuery();
-        res.next();
+        statement.executeUpdate();
+
         return true;
     }
 
