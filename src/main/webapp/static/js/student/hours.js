@@ -5,8 +5,31 @@ window.addEventListener("helpersLoaded", async () => {
     const hours = document.getElementById("hours");
     hours.addEventListener("click", () => select("hours"));
 
+    const dropdown = document.getElementById("day-content");
+    dropdown.addEventListener("click", async (e) => {
+        const element = e.target;
+        if (!element.hasAttribute("data-day")) return;
+
+        await selectDay(element);
+    });
+    dropdown.appendChild(createDayItem(0, "Monday"));
+    dropdown.appendChild(createDayItem(1, "Tuesday"));
+    dropdown.appendChild(createDayItem(2, "Wednesday"));
+    dropdown.appendChild(createDayItem(3, "Thursday"));
+    dropdown.appendChild(createDayItem(4, "Friday"));
+    dropdown.appendChild(createDayItem(5, "Saturday"));
+    dropdown.appendChild(createDayItem(6, "Sunday"));
+
     setupWeeks();
 });
+
+function createDayItem(day, dayName) {
+    const container = document.createElement("div");
+    container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer");
+    container.innerText = dayName;
+    container.setAttribute("data-day", day);
+    return container;
+}
 
 function setupWeeks() {
     const dropdown = document.getElementById("dropdown-content");
@@ -64,7 +87,7 @@ function createYearItem(year) {
 
 function createWeekItem(year, week) {
     const container = document.createElement("div");
-    container.classList.add("py-2", "px-4", "hover:bg-gray-100", "rounded-t-lg", "cursor-pointer");
+    container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer");
     container.innerText = "Week " + week;
     container.setAttribute("data-year", year);
     container.setAttribute("data-week-number", week);
@@ -205,13 +228,13 @@ function getOrder() {
 }
 
 async function submitForm() {
-    const dateInput = document.getElementById('date-input');
+    const dayInput = document.getElementById("day-header");
     const hoursInput = document.getElementById('hours-input');
     const positionInput = document.getElementById("position-header")
     const descriptionInput = document.getElementById('description-input');
 
     const formData = {
-        day: dateInput.value,
+        day: parseInt(dayInput.getAttribute("data-day")),
         minutes: hoursInput.value * 60,
         work: descriptionInput.value
     };
@@ -281,7 +304,7 @@ function submitEdittedForm(uid, ucid, year, week, date, hours, position, descrip
 }
 
 function validateForm(formData, position) {
-    if (formData.day === '' || formData.minutes === '' || formData.work === '' || position === null) {
+    if (formData.day < 0 || formData.day > 6 || formData.minutes === '' || formData.work === '' || position === null) {
         alert('Please fill in all the fields.');
         return false;
     }
@@ -331,6 +354,11 @@ function togglePosition() {
     dropdown.classList.toggle("hidden");
 }
 
+function toggleDay() {
+    const dropdown = document.getElementById("day-content");
+    dropdown.classList.toggle("hidden");
+}
+
 async function selectWeek(option) {
     const header = document.getElementById("dropdown-header");
     const range = document.getElementById("dropdown-range")
@@ -353,6 +381,13 @@ function selectPosition(option) {
     const header = document.getElementById("position-header");
     header.setAttribute('data-role', option.getAttribute("data-role"));
     header.setAttribute('data-id', option.getAttribute("data-id"));
+    header.textContent = option.textContent;
+    togglePosition();
+}
+
+function selectDay(option) {
+    const header = document.getElementById("day-header");
+    header.setAttribute('data-day', option.getAttribute("data-day"));
     header.textContent = option.textContent;
     togglePosition();
 }
@@ -390,6 +425,16 @@ document.addEventListener("click", function (event) {
 document.addEventListener("click", function (event) {
     const dropdown = document.getElementById("position-content");
     const button = document.getElementById("position-button");
+    const targetElement = event.target;
+
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+        dropdown.classList.add("hidden");
+    }
+});
+
+document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("day-content");
+    const button = document.getElementById("day-button");
     const targetElement = event.target;
 
     if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {

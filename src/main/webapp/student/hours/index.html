@@ -32,11 +32,11 @@
                     <div class="dropdown relative">
                         <button id="dropdown-button" class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center"
                                 onclick="toggleWeek()">
-                            <div class="text-white text-left mr-5" id="dropdown-header" data-week-number="23">Week 23</div>
+                            <div class="text-white text-left mr-5" id="dropdown-header">Week</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
                         </button>
                         <div id="dropdown-content"
-                             class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
+                             class="dropdown-content z-20 bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full max-h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
                             <!-- Dropdown options -->
                         </div>
                     </div>
@@ -51,8 +51,20 @@
                 <div class="flex flex-col gap-2">
                     <div class="flex flex-row gap-2">
                         <div class="flex-1">
-                            <input placeholder="Date" type="text" name="date" id="date-input"
-                                   class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+                            <div class="dropdown relative">
+                                <button id="day-button"
+                                        class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white flex-row"
+                                        onclick="toggleDay()">
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-white text-left mr-2" id="day-header">Day</div>
+                                        <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
+                                    </div>
+                                </button>
+                                <div id="day-content"
+                                     class="dropdown-content z-20 bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full max-h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
+                                    <!-- Dropdown options -->
+                                </div>
+                            </div>
                         </div>
                         <div class="flex-1">
                             <input placeholder="Hours" type="text" name="hours" id="hours-input"
@@ -69,9 +81,8 @@
                             </div>
                         </button>
                         <div id="position-content"
-                             class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
+                             class="dropdown-content z-20 bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full max-h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
                             <!-- Dropdown options -->
-
                         </div>
                     </div>
                     <input placeholder="Description" type="text" name="description" id="description-input"

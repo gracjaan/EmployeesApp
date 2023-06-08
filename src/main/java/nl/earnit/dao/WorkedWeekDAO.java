@@ -459,6 +459,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 String[] dataStrings = data.split(",");
 
                 String note = dataStrings[4];
+                if (note.startsWith("\"") && note.endsWith("\"")) note = note.substring(1, note.length() - 1);
 
                 hours.add(new Worked(dataStrings[0], dataStrings[1], Integer.parseInt(dataStrings[2]), Integer.parseInt(dataStrings[3]), note));
             }
