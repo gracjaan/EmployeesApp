@@ -157,7 +157,7 @@ public class UserDAO extends GenericDAO<User> {
     public void disableUserById(String id) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         statement.executeQuery();
 
@@ -166,7 +166,7 @@ public class UserDAO extends GenericDAO<User> {
     public void renableUserById(String id) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         statement.executeQuery();
 

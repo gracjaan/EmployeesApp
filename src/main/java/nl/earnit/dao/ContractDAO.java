@@ -1,5 +1,6 @@
 package nl.earnit.dao;
 
+import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.contracts.Contract;
 
@@ -38,10 +39,10 @@ public class ContractDAO extends GenericDAO<User> {
 
         List<Contract> result = new ArrayList<>();
 
-        String query = "SELECT role, description  FROM  " + tableName + "WHERE id = ? and active = true";
+        String query = "SELECT id, role, description  FROM  " + tableName + " WHERE company_id = ? and active = true";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, companyId);
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
 
         ResultSet res = statement.executeQuery();
 
@@ -57,27 +58,29 @@ public class ContractDAO extends GenericDAO<User> {
     }
 
     public void updateContractDescription(String contractId, String description) throws SQLException {
-        String query = "UPDATE" + tableName + "SET description = ? WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET description = ? WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, description);
-        statement.setString(2, contractId);
+        PostgresJDBCHelper.setUuid(statement, 2, contractId);
+
 
         statement.executeQuery();
     }
 
     public void updateContractRole(String contractId, String role) throws SQLException {
-        String query = "UPDATE" + tableName + "SET role = ? WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET role = ? WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, role);
-        statement.setString(2, contractId);
+        PostgresJDBCHelper.setUuid(statement, 2, contractId);
+
 
         statement.executeQuery();
     }
 
     public Contract getContract(String contractId) throws SQLException {
-        String query = "GET description, role FROM" + tableName + " WHERE id = ?";
+        String query = "GET description, role FROM " + tableName + " WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, contractId);

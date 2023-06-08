@@ -12,7 +12,9 @@ window.addEventListener("helpersLoaded", async () => {
     usersElement.innerText = "";
 
     const companiesElement = document.getElementById("dropdown-company-content");
-    companiesElement.innerText = "";
+    companiesElement.innerText = ""
+
+
 
     for (const user of users) {
         usersElement.append(createUser(user));
@@ -21,6 +23,8 @@ window.addEventListener("helpersLoaded", async () => {
     for (const company of companies) {
         companiesElement.append(createCompany(company));
     }
+
+
 })
 
 
@@ -124,6 +128,30 @@ async function editCompanyInfo(company){
     }
 }
 
+function createContract(contract) {
+    const listElement = document.createElement("li");
+
+    const userLink = document.createElement("a");
+    userLink.classList.add("hover:border-2", "hover:color-color-text", "block", "columns-2", "bg-primary", "rounded-xl", "w-full", "p-2", "pl-4");
+    const role = document.createElement("p")
+    role.classList.add("text-text");
+    role.innerText = contract.role;
+
+    const blockDiv = document.createElement("div");
+    blockDiv.classList.add("block", "columns-1")
+
+    const description = document.createElement("p")
+    description.classList.add("text-text")
+    description.innerText = contract.description;
+
+    blockDiv.append(description);
+    userLink.append(role);
+    userLink.append(blockDiv);
+    listElement.append(userLink);
+
+    return listElement;
+}
+
 async function getStudents() {
     return await fetch("/earnit/api/users",
         {method: "GET",
@@ -145,29 +173,20 @@ async function getCompanies() {
         .catch(() => null);
 }
 
-async function obtainUser(uid){
-    return await fetch("/earnit/api/users/{uid}",
+async function getContracts(cid) {
+
+    return await fetch("/earnit/api/companies/" + cid + "/contracts",
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
                 'authorization': `token ${getJWTCookie()}`
-            }}
-    ).then((res) => res.json()).catch(() => null);
+            },
+        })
+        .then(response => response.json())
+        .catch(e => null);
 }
-
-async function obtainCompany(cid){
-    return await fetch("/earnit/api/companies/{company_id}",
-        {method: "GET",
-            headers: {
-                "accept-type" : "application/json",
-                'authorization': `token ${getJWTCookie()}`
-            }}
-    ).then((res) => res.json())
-        .catch(() => null);
-}
-
-function sendFormDataServer(){
-    return fetch("/earnit/api//companies/{company_id}/contracts/{contract_id}/employees ",
+function sendFormDataServer(companyId, contractId){
+    return fetch("/earnit/api//companies/" + companyId + "/contracts/" + contractId +"/employees ",
         {method: "POST",
             headers: {
                 "accept-type" : "application/json",

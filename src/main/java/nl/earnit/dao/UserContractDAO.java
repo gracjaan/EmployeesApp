@@ -67,8 +67,8 @@ public class UserContractDAO extends GenericDAO<User> {
                 "VALUES + (?, ?, ?, True RETURNING id" ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, user_id);
-        statement.setString(2, contract_id);
+        PostgresJDBCHelper.setUuid(statement, 1, user_id);
+        PostgresJDBCHelper.setUuid(statement, 2, contract_id);
         statement.setInt(3, hourly_wage);
 
         ResultSet res = statement.executeQuery();
@@ -81,7 +81,7 @@ public class UserContractDAO extends GenericDAO<User> {
         String query = "UPDATE" + tableName + "SET active = False WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         statement.executeQuery();
     }
@@ -91,15 +91,14 @@ public class UserContractDAO extends GenericDAO<User> {
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setInt(1, hourlyWage);
-        statement.setString(2, id);
-
+        PostgresJDBCHelper.setUuid(statement, 2, id);
         statement.executeQuery();
     }
 
     public UserContract getUserContractById( String id) throws SQLException {
         String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         ResultSet res = statement.executeQuery();
         return new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active") );
@@ -109,7 +108,7 @@ public class UserContractDAO extends GenericDAO<User> {
         List<UserContract> result = new ArrayList<>();
         String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE contract_id = ? and active = true ";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
 
         ResultSet res = statement.executeQuery();
 
