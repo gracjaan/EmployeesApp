@@ -6,6 +6,7 @@ window.addEventListener("helpersLoaded", async () => {
     hours.addEventListener("click", () => select("hours"));
 
     const dropdown = document.getElementById("day-content");
+
     dropdown.addEventListener("click", async (e) => {
         const element = e.target;
         if (!element.hasAttribute("data-day")) return;
@@ -162,15 +163,29 @@ function createEntry(entry, contract, week, year) {
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
-    const edit = document.createElement("button");
-    edit.classList.add("edit-button");
-    edit.addEventListener("click", () => toggleEdit(edit));
-    entryContainer.appendChild(edit);
+    const editContainer = document.createElement("div");
+    editContainer.classList.add("flex", "items-center");
+    entryContainer.appendChild(editContainer);
 
-    const image = document.createElement("img");
-    image.classList.add("h-6", "w-6");
-    image.src = "/earnit/static/icons/pencil.svg"
-    edit.appendChild(image);
+    const edit1 = document.createElement("button");
+    edit1.classList.add("edit-button", "mr-5");
+    edit1.addEventListener("click", () => toggleEdit(edit1));
+    editContainer.appendChild(edit1);
+
+    const edit2 = document.createElement("button");
+    edit2.classList.add("edit-button");
+    edit2.addEventListener("click", () => toggleEdit(edit2));
+    editContainer.appendChild(edit2);
+
+    const image1 = document.createElement("img");
+    image1.classList.add("h-6", "w-6");
+    image1.src = "/earnit/static/icons/pencil.svg"
+    edit1.appendChild(image1);
+
+    const image2 = document.createElement("img");
+    image2.classList.add("h-5", "w-5");
+    image2.src = "/earnit/static/icons/white-cross.svg"
+    edit2.appendChild(image2);
 
     return entryContainer;
 }
@@ -327,7 +342,7 @@ function toggleEdit(button) {
     entry.classList.toggle('editing', !isEditing);
     editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
 
-    if (!isEditing) {
+    if (isEditing) {
         // Submission logic here
         const updatedData = {
             date: textElements[0].textContent,
