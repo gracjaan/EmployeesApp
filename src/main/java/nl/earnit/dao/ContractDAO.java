@@ -3,10 +3,7 @@ package nl.earnit.dao;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.contracts.Contract;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +45,9 @@ public class ContractDAO extends GenericDAO<User> {
 
         ResultSet res = statement.executeQuery();
 
-        // None foundA
-        if(!res.next()) return null;
-
         while(res.next()) {
             Contract contract = new Contract();
+            contract.setId(res.getString("id"));
             contract.setDescription(res.getString("description"));
             contract.setRole(res.getString("role"));
             result.add(contract);
@@ -85,7 +80,7 @@ public class ContractDAO extends GenericDAO<User> {
         String query = "GET description, role FROM" + tableName + " WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
 
         ResultSet res = statement.executeQuery();
 
@@ -98,7 +93,7 @@ public class ContractDAO extends GenericDAO<User> {
         String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
 
         statement.executeQuery();
     }
@@ -107,7 +102,7 @@ public class ContractDAO extends GenericDAO<User> {
         String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
 
         statement.executeQuery();
     }

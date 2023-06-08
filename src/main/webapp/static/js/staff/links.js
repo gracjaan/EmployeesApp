@@ -1,7 +1,7 @@
 window.addEventListener("helpersLoaded", async () => {
     const companies = await getCompanies();
-    console.log(companies)
     const users = await getStudents();
+
 
     if (companies === null || users === null) {
         alert("Could not load users or companies");
@@ -51,13 +51,10 @@ function createUser(user) {
 
 function createCompany(company) {
     const div = document.createElement("div");
-
-    const a = document.createElement("a");
-
     div.addEventListener("click", ()=>{
         editCompanyInfo(company)
-        getContracts(company.id)
     })
+    const a = document.createElement("a");
 
     div.append(a);
 
@@ -71,6 +68,60 @@ function createCompany(company) {
     itemContainer.append(name);
 
     return div;
+}
+
+function editUserInfo(user){
+    const userDiv = document.getElementById("user-name-display");
+    userDiv.innerText = "";
+
+    const encapsulatingDiv = document.createElement("div");
+    encapsulatingDiv.classList.add("flex", "flex-center");
+    encapsulatingDiv.id = "user-name-display";
+
+    const userIMage = document.createElement("img");
+    userIMage.alt = "user logo"
+    userIMage.classList.add("h-14", "mr-8");
+    userIMage.src = "/earnit/static/icons/user.svg"
+
+    const userName = document.createElement("p");
+    userName.classList.add("text-text", "font-bold", "text-2xl");
+    userName.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
+
+    encapsulatingDiv.append(userIMage);
+    encapsulatingDiv.append(userName);
+
+    userDiv.append(encapsulatingDiv)
+}
+async function editCompanyInfo(company){
+    const companyDiv = document.getElementById("company-name-display");
+    companyDiv.innerText = "";
+
+    const encapsulatingDiv = document.createElement("div");
+    encapsulatingDiv.classList.add("flex", "flex-center");
+    encapsulatingDiv.id = "company-name-display";
+
+    const companyImage = document.createElement("img");
+    companyImage.alt = "company logo"
+    companyImage.classList.add("h-14", "mr-8");
+    companyImage.src = "/earnit/static/icons/building.svg"
+
+    const companyName = document.createElement("p");
+    companyName.classList.add("text-text", "font-bold", "text-2xl");
+    companyName.innerText = company.name;
+    encapsulatingDiv.append(companyImage);
+    encapsulatingDiv.append(companyName);
+
+    companyDiv.append(encapsulatingDiv)
+
+
+//     Now we need to show all the contracts for the company//
+    const contractsList = document.getElementById("contract-list");
+    contractsList.innerText = "";
+    let contracts = await getContracts(company.id)
+    console.log(contracts);
+    for (const contract of contracts) {
+        contractsList.append(createContract(contract));
+    }
 }
 
 async function getStudents() {
@@ -129,24 +180,10 @@ function sendFormDataServer(){
         .catch(() => null);
 }
 
-function editUserInfo(user){
-    userDiv = document.getElementById("user-name-display");
-    userDiv.innerHTML = ""
-}
 
-function editCompanyInfo(company){
 
-}
 
-function getContracts(cid) {
-    return fetch("/earnit/api///companies/{cid}/contracts ",
-        {method: "GET",
-            headers: {
-                "accept-type" : "application/json",
-                'authorization': `token ${getJWTCookie()}`
-            },
-           })
-}
+
 
 document.addEventListener("click", function(event) {
     const dropdown = document.getElementById("dropdown-student-content");
