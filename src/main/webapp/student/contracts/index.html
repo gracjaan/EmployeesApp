@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body class="bg-black flex flex-col w-full font-montserrat">
+<body class="bg-black flex flex-col w-full font-montserrat h-screen">
 <header
         class="flex bg-primary w-fit p-2 rounded-br-lg cursor-pointer"
         onclick="history.back()"
@@ -22,8 +22,10 @@
     />
     <div class="text-text">Back</div>
 </header>
-<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
-
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4 items-center justify-center flex h-full">
+    <div class="h-64 w-64 items-center justify-center flex flex-col" id="entries">
+        <!-- entries -->
+    </div>
 </div>
 
 </body>
