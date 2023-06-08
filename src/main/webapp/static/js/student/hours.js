@@ -119,6 +119,27 @@ async function updateContracts() {
     return contracts;
 }
 
+async function confirmWorkedWeek () {
+    const contracts = await obtainContractsForUser(getUserId())
+    contracts.forEach(c => {
+        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getCurrentYear() + "/" + getCurrentWeek() + "/confirm",
+            {
+                method: "POST",
+                body: JSON.stringify({confirmed: true}),
+                headers: {
+                    'authorization': `token ${getJWTCookie()}`,
+                    "Content-type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+            .then( response => {
+                alert("The worked week was confirmed")
+            })
+            .catch(e => alert("Could not submit hours"))
+
+    })
+}
+
 async function updatePage(contracts) {
     const entries = document.getElementById("entries");
     entries.innerText = "";
@@ -136,6 +157,9 @@ async function updatePage(contracts) {
 function createEntry(entry, contract, week, year) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
+    entryContainer.setAttribute("contract-id", contract.id)
+    entryContainer.setAttribute("data-week", week)
+    entryContainer.setAttribute("data-year", year)
 
     const entryInfo = document.createElement("div");
     entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_2fr_5fr]", "grid");
@@ -169,12 +193,13 @@ function createEntry(entry, contract, week, year) {
 
     const edit1 = document.createElement("button");
     edit1.classList.add("edit-button", "mr-5");
+    edit1.setAttribute("id", "edit1")
     edit1.addEventListener("click", () => toggleEdit(edit1));
     editContainer.appendChild(edit1);
 
     const edit2 = document.createElement("button");
     edit2.classList.add("edit-button");
-    edit2.addEventListener("click", () => toggleEdit(edit2));
+    edit2.addEventListener("click", () => deleteWorkedFromServer(getUserId(), entryContainer.getAttribute("contract-id")));
     editContainer.appendChild(edit2);
 
     const image1 = document.createElement("img");
@@ -184,7 +209,7 @@ function createEntry(entry, contract, week, year) {
 
     const image2 = document.createElement("img");
     image2.classList.add("h-5", "w-5");
-    image2.src = "/earnit/static/icons/white-cross.svg"
+    image2.src = "/earnit/static/icons/bin.svg"
     edit2.appendChild(image2);
 
     return entryContainer;
@@ -299,18 +324,37 @@ function sendFormDataToServer(uid, ucid, formData) {
         .catch(e => alert("Could not submit hours"))
 }
 
-function submitEdittedForm(uid, ucid, year, week, date, hours, position, description) {
+function deleteWorkedFromServer (uid, ucid) {
+    fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
+        {
+            method: "DELETE",
+            headers: {
+                'authorization': `token ${getJWTCookie()}`,
+                'accept-type': 'application/json'
+            }
+        })
+        .then(async (res) => await res.json())
+        .then(async (request) => {
+            const contracts = await updateContracts();
+            await updatePage(contracts);
+        })
+        .catch(() => null);
 
-    if (validateForm() === false) {
+}
+
+function submitEdittedForm(data) {
+
+    if (validateEdittedForm(data) === false) {
         return;
     }
 
-    let json = {date: date, hours: hours, position: position, description: description}
-    fetch("/users/" + uid + "/contracts/" + ucid + "/worked/" + year + "/" + week,
+    let json = {day: data.day, minutes: data.minutes, position: data.position, work: data.work}
+    fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
         {
             method: "PUT",
             body: JSON.stringify(json),
             headers: {
+                'authorization': `token ${getJWTCookie()}`,
                 "Content-type": "application/json",
                 "Accept": "application/json"
             }
@@ -319,6 +363,7 @@ function submitEdittedForm(uid, ucid, year, week, date, hours, position, descrip
 }
 
 function validateForm(formData, position) {
+    console.log(formData, position)
     if (formData.day < 0 || formData.day > 6 || formData.minutes === '' || formData.work === '' || position === null) {
         alert('Please fill in all the fields.');
         return false;
@@ -327,15 +372,25 @@ function validateForm(formData, position) {
     return true;
 }
 
+function validateEdittedForm(formData) {
+    if (formData.minutes === '' || formData.work === '') {
+        alert('Please fill in all the fields.');
+        return false;
+    }
+
+    return true;
+}
 
 function toggleEdit(button) {
-    const entry = button.parentNode;
+    const entry = button.parentNode.parentNode;
     const textElements = entry.querySelectorAll('.text-text');
     const editButton = entry.querySelector('.edit-button');
 
-    textElements.forEach(element => {
-        const isEditable = element.contentEditable === 'true';
-        element.contentEditable = !isEditable;
+    textElements.forEach((element, index) => {
+        if (index !== 2 && index !== 0) {
+            const isEditable = element.contentEditable === 'true';
+            element.contentEditable = !isEditable;
+        }
     });
 
     const isEditing = entry.classList.contains('editing');
@@ -345,14 +400,18 @@ function toggleEdit(button) {
     if (isEditing) {
         // Submission logic here
         const updatedData = {
-            date: textElements[0].textContent,
-            hours: textElements[1].textContent,
+            day: textElements[0].textContent,
+            minutes: textElements[1].textContent,
             position: textElements[2].textContent,
-            description: textElements[3].textContent
+            work: textElements[3].textContent,
+            ucid: entry.getAttribute("contract-id"),
+            week: entry.getAttribute("data-week"),
+            year: entry.getAttribute("data-year")
+
         };
 
         // Send the updatedData to the server or perform any necessary actions
-        console.log(updatedData);
+        submitEdittedForm(updatedData);
     }
 }
 
