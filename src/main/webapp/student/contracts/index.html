@@ -22,10 +22,16 @@
     />
     <div class="text-text">Back</div>
 </header>
-<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4 items-center justify-center flex h-full">
-    <div class="h-64 w-64 items-center justify-center flex flex-col" id="entries">
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto items-center justify-center flex-row gap-8 flex h-full">
+    <button onclick="handleLeftClick()">
+        <img src="/earnit/static/icons/carousel-left.svg" class="h-10 w-10" alt="down arrow"/>
+    </button>
+    <div class="h-80 w-80 items-center justify-center flex flex-col" id="entries">
         <!-- entries -->
     </div>
+    <button onclick="handleRightClick()">
+        <img src="/earnit/static/icons/carousel-right.svg" class="h-10 w-10" alt="down arrow"/>
+    </button>
 </div>
 
 </body>
