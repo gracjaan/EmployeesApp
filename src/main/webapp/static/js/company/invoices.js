@@ -110,5 +110,5 @@ async function select(type) {
         hours.setAttribute("data-selected", state + "");
     }
 
-    await updateHours();
+    await updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
 }
