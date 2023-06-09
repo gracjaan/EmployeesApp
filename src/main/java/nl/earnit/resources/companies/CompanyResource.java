@@ -64,21 +64,20 @@ public class CompanyResource {
     @GET
     @Path("/contracts")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getContracts(@Context HttpHeaders httpHeaders) {
-
+    public Response getContracts(@QueryParam("company") @DefaultValue("false") boolean company,
+                                 @QueryParam("userContracts") @DefaultValue("false")
+                                     boolean userContracts,
+                                 @QueryParam("userContractsUser") @DefaultValue("false") boolean userContractsUser,
+                                 @QueryParam("order") @DefaultValue("contract.role:asc,user_contract.user.last_name:asc") String order) {
         try {
             ContractDAO contractDAO =
                 (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
 
-            return Response.ok(contractDAO.getAllContractsByCompanyId(companyId)).build();
-
+            return Response.ok(contractDAO.getAllContractsByCompanyId(companyId,company, userContracts, userContractsUser, order)).build();
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
-
-
-
-
     }
 
     @GET
@@ -125,7 +124,6 @@ public class CompanyResource {
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year), Integer.parseInt(week), company,contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }

@@ -34,28 +34,6 @@ public class CompanyContractResource {
     }
 
     @GET
-    @PathParam("/companies/{companyId}/contracts")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Contract> getContracts(@PathParam("companyId") String companyId) {
-        if (companyId == null) {
-            return null;
-        }
-
-        List<Contract> result;
-
-        try {
-            ContractDAO ContractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
-
-            result = ContractDAO.getAllContractsByCompanyId(companyId);
-
-        } catch (SQLException e) {
-            return null;
-        }
-        return result;
-
-    }
-
-    @GET
     @PathParam("/companies/{companyId}/contracts/{contractId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public DescriptionRole getContract(@PathParam("contractId") String contractId) {

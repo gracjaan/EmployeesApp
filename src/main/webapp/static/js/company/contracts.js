@@ -4,7 +4,7 @@ let jsonForChange;
 const role = document.getElementById("role");
 const description = document.getElementById("description")
 window.addEventListener("helpersLoaded", async () => {
-    fetch("/earnit/api/companies/"+getUserCompany()+"/contracts", {
+    fetch(`/earnit/api/companies/${getUserCompany()}/contracts?userContracts=true&userContractsUser=true`, {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
