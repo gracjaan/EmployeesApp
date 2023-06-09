@@ -25,7 +25,7 @@
         <div class="flex gap-8 mt-8 w-full">
             <section class="w-full gap-2 flex flex-col">
                 <!--            dropdown menu for the name of the student you want to link-->
-                <div class="p-4 space-y-4">
+                <div class="py-4 space-y-4">
                     <div class="dropdown relative">
                         <button id="dropdown-student-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleStudent()">
@@ -54,7 +54,7 @@
             <!--        This is the section for companie overview-->
             <section class="w-full gap-2 flex flex-col">
                 <!--            dropdown menu for the name of the company you want to link-->
-                <div class="p-4 space-y-4">
+                <div class="py-4 space-y-4">
                     <!--                company dropdown menu-->
                     <div class="dropdown relative">
                         <button id="dropdown-company-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
@@ -146,6 +146,11 @@
                     </li>
                 </ol>
             </div>
+        </div>
+        <div>
+            <span class="before:text-white before:font-bold before:flex before:items-center before:right-4 before:bottom-0 relative before:top-0 before:absolute before:block before:content-['€']">
+                <input onchange="updateHourlyWage(this)" type="number" class="font-bold py-4 flex justify-center text-text bg-primary rounded-xl w-full pl-4 placeholder-gray-300" id="hourly-wage" placeholder="Enter the hourly wage"></input>
+            </span>
         </div>
         <div>
             <button onclick="sendFormDataServer(companyId, hourlyWage)" class="font-bold py-4 flex justify-center text-black bg-white rounded-xl w-full">Create a link</button>

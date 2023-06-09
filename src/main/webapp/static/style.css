@@ -90,3 +90,27 @@
 .border-accent-success {
 	border-color: var(--color-accent-success);
 }
+
+.hover\:border-primary:hover {
+	border-color: var(--color-primary);
+}
+
+.hover\:border-secondary:hover {
+	border-color: var(--color-secondary);
+}
+
+.hover\:border-background:hover {
+	border-color: var(--color-background);
+}
+
+.hover\:border-text:hover {
+	border-color: var(--color-text);
+}
+
+.hover\:border-accent-fail:hover {
+	border-color: var(--color-accent-fail);
+}
+
+.hover\:border-accent-success:hover {
+	border-color: var(--color-accent-success);
+}

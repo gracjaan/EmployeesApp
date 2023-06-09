@@ -95,8 +95,8 @@ public class UserContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
-    public UserContract getUserContractById( String id) throws SQLException {
-        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE id = ?";
+    public UserContract getUserContractById(String id) throws SQLException {
+        String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
 

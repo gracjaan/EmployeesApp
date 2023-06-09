@@ -84,7 +84,7 @@ function editUserInfo(user){
 
     const encapsulatingDiv = document.createElement("div");
     encapsulatingDiv.classList.add("flex", "flex-center");
-    encapsulatingDiv.id = "user-name-display";
+    encapsulatingDiv.setAttribute("id", "user-name-display");
 
     const userIMage = document.createElement("img");
     userIMage.alt = "user logo"
@@ -106,7 +106,7 @@ async function editCompanyInfo(company){
 
     const encapsulatingDiv = document.createElement("div");
     encapsulatingDiv.classList.add("flex", "flex-center");
-    encapsulatingDiv.id = "company-name-display";
+    encapsulatingDiv.setAttribute("id", "company-name-display");
 
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
@@ -135,13 +135,9 @@ async function editCompanyInfo(company){
 function createContract(contract) {
     const listElement = document.createElement("li");
 
-    listElement.addEventListener("click", ()=>{
-
-        contractId=contract.id;
-    })
-
-    const userLink = document.createElement("a");
-    userLink.classList.add("hover:border-2", "hover:color-color-text", "block", "columns-2", "bg-primary", "rounded-xl", "w-full", "p-2", "pl-4");
+    const userDiv = document.createElement("div");
+    userDiv.setAttribute("data-selected", '0')
+    userDiv.classList.add("data-[selected='1']:border-white", "hover:border-text","border-2", "border-primary", "block", "columns-2", "bg-primary", "rounded-xl", "w-full", "p-2", "pl-4");
     const role = document.createElement("p")
     role.classList.add("text-text");
     role.innerText = contract.role;
@@ -153,6 +149,20 @@ function createContract(contract) {
     description.classList.add("text-text")
     description.innerText = contract.description;
 
+    listElement.addEventListener("click", ()=>{
+        contractId=contract.id;
+        const selected = parseInt(userDiv.getAttribute("data-selected"))
+        if (selected === 0) {
+            const orderedList = document.getElementById("contract-list");
+            const userDivs = orderedList.querySelectorAll("[data-selected='1']")
+            for (const userDiv1 of userDivs) {
+                userDiv1.setAttribute("data-selected", "0")
+            }
+            userDiv.setAttribute("data-selected", "1");
+        }
+
+    })
+
     blockDiv.append(description);
     userLink.append(role);
     userLink.append(blockDiv);
@@ -160,6 +170,7 @@ function createContract(contract) {
 
     return listElement;
 }
+
 
 async function getStudents() {
     return await fetch("/earnit/api/users",
@@ -276,3 +287,4 @@ function togglePosition() {
 }
 
 // ------------------------------------------------------------------------------------
+
