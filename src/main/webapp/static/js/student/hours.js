@@ -172,7 +172,7 @@ function obtainContractsForUser(uid) {
         }
     })
         .then(response => response.json())
-        .catch(e => null);
+        .catch(() => null);
 }
 
 function getSelectedWeek() {
@@ -192,7 +192,7 @@ function fetchSheet(userid, contract) {
         }
     })
         .then(response => response.json())
-        .catch(e => null);
+        .catch(() => null);
 }
 
 function getQueryParams() {
@@ -255,7 +255,7 @@ function sendFormDataToServer(uid, ucid, formData) {
 
             if (!response.ok) throw new Error();
         })
-        .catch(e => alert("Could not submit hours. Make sure that the week has not been confirmed yet."))
+        .catch(() => alert("Could not submit hours. Make sure that the week has not been confirmed yet."))
 }
 
 function deleteWorkedFromServer (uid, ucid, hid) {
@@ -474,27 +474,6 @@ function formatNumber(number) {
         useGrouping: false
     });
 }
-
-function weeksInYear(year) {
-    return Math.max(
-        getWeek(new Date(year, 11, 31))
-        , getWeek(new Date(year, 11, 31-7))
-    );
-}
-
-function getWeek(ofDate) {
-    const date = new Date(ofDate);
-    date.setHours(0, 0, 0, 0);
-    // Thursday in current week decides the year.
-    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
-    // January 4 is always in week 1.
-    const week1 = new Date(date.getFullYear(), 0, 4);
-    // Adjust to Thursday in week 1 and count number of weeks from date to week1.
-    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
-        - 3 + (week1.getDay() + 6) % 7) / 7);
-}
-
-
 
 // todo when pencil clicked, bin should change into cross button
 // todo when bin clicked, be asked to confirm your action
