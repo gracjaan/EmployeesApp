@@ -201,7 +201,7 @@ function createEntry(entry, contract, week, year) {
 
     const edit2 = document.createElement("button");
     edit2.classList.add("edit-button");
-    edit2.addEventListener("click", () => deleteWorkedFromServer(getUserId(), entryContainer.getAttribute("contract-id")));
+    edit2.addEventListener("click", () => deleteWorkedFromServer(getUserId(), entryContainer.getAttribute("contract-id"), entryContainer.getAttribute("data-id")));
     editContainer.appendChild(edit2);
 
     const image1 = document.createElement("img");
@@ -326,10 +326,11 @@ function sendFormDataToServer(uid, ucid, formData) {
         .catch(e => alert("Could not submit hours"))
 }
 
-function deleteWorkedFromServer (uid, ucid) {
+function deleteWorkedFromServer (uid, ucid, hid) {
     fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
         {
             method: "DELETE",
+            body: hid.toString(),
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
                 'accept-type': 'application/json'
