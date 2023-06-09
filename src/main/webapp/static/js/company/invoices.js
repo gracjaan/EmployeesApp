@@ -1,9 +1,3 @@
-const contract = document.getElementById("contract");
-contract.addEventListener("click", () => select("contract"));
-
-const hours = document.getElementById("hours");
-hours.addEventListener("click", () => select("hours"));
-
 window.addEventListener("helpersLoaded", async () => {
     /* @TODO download invoices */
     const week = document.getElementById("week");
@@ -11,6 +5,21 @@ window.addEventListener("helpersLoaded", async () => {
     await updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
     week.addEventListener("change", (e) => {
         updateHours(e.detail.year, e.detail.week);
+    })
+
+    const hours = document.getElementById("hours");
+    hours.addEventListener("change", (e) => {
+       updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
+    })
+
+    const contract = document.getElementById("contract");
+    contract.addEventListener("change", (e) => {
+        updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
+    })
+
+    const user = document.getElementById("user");
+    user.addEventListener("change", (e) => {
+        updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
     })
 });
 
@@ -28,11 +37,16 @@ function getOrder() {
     const hours = document.getElementById("hours");
     const hoursSelected = hours.getAttribute("data-selected");
 
+    const user = document.getElementById("user");
+    const userSelected = user.getAttribute("data-selected");
+
     let order = "";
     if (contractSelected > 0) {
         order += "contract.role:" + (contractSelected === "1" ? "asc" : "desc");
     } else if (hoursSelected > 0) {
         order += "hours.total:" + (hoursSelected === "1" ? "asc" : "desc");
+    } else if (userSelected > 0) {
+        order += "user.last_name:" + (userSelected === "1" ? "asc" : "desc");
     }
 
     return order;
@@ -94,28 +108,4 @@ function getRequestForCompany(companyId, year, week, token) {
     })
         .then(async (res) => await res.json())
         .catch(() => null);
-}
-
-async function select(type) {
-    const contract = document.getElementById("contract");
-    const contractSelected = contract.getAttribute("data-selected");
-
-    const hours = document.getElementById("hours");
-    const hoursSelected = hours.getAttribute("data-selected");
-
-    if (type === "contract") {
-        hours.setAttribute("data-selected", "0");
-
-        let state = Number.parseInt(contractSelected ?? "0") + 1;
-        if (state > 2) state = 0;
-        contract.setAttribute("data-selected", state + "");
-    } else {
-        contract.setAttribute("data-selected", "0");
-
-        let state = Number.parseInt(hoursSelected ?? "0") + 1;
-        if (state > 2) state = 0;
-        hours.setAttribute("data-selected", state + "");
-    }
-
-    await updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
 }
