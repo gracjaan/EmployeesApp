@@ -14,7 +14,6 @@ function createWeekSelector(parent) {
 
     const dropdownButton = document.createElement("button");
     dropdownButton.classList.add("rounded-xl", "bg-primary", "px-4", "py-2", "flex", "items-center");
-    // TODO click toggleDropdown
     dropdownContainer.append(dropdownButton);
 
     const dropdownButtonDisplay = document.createElement("div");
@@ -43,7 +42,7 @@ function setupWeeks(weekSelector) {
 
     dropdownContent.addEventListener("click", async (e) => {
         const element = e.target;
-        if (!element.hasAttribute("data-week-number")) return;
+        if (!element.hasAttribute("data-week")) return;
 
         await selectWeek(weekSelector, element);
     });
@@ -51,7 +50,7 @@ function setupWeeks(weekSelector) {
     dropdownContent.addEventListener("scroll", () => {
         if (Math.abs(dropdownContent.scrollHeight - dropdownContent.scrollTop - dropdownContent.clientHeight) < 1) {
             let last = dropdownContent.lastElementChild;
-            while (!last.hasAttribute("data-week-number")) {
+            while (!last.hasAttribute("data-week")) {
                 const index = Array.from(dropdownContent.children).indexOf(last);
                 if (index === 0) return;
 
@@ -59,7 +58,7 @@ function setupWeeks(weekSelector) {
             }
 
             const year = parseInt(last.getAttribute("data-year"))
-            const week = parseInt(last.getAttribute("data-week-number"))
+            const week = parseInt(last.getAttribute("data-week"))
 
             addWeeks(weekSelector, 5, year, week);
         }
@@ -100,16 +99,16 @@ function createWeekItem(year, week) {
     container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer");
     container.innerText = "Week " + week;
     container.setAttribute("data-year", year);
-    container.setAttribute("data-week-number", week);
+    container.setAttribute("data-week", week);
 
     return container;
 }
 
 async function selectWeek(weekSelector, option) {
-    const weekNumber = parseInt(option.dataset.weekNumber);
+    const week = parseInt(option.dataset.weekNumber);
     const year = parseInt(option.dataset.year);
 
-    weekSelector.setAttribute("data-week-number", weekNumber)
+    weekSelector.setAttribute("data-week", week)
     weekSelector.setAttribute("data-year", year)
 
     /** @type {HTMLDivElement} */
@@ -122,7 +121,10 @@ async function selectWeek(weekSelector, option) {
     dropdownButtonDisplay.innerText = option.innerText;
     dropdownContent.classList.add("hidden");
 
-    // @TODO: call event to update
+    weekSelector.dispatchEvent(new CustomEvent("change", {
+        year: year,
+        week: week
+    }))
 }
 
 document.addEventListener("click", function (event) {
