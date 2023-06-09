@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -391,7 +393,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                                                                  boolean withUserContract,
                                                                  boolean withUser, boolean withHours, boolean withTotalHours, String order)
         throws SQLException, InvalidOrderByException {
-        // TODO: Don't immediately add when confirmed wait until x date has passed.
+
+        int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
 
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
             put("worked_week.year", "ww.year");
@@ -448,13 +452,16 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                                 
-                WHERE cy.id = ? AND ww.confirmed IS TRUE AND ww.approved IS NULL AND ww.solved IS NULL
+                WHERE cy.id = ? AND ww.confirmed IS TRUE AND ww.approved IS NULL AND ww.solved IS NULL AND (ww.year < ? OR (ww.year = ? AND ww.week < ?))
                 %3$s
             """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), orderBy.getSQLOrderBy(order, true));
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
+        statement.setInt(2, currentYear);
+        statement.setInt(3, currentYear);
+        statement.setInt(4, currentWeek);
 
         // Execute query
         ResultSet res = statement.executeQuery();
