@@ -104,31 +104,6 @@ function createEntry(entry, contract, week, year) {
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
-    const editContainer = document.createElement("div");
-    editContainer.classList.add("flex", "items-center");
-    entryContainer.appendChild(editContainer);
-
-    const edit1 = document.createElement("button");
-    edit1.classList.add("edit-button", "mr-5");
-    edit1.setAttribute("id", "edit1")
-    //edit1.addEventListener("click", () => toggleEdit(edit1));
-    editContainer.appendChild(edit1);
-
-    const edit2 = document.createElement("button");
-    edit2.classList.add("edit-button");
-    //edit2.addEventListener("click", () => deleteWorkedFromServer(getUserId(), entryContainer.getAttribute("contract-id")));
-    editContainer.appendChild(edit2);
-
-    const image1 = document.createElement("img");
-    image1.classList.add("h-6", "w-6");
-    image1.src = "/earnit/static/icons/pencil.svg"
-    edit1.appendChild(image1);
-
-    const image2 = document.createElement("img");
-    image2.classList.add("h-5", "w-5");
-    image2.src = "/earnit/static/icons/bin.svg"
-    edit2.appendChild(image2);
-
     return entryContainer;
 }
 
