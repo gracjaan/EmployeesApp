@@ -323,7 +323,7 @@ function sendFormDataToServer(uid, ucid, formData) {
 
             if (!response.ok) throw new Error();
         })
-        .catch(e => alert("Could not submit hours"))
+        .catch(e => alert("Could not submit hours. Make sure that the week has not been confirmed yet."))
 }
 
 function deleteWorkedFromServer (uid, ucid, hid) {
@@ -336,10 +336,11 @@ function deleteWorkedFromServer (uid, ucid, hid) {
                 'accept-type': 'application/json'
             }
         })
-        .then(async (res) => await res.json())
-        .then(async (request) => {
+        .then(async response => {
             const contracts = await updateContracts();
             await updatePage(contracts);
+
+            if (!response.ok) throw new Error();
         })
         .catch(() => null);
 
@@ -594,3 +595,10 @@ function getWeek(ofDate) {
     return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
         - 3 + (week1.getDay() + 6) % 7) / 7);
 }
+
+
+
+// todo when pencil clicked, bin should change into cross button
+// todo when bin clicked, be asked to confirm your action
+// todo sorting buttons
+// todo when submit button clicked, input fields should go blank
