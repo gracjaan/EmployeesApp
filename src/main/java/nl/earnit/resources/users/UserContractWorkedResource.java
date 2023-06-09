@@ -105,12 +105,12 @@ public class UserContractWorkedResource {
     }
 
     @DELETE
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response deleteWorkedWeekTask(Worked entry) {
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response deleteWorkedWeekTask(String workedId) {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            boolean flag = workedDAO.deleteWorkedWeekTask(entry);
+            boolean flag = workedDAO.deleteWorkedWeekTask(workedId);
             if (!flag) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }

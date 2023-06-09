@@ -132,14 +132,13 @@ public class WorkedDAO extends GenericDAO<User> {
         return true;
     }
 
-    public boolean deleteWorkedWeekTask(Worked worked) throws SQLException {
-        if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+    public boolean deleteWorkedWeekTask(String workedId) throws SQLException {
+        if (this.isWorkedWeekConfirmed(workedId)) {
             return false;
         }
-
         String query = "DELETE FROM \"" + tableName + "\" WHERE id = ?;";
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, worked.getId());
+        PostgresJDBCHelper.setUuid(statement, 1, workedId);
         statement.executeUpdate();
         return true;
     }
