@@ -47,7 +47,7 @@ function updatePage(request) {
 
     if (request === null || request.length < 1) {
         const noInvoices = document.createElement("div");
-        noInvoices.classList.add("text-text", "font-bold", "w-full", "flex","justify-center","my-2");
+        noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
         noInvoices.innerText = "No invoices";
         entries.append(noInvoices)
     }
@@ -82,7 +82,7 @@ function createEntry(workedWeek) {
 
 function getQueryParams() {
     const order = getOrder();
-    return `user=true&contract=true&totalHours=true${order.length > 0 ? `&order=${order}`: ""}`
+    return `user=true&contract=true&totalHours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
 function getRequestForCompany(companyId, year, week, token) {
