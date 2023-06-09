@@ -10,6 +10,59 @@
 	--color-accent-success: #339e4b;
 }
 
+*, ::before, ::after {
+	--tw-scrollbar-track: var(--color-text);
+	--tw-scrollbar-thumb: var(--color-background);
+}
+
+.scrollbar-track-primary {
+	--tw-scrollbar-track: var(--color-primary);
+}
+
+.scrollbar-track-secondary {
+	--tw-scrollbar-track: var(--color-secondary);
+}
+
+.scrollbar-track-background {
+	--tw-scrollbar-track: var(--color-background);
+}
+
+.scrollbar-track-text {
+	--tw-scrollbar-track: var(--color-text);
+}
+
+.scrollbar-track-accent-success {
+	--tw-scrollbar-track: var(--color-accent-success);
+}
+
+.scrollbar-track-accent-fail {
+	--tw-scrollbar-track: var(--color-accent-fail);
+}
+
+.scrollbar-thumb-primary {
+	--tw-scrollbar-thumb: var(--color-primary);
+}
+
+.scrollbar-thumb-secondary {
+	--tw-scrollbar-thumb: var(--color-secondary);
+}
+
+.scrollbar-thumb-background {
+	--tw-scrollbar-thumb: var(--color-background);
+}
+
+.scrollbar-thumb-text {
+	--tw-scrollbar-thumb: var(--color-text);
+}
+
+.scrollbar-thumb-accent-success {
+	--tw-scrollbar-thumb: var(--color-accent-success);
+}
+
+.scrollbar-thumb-accent-fail {
+	--tw-scrollbar-thumb: var(--color-accent-fail);
+}
+
 .scrollbar-none::-webkit-scrollbar {
 	display: none;
 	scrollbar-width: 0px;
@@ -18,7 +71,7 @@
 /* Firefox */
 .scrollbar-custom {
 	scrollbar-width: thin;
-	scrollbar-color: var(--color-text) var(--color-background);
+	scrollbar-color: var(--tw-scrollbar-track) var(--tw-scrollbar-thumb);
 }
 
 /* Chrome, Edge, and Safari */
@@ -27,13 +80,13 @@
 }
 
 .scrollbar-custom::-webkit-scrollbar-track {
-	background: var(--color-text);
+	background: var(--tw-scrollbar-track)
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb {
-	background-color: var(--color-background);
+	background-color: var(--tw-scrollbar-thumb);
 	border-radius: 2rem;
-	border: 3px solid var(--color-text);
+	border: 3px solid var(--tw-scrollbar-track);
 }
 
 .scrollbar-rounded-xl::-webkit-scrollbar-track {
