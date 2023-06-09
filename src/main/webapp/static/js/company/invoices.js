@@ -69,11 +69,11 @@ function updatePage(request) {
 
 function createEntry(workedWeek) {
     const entryContainer = document.createElement("a");
-    entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
+    entryContainer.classList.add("rounded-xl", "bg-primary", workedWeek.approved === null ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
     entryContainer.href = "/earnit/request?worked_week=" + workedWeek.id;
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[3fr_1fr_1fr]", "grid");
+    entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr]", "grid", "items-center");
     entryContainer.appendChild(entryInfo);
 
     const name = document.createElement("div");
@@ -90,6 +90,22 @@ function createEntry(workedWeek) {
     role.classList.add("text-text");
     role.innerText = workedWeek.contract.role;
     entryInfo.appendChild(role);
+
+    if (workedWeek.approved !== null) {
+        const statusContainer = document.createElement("div");
+        statusContainer.classList.add("w-full", "flex", "justify-end")
+        entryInfo.appendChild(statusContainer);
+
+        const status = document.createElement("div");
+        status.classList.add("rounded-xl", workedWeek.approved ? "bg-accent-success" : "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center", "items-center")
+        statusContainer.appendChild(status);
+
+        const img = document.createElement("img");
+        img.alt = "checkmark";
+        img.src = `/earnit/static/icons/${workedWeek.approved ? "checkmark" : "white-cross"}.svg`;
+        img.classList.add("w-4", "h-4")
+        status.append(img);
+    }
 
     return entryContainer;
 }
