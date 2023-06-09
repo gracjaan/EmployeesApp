@@ -9,18 +9,21 @@ window.addEventListener("helpersLoaded", ()=> {
         dropdownContainer.append(dropdownButton);
 
         const dropdownButtonDisplay = document.createElement("div");
-        dropdownButtonDisplay.classList.add("text-white", "mr-5");
+        dropdownButtonDisplay.classList.add("text-white", "mr-5", "whitespace-nowrap");
         dropdownButtonDisplay.innerText = "Week 10";
         dropdownButton.append(dropdownButtonDisplay);
+
+        const imgDiv = document.createElement("div");
+        imgDiv.classList.add("aspect-square", "w-4", "flex", "items-center", "justify-center", "ml-2")
+        dropdownButton.append(imgDiv);
 
         const dropdownButtonChevron = document.createElement("img");
         dropdownButtonChevron.src = "/earnit/static/icons/arrow-down.svg";
         dropdownButtonChevron.alt = "arrow down";
-        dropdownButtonChevron.classList.add("ml-2");
-        dropdownButton.append(dropdownButtonChevron);
+        imgDiv.append(dropdownButtonChevron);
 
         const dropdownContent = document.createElement("div");
-        dropdownContent.classList.add("z-20", "bg-white", "shadow-lg", "rounded-lg", "absolute", "top-full", "left-0", "mt-2", "hidden", "w-full", "max-h-32", "overflow-y-auto", "scrollbar-custom", "scrollbar-rounded-xl");
+        dropdownContent.classList.add("z-20", "bg-white", "shadow-lg", "rounded-lg", "fixed", "mt-2", "hidden", "w-fit", "max-h-32", "overflow-y-auto", "scrollbar-custom", "scrollbar-rounded-xl");
         dropdownContainer.append(dropdownContent);
 
         dropdownButton.addEventListener("click", () => {
