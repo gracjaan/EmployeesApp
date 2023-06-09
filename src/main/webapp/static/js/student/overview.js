@@ -238,3 +238,8 @@ function getWeek(ofDate) {
     return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
         - 3 + (week1.getDay() + 6) % 7) / 7);
 }
+
+
+// todo deletbutton and edit button should not exist
+// todo filtering buttons (position, week)
+// todo make the chart working

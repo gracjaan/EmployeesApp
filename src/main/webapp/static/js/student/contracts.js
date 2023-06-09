@@ -37,3 +37,6 @@ function createEntry(contract) {
 
     return entryContainer;
 }
+
+
+// todo inifinite carousel with arrows
