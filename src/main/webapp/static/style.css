@@ -87,7 +87,7 @@
 	border-color: var(--color-accent-fail);
 }
 
-.border-accent-success {
+.hover\:border-accent-success {
 	border-color: var(--color-accent-success);
 }
 

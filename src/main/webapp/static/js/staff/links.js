@@ -164,9 +164,9 @@ function createContract(contract) {
     })
 
     blockDiv.append(description);
-    userLink.append(role);
-    userLink.append(blockDiv);
-    listElement.append(userLink);
+    userDiv.append(role);
+    userDiv.append(blockDiv);
+    listElement.append(userDiv);
 
     return listElement;
 }
@@ -205,8 +205,8 @@ async function getContracts(cid) {
         .then(response => response.json())
         .catch(e => null);
 }
-function sendFormDataServer(companyId, contractId){
-    return fetch("/earnit/api//companies/" + companyId + "/contracts/" + contractId +"/employees ",
+function sendFormDataServer(){
+    return fetch("/earnit/api/companies/" + companyId + "/contracts/" + contractId +"/employees",
         {method: "POST",
             headers: {
                 "accept-type" : "application/json",
