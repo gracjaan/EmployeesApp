@@ -37,14 +37,9 @@ public class OrderBy {
 
         for (String order : orders) {
             String[] items = order.split(":");
-            String column = items[0];
             String direction = items[1];
 
             if (!direction.equals("asc") && !direction.equals("desc")) {
-                return false;
-            }
-
-            if (!allowedColumns.containsKey(column)) {
                 return false;
             }
         }
@@ -58,7 +53,7 @@ public class OrderBy {
      * @return Order by
      * @throws InvalidOrderByException If query is invalid
      */
-    public String getSQLOrderBy(String query) throws InvalidOrderByException {
+    public String getSQLOrderBy(String query, boolean convertToOrderBySql) throws InvalidOrderByException {
         if (!isValid(query)){
             throw new InvalidOrderByException("Query does not match '<column>:<asc|desc>,<column>:<asc|desc>'");
         }
@@ -70,13 +65,24 @@ public class OrderBy {
             String column = items[0];
             String direction = items[1];
 
+            if (!allowedColumns.containsKey(column)) continue;
+
             sqlBuilder.append(allowedColumns.get(column)).append(" ").append(direction).append(",");
         }
 
         String sql = sqlBuilder.toString();
-
-        return sql.length() == 0
+        String sqlOrderBy = sql.length() == 0
             ? null
             : sql.substring(0, sql.length() - 1);
+
+        if (convertToOrderBySql) {
+            return convertToOrderBySQL(sqlOrderBy);
+        }
+
+        return sqlOrderBy;
+    }
+
+    public static String convertToOrderBySQL(String sqlOrderBy) {
+        return sqlOrderBy == null ? "" : " ORDER BY " + sqlOrderBy;
     }
 }
