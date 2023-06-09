@@ -193,6 +193,10 @@ async function getCompanies() {
         .catch(() => null);
 }
 
+function updateHourlyWage(e) {
+    hourlyWage = e.value;
+}
+
 async function getContracts(cid) {
 
     return await fetch("/earnit/api/companies/" + cid + "/contracts",
@@ -210,7 +214,8 @@ function sendFormDataServer(){
         {method: "POST",
             headers: {
                 "accept-type" : "application/json",
-                'authorization': `token ${getJWTCookie()}`
+                'authorization': `token ${getJWTCookie()}`,
+                'content-type': "application/json"
             },
         body:JSON.stringify({
             userId, hourlyWage
