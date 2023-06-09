@@ -88,7 +88,7 @@ public class UserDAO extends GenericDAO<User> {
 
         ArrayList<UserResponse> userList = new ArrayList<>();
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true ORDER BY " + orderBy.getSQLOrderBy(order) ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true and type = 'STUDENT' ORDER BY " + orderBy.getSQLOrderBy(order) ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
         ResultSet res = statement.executeQuery();
