@@ -28,13 +28,16 @@ window.addEventListener("helpersLoaded", async () => {
 })
 
 
-const userId = ''
-const hourlyWage = ''
+let userId = ''
+let hourlyWage = ''
+let contractId=''
+let companyId=''
 
 function createUser(user) {
     const div = document.createElement("div");
     div.addEventListener("click", ()=>{
         editUserInfo(user)
+        userId=user.id;
     })
 
     const a = document.createElement("a");
@@ -57,6 +60,7 @@ function createCompany(company) {
     const div = document.createElement("div");
     div.addEventListener("click", ()=>{
         editCompanyInfo(company)
+        companyId=company.id;
     })
     const a = document.createElement("a");
 
@@ -130,6 +134,11 @@ async function editCompanyInfo(company){
 
 function createContract(contract) {
     const listElement = document.createElement("li");
+
+    listElement.addEventListener("click", ()=>{
+
+        contractId=contract.id;
+    })
 
     const userLink = document.createElement("a");
     userLink.classList.add("hover:border-2", "hover:color-color-text", "block", "columns-2", "bg-primary", "rounded-xl", "w-full", "p-2", "pl-4");
