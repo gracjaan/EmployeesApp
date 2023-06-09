@@ -7,6 +7,13 @@ window.addEventListener("helpersLoaded", async () => {
         const container = createRequestCard(request);
         requestsContainer.appendChild(container);
     }
+
+    if (requests === null || requests.length < 1) {
+        const noRequests = document.createElement("div");
+        noRequests.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noRequests.innerText = "No requests";
+        requestsContainer.append(noRequests)
+    }
 });
 
 function getRequestsForCompany(uid, token) {
