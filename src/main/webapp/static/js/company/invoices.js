@@ -6,12 +6,17 @@ hours.addEventListener("click", () => select("hours"));
 
 window.addEventListener("helpersLoaded", async () => {
     /* @TODO download invoices */
-    await updateHours();
+    const week = document.getElementById("week");
+
+    await updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
+    week.addEventListener("change", (e) => {
+        updateHours(e.detail.year, e.detail.week);
+    })
 });
 
-async function updateHours() {
-    const request = await getRequestForCompany(getUserCompany(), 2023, 22, getJWTCookie());
-    console.log(request)
+async function updateHours(year, week) {
+    const request = await getRequestForCompany(getUserCompany(), year, week, getJWTCookie());
+
     // Update page to data
     updatePage(request);
 }
@@ -106,33 +111,4 @@ async function select(type) {
     }
 
     await updateHours();
-}
-
-// modified from https://stackoverflow.com/questions/16590500/calculate-date-from-week-number-in-javascript
-function getDateOfISOWeek(w, y) {
-    const simple = new Date(y, 0, 1 + (w - 1) * 7);
-    const dow = simple.getDay();
-    const ISOweekStart = simple;
-
-    if (dow <= 4) {
-        ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-    } else {
-        ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-    }
-
-    return ISOweekStart;
-}
-
-// modified from https://stackoverflow.com/questions/563406/how-to-add-days-to-date
-function addDays(date, days) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-}
-
-function formatNumber(number) {
-    return number.toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false
-    });
 }
