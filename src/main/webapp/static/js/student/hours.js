@@ -21,7 +21,20 @@ window.addEventListener("helpersLoaded", async () => {
     dropdown.appendChild(createDayItem(5, "Saturday"));
     dropdown.appendChild(createDayItem(6, "Sunday"));
 
-    setupWeeks();
+    const range = document.getElementById("dropdown-range")
+    range.innerText = getWeekDateRange(getSelectedWeek(), getSelectedYear());
+
+    const contracts = await updateContracts();
+    await updatePage(contracts);
+
+    const week = document.getElementById("week");
+    week.addEventListener("change", async (e) => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+
+        const range = document.getElementById("dropdown-range")
+        range.innerText = getWeekDateRange(e.detail.week, e.detail.year);
+    })
 });
 
 function createDayItem(day, dayName) {
@@ -29,70 +42,6 @@ function createDayItem(day, dayName) {
     container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer");
     container.innerText = dayName;
     container.setAttribute("data-day", day);
-    return container;
-}
-
-function setupWeeks() {
-    const dropdown = document.getElementById("dropdown-content");
-    dropdown.addEventListener("click", async (e) => {
-        const element = e.target;
-        if (!element.hasAttribute("data-week-number")) return;
-
-        await selectWeek(element);
-    });
-    dropdown.addEventListener("scroll", () => {
-        if (Math.abs(dropdown.scrollHeight - dropdown.scrollTop - dropdown.clientHeight) < 1) {
-            let last = dropdown.lastElementChild;
-            while (!last.hasAttribute("data-week-number")) {
-                const index = Array.from(dropdown.children).indexOf(last);
-                if (index === 0) return;
-
-                last = dropdown.children.item(index - 1);
-            }
-
-            const year = parseInt(last.getAttribute("data-year"))
-            const week = parseInt(last.getAttribute("data-week-number"))
-
-            addWeeks(5, year, week);
-        }
-    })
-
-    dropdown.innerText = "";
-    addWeeks(5, getCurrentYear(), getCurrentWeek() + 1);
-    dropdown.children.item(0).click();
-}
-
-function addWeeks(amount, lastYear, lastWeek) {
-    const dropdown = document.getElementById("dropdown-content");
-
-    while (amount-- > 0) {
-        lastWeek--;
-
-        if (lastWeek < 1) {
-            lastYear--;
-            lastWeek = weeksInYear(lastYear);
-            dropdown.appendChild(createYearItem(lastYear));
-        }
-
-        dropdown.appendChild(createWeekItem(lastYear, lastWeek));
-    }
-}
-
-function createYearItem(year) {
-    const container = document.createElement("div");
-    container.classList.add("py-2", "px-4", "font-bold");
-    container.innerText = year;
-
-    return container;
-}
-
-function createWeekItem(year, week) {
-    const container = document.createElement("div");
-    container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer");
-    container.innerText = "Week " + week;
-    container.setAttribute("data-year", year);
-    container.setAttribute("data-week-number", week);
-
     return container;
 }
 
@@ -122,7 +71,7 @@ async function updateContracts() {
 async function confirmWorkedWeek () {
     const contracts = await obtainContractsForUser(getUserId())
     contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getCurrentYear() + "/" + getCurrentWeek() + "/confirm",
+        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
             {
                 method: "POST",
                 body: JSON.stringify({confirmed: true}),
@@ -132,11 +81,10 @@ async function confirmWorkedWeek () {
                     "Accept": "application/json"
                 }
             })
-            .then( response => {
+            .then(() => {
                 alert("The worked week was confirmed")
             })
-            .catch(e => alert("Could not submit hours"))
-
+            .catch(() => alert("Could not submit hours"))
     })
 }
 
@@ -228,12 +176,12 @@ function obtainContractsForUser(uid) {
 }
 
 function getSelectedWeek() {
-    const header = document.getElementById("dropdown-header");
-    return header.getAttribute("data-week-number").toString();
+    const header = document.getElementById("week");
+    return header.getAttribute("data-week").toString();
 }
 
 function getSelectedYear() {
-    const header = document.getElementById("dropdown-header");
+    const header = document.getElementById("week");
     return header.getAttribute("data-year").toString();
 }
 
@@ -288,22 +236,6 @@ async function submitForm() {
     }
 
     sendFormDataToServer(getUserId(), positionInput.getAttribute("data-id").toString(), formData);
-}
-
-function getCurrentYear() {
-    const currentDate = new Date();
-    return currentDate.getFullYear();
-}
-
-function getCurrentWeek() {
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), 0, 1);
-    const days = Math.floor((currentDate - startDate) /
-        (24 * 60 * 60 * 1000));
-
-    const weekNumber = Math.ceil(days / 7);
-
-    return weekNumber;
 }
 
 function sendFormDataToServer(uid, ucid, formData) {
@@ -424,12 +356,6 @@ function toggleEdit(button) {
 
 
 //______________________________________________DROPDOWNS______________________________________________________________
-
-function toggleWeek() {
-    const dropdown = document.getElementById("dropdown-content");
-    dropdown.classList.toggle("hidden");
-}
-
 function togglePosition() {
     const dropdown = document.getElementById("position-content");
     dropdown.classList.toggle("hidden");
@@ -438,24 +364,6 @@ function togglePosition() {
 function toggleDay() {
     const dropdown = document.getElementById("day-content");
     dropdown.classList.toggle("hidden");
-}
-
-async function selectWeek(option) {
-    const header = document.getElementById("dropdown-header");
-    const range = document.getElementById("dropdown-range")
-    const weekNumber = parseInt(option.dataset.weekNumber);
-    const year = parseInt(option.dataset.year);
-    const dateRange = getWeekDateRange(weekNumber, year);
-    header.textContent = option.textContent;
-    header.setAttribute("data-week-number", option.getAttribute("data-week-number"))
-    header.setAttribute("data-year", option.getAttribute("data-year"))
-    range.textContent = dateRange;
-
-    const dropdown = document.getElementById("dropdown-content");
-    dropdown.classList.add("hidden");
-
-    const contracts = await updateContracts();
-    await updatePage(contracts);
 }
 
 function selectPosition(option) {
@@ -492,16 +400,6 @@ function formatDate(date) {
     const year = date.getFullYear();
     return day + "." + month + "." + year;
 }
-
-document.addEventListener("click", function (event) {
-    const dropdown = document.getElementById("dropdown-content");
-    const button = document.getElementById("dropdown-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !dropdown.contains(targetElement) && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
 
 document.addEventListener("click", function (event) {
     const dropdown = document.getElementById("position-content");

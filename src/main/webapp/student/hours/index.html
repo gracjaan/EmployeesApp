@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Earnit</title>
     <script src="/earnit/static/js/helpers.js"></script>
+    <script src="/earnit/static/js/components/week-selector.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/earnit/static/js/student/hours.js"></script>
@@ -29,17 +30,7 @@
                 <h2 class="text-text text-2xl font-regular" id="dropdown-range">Date range</h2>
                 <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
                 <div class="flex">
-                    <div class="dropdown relative">
-                        <button id="dropdown-button" class="rounded-xl bg-primary px-4 py-2 flex mr-5 items-center"
-                                onclick="toggleWeek()">
-                            <div class="text-white text-left mr-5" id="dropdown-header">Week</div>
-                            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class="ml-2"/>
-                        </button>
-                        <div id="dropdown-content"
-                             class="dropdown-content z-20 bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full max-h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
-                            <!-- Dropdown options -->
-                        </div>
-                    </div>
+                    <div class="mr-5"><week-selector id="week"></week-selector></div>
                     <button class="rounded-xl bg-accent-success p-2 items-center" onclick="confirmWorkedWeek()">
                         <div class="text-white text-left">
                             <img src="/earnit/static/icons/checkmark.svg" alt="checkmark"/>
