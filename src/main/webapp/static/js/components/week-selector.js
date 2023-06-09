@@ -105,7 +105,7 @@ function createWeekItem(year, week) {
 }
 
 async function selectWeek(weekSelector, option) {
-    const week = parseInt(option.dataset.weekNumber);
+    const week = parseInt(option.dataset.week);
     const year = parseInt(option.dataset.year);
 
     weekSelector.setAttribute("data-week", week)
@@ -121,10 +121,10 @@ async function selectWeek(weekSelector, option) {
     dropdownButtonDisplay.innerText = option.innerText;
     dropdownContent.classList.add("hidden");
 
-    weekSelector.dispatchEvent(new CustomEvent("change", {
-        year: year,
-        week: week
-    }))
+    weekSelector.dispatchEvent(new CustomEvent("change",{detail: {
+            year: year,
+            week: week
+        }}))
 }
 
 document.addEventListener("click", function (event) {
