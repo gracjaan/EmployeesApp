@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Request</title>
     <script src="/earnit/static/js/helpers.js"></script>
-    <script src="/earnit/static/js/company/contracts.js" defer></script>
+    <script src="/earnit/static/js/company/user.js" defer></script>
 
     <script src="/earnit/static/js/components/back.js"></script>
 
@@ -15,11 +15,16 @@
 <body
         class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
 >
-<back data-home></back>
+<back></back>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
     <main class="flex gap-4 my-8 flex-col px-2 md:px-0">
-        <h2 class="text-text text-2xl font-bold">Contracts</h2>
-        <section id="contracts" class="flex gap-4 flex-col"></section>
+        <div><h2 class="text-text text-2xl font-bold" id="name">Name</h2>
+            <h2 class="text-text" id="email">e-mail</h2></div>
+        <div class="bg-secondary rounded-2xl p-4 w-full">
+            <div class="flex flex-col gap-2 overflow-y-auto max-h-40 scrollbar-custom scrollbar-rounded-xl scrollbar-track-secondary scrollbar-thumb-text"
+                 id="contracts">
+            </div>
+        </div>
     </main>
 </div>
 </body>

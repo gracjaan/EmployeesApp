@@ -75,7 +75,6 @@ public class CompanyResource {
 
             return Response.ok(contractDAO.getAllContractsByCompanyId(companyId,company, userContracts, userContractsUser, order)).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }
@@ -92,6 +91,21 @@ public class CompanyResource {
             return Response.serverError().build();
         }
         return Response.ok(users).build();
+    }
+
+    @GET
+    @Path("/students/{studentId}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getStudent(@PathParam("studentId") String studentId,
+                               @QueryParam("userContracts") @DefaultValue("false") boolean userContracts,
+                               @QueryParam("userContractsContract") @DefaultValue("false") boolean userContractsContract,
+                               @QueryParam("order") @DefaultValue("contract.role:asc") String order) {
+        try {
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            return Response.ok(companyDAO.getStudentForCompany(companyId, userContracts, userContractsContract, order)).build();
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
     }
 
     @POST

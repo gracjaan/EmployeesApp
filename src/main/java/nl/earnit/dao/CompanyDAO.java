@@ -1,15 +1,21 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.ContractDTO;
+import nl.earnit.dto.workedweek.UserContractDTO;
+import nl.earnit.dto.workedweek.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.Worked;
 import nl.earnit.models.resource.users.UserResponse;
+import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CompanyDAO extends GenericDAO<User> {
@@ -132,5 +138,72 @@ public class CompanyDAO extends GenericDAO<User> {
     }
 
 
+    public UserDTO getStudentForCompany(String companyId, boolean withUserContracts, boolean withUserContractsContract, String order) throws SQLException {
+        OrderBy orderByContracts = new OrderBy(new HashMap<>() {{
+            put("contract.id", "c.id");
+            put("contract.company_id", "c.company_id");
+            put("contract.role", "c.role");
+
+            put("user_contract.contract_id", "uc.contract_id");
+            put("user_contract.user_id", "uc.user_id");
+            put("user_contract.hourly_wage", "uc.hourly_wage");
+            put("user_contract.active", "uc.active");
+        }});
+
+        String query = """
+            SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, uc.user_contracts FROM "user" u
+            JOIN (select c.company_id, uc.user_id, array_agg((uc.*, c.*)%s) as user_contracts from user_contract uc
+                    join contract c on c.id = uc.contract_id
+                    where uc.active IS TRUE
+                    group by c.id, uc.user_id
+                ) uc on uc.user_id = u.id AND uc.company_id = ?
+            where cardinality(uc.user_contracts) > 0
+        """.formatted(orderByContracts.getSQLOrderBy(order, true));
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return null;
+
+        UserDTO user =
+            new UserDTO(res.getString("id"), res.getString("email"),
+                res.getString("first_name"), res.getString("last_name"),
+                res.getString("last_name_prefix"), res.getString("type"));
+
+        if (withUserContracts) {
+            List<UserContractDTO> userContracts = new ArrayList<>();
+            ResultSet userContractsSet = res.getArray("user_contracts").getResultSet();
+
+            while (userContractsSet.next()) {
+                String data = ((PGobject) userContractsSet.getObject("VALUE")).getValue();
+                if (data == null) continue;
+
+                data = data.substring(1, data.length() - 1);
+                String[] dataStrings = data.split(",");
+
+                UserContractDTO userContract = new UserContractDTO(dataStrings[0], dataStrings[1], dataStrings[2], Integer.parseInt(dataStrings[3]), dataStrings[4].equals("t"));
+
+                if (withUserContractsContract) {
+                    String role = dataStrings[7];
+                    role = role.substring(1, role.length() - 1);
+
+                    String description = dataStrings[8];
+                    description = description.substring(1, description.length() - 1);
+
+                    ContractDTO contract = new ContractDTO(dataStrings[5], role, description);
+                    userContract.setContract(contract);
+                }
+
+                userContracts.add(userContract);
+            }
+
+            user.setUserContracts(userContracts);
+        }
+
+        return user;
+    }
 }
 
