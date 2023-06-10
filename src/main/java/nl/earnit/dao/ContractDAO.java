@@ -86,7 +86,7 @@ public class ContractDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
 
         while (res.next()) {
-            ContractDTO contract = new ContractDTO(res.getString("id"), res.getString("description"), res.getString("role"));
+            ContractDTO contract = new ContractDTO(res.getString("id"), res.getString("role"), res.getString("description"));
 
             if (withCompany) {
                 contract.setCompany(new Company(res.getString("company_id"), res.getString("company_name")));
