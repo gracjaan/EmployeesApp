@@ -14,6 +14,11 @@ const undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", () => undo(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
 
 window.addEventListener("helpersLoaded", async () => {
+    const name = document.getElementById("name");
+    name.addEventListener("click", () => {
+        location.href = "/earnit/user?id=" + name.getAttribute("data-user-id")
+    })
+
     await updateHours();
 });
 
@@ -95,7 +100,9 @@ function undo(companyId, workedWeekId, token) {
 }
 
 function updatePage(request) {
-    document.getElementById("name").innerHTML = getName(request.user.firstName, request.user.lastName, request.user.lastNamePrefix, "<br />");
+    const name = document.getElementById("name");
+    name.innerHTML = getName(request.user.firstName, request.user.lastName, request.user.lastNamePrefix, "<br />");
+    name.setAttribute("data-user-id", request.user.id);
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
