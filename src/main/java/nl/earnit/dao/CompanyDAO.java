@@ -124,6 +124,25 @@ public class CompanyDAO extends GenericDAO<User> {
 
     }
 
+    public boolean hasCompanyAccessToUser(String companyId, String studentId) throws SQLException {
+        String query = """
+            SELECT uc.id, COUNT(*) as contracts FROM user_contract uc
+            JOIN contract c ON c.id = uc.contract_id
+            WHERE uc.user_id = ? AND c.company_id = ?
+            GROUP BY uc.id
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, studentId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        return res.next();
+    }
+
     public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
         String query = "SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email FROM user u, company_user c WHERE u.id = c.user_id AND c.company_id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -138,7 +157,7 @@ public class CompanyDAO extends GenericDAO<User> {
     }
 
 
-    public UserDTO getStudentForCompany(String companyId, boolean withUserContracts, boolean withUserContractsContract, String order) throws SQLException {
+    public UserDTO getStudentForCompany(String companyId, String studentId, boolean withUserContracts, boolean withUserContractsContract, String order) throws SQLException {
         OrderBy orderByContracts = new OrderBy(new HashMap<>() {{
             put("contract.id", "c.id");
             put("contract.company_id", "c.company_id");
@@ -154,15 +173,15 @@ public class CompanyDAO extends GenericDAO<User> {
             SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, uc.user_contracts FROM "user" u
             JOIN (select c.company_id, uc.user_id, array_agg((uc.*, c.*)%s) as user_contracts from user_contract uc
                     join contract c on c.id = uc.contract_id
-                    where uc.active IS TRUE
                     group by c.id, uc.user_id
                 ) uc on uc.user_id = u.id AND uc.company_id = ?
-            where cardinality(uc.user_contracts) > 0
+            WHERE u.id = ?
         """.formatted(orderByContracts.getSQLOrderBy(order, true));
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
+        PostgresJDBCHelper.setUuid(statement, 2, studentId);
 
         ResultSet res = statement.executeQuery();
 

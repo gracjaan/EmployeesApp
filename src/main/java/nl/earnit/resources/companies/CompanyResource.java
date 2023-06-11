@@ -102,8 +102,13 @@ public class CompanyResource {
                                @QueryParam("order") @DefaultValue("contract.role:asc") String order) {
         try {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
-            return Response.ok(companyDAO.getStudentForCompany(companyId, userContracts, userContractsContract, order)).build();
+            if (!companyDAO.hasCompanyAccessToUser(companyId, studentId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            return Response.ok(companyDAO.getStudentForCompany(companyId, studentId, userContracts, userContractsContract, order)).build();
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
     }
@@ -138,6 +143,33 @@ public class CompanyResource {
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year), Integer.parseInt(week), company,contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
         } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/{studentId}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getInvoices(@PathParam("studentId") String studentId,
+                                @QueryParam("company") @DefaultValue("false") boolean company,
+                                @QueryParam("contract") @DefaultValue("false") boolean contract,
+                                @QueryParam("userContract") @DefaultValue("false")
+                                boolean userContract,
+                                @QueryParam("user") @DefaultValue("false") boolean user,
+                                @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                                @QueryParam("order") @DefaultValue("worked_week.year:asc,worked_week.week:asc") String order) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            if (!companyDAO.hasCompanyAccessToUser(companyId, studentId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompanyForUser(companyId, studentId, company,contract,userContract, user,hours,totalHours, order);
+            return Response.ok(workedWeeks).build();
+        } catch (SQLException e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
     }

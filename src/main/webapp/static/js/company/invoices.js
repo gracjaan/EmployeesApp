@@ -44,7 +44,7 @@ function getOrder() {
     if (contractSelected > 0) {
         order += "contract.role:" + (contractSelected === "1" ? "asc" : "desc");
     } else if (hoursSelected > 0) {
-        order += "hours.total:" + (hoursSelected === "1" ? "asc" : "desc");
+        order += "worked_week.total_hours:" + (hoursSelected === "1" ? "asc" : "desc");
     } else if (userSelected > 0) {
         order += "user.last_name:" + (userSelected === "1" ? "asc" : "desc");
     }

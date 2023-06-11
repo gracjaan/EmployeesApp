@@ -26,6 +26,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         put("worked_week.confirmed", "ww.confirmed");
         put("worked_week.approved", "ww.approved");
         put("worked_week.solved", "ww.solved");
+        put("worked_week.total_hours", "w.minutes");
 
         put("user_contract.contract_id", "uc.contract_id");
         put("user_contract.user_id", "uc.user_id");
@@ -304,6 +305,80 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.setInt(1, year);
         statement.setInt(2, week);
         PostgresJDBCHelper.setUuid(statement, 3, companyId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return
+        List<WorkedWeekDTO> workedWeeks = new ArrayList<>();
+
+        while (res.next()) {
+            workedWeeks.add(getWorkedWeekFromRow(res, "worked_week_", withCompany, withContract, withUserContract, withUser, withHours, withTotalHours));
+        }
+
+        return workedWeeks;
+    }
+
+    /**
+     * Gets all worked weeks the company has access to per week.
+     *
+     * @param companyId The id of the company.
+     * @throws SQLException If a database error occurs.
+     */
+    public List<WorkedWeekDTO> getWorkedWeeksForCompanyForUser(String companyId, String userId, boolean withCompany,
+                                                        boolean withContract, boolean withUserContract,
+                                                        boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+        String query = """
+            SELECT DISTINCT ww.id as worked_week_id,
+                ww.contract_id as worked_week_contract_id,
+                ww.year as worked_week_year,
+                ww.week as worked_week_week,
+                ww.note as worked_week_note,
+                ww.confirmed as worked_week_confirmed,
+                ww.approved as worked_week_approved,
+                ww.solved as worked_week_solved,
+                
+                uc.id as user_contract_id,
+                uc.contract_id as user_contract_contract_id,
+                uc.user_id as user_contract_user_id,
+                uc.hourly_wage as user_contract_hourly_wage,
+                uc.active as user_contract_active,
+                
+                u.id as user_id,
+                u.first_name as user_first_name,
+                u.last_name as user_last_name,
+                u.last_name_prefix as user_last_name_prefix,
+                u.email as user_email,
+                u.type as user_type,
+                
+                c.id as contract_id,
+                c.company_id as contract_company_id,
+                c.role as contract_role,
+                c.description as contract_description,
+                
+                cy.id as company_id,
+                cy.name as company_name,
+                
+                w.hours,
+                w.minutes
+                
+                FROM "%s" ww
+                        
+                JOIN user_contract uc ON uc.id = ww.contract_id
+                JOIN "user" u ON u.id = uc.user_id
+                JOIN contract c ON c.id = uc.contract_id
+                JOIN company cy ON cy.id = c.company_id
+                
+                LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
+                                
+                WHERE cy.id = ? AND u.id = ?
+                %3$s
+            """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), orderBy.getSQLOrderBy(order, true));
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
+        PostgresJDBCHelper.setUuid(statement, 2, userId);
 
         // Execute query
         ResultSet res = statement.executeQuery();
