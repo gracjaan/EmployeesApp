@@ -138,7 +138,7 @@ function createEntry(year, week, contract, entry) {
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_2fr_5fr]", "grid");
+    entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_1fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr]", "grid");
     entryContainer.appendChild(entryInfo);
 
     const calculatedDate = addDays(getDateOfISOWeek(week, year), entry.day);
@@ -149,17 +149,17 @@ function createEntry(year, week, contract, entry) {
     entryInfo.appendChild(date);
 
     const hours = document.createElement("div");
-    hours.classList.add("text-text");
+    hours.classList.add("text-text", "font-bold", "sm:font-normal");
     hours.innerText = `${entry.minutes / 60}H`;
     entryInfo.appendChild(hours);
 
     const role = document.createElement("div");
-    role.classList.add("text-text");
+    role.classList.add("text-text", "font-bold", "sm:font-normal");
     role.innerText = contract.role;
     entryInfo.appendChild(role);
 
     const description = document.createElement("div");
-    description.classList.add("text-text");
+    description.classList.add("text-text", "col-span-3", "sm:col-span-1");
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
