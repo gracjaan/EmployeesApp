@@ -41,7 +41,6 @@ public class Auth {
             .withIssuedAt(Instant.ofEpochMilli(System.currentTimeMillis()))
             .withExpiresAt(Instant.ofEpochMilli(expiresAt))
             .withClaim("user_id", user.getId())
-            .withClaim("user_email", user.getEmail())
             .withClaim("user_company", companyId)
             .sign(algorithm);
     }
@@ -64,12 +63,6 @@ public class Auth {
         }
 
         Claim userId = jwt.getClaim("user_id");
-        Claim userEmail = jwt.getClaim("user_email");
-
-        // Make sure the subject and claim match
-        if (!jwt.getSubject().equals(userEmail.asString())) {
-            return null;
-        }
 
         // Make sure the token is currently valid
         if (!jwt.getIssuedAt().before(Date.from(Instant.ofEpochMilli(System.currentTimeMillis())))) {
@@ -82,12 +75,8 @@ public class Auth {
 
         try {
             UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            User user = userDAO.getUserById(userId.asString());
 
-            if (user == null) return null;
-            if (!user.getEmail().equals(userEmail.asString())) return null;
-
-            return user;
+            return userDAO.getUserById(userId.asString());
         } catch (SQLException e) {
             return null;
         }

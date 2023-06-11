@@ -35,10 +35,6 @@ function getUserId() {
     return getJWT().user_id;
 }
 
-function getUserEmail() {
-    return getJWT().user_email;
-}
-
 function getUserCompany() {
     return getJWT().user_company;
 }
