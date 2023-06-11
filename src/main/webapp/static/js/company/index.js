@@ -31,15 +31,18 @@ function getHours(companyId, token) {
 
 function updateChart(workedWeeks) {
     const labels = [];
+    const ids = [];
     const dataset = [];
 
     for (const workedWeek of workedWeeks) {
         const label = escapeHtml(workedWeek.user.firstName);
         const hours = workedWeek.totalMinutes / 60
+        const id = workedWeek.user.id;
 
-        if (labels.includes(label)) {
-            dataset[labels.indexOf(label)] += hours;
+        if (ids.includes(id)) {
+            dataset[ids.indexOf(id)] += hours;
         } else {
+            ids.push(id);
             labels.push(label);
             dataset.push(hours);
         }
