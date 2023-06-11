@@ -2,7 +2,15 @@ window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const email = document.getElementById("email");
     const contracts = document.getElementById("contracts");
-    const invoices = document.getElementById("invoices");
+
+    const hours = document.getElementById("hours");
+    hours.addEventListener("change", () => updateInvoices())
+
+    const contract = document.getElementById("contract");
+    contract.addEventListener("change", () => updateInvoices())
+
+    const week = document.getElementById("week");
+    week.addEventListener("change", () => updateInvoices())
 
     const user = await getUser();
     if (user === null) {
@@ -17,13 +25,20 @@ window.addEventListener("helpersLoaded", async () => {
         contracts.append(createUserContractItem(userContract));
     }
 
+    await updateInvoices();
+})
+
+async function updateInvoices() {
     const workedWeeks = await getInvoices();
     if (workedWeeks === null) return;
+
+    const invoices = document.getElementById("invoices");
+    invoices.innerText = "";
 
     for (const workedWeek of workedWeeks) {
         invoices.append(createInvoiceItem(workedWeek));
     }
-})
+}
 
 function createUserContractItem(userContract) {
     const userContractContainer = document.createElement("div");
