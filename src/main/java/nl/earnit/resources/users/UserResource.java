@@ -62,14 +62,12 @@ public class UserResource {
     @Path("/companies")
     public Response getCompanies() {
         UserDAO userDAO;
-        List<Company> companies;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            companies = userDAO.getCompanies(this.userId);
+            return Response.ok(userDAO.getCompanies(this.userId)).build();
         } catch (SQLException e) {
             return Response.serverError().build();
         }
-        return Response.ok(companies).build();
     }
 
     @Path("/companies/{companyId}")
