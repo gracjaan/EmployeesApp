@@ -54,3 +54,7 @@ function getUser() {
 function getName(firstName, lastName, lastNamePrefix, separator = " ") {
     return [firstName, lastNamePrefix, lastName].filter(Boolean).join(separator);
 }
+
+const escapeHtml = (unsafe) => {
+    return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}

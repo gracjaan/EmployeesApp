@@ -51,9 +51,8 @@ fetch("/earnit/api/users/"+getUserId(), {
 )
     .then(async res => {
         const json = await res.json();
-        console.log(json);
-        name.innerHTML = "Welcome back, " + json.firstName;
-})
+        name.innerText = "Welcome back, " + json.firstName;
+    })
 });
 
 

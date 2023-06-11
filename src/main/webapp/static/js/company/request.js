@@ -101,7 +101,7 @@ function undo(companyId, workedWeekId, token) {
 
 function updatePage(request) {
     const name = document.getElementById("name");
-    name.innerHTML = getName(request.user.firstName, request.user.lastName, request.user.lastNamePrefix, "<br />");
+    name.innerHTML = getName(escapeHtml(request.user.firstName), escapeHtml(request.user.lastName), escapeHtml(request.user.lastNamePrefix), "<br />");
     name.setAttribute("data-user-id", request.user.id);
 
     const entries = document.getElementById("entries");

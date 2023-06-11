@@ -34,7 +34,7 @@ function createRequestCard(workedWeek) {
 
     const name = document.createElement("h3");
     name.classList.add("text-text", "text-2xl", "font-bold");
-    name.innerHTML = getName(workedWeek.user.firstName, workedWeek.user.lastName, workedWeek.user.lastNamePrefix, "<br />");
+    name.innerHTML = getName(escapeHtml(workedWeek.user.firstName), escapeHtml(workedWeek.user.lastName), escapeHtml(workedWeek.user.lastNamePrefix), "<br />");
     container.appendChild(name);
 
     const role = document.createElement("p");
