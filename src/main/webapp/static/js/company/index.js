@@ -17,7 +17,6 @@ window.addEventListener("helpersLoaded", async () => {
 
     const workedWeeks = await getHours(getUserCompany(), getJWTCookie());
     updateChart(workedWeeks)
-    console.log(workedWeeks);
 });
 
 function getHours(companyId, token) {
