@@ -48,6 +48,11 @@ public class RedirectFilter implements Filter {
             return;
         }
 
+        if (req.getServletPath().startsWith("/settings")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
 
         if (user == null) {
             redirectLogin(servletResponse);

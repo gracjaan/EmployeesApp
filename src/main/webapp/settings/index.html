@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Settings</title>
+    <script src="/earnit/static/js/helpers.js"></script>
+    <script src="/earnit/static/js/settings.js" defer></script>
+
+    <script src="/earnit/static/js/components/back.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body
+        class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
+>
+<back data-home></back>
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
+    <main class="flex gap-4 my-8 flex-col px-2 md:px-0">
+        <h2 class="text-text text-2xl font-bold">Settings</h2>
+        <div
+                class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+        >
+            <div class="font-bold text-text"
+            >Password
+            </div
+            >
+            <input placeholder="Hours" type="text" name="hours" id="hours"
+                   class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>
