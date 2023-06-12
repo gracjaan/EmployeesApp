@@ -52,5 +52,6 @@ function getName(firstName, lastName, lastNamePrefix, separator = " ") {
 }
 
 const escapeHtml = (unsafe) => {
+    if (unsafe === null || unsafe === undefined) return unsafe;
     return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }
