@@ -6,6 +6,7 @@ import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
+import nl.earnit.models.resource.contracts.Contract;
 
 import java.sql.SQLException;
 
@@ -73,8 +74,18 @@ public class CompanyResource {
 
     @POST
     @Path("/contracts")
-    public Response addContract() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getContracts(Contract contract) {
+        ContractDAO contractDAO;
+
+        try {
+            contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+            contractDAO.createContract(contract, companyId);
+        } catch (SQLException e){
+            System.out.println(e);
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @Path("/contracts/{contractId}")

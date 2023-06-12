@@ -54,20 +54,7 @@ public class UserCompanyResource {
         return Response.ok(userContracts).build();
     }
 
-    @POST
-    @Path("/contracts")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getContracts(Contract contract) {
-        ContractDAO contractDAO;
 
-        try {
-            contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
-            contractDAO.createContract(contract, companyId);
-        } catch (SQLException e){
-            return Response.serverError().build();
-        }
-        return Response.ok().build();
-    }
 
     @GET
     @Path("/contracts/{userContractId}")
