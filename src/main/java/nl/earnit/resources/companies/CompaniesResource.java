@@ -11,6 +11,7 @@ import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateCompany;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
 
@@ -73,7 +74,7 @@ public class CompaniesResource {
                     }
 
                     user.setType("COMPANY");
-                    userDAO.updateUser(user);
+                    userDAO.updateUser(new UserResponse(user));
                 }
             }
 
