@@ -209,7 +209,16 @@ async function getContracts(cid) {
         .then(response => response.json())
         .catch(e => null);
 }
-function sendFormDataServer(){
+function sendFormDataServer() {
+    if (hourlyWage < 0) {
+        alert("Negative hourly wage is not allowed");
+        return;
+    }
+
+    if (hourlyWage === null || userId === null || contractId === null || companyId === null) {
+        alert("Fill in all inputs");
+        return;
+    }
     return fetch("/earnit/api/companies/" + companyId + "/contracts/" + contractId +"/employees",
         {method: "POST",
             headers: {
@@ -220,7 +229,13 @@ function sendFormDataServer(){
         body:JSON.stringify({
             userId, hourlyWage
         })}
-    ).then((res) => res.json())
+    ).then((res) => {
+        if(res.status === 200) {
+            alert("Successfully created link");
+        } else {
+            alert("Link failed, try again, code: " + res.status);
+        }
+    })
         .catch(() => null);
 }
 
