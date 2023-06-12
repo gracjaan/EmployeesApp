@@ -82,6 +82,7 @@ public class CompanyResource {
             contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
             contractDAO.createContract(contract, companyId);
         } catch (SQLException e){
+            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok().build();

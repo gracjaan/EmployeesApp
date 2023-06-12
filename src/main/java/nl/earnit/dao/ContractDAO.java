@@ -83,7 +83,7 @@ public class ContractDAO extends GenericDAO<User> {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, role, description) "+
                 "VALUES (?, ?, ?) RETURNING id";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, company_id);
+        PostgresJDBCHelper.setUuid(statement, 1, company_id);
         statement.setString(2, contract.getRole());
         statement.setString(3, contract.getDescription());
         ResultSet res = statement.executeQuery();

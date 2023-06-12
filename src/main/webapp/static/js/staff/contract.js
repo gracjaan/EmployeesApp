@@ -64,10 +64,10 @@ document.addEventListener("click", function(event) {
 async function editCompanyInfo(company){
     const companyDiv = document.getElementById("company-name-display");
     companyDiv.innerText = "";
+    companyDiv.setAttribute("company-id", company.id)
 
     const encapsulatingDiv = document.createElement("div");
     encapsulatingDiv.classList.add("flex", "flex-center");
-    encapsulatingDiv.setAttribute("id", "company-name-display");
 
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
@@ -82,14 +82,30 @@ async function editCompanyInfo(company){
 
     companyDiv.append(encapsulatingDiv)
 
+}
 
-//     Now we need to show all the contracts for the company//
-    const contractsList = document.getElementById("contract-list");
-    contractsList.innerText = "";
-    let contracts = await getContracts(company.id)
-    console.log(contracts);
-    for (const contract of contracts) {
-        contractsList.append(createContract(contract));
-    }
+function submitForm () {
+    const cid = document.getElementById("company-name-display").getAttribute("company-id")
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+
+    const formData = {
+        id: null,
+        role: name,
+        description: description
+    };
+
+    fetch ("/earnit/api/companies/"+ cid + "/contracts/",
+        {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: {
+                "accept-type" : "application/json",
+                'authorization': `token ${getJWTCookie()}`,
+                'content-type': "application/json"
+            }
+        })
+        .then (response => alert("Form submitted successfully"))
+        .catch(e => console.error(e))
 }
 
