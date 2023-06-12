@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
@@ -132,17 +133,16 @@ public class UserDAO extends GenericDAO<User> {
         return getUserById(res.getString("id"));
     }
 
-    public User updateUser(User user) throws SQLException {
+    public User updateUser(UserResponse user) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, password = ?, type = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, type = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, user.getEmail());
         statement.setString(2, user.getFirstName());
         statement.setString(3, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());
         statement.setString(4, user.getLastName());
-        statement.setString(5, user.getPassword());
-        statement.setString(6, user.getType());
+        statement.setString(5, user.getType());
 
         // Execute query
         ResultSet res = statement.executeQuery();

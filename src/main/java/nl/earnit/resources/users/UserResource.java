@@ -6,6 +6,7 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -40,7 +41,7 @@ public class UserResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateUser(User user) {
+    public Response updateUser(UserResponse user) {
         UserDAO userDAO;
         User dbUser;
         try {
