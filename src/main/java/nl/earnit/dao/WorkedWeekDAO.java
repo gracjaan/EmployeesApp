@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +53,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
     }
 
     public void removeConfirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
+        if (hasDatePassed(year, week)) {
+            return;
+        }
         String query = "UPDATE worked_week SET confirmed = false WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, userContractId);
@@ -506,5 +511,22 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
         resultSet.next();
 
+    }
+
+    public boolean hasDatePassed(String year, String week) {
+        int y = 0;
+        int w = 0;
+        try {
+            w = Integer.parseInt(week);
+            y = Integer.parseInt(year);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+        int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
+        if (currentYear>=y&&currentWeek>w) {
+            return false;
+        }
+        return true;
     }
 }

@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,6 +153,8 @@ public class WorkedDAO extends GenericDAO<User> {
         if (!resultSet.next()) return false;
         return resultSet.getBoolean("confirmed");
     }
+
+
 
 
 }
