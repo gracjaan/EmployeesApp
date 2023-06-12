@@ -1,16 +1,11 @@
 package nl.earnit.resources.users;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.CompanyDAO;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.UserContractDAO;
-import nl.earnit.dao.WorkedDAO;
+import nl.earnit.dao.*;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.contracts.Contract;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -57,6 +52,21 @@ public class UserCompanyResource {
             return Response.serverError().build();
         }
         return Response.ok(userContracts).build();
+    }
+
+    @POST
+    @Path("/contracts")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getContracts(Contract contract) {
+        ContractDAO contractDAO;
+
+        try {
+            contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+            contractDAO.createContract(contract, companyId);
+        } catch (SQLException e){
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @GET

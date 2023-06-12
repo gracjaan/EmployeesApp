@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class UserDAO extends GenericDAO<User> {
@@ -77,33 +76,35 @@ public class UserDAO extends GenericDAO<User> {
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
     }
 
-    public List<UserResponse> getAllUsers(String order) throws SQLException {
-        OrderBy orderBy = new OrderBy(new HashMap<>() {{
-            put("user.first_name", "first_name");
-            put("user.last_name", "last_name");
-            put("user.last_name_prefix", "last_name_prefix");
-            put("user.email", "email");
-            put("user.id", "id");
-        }});
+    public List<User> getAllUsers(String order) throws SQLException {
+        ArrayList<User> userList = new ArrayList<>();
 
-        ArrayList<UserResponse> userList = new ArrayList<>();
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true and type = 'STUDENT' ORDER BY " + orderBy.getSQLOrderBy(order) ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\" WHERE active = true ORDER BY ? " ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
+
+
+        if(order.equals("name")) {
+            statement.setString(1, "last_name");
+        } else {
+            statement.setString(1, "id");
+        }
+
         ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
 
         // Return all users
         while(res.next()) {
-            UserResponse user = new UserResponse();
+            User user = new User();
             user.setId(res.getString("id"));
-            user.setEmail(res.getString("email"));
             user.setFirstName(res.getString("first_name"));
             user.setLastName(res.getString("last_name"));
             user.setLastNamePrefix(res.getString("last_name_prefix"));
             userList.add(user);
         }
-
         return userList;
 
     }
@@ -134,14 +135,13 @@ public class UserDAO extends GenericDAO<User> {
 
     public User updateUser(User user) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, password = ?, type = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, type = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, user.getEmail());
         statement.setString(2, user.getFirstName());
         statement.setString(3, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());
         statement.setString(4, user.getLastName());
-        statement.setString(5, user.getPassword());
         statement.setString(6, user.getType());
 
         // Execute query
@@ -155,18 +155,18 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     public void disableUserById(String id) throws SQLException {
-        String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
+        String query = "UPDATE" + tableName + "SET active = false WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, id);
+        statement.setString(1, id);
 
         statement.executeQuery();
 
     }
 
     public void renableUserById(String id) throws SQLException {
-        String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
+        String query = "UPDATE" + tableName + "SET active = true WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, id);
+        statement.setString(1, id);
 
         statement.executeQuery();
 
