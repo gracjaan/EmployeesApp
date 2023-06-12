@@ -34,7 +34,7 @@
       </div>
     </nav>
   </header>
-  <main class="gap-8 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
+  <main class="gap-8 md:gap-8 my-8 flex-col px-2 sm:px-0 gap-4 flex p-4">
     <section class="w-full h-full gap-2 flex flex-col px-6">
       <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
         <div class="flex">
@@ -80,19 +80,41 @@
           </div>
         </div>
         <!--        This will list the different students-->
-        <ol class="overflow-y-auto gap-2">
-          <li class="w-full">
-            <a href="" class="hover:border-2 hover:color-color-text block columns-2 bg-primary  rounded-xl w-full p-2 pl-4">
-              <p class="text-text">Gracjan Chmielnicki</p>
-              <div class="block columns-2">
-                <p class="text-text">160H</p>
-                <p class="text-text">WEEK 10</p>
-              </div>
-            </a>
+        <ol class="pr-2 flex flex-col gap-2 overflow-y-auto max-h-[15rem] scrollbar-custom scrollbar-rounded-xl scrollbar-thumb-primary">
+          <li>
+            <div data-selected="0" class="justify-between flex flex-row data-[selected='1']:border-white hover:border-text border-2 border-primary block bg-primary rounded-xl w-full p-2 pl-2 overflow-y-auto scrollbar-custom scrollbar-track-text scrollbar-rounded-xl scrollbar-thumb-background max-h-[5rem]">
+              <p class="text-text">Employee</p>
+              <p class="text-text">Company</p>
+              <p class="text-text">Role</p>
+              <p class="text-text">Week</p>
+              <p class="text-text pr-2">Hours</p>
+            </div>
           </li>
         </ol>
 
       </div>
+    </section>
+    <section class="w-full h-full gap-2 flex flex-col px-6">
+        <p class="font-bold font-montserrat text-4xl text-text">Comments</p>
+        <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2 sm:flex-row">
+<!--          comments for the user-->
+          <div class="bg-primary rounded-xl w-full w-full p-2 pl-4">
+            <div class="items-center gap-4 flex flex-row">
+              <img class="h-14" src="/earnit/static/icons/user.svg" alt="user logo">
+              <p class="text-text font-bold font-montserrat text-2xl">Amazon</p>
+            </div>
+            <p class="text-text mt-4 font-montserrat font-bold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+          </div>
+<!--          comments for the company-->
+          <div class="bg-primary rounded-xl w-full w-full p-2 pl-4">
+            <div class="items-center gap-4 flex flex-row">
+              <img class="h-14" src="/earnit/static/icons/building.svg" alt="user logo">
+              <p class="text-text font-bold font-montserrat text-2xl">Gracjan
+                Chmielnicki</p>
+            </div>
+            <p class="text-text mt-4 font-montserrat font-bold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+          </div>
+        </div>
     </section>
   </main>
 </div>

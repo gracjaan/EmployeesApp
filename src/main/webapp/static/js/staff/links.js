@@ -143,7 +143,7 @@ function createContract(contract) {
     role.innerText = contract.role;
 
     const blockDiv = document.createElement("div");
-    blockDiv.classList.add("block", "overflow-y-auto", "scrollbar-custom", "scrollbar-track-text", "scrollbar-rounded-xl", "scrollbar-thumb-background", "max-h-[5rem]")
+    blockDiv.classList.add("block", "overflow-y-auto", "scrollbar-custom", "scrollbar-track-text", "scrollbar-rounded-xl", "scrollbar-thumb-background", "max-h-[5rem]");
 
     const description = document.createElement("p")
     description.classList.add("text-text", "break-inside-avoid-column")
