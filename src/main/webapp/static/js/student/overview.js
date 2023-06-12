@@ -214,6 +214,52 @@ function getWeek(ofDate) {
         - 3 + (week1.getDay() + 6) % 7) / 7);
 }
 
+function togglePosition() {
+    const dropdown = document.getElementById("position-content");
+    dropdown.classList.toggle("hidden");
+}
+
+function selectPosition(option) {
+    const header = document.getElementById("position-header");
+    header.setAttribute('data-role', option.getAttribute("data-role"));
+    header.setAttribute('data-id', option.getAttribute("data-id"));
+    header.textContent = option.textContent;
+    togglePosition();
+}
+
+document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("position-content");
+    const button = document.getElementById("position-button");
+    const targetElement = event.target;
+
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+        dropdown.classList.add("hidden");
+    }
+});
+
+async function updateContracts() {
+    const contracts = await obtainContractsForUser(getUserId())
+
+    if (contracts === null) {
+        return null;
+    }
+
+    const positionContent = document.getElementById('position-content');
+    positionContent.innerText = "";
+
+    contracts.forEach(c => {
+        const option = document.createElement('div');
+        option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
+        option.textContent = c.contract.role;
+        option.setAttribute('data-role', c.contract.role);
+        option.setAttribute('data-id', c.contract.id);
+        option.addEventListener('click', () => selectPosition(option));
+        positionContent.appendChild(option);
+    });
+
+    return contracts;
+}
+
 
 // todo deletbutton and edit button should not exist
 // todo filtering buttons (position, week)
