@@ -493,4 +493,49 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             withHours ? hours : null
         );
     }
+
+    public List<WorkedWeek> getRejectedWorkedWeeks() throws SQLException{
+        ArrayList<WorkedWeek> rejectedWeeks = new ArrayList<>();
+
+        String query = "SELECT id,contract_id, year, week, note, confirmed, approved, solved FROM  " + tableName + " WHERE approved=false AND solved = false";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        while(res.next()) {
+            WorkedWeek workedWeek = new WorkedWeek();
+            workedWeek.setId(res.getString("id"));
+            workedWeek.setContractId(res.getString("contract_id"));
+            workedWeek.setYear(res.getInt("year"));
+            workedWeek.setWeek(res.getInt("week"));
+            workedWeek.setNote(res.getString("note"));
+            workedWeek.setConfirmed(res.getBoolean("confirmed"));
+            workedWeek.setApproved(res.getBoolean("approved"));
+            workedWeek.setSolved(res.getBoolean("solved"));
+            rejectedWeeks.add(workedWeek);
+        }
+
+        return rejectedWeeks;
+    }
+
+    public void resolveRejectedWeek(String id) throws SQLException {
+        String query = "UPDATE " + tableName + " SET approved = true, solved = true WHERE id = ? RETURNING id";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
+        statement.executeQuery();
+
+    }
+
+    public void denyRejectedWeek(String id) throws SQLException {
+        String query = "UPDATE " + tableName + " SET approved = false, solved = true WHERE id = ? RETURNING id";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
+        statement.executeQuery();
+
+    }
 }
