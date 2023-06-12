@@ -28,10 +28,10 @@ window.addEventListener("helpersLoaded", async () => {
 })
 
 
-let userId = ''
-let hourlyWage = ''
-let contractId=''
-let companyId=''
+let userId = null;
+let hourlyWage = null;
+let contractId = null;
+let companyId = null;
 
 function createUser(user) {
     const div = document.createElement("div");
@@ -143,10 +143,10 @@ function createContract(contract) {
     role.innerText = contract.role;
 
     const blockDiv = document.createElement("div");
-    blockDiv.classList.add("block", "columns-1")
+    blockDiv.classList.add("block", "overflow-y-auto", "scrollbar-custom", "scrollbar-track-text", "scrollbar-rounded-xl", "scrollbar-thumb-background", "max-h-[5rem]")
 
     const description = document.createElement("p")
-    description.classList.add("text-text")
+    description.classList.add("text-text", "break-inside-avoid-column")
     description.innerText = contract.description;
 
     listElement.addEventListener("click", ()=>{
