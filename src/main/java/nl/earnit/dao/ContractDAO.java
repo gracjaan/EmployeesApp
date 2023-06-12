@@ -10,10 +10,7 @@ import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,31 +91,34 @@ public class ContractDAO extends GenericDAO<User> {
 
             if (withUserContracts) {
                 List<UserContractDTO> userContracts = new ArrayList<>();
-                ResultSet userContractsSet = res.getArray("user_contracts").getResultSet();
+                Array userContractsArray = res.getArray("user_contracts");
+                if(!res.wasNull()) {
+                    ResultSet userContractsSet = userContractsArray.getResultSet();
 
-                while (userContractsSet.next()) {
-                    String data = ((PGobject) userContractsSet.getObject("VALUE")).getValue();
-                    if (data == null) continue;
+                    while (userContractsSet.next()) {
+                        String data = ((PGobject) userContractsSet.getObject("VALUE")).getValue();
+                        if (data == null) continue;
 
-                    data = data.substring(1, data.length() - 1);
-                    String[] dataStrings = data.split(",");
+                        data = data.substring(1, data.length() - 1);
+                        String[] dataStrings = data.split(",");
 
-                    UserContractDTO userContract = new UserContractDTO(dataStrings[0], dataStrings[1], dataStrings[2], Integer.parseInt(dataStrings[3]), true);
+                        UserContractDTO userContract = new UserContractDTO(dataStrings[0], dataStrings[1], dataStrings[2], Integer.parseInt(dataStrings[3]), true);
 
-                    if (withUserContractsUser) {
-                        String firstName = dataStrings[6];
-                        if (firstName.startsWith("\"") && firstName.endsWith("\"")) firstName = firstName.substring(1, firstName.length() - 1);
+                        if (withUserContractsUser) {
+                            String firstName = dataStrings[6];
+                            if (firstName.startsWith("\"") && firstName.endsWith("\"")) firstName = firstName.substring(1, firstName.length() - 1);
 
-                        String lastName = dataStrings[7];
-                        if (lastName.startsWith("\"") && lastName.endsWith("\"")) lastName = lastName.substring(1, lastName.length() - 1);
+                            String lastName = dataStrings[7];
+                            if (lastName.startsWith("\"") && lastName.endsWith("\"")) lastName = lastName.substring(1, lastName.length() - 1);
 
-                        String lastNamePrefix = dataStrings[8];
-                        if (lastNamePrefix.startsWith("\"") && lastNamePrefix.endsWith("\"")) lastNamePrefix = lastNamePrefix.substring(1, lastNamePrefix.length() - 1);
+                            String lastNamePrefix = dataStrings[8];
+                            if (lastNamePrefix.startsWith("\"") && lastNamePrefix.endsWith("\"")) lastNamePrefix = lastNamePrefix.substring(1, lastNamePrefix.length() - 1);
 
-                        userContract.setUser(new UserResponse(dataStrings[4], dataStrings[5], firstName, lastName, lastNamePrefix, dataStrings[9]));
+                            userContract.setUser(new UserResponse(dataStrings[4], dataStrings[5], firstName, lastName, lastNamePrefix, dataStrings[9]));
+                        }
+
+                        userContracts.add(userContract);
                     }
-
-                    userContracts.add(userContract);
                 }
 
                 contract.setUserContracts(userContracts);
