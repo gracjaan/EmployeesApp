@@ -79,6 +79,16 @@ public class ContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    public void createContract(Contract contract, String company_id) throws SQLException {
+        String query = "INSERT INTO \"" + tableName + "\" (company_id, role, description) "+
+                "VALUES (?, ?, ?) RETURNING id";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, company_id);
+        statement.setString(2, contract.getRole());
+        statement.setString(3, contract.getDescription());
+        ResultSet res = statement.executeQuery();
+    }
+
     public Contract getContract(String contractId) throws SQLException {
         String query = "GET description, role FROM " + tableName + " WHERE id = ?";
 

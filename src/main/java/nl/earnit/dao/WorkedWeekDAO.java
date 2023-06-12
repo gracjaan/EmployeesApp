@@ -26,14 +26,10 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
     @Override
     public int count() throws SQLException {
-        // Create query
         String query = """
              SELECT COUNT(DISTINCT ww.id) AS count FROM "%s" ww
             """.formatted(tableName);
-
         PreparedStatement counter = this.con.prepareStatement(query);
-
-        // Execute query
         ResultSet res = counter.executeQuery();
 
         // Return count
@@ -95,8 +91,6 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
         // Execute query
         ResultSet res = counter.executeQuery();
-
-        // Return count
         res.next();
         return res.getInt("count");
     }
