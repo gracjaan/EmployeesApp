@@ -31,6 +31,21 @@ async function getRejectedWeeks() {
     ).then((res) => res.json()).catch(() => null);
 }
 
+function createComment(note, companyNote, employee, company){
+    const commentDiv = document.getElementById("comments");
+
+    const userCommentDiv = document.createElement("div")
+    userCommentDiv.classList.add("bg-primary", "rounded-xl", "w-full","p-2","pl-4")
+    const userHeaderDiv = document.createElement("div")
+    userHeaderDiv.classList.add("items-center", "gap-4" ,"flex", "flex-row")
+
+
+    const companyCommentDiv = document.createElement("div")
+    companyCommentDiv.classList.add("bg-primary", "rounded-xl", "w-full","p-2","pl-4")
+    const companyHeaderDiv = document.createElement("div")
+    companyHeaderDiv.classList.add("items-center", "gap-4" ,"flex", "flex-row")
+
+}
 function createRejectedWeek(rejectedWeek) {
     const listElement = document.createElement("li");
 
@@ -55,6 +70,7 @@ function createRejectedWeek(rejectedWeek) {
 
 
     listElement.addEventListener("click", ()=>{
+        createComment(rejectedWeek.note, rejectedWeek.companyNote);
         contractId=contract.id;
         const selected = parseInt(weekDiv.getAttribute("data-selected"))
         if (selected === 0) {
