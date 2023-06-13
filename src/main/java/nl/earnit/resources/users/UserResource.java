@@ -68,7 +68,8 @@ public class UserResource {
         User dbUser;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            if (!userDAO.getUserByEmail(user.getEmail()).getId().equals(userId)) {
+            User userEmailCheck = userDAO.getUserByEmail(user.getEmail());
+            if (userEmailCheck != null && !userEmailCheck.getId().equals(userId)) {
                 return Response.status(Response.Status.CONFLICT).entity(new InvalidEntry("email")).build();
             }
 
