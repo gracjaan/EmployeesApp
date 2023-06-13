@@ -16,6 +16,7 @@ public class Contract {
         this.description = description;
     }
 
+
     public String getRole() {
         return role;
     }

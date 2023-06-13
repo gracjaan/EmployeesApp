@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 //TODO: change database so it makes the active attribute true by default
@@ -92,22 +93,17 @@ public class CompanyDAO extends GenericDAO<User> {
         return getCompanyById(res.getString("id"));
     }
 
-    public List<Company> getAllCompaniesUsers(String order) throws SQLException {
+    public List<Company> getAllCompanies(String order) throws SQLException {
+        OrderBy orderBy = new OrderBy(new HashMap<>() {{
+            put("company.name", "name");
+            put("company.id", "id");
+        }});
+
         ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name FROM " + tableName + "WHERE active = true ORDER BY ? " ;
+        String query = "SELECT id, name FROM " + tableName + " WHERE active = true ORDER BY " + orderBy.getSQLOrderBy(order) ;
         PreparedStatement statement = this.con.prepareStatement(query);
 
-
-        if(order.equals("name")) {
-            statement.setString(1, order);
-        } else {
-            statement.setString(1, "id");
-        }
-
         ResultSet res = statement.executeQuery();
-
-        // None found
-        if(!res.next()) return null;
 
         while(res.next()) {
             Company company = new Company();
@@ -115,6 +111,7 @@ public class CompanyDAO extends GenericDAO<User> {
             company.setName(res.getString("name"));
             companyList.add(company);
         }
+
         return companyList;
 
     }
