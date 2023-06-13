@@ -130,11 +130,8 @@ public class CompanyContractResource {
 
             return Response.ok(userContractDAO.addNewUserContract(addUserToContract.getUserId(), contractId, addUserToContract.getHourlyWage())).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
-
-
     }
 
     @GET

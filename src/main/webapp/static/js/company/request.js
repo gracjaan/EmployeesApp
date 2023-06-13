@@ -14,6 +14,11 @@ const undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", () => undo(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
 
 window.addEventListener("helpersLoaded", async () => {
+    const name = document.getElementById("name");
+    name.addEventListener("click", () => {
+        location.href = "/earnit/user?id=" + name.getAttribute("data-user-id")
+    })
+
     await updateHours();
 });
 
@@ -55,7 +60,6 @@ function approve(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .then((request) => {
-            // @TODO check if updated
             updatePage(request);
         })
         .catch(() => null);
@@ -71,7 +75,6 @@ function reject(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .then((request) => {
-            // @TODO check if updated
             updatePage(request);
         })
         .catch(() => null);
@@ -91,14 +94,15 @@ function undo(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .then((request) => {
-            // @TODO check if updated
             updatePage(request);
         })
         .catch(() => null);
 }
 
 function updatePage(request) {
-    document.getElementById("name").innerHTML = getName(request.user.firstName, request.user.lastName, request.user.lastNamePrefix, "<br />");
+    const name = document.getElementById("name");
+    name.innerHTML = getName(escapeHtml(request.user.firstName), escapeHtml(request.user.lastName), escapeHtml(request.user.lastNamePrefix), "<br />");
+    name.setAttribute("data-user-id", request.user.id);
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
@@ -134,7 +138,7 @@ function createEntry(year, week, contract, entry) {
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_2fr_5fr]", "grid");
+    entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_1fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr]", "grid");
     entryContainer.appendChild(entryInfo);
 
     const calculatedDate = addDays(getDateOfISOWeek(week, year), entry.day);
@@ -145,17 +149,17 @@ function createEntry(year, week, contract, entry) {
     entryInfo.appendChild(date);
 
     const hours = document.createElement("div");
-    hours.classList.add("text-text");
+    hours.classList.add("text-text", "font-bold", "sm:font-normal");
     hours.innerText = `${entry.minutes / 60}H`;
     entryInfo.appendChild(hours);
 
     const role = document.createElement("div");
-    role.classList.add("text-text");
+    role.classList.add("text-text", "font-bold", "sm:font-normal");
     role.innerText = contract.role;
     entryInfo.appendChild(role);
 
     const description = document.createElement("div");
-    description.classList.add("text-text");
+    description.classList.add("text-text", "col-span-3", "sm:col-span-1");
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 

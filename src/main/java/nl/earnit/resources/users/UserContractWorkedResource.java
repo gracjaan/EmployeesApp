@@ -52,14 +52,15 @@ public class UserContractWorkedResource {
                                       boolean userContract,
                                   @QueryParam("user") @DefaultValue("false") boolean user,
                                   @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                  @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
                                   @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
         WorkedWeekDTO workedWeek = null;
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             if (this.weekId != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekById(weekId, company, contract, userContract, user, hours, order);
+                workedWeek = workedWeekDAO.getWorkedWeekById(weekId, company, contract, userContract, user, hours, totalHours, order);
             } else if (this.year != null && this.week != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, order);
+                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, totalHours, order);
             }
         } catch (SQLException e) {
             return Response.serverError().build();

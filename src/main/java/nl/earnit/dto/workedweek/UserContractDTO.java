@@ -2,6 +2,7 @@ package nl.earnit.dto.workedweek;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import nl.earnit.models.resource.users.UserResponse;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.models.resource.contracts.Contract;
 
@@ -12,17 +13,18 @@ public class UserContractDTO {
     private String userId;
     private int hourlyWage;
     private boolean active;
+    private ContractDTO contract;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Contract contract;
+    private UserResponse user;
 
     public UserContractDTO() {}
-    public UserContractDTO(String id, String contractId, String userId, int hourlyWage, boolean active, Contract contract) {
+
+    public UserContractDTO(String id, String contractId, String userId, int hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
         this.userId = userId;
         this.hourlyWage = hourlyWage;
         this.active = active;
-        this.contract = contract;
     }
 
     public String getId() {
@@ -65,11 +67,19 @@ public class UserContractDTO {
         this.active = active;
     }
 
-    public Contract getContract() {
+    public UserResponse getUser() {
+        return user;
+    }
+
+    public void setUser(UserResponse user) {
+        this.user = user;
+    }
+
+    public ContractDTO getContract() {
         return contract;
     }
 
-    public void setContract(Contract contract) {
+    public void setContract(ContractDTO contract) {
         this.contract = contract;
     }
 }

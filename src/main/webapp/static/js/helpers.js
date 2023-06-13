@@ -35,10 +35,6 @@ function getUserId() {
     return getJWT().user_id;
 }
 
-function getUserEmail() {
-    return getJWT().user_email;
-}
-
 function getUserCompany() {
     return getJWT().user_company;
 }
@@ -46,6 +42,7 @@ function getUserCompany() {
 function getUser() {
     return fetch("/earnit/api/users/" + getUserId(), {
         headers: {
+            'authorization': `token ${getJWTCookie()}`,
             "accept-type": "application/json"
         }
     }).then((res) => res.json()).catch(() => null);
@@ -53,4 +50,9 @@ function getUser() {
 
 function getName(firstName, lastName, lastNamePrefix, separator = " ") {
     return [firstName, lastNamePrefix, lastName].filter(Boolean).join(separator);
+}
+
+const escapeHtml = (unsafe) => {
+    if (unsafe === null || unsafe === undefined) return unsafe;
+    return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }

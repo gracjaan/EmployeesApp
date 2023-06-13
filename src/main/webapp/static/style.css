@@ -71,6 +71,31 @@
 /* Firefox */
 .scrollbar-custom {
 	scrollbar-width: thin;
+	scrollbar-color: var(--tw-scrollbar-track) var(--tw-scrollbar-thumb);
+}
+
+/* Chrome, Edge, and Safari */
+.scrollbar-custom::-webkit-scrollbar {
+	width: 0.75rem;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+	background: var(--tw-scrollbar-track)
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+	background-color: var(--tw-scrollbar-thumb);
+	border-radius: 2rem;
+	border: 3px solid var(--tw-scrollbar-track);
+}
+
+.scrollbar-rounded-xl::-webkit-scrollbar-track {
+	border-radius: 0.5rem;
+}
+
+/* Firefox */
+.scrollbar-custom {
+	scrollbar-width: thin;
 	scrollbar-color: var(--color-text) var(--color-background);
 }
 

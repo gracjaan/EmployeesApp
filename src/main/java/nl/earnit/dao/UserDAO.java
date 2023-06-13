@@ -133,16 +133,16 @@ public class UserDAO extends GenericDAO<User> {
         return getUserById(res.getString("id"));
     }
 
-    public User updateUser(User user) throws SQLException {
+    public User updateUser(UserResponse user) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, type = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, user.getEmail());
         statement.setString(2, user.getFirstName());
-        statement.setString(3, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());
-        statement.setString(4, user.getLastName());
-        statement.setString(6, user.getType());
+        statement.setString(3, user.getLastName());
+        statement.setString(4, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());
+        PostgresJDBCHelper.setUuid(statement, 5, user.getId());
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -178,7 +178,7 @@ public class UserDAO extends GenericDAO<User> {
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, userId);
         ResultSet res = statement.executeQuery();
-        res.next();
+
         while (res.next()) {
             Company c = new Company(res.getString("id"), res.getString("name"));
             companies.add(c);
