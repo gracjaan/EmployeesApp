@@ -105,7 +105,7 @@ public class CompanyDAO extends GenericDAO<User> {
         }});
 
         ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name FROM " + tableName + " WHERE active = true ORDER BY " + orderBy.getSQLOrderBy(order) ;
+        String query = "SELECT id, name FROM " + tableName + " WHERE active = true ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
         PreparedStatement statement = this.con.prepareStatement(query);
 
         ResultSet res = statement.executeQuery();

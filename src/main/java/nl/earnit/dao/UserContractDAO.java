@@ -1,10 +1,10 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.ContractDTO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
-import nl.earnit.models.resource.contracts.Contract;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -64,8 +64,9 @@ public class UserContractDAO extends GenericDAO<User> {
         // Return count
         List<UserContractDTO> userContracts = new ArrayList<>();
         while (res.next()) {
-            Contract c = new Contract(res.getString("id"), res.getString("role"), res.getString("description"));
-            UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"), c);
+            ContractDTO c = new ContractDTO(res.getString("id"), res.getString("role"), res.getString("description"));
+            UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
+            uc.setContract(c);
             userContracts.add(uc);
         }
         return userContracts;

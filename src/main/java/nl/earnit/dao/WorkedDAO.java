@@ -91,7 +91,7 @@ public class WorkedDAO extends GenericDAO<User> {
 
     public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
             WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
+            WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, false, "hours.day:asc");
             if (ww == null) {
                 wwDao.addWorkedWeek(userContractId, year, week);
                 return addWorkedWeekTask(worked, userContractId, year, week);
