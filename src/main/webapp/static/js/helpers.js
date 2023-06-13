@@ -42,6 +42,7 @@ function getUserCompany() {
 function getUser() {
     return fetch("/earnit/api/users/" + getUserId(), {
         headers: {
+            'authorization': `token ${getJWTCookie()}`,
             "accept-type": "application/json"
         }
     }).then((res) => res.json()).catch(() => null);

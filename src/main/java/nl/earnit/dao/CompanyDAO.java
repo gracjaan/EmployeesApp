@@ -62,23 +62,6 @@ public class CompanyDAO extends GenericDAO<User> {
         return new Company(res.getString("id"), res.getString("name"));
     }
 
-    public Company getCompanyByName(String name) throws SQLException {
-        // Create query
-        String query =
-                "SELECT id, name FROM \"" + tableName + "\" WHERE \"name\" = ?";
-        PreparedStatement statement = this.con.prepareStatement(query);
-
-        statement.setString(1, name);
-        // Execute query
-        ResultSet res = statement.executeQuery();
-
-        // None found
-        if(!res.next()) return null;
-
-        // Return Company
-        return new Company(res.getString("id"), res.getString("name"));
-    }
-
     public Company createCompany(String name)
         throws SQLException {
         // Create query
@@ -94,6 +77,24 @@ public class CompanyDAO extends GenericDAO<User> {
         if(!res.next()) return null;
 
         // Return company
+        return getCompanyById(res.getString("id"));
+    }
+
+    public Company updateCompany(Company company) throws SQLException {
+        // Create query
+        String query = "UPDATE \"" + tableName + "\" SET name = ? WHERE \"id\" = ? RETURNING id";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, company.getName());
+        PostgresJDBCHelper.setUuid(statement, 2, company.getId());
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return user
         return getCompanyById(res.getString("id"));
     }
 

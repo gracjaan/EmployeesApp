@@ -8,7 +8,9 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
+import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
@@ -30,12 +32,37 @@ public class CompanyResource {
 
     @GET
     public Response getCompany() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            CompanyDAO companyDAO =
+                (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+
+            return Response.ok(companyDAO.getCompanyById(companyId)).build();
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
     }
 
     @PUT
-    public Response updateCompany() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response updateCompany(Company company) {
+        // Validate create company
+        if (company == null || company.getName() == null) {
+            return Response.status(400).build();
+        }
+
+        // Validate company
+        if (company.getName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntry("name")).build();
+        }
+
+        try {
+            CompanyDAO companyDAO =
+                (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+
+            company.setId(companyId);
+            return Response.ok(companyDAO.updateCompany(company)).build();
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
     }
 
     @DELETE

@@ -6,10 +6,12 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class UserResource {
     @Context
@@ -42,10 +44,35 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateUser(UserResponse user) {
+        // Validate create user
+        if (user == null || user.getEmail() == null || user.getFirstName() == null || user.getLastName() == null) {
+            return Response.status(400).build();
+        }
+
+        // Validate user
+        if (user.getFirstName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntry("firstName")).build();
+        }
+
+        if (user.getLastName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntry("lastName")).build();
+        }
+
+        String emailRegex = "([-!#-'*+/-9=?A-Z^-~]+(\\.[-!#-'*+/-9=?A-Z^-~]+)*|\"(\\[]!#-[^-~ \\t]|(\\\\[\\t -~]))+\")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        if (!emailPattern.matcher(user.getEmail()).matches()) {
+            return Response.status(422).entity(new InvalidEntry("email")).build();
+        }
+        
         UserDAO userDAO;
         User dbUser;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            if (!userDAO.getUserByEmail(user.getEmail()).getId().equals(userId)) {
+                return Response.status(Response.Status.CONFLICT).entity(new InvalidEntry("email")).build();
+            }
+
+            user.setId(userId);
             dbUser = userDAO.updateUser(user);
         } catch (SQLException e) {
             return Response.serverError().build();
