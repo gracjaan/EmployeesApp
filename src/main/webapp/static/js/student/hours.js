@@ -1,9 +1,15 @@
 window.addEventListener("helpersLoaded", async () => {
     const date = document.getElementById("date");
-    date.addEventListener("click", () => select("date"));
+    date.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
 
     const hours = document.getElementById("hours");
-    hours.addEventListener("click", () => select("hours"));
+    hours.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
 
     const dropdown = document.getElementById("day-content");
 
@@ -68,8 +74,18 @@ async function updateContracts() {
     return contracts;
 }
 
-async function confirmWorkedWeek () {
+async function confirmWorkedWeek() {
+    const error = document.getElementById("confirm-error");
+    error.classList.add("hidden");
+
     const contracts = await obtainContractsForUser(getUserId())
+    if (contracts === null) {
+        const error = document.getElementById("confirm-error");
+        error.classList.remove("hidden");
+        error.innerText = "Could not confirm worked week";
+        return;
+    }
+
     contracts.forEach(c => {
         fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
             {
@@ -82,23 +98,54 @@ async function confirmWorkedWeek () {
                 }
             })
             .then(() => {
+                // TODO: change too check mark instead
                 alert("The worked week was confirmed")
             })
-            .catch(() => alert("Could not submit hours"))
+            .catch(() => {
+                const error = document.getElementById("confirm-error");
+                error.classList.remove("hidden");
+                error.innerText = "Could not confirm worked week";
+            })
     })
 }
 
 async function updatePage(contracts) {
     const entries = document.getElementById("entries");
-    entries.innerText = "";
 
+    const workEntries = [];
     for (const contract of contracts) {
         const workedHours = await fetchSheet(getUserId(), contract);
         if (workedHours === null) continue;
 
         for (const hour of workedHours.hours) {
-            entries.appendChild(createEntry(hour, contract.contract, getSelectedWeek(), getSelectedYear()))
+            workEntries.push({hour, contract: contract.contract});
         }
+    }
+
+    const date = document.getElementById("date");
+    const dateSelected = date.getAttribute("data-selected");
+
+    const hours = document.getElementById("hours");
+    const hoursSelected = hours.getAttribute("data-selected");
+
+    let order = 0;
+    let key = "";
+    if (dateSelected > 0) {
+        order = (dateSelected === "1" ? 1 : -1);
+        key = "day"
+    } else if (hoursSelected > 0) {
+        order = (hoursSelected === "1" ? 1 : -1);
+        key = "minutes"
+    }
+
+    workEntries.sort((a, b) => a.hour[key] - b.hour[key]);
+    if (order < 0) {
+        workEntries.reverse();
+    }
+
+    entries.innerText = "";
+    for (const workEntry of workEntries) {
+        entries.appendChild(createEntry(workEntry.hour, workEntry.contract, getSelectedWeek(), getSelectedYear()))
     }
 }
 
@@ -235,6 +282,8 @@ async function submitForm() {
         return;
     }
 
+    const error = document.getElementById("submit-error");
+    error.classList.add("hidden");
     sendFormDataToServer(getUserId(), positionInput.getAttribute("data-id").toString(), formData);
 }
 
@@ -255,7 +304,11 @@ function sendFormDataToServer(uid, ucid, formData) {
 
             if (!response.ok) throw new Error();
         })
-        .catch(() => alert("Could not submit hours. Make sure that the week has not been confirmed yet."))
+        .catch(() => {
+            const error = document.getElementById("submit-error");
+            error.classList.remove("hidden");
+            error.innerText = "Could not submit hours. Make sure that the week has not been confirmed yet.";
+        })
 }
 
 function deleteWorkedFromServer (uid, ucid, hid) {
@@ -278,16 +331,16 @@ function deleteWorkedFromServer (uid, ucid, hid) {
 
 }
 
-function submitEdittedForm(data) {
+async function submitEdittedForm(data) {
 
     if (validateEdittedForm(data) === false) {
-        return;
+        return false;
     }
 
     let json = {day: data.day, minutes: data.minutes, work: data.work, id: data.id
             //position: data.position
         }
-    fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
+    const updated = await fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
         {
             method: "PUT",
             body: JSON.stringify(json),
@@ -297,13 +350,24 @@ function submitEdittedForm(data) {
                 "Accept": "application/json"
             }
         })
-        .catch(e => console.error(e))
+        .then((res) => res.status === 200)
+        .catch(() => false);
+
+    if (!updated) {
+        const error = document.getElementById("edit-error");
+        error.classList.remove("hidden");
+        error.innerText = "Could not update"
+    }
+
+    return updated;
 }
 
 function validateForm(formData, position) {
     console.log(formData, position)
     if (formData.day < 0 || formData.day > 6 || formData.minutes === '' || formData.work === '' || position === null) {
-        alert('Please fill in all the fields.');
+        const error = document.getElementById("submit-error");
+        error.classList.remove("hidden");
+        error.innerText = "Please fill in all inputs"
         return false;
     }
 
@@ -312,14 +376,16 @@ function validateForm(formData, position) {
 
 function validateEdittedForm(formData) {
     if (formData.minutes === '' || formData.work === '') {
-        alert('Please fill in all the fields.');
+        const error = document.getElementById("edit-error");
+        error.classList.remove("hidden");
+        error.innerText = "Please fill in all inputs"
         return false;
     }
 
     return true;
 }
 
-function toggleEdit(button) {
+async function toggleEdit(button) {
     const entry = button.parentNode.parentNode;
     const textElements = entry.querySelectorAll('.text-text');
     const editButton = entry.querySelector('.edit-button');
@@ -350,10 +416,26 @@ function toggleEdit(button) {
         };
 
         // Send the updatedData to the server or perform any necessary actions
-        submitEdittedForm(updatedData);
+        if(!(await submitEdittedForm(updatedData))) {
+            textElements.forEach((element, index) => {
+                if (index !== 2 && index !== 0) {
+                    const isEditable = element.contentEditable === 'true';
+                    element.contentEditable = !isEditable;
+                }
+            });
+
+            const isEditing = entry.classList.contains('editing');
+            entry.classList.toggle('editing', !isEditing);
+            editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+        } else {
+            const error = document.getElementById("edit-error");
+            error.classList.add("hidden");
+        }
+    } else {
+        const error = document.getElementById("edit-error");
+        error.classList.add("hidden");
     }
 }
-
 
 //______________________________________________DROPDOWNS______________________________________________________________
 function togglePosition() {
@@ -423,28 +505,6 @@ document.addEventListener("click", function (event) {
 
 
 //__________________________________FILTERS___________________________________________
-async function select(type) {
-    const date = document.getElementById("date");
-    const dateSelected = date.getAttribute("data-selected");
-
-    const hours = document.getElementById("hours");
-    const hoursSelected = hours.getAttribute("data-selected");
-
-    if (type === "date") {
-        hours.setAttribute("data-selected", "0");
-
-        let state = Number.parseInt(dateSelected ?? "0") + 1;
-        if (state > 2) state = 0;
-        date.setAttribute("data-selected", state + "");
-    } else {
-        date.setAttribute("data-selected", "0");
-
-        let state = Number.parseInt(hoursSelected ?? "0") + 1;
-        if (state > 2) state = 0;
-        hours.setAttribute("data-selected", state + "");
-    }
-}
-
 
 // modified from https://stackoverflow.com/questions/16590500/calculate-date-from-week-number-in-javascript
 function getDateOfISOWeek(w, y) {
