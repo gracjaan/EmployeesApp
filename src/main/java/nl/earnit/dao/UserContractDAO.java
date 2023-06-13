@@ -1,8 +1,10 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.contracts.Contract;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +41,7 @@ public class UserContractDAO extends GenericDAO<User> {
      */
     public int countContractsForUser(String userId) throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ? and active = true";
+        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"u.user_id\" = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -49,6 +51,24 @@ public class UserContractDAO extends GenericDAO<User> {
         // Return count
         res.next();
         return res.getInt("count");
+    }
+
+    public List<UserContractDTO> getUserContractsByUserId(String userId) throws SQLException {
+        String query = "SELECT u.*, c.* FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
+        PreparedStatement counter = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(counter, 1, userId);
+
+        // Execute query
+        ResultSet res = counter.executeQuery();
+
+        // Return count
+        List<UserContractDTO> userContracts = new ArrayList<>();
+        while (res.next()) {
+            Contract c = new Contract(res.getString("id"), res.getString("role"), res.getString("description"));
+            UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"), c);
+            userContracts.add(uc);
+        }
+        return userContracts;
     }
 
     public UserContract getUserContract(String userId, String userContractId) throws SQLException {

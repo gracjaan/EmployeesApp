@@ -4,10 +4,10 @@
     <meta charset="UTF-8"/>
     <title>Earnit</title>
     <script src="/earnit/static/js/helpers.js"></script>
-    <script src="/earnit/static/js/components/week-selector.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/earnit/static/js/student/hours.js"></script>
+    <script src="/earnit/static/js/student/overview.js"></script>
+    <script src="/earnit/static/js/components/week-selector.js"></script>
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
@@ -24,44 +24,20 @@
     <div class="text-text">Back</div>
 </header>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
-    <header class="w-full">
-        <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 px-2 sm:px-0 ">
-            <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md z-10">
-                <h2 class="text-text text-2xl font-regular" id="dropdown-range">Date range</h2>
-                <h2 class="text-text text-2xl font-bold my-2">Fill in your hours</h2>
-                <div class="flex">
-                    <div class="mr-5"><week-selector id="week"></week-selector></div>
-                    <button class="rounded-xl bg-accent-success p-2 items-center" onclick="confirmWorkedWeek()">
-                        <div class="text-white text-left">
-                            <img src="/earnit/static/icons/checkmark.svg" alt="checkmark"/>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="flex-1 rounded-2xl min-w-[20rem] sm:min-w-0 w-full drop-shadow-md">
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row gap-2">
-                        <div class="flex-1">
-                            <div class="dropdown relative">
-                                <button id="day-button"
-                                        class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white flex-row"
-                                        onclick="toggleDay()">
-                                    <div class="flex items-center justify-between">
-                                        <div class="text-white text-left mr-2" id="day-header">Day</div>
-                                        <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
-                                    </div>
-                                </button>
-                                <div id="day-content"
-                                     class="dropdown-content z-20 bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full max-h-32 overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
-                                    <!-- Dropdown options -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <input placeholder="Hours" type="text" name="hours" id="hours-input"
-                                   class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
-                        </div>
-                    </div>
+    <section class="w-full gap-2 flex flex-col">
+        <h2 class="text-text text-2xl font-bold">Overview</h2>
+        <div class="rounded-2xl bg-secondary">
+            <canvas id="myChart"></canvas>
+        </div>
+    </section>
+    <main class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
+        <h2 class="text-text text-2xl font-bold mb-2">Sheet</h2>
+        <section class="w-full h-full gap-2 flex flex-col">
+            <div
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+            >
+                <div class="flex gap-2">
+                    <div><week-selector id="week"></week-selector></div>
                     <div class="dropdown relative">
                         <button id="position-button"
                                 class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white flex-row"
@@ -76,23 +52,6 @@
                             <!-- Dropdown options -->
                         </div>
                     </div>
-                    <input placeholder="Description" type="text" name="description" id="description-input"
-                           class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white"/>
-                    <button class="rounded-xl bg-text py-2 px-4 justify-center items-center">
-                        <div class="text-background text-center font-bold" id="submit-button" onclick="submitForm()">
-                            Submit
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <main class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
-        <section class="w-full h-full gap-2 flex flex-col">
-            <div
-                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
-            >
-                <div class="flex gap-2">
                     <button
                             class="rounded-xl bg-text px-4 py-2 flex gap-4 items-center group"
                             data-selected="1"

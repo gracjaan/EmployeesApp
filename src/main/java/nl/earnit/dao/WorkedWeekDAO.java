@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,33 +43,34 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return res.getInt("count");
     }
 
-    public void confirmWorkedWeek(String year, String week) throws SQLException {
-        String query = "UPDATE worked_week SET confirmed = true WHERE year=? AND week=?";
+    public void confirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
+        String query = "UPDATE worked_week SET confirmed = true WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        statement.setString(1, year);
-        statement.setString(2, week);
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        statement.setInt(2, Integer.parseInt(year));
+        statement.setInt(3, Integer.parseInt(week));
         statement.executeUpdate();
     }
 
-    public void confirmWorkedWeekById(String workedWeekId) throws SQLException {
-        String query = "UPDATE worked_week SET confirmed = true WHERE id = ?";
+    public void removeConfirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
+        if (hasDatePassed(year, week)) {
+            return;
+        }
+        String query = "UPDATE worked_week SET confirmed = false WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        statement.setInt(2, Integer.parseInt(year));
+        statement.setInt(3, Integer.parseInt(week));
         statement.executeUpdate();
     }
 
-    public void removeConfirmWorkedWeekById(String workedWeekId) throws SQLException {
-        String query = "UPDATE worked_week SET confirmed = false WHERE id = ?";
+    public void updateWorkedWeekNote(String note, String userContractId, String year, String week) throws SQLException {
+        String query = "UPDATE worked_week SET note = ? WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
-        statement.executeUpdate();
-    }
-
-    public void updateWorkedWeekNote(WorkedWeek workedWeek) throws SQLException {
-        String query = "UPDATE worked_week SET note = ? WHERE id = ?";
-        PreparedStatement statement = con.prepareStatement(query);
-        statement.setString(1, workedWeek.getNote());
-        PostgresJDBCHelper.setUuid(statement, 2, workedWeek.getId());
+        statement.setString(1, note);
+        PostgresJDBCHelper.setUuid(statement, 2, userContractId);
+        statement.setInt(3, Integer.parseInt(year));
+        statement.setInt(4, Integer.parseInt(week));
     }
 
     /**
@@ -105,7 +108,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(id, false, false, false, false, false, "hours.day:asc");
     }
 
-    public WorkedWeekDTO getWorkedWeekByDate(int year, int week, boolean withCompany,
+    public WorkedWeekDTO getWorkedWeekByDate(String userContractId, int year, int week, boolean withCompany,
                                              boolean withContract, boolean withUserContract,
                                              boolean withUser, boolean withHours, String order)
         throws SQLException {
@@ -156,7 +159,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 LEFT JOIN (select w.worked_week_id, array_agg(w.* ORDER BY %2$s) as hours FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                 
-                WHERE ww.year = ? AND ww.week = ?
+                WHERE ww.year = ? AND ww.week = ? AND uc.id = ?
                 LIMIT 1
             """.formatted(tableName, orderBy.getSQLOrderBy(order));
 
@@ -164,6 +167,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
         statement.setInt(1, year);
         statement.setInt(2, week);
+        PostgresJDBCHelper.setUuid(statement, 3, userContractId);
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -460,7 +464,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 String[] dataStrings = data.split(",");
 
                 String note = dataStrings[4];
-                note = note.substring(1, note.length() - 1);
+                if (note.startsWith("\"") && note.endsWith("\"")) note = note.substring(1, note.length() - 1);
 
                 hours.add(new Worked(dataStrings[0], dataStrings[1], Integer.parseInt(dataStrings[2]), Integer.parseInt(dataStrings[3]), note));
             }
@@ -492,5 +496,37 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 res.getString("contract_description")) : null,
             withHours ? hours : null
         );
+    }
+
+    public void addWorkedWeek(String contractId, String year, String week) throws SQLException {
+        String query = "INSERT INTO \"" + tableName + "\" (contract_id, year, week, confirmed) " +
+            "VALUES (?, ?, ?, ?) RETURNING id";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
+        statement.setInt(2, Integer.parseInt(year));
+        statement.setInt(3, Integer.parseInt(week));
+        statement.setBoolean(4, false);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        resultSet.next();
+
+    }
+
+    public boolean hasDatePassed(String year, String week) {
+        int y = 0;
+        int w = 0;
+        try {
+            w = Integer.parseInt(week);
+            y = Integer.parseInt(year);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+        int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
+        if (currentYear>=y&&currentWeek>w) {
+            return false;
+        }
+        return true;
     }
 }

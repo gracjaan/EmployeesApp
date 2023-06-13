@@ -1,5 +1,6 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
@@ -9,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,36 +89,69 @@ public class WorkedDAO extends GenericDAO<User> {
         return contractList;
     }
 
-    public void addWorkedWeekTask(Worked worked) throws SQLException{
-        String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) "+
-                "VALUES (?, ?, ?, ?) RETURNING id";
-        PreparedStatement counter = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(counter, 1, worked.getWorkedWeekId());
-        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getDay()));
-        PostgresJDBCHelper.setUuid(counter, 3, String.valueOf(worked.getMinutes()));
-        PostgresJDBCHelper.setUuid(counter, 4, worked.getWork());
-        // Execute query
-        ResultSet res = counter.executeQuery();
-        // Return count
-        res.next();
+    public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
+            WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            WorkedWeekDTO ww = wwDao.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, "hours.day:asc");
+            if (ww == null) {
+                wwDao.addWorkedWeek(userContractId, year, week);
+                return addWorkedWeekTask(worked, userContractId, year, week);
+            }
+
+            worked.setWorkedWeekId(ww.getId());
+
+            if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+                return false;
+            }
+
+            String query = "INSERT INTO \"" + tableName + "\" (worked_week_id, day, minutes, work) " +
+                    "VALUES (?, ?, ?, ?) RETURNING id";
+            PreparedStatement counter = this.con.prepareStatement(query);
+            PostgresJDBCHelper.setUuid(counter, 1, ww.getId());
+            counter.setInt(2, worked.getDay());
+            counter.setInt(3, worked.getMinutes());
+            counter.setString(4, worked.getWork());
+            // Execute query
+            ResultSet res = counter.executeQuery();
+            // Return count
+            res.next();
+            return true;
     }
 
-    public void updateWorkedWeekTask(Worked worked) throws SQLException {
-        String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?;";
-        PreparedStatement counter = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(counter, 1, String.valueOf(worked.getDay()));
-        PostgresJDBCHelper.setUuid(counter, 2, String.valueOf(worked.getMinutes()));
-        PostgresJDBCHelper.setUuid(counter, 3, worked.getWork());
-        PostgresJDBCHelper.setUuid(counter, 4, worked.getId());
-        ResultSet res = counter.executeQuery();
-        res.next();
+
+    public boolean updateWorkedWeekTask(Worked worked) throws SQLException {
+        if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+            return false;
+        }
+
+        String query = "UPDATE \"" + tableName + "\" SET day = ?, minutes = ?, work = ? WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setInt(1, worked.getDay());
+        statement.setInt(2, worked.getMinutes());
+        statement.setString(3, worked.getWork());
+        PostgresJDBCHelper.setUuid(statement, 4, worked.getId());
+        statement.executeUpdate();
+
+        return true;
     }
 
-    public void deleteWorkedWeekTask(String workedId) throws SQLException {
+    public boolean deleteWorkedWeekTask(String workedId) throws SQLException {
+        if (this.isWorkedWeekConfirmed(workedId)) {
+            return false;
+        }
         String query = "DELETE FROM \"" + tableName + "\" WHERE id = ?;";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, workedId);
         statement.executeUpdate();
+        return true;
+    }
+
+    public boolean isWorkedWeekConfirmed(String workedWeekId) throws SQLException {
+        String query = "SELECT confirmed FROM worked_week WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        ResultSet resultSet = statement.executeQuery();
+        if (!resultSet.next()) return false;
+        return resultSet.getBoolean("confirmed");
     }
 
 

@@ -3,11 +3,15 @@ package nl.earnit.resources.users;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserResource {
@@ -79,8 +83,17 @@ public class UserResource {
 
     @GET
     @Path("/contracts")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContracts() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        UserContractDAO userContractDAO;
+        List<UserContractDTO> userContracts;
+        try {
+            userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            userContracts = userContractDAO.getUserContractsByUserId(this.userId);
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.ok(userContracts).build();
     }
 
     @Path("/contracts/{userContractId}")
