@@ -25,7 +25,7 @@ window.addEventListener("helpersLoaded", async () => {
 async function updateHours() {
     const request = await getRequestForStaff(getWorkedWeekId(), getJWTCookie());
     if (request === null) {
-        location.replace("/earnit/requests");
+        // location.replace("/earnit/requests");
         return;
     }
 
