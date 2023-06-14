@@ -188,5 +188,20 @@ public class UserDAO extends GenericDAO<User> {
         }
         return companies;
     }
+
+    public boolean updateUserType(UserResponse userResponse) throws SQLException {
+        // Create query
+        String query = "UPDATE \"" + tableName + "\" SET type = ? WHERE \"id\" = ? RETURNING id";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, userResponse.getType());
+        PostgresJDBCHelper.setUuid(statement, 2, userResponse.getId());
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        return res.next();
+    }
 }
 
