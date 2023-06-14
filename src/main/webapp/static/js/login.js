@@ -68,6 +68,7 @@ window.addEventListener("helpersLoaded", () => {
         if (!dropdownHeader.hasAttribute("data-company")) {
             companyError.innerText = "No company selected";
             companyError.classList.remove("hidden");
+            companyDialog.classList.add("hidden");
             return;
         }
 
@@ -121,7 +122,7 @@ window.addEventListener("helpersLoaded", () => {
             const data = (await res.json());
             Cookies.set('earnit-token', data.token, { expires: new Date(data.expires) })
 
-            // window.location.replace("/earnit/");
+            window.location.replace("/earnit/");
         })
     })
 

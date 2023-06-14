@@ -78,7 +78,7 @@ public class CompanyUserDAO extends GenericDAO<User> {
 
     public boolean createCompanyUser(String companyId, String userId) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, user_id) "+
-            "VALUES (?, ?) RETURNING id";
+            "VALUES (?, ?) RETURNING company_id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         PostgresJDBCHelper.setUuid(statement, 2, userId);
