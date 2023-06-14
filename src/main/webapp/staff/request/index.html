@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Request</title>
+		<script src="/earnit/static/js/helpers.js"></script>
+		<script src="/earnit/static/js/company/request.js" defer></script>
+
+		<script src="/earnit/static/js/components/back.js"></script>
+
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<link rel="stylesheet" href="/earnit/static/style.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body
+		class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
+	>
+		<back></back>
+		<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
+			<main class="flex gap-4 my-8 flex-col px-2 sm:px-0">
+				<header class="w-full flex justify-between items-end">
+					<h2 class="text-text text-4xl font-bold cursor-pointer" id="name"></h2>
+					<div class="flex gap-2">
+						<div
+							id="accept"
+							class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+						>
+							<img
+								src="/earnit/static/icons/checkmark-green.svg"
+								alt="checkmark"
+							/>
+							<div
+								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Approves week
+							</div>
+						</div>
+						<div
+							id="reject"
+							class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+						>
+							<img
+								src="/earnit/static/icons/red-cross.svg"
+								alt="checkmark"
+							/>
+							<div
+								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Reject week
+							</div>
+						</div>
+						<div
+								id="rejected"
+								class="w-14 h-14 p-3 rounded-xl flex justify-center items-center aspect-square cursor-pointer relative group bg-accent-fail hidden"
+						>
+							<img
+									src="/earnit/static/icons/white-cross.svg"
+									alt="checkmark"
+							/>
+							<div
+									class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Week Rejected
+							</div>
+						</div>
+						<div
+								id="accepted"
+								class="w-14 h-14 p-3 rounded-xl flex justify-center items-center aspect-square cursor-pointer relative group bg-accent-success hidden"
+						>
+							<img
+									src="/earnit/static/icons/checkmark-white.svg"
+									alt="checkmark"
+							/>
+							<div
+									class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Week Accepted
+							</div>
+						</div>
+						<div
+								id="undo"
+								class="hidden w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+						>
+							<img
+									src="/earnit/static/icons/uturn.svg"
+									alt="checkmark"
+							/>
+							<div
+									class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+							>
+								Undo
+							</div>
+						</div>
+					</div>
+				</header>
+				<section class="w-full h-full gap-2 flex flex-col">
+					<div
+						class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+					>
+						<div class="flex gap-2">
+							<button
+								class="rounded-xl bg-text px-4 py-2 flex gap-4 items-center group"
+								data-selected="1"
+                                id="date"
+							>
+								<span class="text-black text-left">Date</span>
+								<img
+									src="/earnit/static/icons/arrow-down-black.svg"
+									class="group-data-[selected='1']:block hidden"
+									alt="down arrow"
+								/>
+								<img
+									src="/earnit/static/icons/arrow-up-black.svg"
+									class="group-data-[selected='2']:block hidden"
+									alt="up arrow"
+								/>
+								<img
+									src="/earnit/static/icons/line-black.svg"
+									class="group-data-[selected='0']:block hidden"
+									alt="line"
+								/>
+							</button>
+							<button
+								class="rounded-xl bg-text px-4 py-2 flex gap-4 items-center group"
+								data-selected="0"
+                                id="hours"
+							>
+								<span class="text-black text-left">Hours</span>
+								<img
+									src="/earnit/static/icons/arrow-down-black.svg"
+									class="group-data-[selected='1']:block hidden"
+									alt="down arrow"
+								/>
+								<img
+									src="/earnit/static/icons/arrow-up-black.svg"
+									class="group-data-[selected='2']:block hidden"
+									alt="up arrow"
+								/>
+								<img
+									src="/earnit/static/icons/line-black.svg"
+									class="group-data-[selected='0']:block hidden"
+									alt="line"
+								/>
+							</button>
+						</div>
+						<div class="flex flex-col gap-2" id="entries"></div>
+					</div>
+				</section>
+			</main>
+		</div>
+	</body>
+</html>
