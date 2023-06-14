@@ -1,61 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Earnit</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/earnit/static/js/helpers.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="/earnit/static/js/staff/overview.js" defer></script>
-  <link rel="stylesheet" href="/earnit/static/style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <title>Earnit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/earnit/static/js/helpers.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/earnit/static/js/staff/overview.js" defer></script>
+    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 </head>
 <body class="bg-black flex flex-col justify-center overflow-x-hidden font-montserrat h-screen">
 
 <a href="javascript:history.back()" class="flex items-center">
-  <header class="flex bg-primary w-fit p-2 rounded-br-lg">
-    <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
-    <div class="text-text">Back</div>
-  </header>
+    <header class="flex bg-primary w-fit p-2 rounded-br-lg">
+        <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
+        <div class="text-text">Back</div>
+    </header>
 </a>
 
 <div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
-  <main class="flex gap-8 mt-8 w-full h-full">
-    <!--        This is the section for the students overview-->
-    <section class="w-full gap-2 flex flex-col">
-      <div class="rounded-2xl bg-secondary p-4 h-full">
-        <h2 class="text-text text-2xl font-bold">Users</h2>
+    <main class="flex gap-8 mt-8 w-full h-full">
+        <!--        This is the section for the students overview-->
+        <section class="w-full gap-2 flex flex-col">
+            <div class="rounded-2xl bg-secondary p-4 h-full">
+                <div class="flex flex-row items-center justify-between">
+                    <h2 class="text-text text-2xl font-bold">Users</h2>
 
-        <!--        here there needs to be added the filters and search bar-->
-        <div>
+                    <button id="user-button"
+                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
+                            onclick="togglePosition()">
+                        <div class="flex items-center justify-between">
+                            <div class="text-black text-left mr-2" id="user-header">Name</div>
+                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
+                        </div>
+                    </button>
+                </div>
 
-        </div>
+                <!--        here there needs to be added the filters and search bar-->
+                <div>
 
-        <!--        This will list the different students-->
-        <ol class="overflow-y-auto gap-2" id="users" >
+                </div>
 
-        </ol>
+                <!--        This will list the different students-->
+                <ol class="overflow-y-auto gap-2" id="users">
 
-      </div>
-    </section>
+                </ol>
 
-    <!--        This is the section for company overview-->
-    <section class="w-full gap-2 flex flex-col">
-      <div class="rounded-2xl bg-secondary p-4 h-full">
-        <h2 class="text-text text-2xl font-bold">Companies</h2>
-<!--        here there needs to be added the filters and search bar-->
-        <div>
+            </div>
+        </section>
 
-        </div>
+        <!--        This is the section for company overview-->
+        <section class="w-full gap-2 flex flex-col">
+            <div class="rounded-2xl bg-secondary p-4 h-full">
+                <div class="flex flex-row items-center justify-between">
+                    <h2 class="text-text text-2xl font-bold">Company</h2>
 
-<!--        This will list the different companies-->
-        <ol class="overflow-y-auto" id="companies">
+                    <button id="company-button"
+                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
+                            onclick="togglePosition()">
+                        <div class="flex items-center justify-between">
+                            <div class="text-black text-left mr-2" id="company-header">Name</div>
+                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
+                        </div>
+                    </button>
+                </div>
+                <!--        here there needs to be added the filters and search bar-->
+                <div>
 
-        </ol>
-      </div>
-    </section>
-  </main>
+                </div>
+
+                <!--        This will list the different companies-->
+                <ol class="overflow-y-auto" id="companies">
+
+                </ol>
+            </div>
+        </section>
+    </main>
 </div>
 </body>
 </html>
