@@ -10,7 +10,6 @@ import nl.earnit.models.db.Worked;
 import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class UserContractWorkedResource {
     @Context
@@ -52,21 +51,23 @@ public class UserContractWorkedResource {
                                   @QueryParam("user_contract") @DefaultValue("false")
                                       boolean userContract,
                                   @QueryParam("user") @DefaultValue("false") boolean user,
-                                  @QueryParam("hours") @DefaultValue("false") boolean hours) {
+                                  @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                  @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                                  @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
         WorkedWeekDTO workedWeek = null;
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             if (this.weekId != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekById(weekId);
+                workedWeek = workedWeekDAO.getWorkedWeekById(weekId, company, contract, userContract, user, hours, totalHours, order);
             } else if (this.year != null && this.week != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(year), company, contract, userContract, user, hours);
+                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, totalHours, order);
             }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
 
         if (workedWeek == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         return Response.ok(workedWeek).build();
@@ -78,7 +79,10 @@ public class UserContractWorkedResource {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.updateWorkedWeekTask(entry);
+            boolean flag = workedDAO.updateWorkedWeekTask(entry);
+            if (!flag) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -91,7 +95,10 @@ public class UserContractWorkedResource {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.addWorkedWeekTask(entry);
+            boolean flag = workedDAO.addWorkedWeekTask(entry,userContractId, year, week);
+            if (!flag) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -104,7 +111,10 @@ public class UserContractWorkedResource {
         WorkedDAO workedDAO;
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-            workedDAO.deleteWorkedWeekTask(workedId);
+            boolean flag = workedDAO.deleteWorkedWeekTask(workedId);
+            if (!flag) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
         } catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -114,12 +124,11 @@ public class UserContractWorkedResource {
 
     @POST
     @Path("/confirm")
-    @Consumes({MediaType.TEXT_PLAIN})
-    public Response confirmWorkedWeek(String workedWeekId) {
+    public Response confirmWorkedWeek() {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.confirmWorkedWeekById(workedWeekId);
+            workedWeekDAO.confirmWorkedWeek(userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -130,12 +139,11 @@ public class UserContractWorkedResource {
 
     @DELETE
     @Path("/confirm")
-    @Consumes({MediaType.TEXT_PLAIN})
-    public Response removeConfirmWorkedWeek(String workedWeekId) {
+    public Response removeConfirmWorkedWeek() {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.removeConfirmWorkedWeekById(workedWeekId);
+            workedWeekDAO.removeConfirmWorkedWeek(userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }
@@ -144,12 +152,12 @@ public class UserContractWorkedResource {
 
     @PUT
     @Path("/note")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateWorkedWeekNote(WorkedWeek workedWeek) {
+    @Consumes({MediaType.TEXT_PLAIN})
+    public Response updateWorkedWeekNote(String note) {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.updateWorkedWeekNote(workedWeek);
+            workedWeekDAO.updateWorkedWeekNote(note, userContractId, year, week);
         }catch (SQLException e) {
             return Response.serverError().build();
         }

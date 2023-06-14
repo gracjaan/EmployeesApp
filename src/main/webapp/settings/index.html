@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Settings</title>
+    <script src="/earnit/static/js/helpers.js"></script>
+    <script src="/earnit/static/js/settings.js"></script>
+
+    <script src="/earnit/static/js/components/back.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body
+        class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
+>
+<back data-home></back>
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
+    <main class="flex gap-4 my-8 flex-col px-2 md:px-0">
+        <div class="flex flex-col gap-2">
+            <h2 class="text-text text-2xl font-bold">Settings</h2>
+            <div
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+            >
+                <div id="user-success" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-success text-text hidden"></div>
+                <div id="user-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+                <div class="font-bold text-text">E-mail
+                </div>
+                <input placeholder="E-mail" type="text" name="email" id="email"
+                       class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+
+                <div class="font-bold text-text"
+                >Name
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex sm:flex-row flex-col gap-2">
+                        <input placeholder="First name" type="text" name="firstname" id="firstname"
+                               class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+                        <input placeholder="Last name prefix" type="text" name="lastnameprefix" id="lastnameprefix"
+                               class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+                    </div>
+                    <input placeholder="Last name" type="text" name="lastname" id="lastname"
+                           class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+
+                </div>
+                <button id="update-user" class="rounded-xl bg-text py-2 px-4 text-background text-center font-bold">
+                    Update
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 hidden" id="company">
+            <h2 class="text-text text-2xl font-bold">Company Settings</h2>
+            <div
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+            >
+                <div id="company-success" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-success text-text hidden"></div>
+                <div id="company-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+                <div class="font-bold text-text">Name
+                </div>
+                <input placeholder="Name" type="text" name="name" id="name"
+                       class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+
+                <button id="update-company" class="rounded-xl bg-text py-2 px-4 text-background text-center font-bold">
+                    Update
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

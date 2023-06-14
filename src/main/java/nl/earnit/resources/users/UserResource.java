@@ -3,12 +3,19 @@ package nl.earnit.resources.users;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
+import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.InvalidEntry;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class UserResource {
     @Context
@@ -40,11 +47,37 @@ public class UserResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateUser(User user) {
+    public Response updateUser(UserResponse user) {
+        // Validate create user
+        if (user == null || user.getEmail() == null || user.getFirstName() == null || user.getLastName() == null) {
+            return Response.status(400).build();
+        }
+
+        // Validate user
+        if (user.getFirstName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntry("firstName")).build();
+        }
+
+        if (user.getLastName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntry("lastName")).build();
+        }
+
+        String emailRegex = "([-!#-'*+/-9=?A-Z^-~]+(\\.[-!#-'*+/-9=?A-Z^-~]+)*|\"(\\[]!#-[^-~ \\t]|(\\\\[\\t -~]))+\")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        if (!emailPattern.matcher(user.getEmail()).matches()) {
+            return Response.status(422).entity(new InvalidEntry("email")).build();
+        }
+
         UserDAO userDAO;
         User dbUser;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            User userEmailCheck = userDAO.getUserByEmail(user.getEmail());
+            if (userEmailCheck != null && !userEmailCheck.getId().equals(userId)) {
+                return Response.status(Response.Status.CONFLICT).entity(new InvalidEntry("email")).build();
+            }
+
+            user.setId(userId);
             dbUser = userDAO.updateUser(user);
         } catch (SQLException e) {
             return Response.serverError().build();
@@ -54,22 +87,27 @@ public class UserResource {
 
     @DELETE
     @Path("/users/{userId}")
-    public Response deleteUser(@PathParam("userId") String userId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response disableUser(@PathParam("userId") String userId) {
+        UserDAO userDAO;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            userDAO.disableUserById(userId);
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @GET
     @Path("/companies")
     public Response getCompanies() {
         UserDAO userDAO;
-        List<Company> companies;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            companies = userDAO.getCompanies(this.userId);
+            return Response.ok(userDAO.getCompanies(this.userId)).build();
         } catch (SQLException e) {
             return Response.serverError().build();
         }
-        return Response.ok(companies).build();
     }
 
     @Path("/companies/{companyId}")
@@ -79,8 +117,17 @@ public class UserResource {
 
     @GET
     @Path("/contracts")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContracts() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        UserContractDAO userContractDAO;
+        List<UserContractDTO> userContracts;
+        try {
+            userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            userContracts = userContractDAO.getUserContractsByUserId(this.userId);
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.ok(userContracts).build();
     }
 
     @Path("/contracts/{userContractId}")

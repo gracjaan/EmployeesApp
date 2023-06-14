@@ -7,10 +7,17 @@ window.addEventListener("helpersLoaded", async () => {
         const container = createRequestCard(request);
         requestsContainer.appendChild(container);
     }
+
+    if (requests === null || requests.length < 1) {
+        const noRequests = document.createElement("div");
+        noRequests.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noRequests.innerText = "No requests";
+        requestsContainer.append(noRequests)
+    }
 });
 
 function getRequestsForCompany(uid, token) {
-    return fetch(`/earnit/api/companies/${uid}/approves?user=true&contract=true&order=desc`, {
+    return fetch(`/earnit/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'
@@ -22,12 +29,12 @@ function getRequestsForCompany(uid, token) {
 
 function createRequestCard(workedWeek) {
     const container = document.createElement("a");
-    container.classList.add("bg-primary", "block", "rounded", "py-4", "pl-4", "pr-8", "w-full", "break-inside-avoid-column");
+    container.classList.add("bg-primary", "block", "rounded-xl", "py-4", "pl-4", "pr-8", "w-full", "break-inside-avoid-column");
     container.href = "/earnit/request?worked_week=" + workedWeek.id;
 
     const name = document.createElement("h3");
     name.classList.add("text-text", "text-2xl", "font-bold");
-    name.innerHTML = getName(workedWeek.user.firstName, workedWeek.user.lastName, workedWeek.user.lastNamePrefix, "<br />");
+    name.innerHTML = getName(escapeHtml(workedWeek.user.firstName), escapeHtml(workedWeek.user.lastName), escapeHtml(workedWeek.user.lastNamePrefix), "<br />");
     container.appendChild(name);
 
     const role = document.createElement("p");

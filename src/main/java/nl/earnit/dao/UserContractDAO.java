@@ -1,5 +1,7 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.workedweek.ContractDTO;
+import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
@@ -39,7 +41,7 @@ public class UserContractDAO extends GenericDAO<User> {
      */
     public int countContractsForUser(String userId) throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ? and active = true";
+        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"u.user_id\" = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -49,6 +51,25 @@ public class UserContractDAO extends GenericDAO<User> {
         // Return count
         res.next();
         return res.getInt("count");
+    }
+
+    public List<UserContractDTO> getUserContractsByUserId(String userId) throws SQLException {
+        String query = "SELECT u.*, c.* FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
+        PreparedStatement counter = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(counter, 1, userId);
+
+        // Execute query
+        ResultSet res = counter.executeQuery();
+
+        // Return count
+        List<UserContractDTO> userContracts = new ArrayList<>();
+        while (res.next()) {
+            ContractDTO c = new ContractDTO(res.getString("id"), res.getString("role"), res.getString("description"));
+            UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
+            uc.setContract(c);
+            userContracts.add(uc);
+        }
+        return userContracts;
     }
 
     public UserContract getUserContract(String userId, String userContractId) throws SQLException {
@@ -63,53 +84,57 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {
-        String query = "INSERT INTO" + tableName + "(id, contract_id, user_id, hourly_wage, active) " +
-                "VALUES + (gen_random_uuid(), ?, ?, ?, True RETURNING id" ;
+        String query = "INSERT INTO " + tableName + " (contract_id, user_id, hourly_wage) " +
+                "VALUES (?, ?, ?) RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, user_id);
-        statement.setString(2, contract_id);
+        PostgresJDBCHelper.setUuid(statement, 1, contract_id);
+        PostgresJDBCHelper.setUuid(statement, 2, user_id);
         statement.setInt(3, hourly_wage);
 
         ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return  null;
 
         return getUserContractById(res.getString("id"));
     }
 
     public void disableUserContract(String id) throws SQLException {
 
-        String query = "UPDATE" + tableName + "SET active = False WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET active = False WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         statement.executeQuery();
     }
 
     public void changeHourlyWage(String id, int hourlyWage) throws SQLException {
-        String query = "UPDATE" + tableName + "SET hourly_wage = ? WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET hourly_wage = ? WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setInt(1, hourlyWage);
-        statement.setString(2, id);
-
+        PostgresJDBCHelper.setUuid(statement, 2, id);
         statement.executeQuery();
     }
 
-    public UserContract getUserContractById( String id) throws SQLException {
-        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE id = ?";
+    public UserContract getUserContractById(String id) throws SQLException {
+        String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
 
         ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return null;
+
         return new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active") );
     }
 
     public List<UserContract> getUserContractsByContractId(String contractId) throws SQLException {
         List<UserContract> result = new ArrayList<>();
-        String query = "SELECT id, contract_id, user_id, hourly_wage, active " + tableName + " WHERE contract_id = ? and active = true ";
+        String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE contract_id = ? and active = true ";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
 
         ResultSet res = statement.executeQuery();
 

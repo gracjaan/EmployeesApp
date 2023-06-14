@@ -5,6 +5,9 @@
     <title>Request</title>
     <script src="/earnit/static/js/helpers.js"></script>
     <script src="/earnit/static/js/company/requests.js" defer></script>
+
+    <script src="/earnit/static/js/components/back.js"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/earnit/static/style.css"/>
@@ -13,14 +16,7 @@
 <body
         class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
 >
-<header class="flex bg-primary w-fit p-2 rounded-br-lg cursor-pointer" onclick="history.back()">
-    <img
-            src="/earnit/static/icons/arrow-left.svg"
-            alt="arrow down"
-            class="mr-3"
-    />
-    <div class="text-text">Back</div>
-</header>
+<back data-home></back>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
     <main class="flex gap-4 my-8 flex-col px-2 md:px-0">
         <h2 class="text-text text-2xl font-bold">Requests</h2>

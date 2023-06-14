@@ -31,12 +31,14 @@ public class WorkedWeekDTO {
     private Contract contract;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Worked> hours;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer totalMinutes;
 
     public WorkedWeekDTO(String id, String contractId, Integer year, Integer week,
                          String note,
                          Boolean confirmed, Boolean approved, Boolean solved,
                          UserResponse user, Company company, UserContract userContract,
-                         Contract contract, List<Worked> hours) {
+                         Contract contract, List<Worked> hours, Integer totalHours) {
         this.id = id;
         this.contractId = contractId;
         this.year = year;
@@ -50,6 +52,7 @@ public class WorkedWeekDTO {
         this.userContract = userContract;
         this.contract = contract;
         this.hours = hours;
+        this.totalMinutes = totalHours;
     }
 
     public WorkedWeekDTO() {}
@@ -156,5 +159,13 @@ public class WorkedWeekDTO {
 
     public void setHours(List<Worked> hours) {
         this.hours = hours;
+    }
+
+    public Integer getTotalMinutes() {
+        return totalMinutes;
+    }
+
+    public void setTotalMinutes(Integer totalMinutes) {
+        this.totalMinutes = totalMinutes;
     }
 }

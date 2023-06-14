@@ -34,29 +34,6 @@ public class CompanyContractResource {
     }
 
     @GET
-    @PathParam("/companies/{companyId}/contracts")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Contract> getContracts(@PathParam("companyId") String companyId) {
-        if (companyId == null) {
-            return null;
-        }
-
-        List<Contract> result;
-
-        try {
-            ContractDAO ContractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
-
-            result = ContractDAO.getAllContractsByCompanyId(companyId);
-
-        } catch (SQLException e) {
-            return null;
-        }
-        return result;
-
-    }
-
-    @GET
-    @PathParam("/companies/{companyId}/contracts/{contractId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public DescriptionRole getContract(@PathParam("contractId") String contractId) {
         DescriptionRole result = new DescriptionRole();
@@ -78,7 +55,6 @@ public class CompanyContractResource {
     }
 
     @PUT
-    @Path("/companies/{companyId}/contracts/{contractId}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateContract(@PathParam("contractId") String contractId, JAXBElement<DescriptionRole> descriptionRole ) {
         if (contractId == null) {
@@ -106,7 +82,6 @@ public class CompanyContractResource {
     }
 
     @DELETE
-    @PathParam("/companies/{companyId}/contracts/{contractId}")
     public Response disableContract(@PathParam("contractId") String contractId) {
         if (contractId == null) {
             return Response.status(400).build();
@@ -124,7 +99,7 @@ public class CompanyContractResource {
     }
 
     @GET
-    @Path("{contractId}/employees")
+    @Path("/employees")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<UserContract> getUserContracts(@PathParam("contractId") String contractId) {
         if (contractId == null) {
@@ -153,14 +128,10 @@ public class CompanyContractResource {
         try {
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
 
-            userContractDAO.addNewUserContract(addUserToContract.getUserId(), companyId, addUserToContract.getHourlyWage());
-
+            return Response.ok(userContractDAO.addNewUserContract(addUserToContract.getUserId(), contractId, addUserToContract.getHourlyWage())).build();
         } catch (SQLException e) {
             return Response.serverError().build();
         }
-
-
-        return Response.ok().build();
     }
 
     @GET
@@ -208,7 +179,7 @@ public class CompanyContractResource {
 
     @DELETE
     @Path("/employees/{userContractId}")
-    public Response deleteUserContract(@PathParam("userContractId") String userContractId) {
+    public Response disableUserContract(@PathParam("userContractId") String userContractId) {
         if (userContractId == null) {
             return Response.status(400).build();
         }

@@ -2,8 +2,13 @@ package nl.earnit.resources.staff;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import nl.earnit.dao.ContractDAO;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
+
+import java.sql.SQLException;
 
 @Path("/staff")
 public class StaffResource {
@@ -35,8 +40,17 @@ public class StaffResource {
 
     @GET
     @Path("/rejects")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getRejects() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            WorkedWeekDAO workedWeekDAO =
+                    (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            return Response.ok(workedWeekDAO.getRejectedWorkedWeeks()).build();
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
     }
 
     @GET
@@ -48,12 +62,30 @@ public class StaffResource {
     @POST
     @Path("/rejects/{workedWeekId}")
     public Response resolvedAccept(@PathParam("workedWeekId") String workedWeekId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            WorkedWeekDAO workedWeekDAO =
+                    (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.resolveRejectedWeek(workedWeekId);
+
+            return Response.ok().build();
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
     }
 
     @DELETE
     @Path("/rejects/{workedWeekId}")
     public Response resolvedReject(@PathParam("workedWeekId") String workedWeekId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            WorkedWeekDAO workedWeekDAO =
+                    (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            workedWeekDAO.denyRejectedWeek(workedWeekId);
+
+            return Response.ok().build();
+
+        } catch (SQLException e) {
+            return Response.serverError().build();
+        }
     }
 }

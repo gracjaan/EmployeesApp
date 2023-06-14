@@ -11,8 +11,10 @@ import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateCompany;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Path("/companies")
 public class CompaniesResource {
@@ -23,11 +25,19 @@ public class CompaniesResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getCompanies(@Context HttpHeaders httpHeaders) {
+    public Response getCompanies(@Context HttpHeaders httpHeaders,
+                                 @QueryParam("order") @DefaultValue("company.id:asc") String order) {
         User user = RequestHelper.validateUser(httpHeaders);
         RequestHelper.handleAccessToStaff(user);
 
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        try {
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            List<Company> companies = companyDAO.getAllCompanies(order);
+
+            return Response.ok(companies).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @POST
@@ -73,7 +83,7 @@ public class CompaniesResource {
                     }
 
                     user.setType("COMPANY");
-                    userDAO.updateUser(user);
+                    userDAO.updateUser(new UserResponse(user));
                 }
             }
 

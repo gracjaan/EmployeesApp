@@ -48,7 +48,6 @@ public class LoginResource {
 
         long expiresAt = System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME;
 
-        // TODO: Make user choose what company to use
         String companyId = null;
 
         if (user.getType().equals("COMPANY")) {
@@ -57,7 +56,11 @@ public class LoginResource {
                 List<Company> companies = companyUserDAO.getCompaniesUserIsWorkingFor(user.getId());
 
                 if (!companies.isEmpty()) {
-                    companyId = companies.get(0).getId();
+                    if (companies.stream().noneMatch(x -> x.getId().equals(login.getCompanyId()))) {
+                        companyId = companies.get(0).getId();
+                    } else {
+                        companyId = login.getCompanyId();
+                    }
                 }
             } catch (SQLException e) {
                 return Response.serverError().build();

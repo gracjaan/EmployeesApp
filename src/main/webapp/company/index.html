@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Earnit</title>
+  <script src="/earnit/static/js/helpers.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="/earnit/static/js/company/index.js" defer></script>
@@ -17,9 +18,19 @@
     <div
             class="bg-secondary top-0 -left-full -right-full h-3/4 absolute -z-10"
     ></div>
-    <h1 class="text-text text-2xl font-bold py-16 px-4 sm:px-0">
-      Welcome back, Pepijn
-    </h1>
+    <div class="flex justify-between py-16 px-4 sm:px-0">
+      <h1 id="name" class="flex text-text text-2xl font-bold">
+
+      </h1>
+      <div class="flex justify-center">
+        <a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/earnit/settings">
+          <img src="/earnit/static/icons/settings.svg" class="flex w-7 mx-auto">
+        </a>
+        <a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/earnit/logout">
+          <img src="/earnit/static/icons/logout.svg" class="flex w-7 mx-auto">
+        </a>
+      </div>
+    </div>
     <nav
             class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
     >
@@ -57,7 +68,7 @@
   >
     <section class="w-full gap-2 flex flex-col">
       <h2 class="text-text text-2xl font-bold">Dashboard</h2>
-      <div class="rounded-2xl bg-secondary">
+      <div class="rounded-2xl bg-secondary pt-2 p-4">
         <canvas id="myChart"></canvas>
       </div>
     </section>
@@ -70,7 +81,7 @@
                 href="/earnit/"
                 class="rounded-2xl bg-primary p-4 relative"
         >
-          <div class="text-text font-bold uppercase">
+          <div href="/earnit/request" class="text-text font-bold uppercase">
             week 11 approved
           </div>
           <div class="text-text uppercase">23.04.2023</div>
