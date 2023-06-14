@@ -246,3 +246,10 @@
 .hover\:border-accent-success:hover {
 	border-color: var(--color-accent-success);
 }
+
+.group-data-\[checked\=\'0\'\]\:bg-accent-success[data-checked="0"] {
+	background-color: var(--color-accent-success);
+}
+.group-data-\[checked\=\'1\'\]\:bg-accent-fail[data-checked="1"] {
+	background-color: var(--color-accent-fail);
+}

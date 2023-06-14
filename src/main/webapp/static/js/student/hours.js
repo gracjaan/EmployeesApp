@@ -75,6 +75,11 @@ async function updateContracts() {
 }
 
 async function confirmWorkedWeek() {
+    if (document.getElementById("confirm-button").getAttribute("data-checked") === "1") {
+        unconfirmWorkedWeek();
+        return;
+    }
+
     const error = document.getElementById("confirm-error");
     error.classList.add("hidden");
 
@@ -90,7 +95,6 @@ async function confirmWorkedWeek() {
         fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
             {
                 method: "POST",
-                body: JSON.stringify({confirmed: true}),
                 headers: {
                     'authorization': `token ${getJWTCookie()}`,
                     "Content-type": "application/json",
@@ -98,8 +102,7 @@ async function confirmWorkedWeek() {
                 }
             })
             .then(() => {
-                // TODO: change too check mark instead
-                alert("The worked week was confirmed")
+                document.getElementById("confirm-button").setAttribute("data-checked", "1");
             })
             .catch(() => {
                 const error = document.getElementById("confirm-error");
@@ -109,18 +112,62 @@ async function confirmWorkedWeek() {
     })
 }
 
+async function unconfirmWorkedWeek() {
+    const error = document.getElementById("confirm-error");
+    error.classList.add("hidden");
+
+    const contracts = await obtainContractsForUser(getUserId())
+    if (contracts === null) {
+        const error = document.getElementById("confirm-error");
+        error.classList.remove("hidden");
+        error.innerText = "Could not unconfirm worked week";
+        return;
+    }
+
+    contracts.forEach(c => {
+        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+            {
+                method: "DELETE",
+                headers: {
+                    'authorization': `token ${getJWTCookie()}`,
+                    "Content-type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+            .then((res) => {
+                if (res.status === 200) document.getElementById("confirm-button").setAttribute("data-checked", "0");
+                else {
+                    const error = document.getElementById("confirm-error");
+                    error.classList.remove("hidden");
+                    error.innerText = "Could not unconfirm worked week, because the week has passed";
+                }
+            })
+            .catch(() => {
+                const error = document.getElementById("confirm-error");
+                error.classList.remove("hidden");
+                error.innerText = "Could not unconfirm worked week";
+            })
+    })
+}
+
 async function updatePage(contracts) {
     const entries = document.getElementById("entries");
 
     const workEntries = [];
+    let confirmed = true;
     for (const contract of contracts) {
         const workedHours = await fetchSheet(getUserId(), contract);
         if (workedHours === null) continue;
+
+        if (!workedHours.confirmed) confirmed = false;
 
         for (const hour of workedHours.hours) {
             workEntries.push({hour, contract: contract.contract});
         }
     }
+
+    const confirm = document.getElementById("confirm-button");
+    confirm.setAttribute("data-checked", confirmed ? "1" : "0");
 
     const date = document.getElementById("date");
     const dateSelected = date.getAttribute("data-selected");

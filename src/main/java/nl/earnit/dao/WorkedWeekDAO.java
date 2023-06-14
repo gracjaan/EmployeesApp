@@ -84,9 +84,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.executeUpdate();
     }
 
-    public void removeConfirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
+    public boolean removeConfirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
         if (hasDatePassed(year, week)) {
-            return;
+            return false;
         }
         String query = "UPDATE worked_week SET confirmed = false WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
@@ -94,6 +94,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         statement.setInt(2, Integer.parseInt(year));
         statement.setInt(3, Integer.parseInt(week));
         statement.executeUpdate();
+        return true;
     }
 
     public void updateWorkedWeekNote(String note, String userContractId, String year, String week) throws SQLException {
@@ -704,10 +705,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         }
         int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
         int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
-        if (currentYear>=y&&currentWeek>w) {
-            return false;
-        }
-        return true;
+        return currentYear > y || (currentYear == y && currentWeek > w);
     }
 
     public List<WorkedWeek> getRejectedWorkedWeeks() throws SQLException{
