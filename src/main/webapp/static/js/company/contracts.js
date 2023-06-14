@@ -45,7 +45,7 @@ function createContractItem(contract) {
     
     for (const userContract of contract.userContracts) {
         const userContractElement = document.createElement("div");
-        userContractElement.classList.add("text-text", "whitespace-nowrap", "bg-primary", "py-2", "px-4", "flex", "justify-between", "rounded-xl", "w-full", "cursor-pointer");
+        userContractElement.classList.add("text-text", "whitespace-nowrap", "bg-primary", "w-fit", "gap-2", "py-2", "px-4", "flex", "justify-between", "rounded-xl", "w-full", "cursor-pointer");
         contractUsersContainer.append(userContractElement);
 
         userContractElement.addEventListener("click", () => location.href = "/earnit/user?id=" + userContract.user.id)
