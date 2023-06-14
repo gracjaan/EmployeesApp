@@ -47,12 +47,20 @@ public class StaffResource {
     @GET
     @Path("/rejects")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getRejects() {
+    public Response getRejects(@QueryParam("company") @DefaultValue("false") boolean company,
+                               @QueryParam("contract") @DefaultValue("false")
+                                   boolean contract,
+                               @QueryParam("userContract") @DefaultValue("false")
+                                   boolean userContract,
+                               @QueryParam("user") @DefaultValue("false") boolean user,
+                               @QueryParam("hours") @DefaultValue("false") boolean hours,
+                               @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                               @QueryParam("order") @DefaultValue("worked_week.week:asc,hours.day:asc") String order) {
 
         try {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            List<WorkedWeekDTO> rejectedWeeks = workedWeekDAO.getWorkedWeeksToApproveForStaff(true, true, true , true, true, true, "");
+            List<WorkedWeekDTO> rejectedWeeks = workedWeekDAO.getWorkedWeeksToApproveForStaff(company, contract, userContract , user, hours, totalHours, order);
             return Response.ok(rejectedWeeks).build();
 
         } catch (SQLException e) {
