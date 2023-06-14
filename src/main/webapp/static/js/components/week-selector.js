@@ -91,7 +91,7 @@ window.addEventListener("helpersLoaded", ()=> {
 
     function createWeekItem(year, week) {
         const container = document.createElement("div");
-        container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer", "whitespace-nowrap");
+        container.classList.add("py-2", "pl-4", "pr-6", "hover:bg-gray-100", "cursor-pointer", "whitespace-nowrap");
         container.innerText = "Week " + week;
         container.setAttribute("data-year", year);
         container.setAttribute("data-week", week);
