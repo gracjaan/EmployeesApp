@@ -36,7 +36,7 @@ public class UsersResource {
             UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             List<User> users = userDAO.getAllUsers(order);
             return Response.ok(users).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -88,7 +88,7 @@ public class UsersResource {
             user = userDAO.createUser(createUser.getEmail(), createUser.getFirstName(),
                 createUser.getLastNamePrefix(), createUser.getLastName(), passwordHash,
                 "STUDENT"); // Make user student by default
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
 

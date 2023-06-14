@@ -38,7 +38,7 @@ public class UserResource {
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             user = userDAO.getUserById(this.userId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok(user).build();
@@ -79,7 +79,7 @@ public class UserResource {
 
             user.setId(userId);
             dbUser = userDAO.updateUser(user);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok(dbUser).build();
@@ -92,7 +92,7 @@ public class UserResource {
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             userDAO.disableUserById(userId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -105,7 +105,7 @@ public class UserResource {
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             return Response.ok(userDAO.getCompanies(this.userId)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -124,7 +124,7 @@ public class UserResource {
         try {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             userContracts = userContractDAO.getUserContractsByUserId(this.userId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.ok(userContracts).build();
