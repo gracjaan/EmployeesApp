@@ -5,13 +5,13 @@ const hours = document.getElementById("hours");
 hours.addEventListener("click", () => select("hours"));
 
 const acceptButton = document.getElementById("accept");
-acceptButton.addEventListener("click", () => approve(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
+acceptButton.addEventListener("click", () => approve(getWorkedWeekId(), getJWTCookie()));
 
 const rejectButton = document.getElementById("reject");
-rejectButton.addEventListener("click", () => reject(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
+rejectButton.addEventListener("click", () => reject(getWorkedWeekId(), getJWTCookie()));
 
 const undoButton = document.getElementById("undo");
-undoButton.addEventListener("click", () => undo(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
+undoButton.addEventListener("click", () => undo(getWorkedWeekId(), getJWTCookie()));
 
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
@@ -25,7 +25,7 @@ window.addEventListener("helpersLoaded", async () => {
 async function updateHours() {
     const request = await getRequestForStaff(getWorkedWeekId(), getJWTCookie());
     if (request === null) {
-        // location.replace("/earnit/requests");
+        location.replace("/earnit/requests");
         return;
     }
 
@@ -50,8 +50,8 @@ function getOrder() {
     return order;
 }
 
-function approve(companyId, workedWeekId, token) {
-    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+function approve(workedWeekId, token) {
+    fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'POST',
         headers: {
             'authorization': `token ${token}`,
@@ -65,8 +65,8 @@ function approve(companyId, workedWeekId, token) {
         .catch(() => null);
 }
 
-function reject(companyId, workedWeekId, token) {
-    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+function reject(workedWeekId, token) {
+    fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'DELETE',
         headers: {
             'authorization': `token ${token}`,
@@ -80,8 +80,8 @@ function reject(companyId, workedWeekId, token) {
         .catch(() => null);
 }
 
-function undo(companyId, workedWeekId, token) {
-    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+function undo(workedWeekId, token) {
+    fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'PUT',
         headers: {
             'authorization': `token ${token}`,
@@ -89,7 +89,7 @@ function undo(companyId, workedWeekId, token) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            approve: null
+            solved: null
         })
     })
         .then(async (res) => await res.json())
@@ -110,12 +110,12 @@ function updatePage(request) {
         entries.appendChild(createEntry(request.year, request.week, request.contract, hour));
     }
 
-    if (request.approved !== null) {
+    if (request.solved !== null) {
         document.getElementById("accept").classList.add("hidden");
         document.getElementById("reject").classList.add("hidden");
         document.getElementById("undo").classList.remove("hidden");
 
-        if (request.approved) {
+        if (request.solved) {
             document.getElementById("rejected").classList.add("hidden");
             document.getElementById("accepted").classList.remove("hidden");
         } else {
