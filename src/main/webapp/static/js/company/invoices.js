@@ -55,15 +55,17 @@ function getOrder() {
 function updatePage(request) {
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
-    for (const workedWeek of request) {
-        entries.appendChild(createEntry(workedWeek));
-    }
 
     if (request === null || request.length < 1) {
         const noInvoices = document.createElement("div");
         noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
         noInvoices.innerText = "No invoices";
-        entries.append(noInvoices)
+        entries.append(noInvoices);
+        return;
+    }
+
+    for (const workedWeek of request) {
+        entries.appendChild(createEntry(workedWeek));
     }
 }
 

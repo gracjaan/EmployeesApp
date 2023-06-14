@@ -155,15 +155,21 @@ async function updatePage(contracts) {
 
     const workEntries = [];
     let confirmed = true;
+    let workedHoursCreated = false;
     for (const contract of contracts) {
         const workedHours = await fetchSheet(getUserId(), contract);
         if (workedHours === null) continue;
 
+        workedHoursCreated = true;
         if (!workedHours.confirmed) confirmed = false;
 
         for (const hour of workedHours.hours) {
             workEntries.push({hour, contract: contract.contract});
         }
+    }
+
+    if (!workedHoursCreated && confirmed) {
+        confirmed = false;
     }
 
     const confirm = document.getElementById("confirm-button");
