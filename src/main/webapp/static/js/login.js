@@ -173,7 +173,6 @@ window.addEventListener("helpersLoaded", () => {
             const data = (await res.json());
             Cookies.set('earnit-token', data.token, { expires: new Date(data.expires) })
 
-            console.log(getUserCompany())
             if (getUserCompany() !== null) {
                 const dropdown = document.getElementById("company-content");
 
@@ -200,7 +199,7 @@ window.addEventListener("helpersLoaded", () => {
                 const companyDialog = document.getElementById("company-dialog");
                 companyDialog.classList.remove("hidden");
             } else {
-                // window.location.replace("/earnit/");
+                window.location.replace("/earnit/");
             }
         })
     })
