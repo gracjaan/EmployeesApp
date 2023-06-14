@@ -4,22 +4,21 @@
     <meta charset="UTF-8"/>
     <title>Earnit</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/earnit/static/js/helpers.js"></script>
+
+    <script src="/earnit/static/js/components/back.js"></script>
+
     <script src="/earnit/static/js/staff/contract.js" defer></script>
-    <script src="/earnit/static/js/helpers.js" defer></script>
+
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat">
-<a href="javascript:history.back()" class="flex items-center">
-    <header class="flex bg-primary w-fit p-2 rounded-br-lg">
-        <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
-        <div class="text-text">Back</div>
-    </header>
-</a>
+<back data-home></back>
 <div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
     <main class="gap-4 flex flex-col p-4">
-        <div class="flex gap-8 mt-8 w-full">
+        <h2 class="text-text text-2xl font-bold">Create contract</h2>
+        <div class="flex gap-8 w-full">
             <section class="w-full gap-2 flex flex-col">
                 <!--            dropdown menu for the name of the student you want to link-->
                 <div class="py-4 space-y-4">
@@ -39,8 +38,8 @@
                     </div>
 
                     <div id="company-name-display" class="bg-secondary rounded-xl flex flex-col gap-4 p-4">
-                        <div class="flex flex-center">
-                            <p class="text-text font-bold text-2xl">Select A User</p>
+                        <div class="flex flex items-center">
+                            <p class="text-text font-bold text-2xl">Select a company</p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
             <section class="w-full gap-2 flex flex-col">
                 <!--            dropdown menu for the name of the company you want to link-->
                 <div class="py-4 space-y-4">
-                    <input placeholder="Name" type="text" name="Name" id="name" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white w-full" />
+                    <input placeholder="Role" type="text" name="Name" id="name" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white w-full" />
                     <textarea rows="3" placeholder="Description" type="text" name="description" id="description" class="py-2 px-4 bg-primary text-text rounded-xl outline-none placeholder-white w-full"></textarea>
                 </div>
             </section>

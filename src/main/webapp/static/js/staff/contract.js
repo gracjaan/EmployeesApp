@@ -67,7 +67,7 @@ async function editCompanyInfo(company){
     companyDiv.setAttribute("company-id", company.id)
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "flex-center");
+    encapsulatingDiv.classList.add("flex", "items-center");
 
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
