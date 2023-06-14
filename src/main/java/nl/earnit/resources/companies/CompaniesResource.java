@@ -83,7 +83,9 @@ public class CompaniesResource {
                     }
 
                     user.setType("COMPANY");
-                    userDAO.updateUser(new UserResponse(user));
+                    if (!userDAO.updateUserType(new UserResponse(user))) {
+                        return Response.status(Response.Status.NOT_MODIFIED).build();
+                    }
                 }
             }
 
@@ -91,6 +93,7 @@ public class CompaniesResource {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             company = companyDAO.createCompany(createCompany.getName());
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
 
