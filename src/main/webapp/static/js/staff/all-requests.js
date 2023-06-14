@@ -7,9 +7,10 @@ window.addEventListener("helpersLoaded", async () => {
         return;
     }
 
-    const rejectedWeeksElement = document.getElementById("dropdown-company-content");
+    const rejectedWeeksElement = document.getElementById("rejected-weeks");
     rejectedWeeksElement.innerText = ""
 
+    console.log(rejectedWeeks)
     for (const rejectedWeek of rejectedWeeks) {
         rejectedWeeksElement.append(createRejectedWeek(rejectedWeek));
     }
@@ -26,24 +27,10 @@ async function getRejectedWeeks() {
     ).then((res) => res.json()).catch(() => null);
 }
 
-function createComment(note, companyNote, employee, company){
-    const commentDiv = document.getElementById("comments");
-
-    const userCommentDiv = document.createElement("div")
-    userCommentDiv.classList.add("bg-primary", "rounded-xl", "w-full","p-2","pl-4")
-    const userHeaderDiv = document.createElement("div")
-    userHeaderDiv.classList.add("items-center", "gap-4" ,"flex", "flex-row")
-
-
-    const companyCommentDiv = document.createElement("div")
-    companyCommentDiv.classList.add("bg-primary", "rounded-xl", "w-full","p-2","pl-4")
-    const companyHeaderDiv = document.createElement("div")
-    companyHeaderDiv.classList.add("items-center", "gap-4" ,"flex", "flex-row")
-
-}
 function createRejectedWeek(rejectedWeek) {
     const listElement = document.createElement("li");
-
+    const linkElement = document.createElement("a");
+    linkElement.href = "/earnit/staff/reject/request?worked_week=" + rejectedWeek.id;
     const weekDiv = document.createElement("div");
     weekDiv.setAttribute("data-selected", '0')
     weekDiv.classList.add("justify-between", "flex flex-row", "data-[selected='1']:border-white", "hover:border-text", "border-2", "border-primary", "block bg-primary", "rounded-xl", "w-full", "p-2", "pl-2", "overflow-y-auto", "scrollbar-custom", "scrollbar-track-text", "scrollbar-rounded-xl", "scrollbar-thumb-background", "max-h-[5rem]");
@@ -64,22 +51,9 @@ function createRejectedWeek(rejectedWeek) {
     hours.innerText = rejectedWeek.role;
 
 
-    listElement.addEventListener("click", ()=>{
-        createComment(rejectedWeek.note, rejectedWeek.companyNote);
-        contractId=contract.id;
-        const selected = parseInt(weekDiv.getAttribute("data-selected"))
-        if (selected === 0) {
-            const orderedList = document.getElementById("contract-list");
-            const userDivs = orderedList.querySelectorAll("[data-selected='1']")
-            for (const userDiv1 of userDivs) {
-                userDiv1.setAttribute("data-selected", "0")
-            }
-            weekDiv.setAttribute("data-selected", "1");
-        }
 
-    })
 
-}
+
 
 function getNotes() {
 
