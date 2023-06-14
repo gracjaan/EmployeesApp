@@ -24,10 +24,10 @@
                 <h2 class="text-text text-2xl font-bold">Fill in your hours</h2>
                 <div class="flex gap-2">
                     <week-selector id="week"></week-selector>
-                    <button class="rounded-xl bg-accent-success p-2 items-center flex justify-center h-full aspect-square" onclick="confirmWorkedWeek()">
-                        <div class="text-white">
-                            <img src="/earnit/static/icons/checkmark.svg" alt="checkmark"/>
-                        </div>
+
+                    <button id="confirm-button" data-checked="0" class="group rounded-xl text-white group-data-[checked='0']:bg-accent-success group-data-[checked='1']:bg-accent-fail p-2 items-center flex justify-center h-full aspect-square" onclick="confirmWorkedWeek()">
+                        <img src="/earnit/static/icons/checkmark.svg" class="w-6 h-6 hidden group-data-[checked='0']:block" alt="checkmark"/>
+                        <img src="/earnit/static/icons/white-cross.svg" class="w-5 h-5 hidden group-data-[checked='1']:block" alt="x"/>
                     </button>
                 </div>
                 <div id="confirm-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>

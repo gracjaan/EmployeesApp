@@ -29,7 +29,7 @@
                     <div class="dropdown relative">
                         <button id="dropdown-student-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleStudent()">
-                            <div id="user" class="text-text font-bold">Choose user</div>
+                            <div id="user" class="text-text">Choose user</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
                         </button>
                         <div id="dropdown-student-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute mt-2 hidden w-full">
@@ -46,9 +46,9 @@
             </section>
             <!--        the switch button section-->
             <section class="flex">
-                <button class="justify-center">
+                <div class="justify-center">
                     <img class="object-scale-down h-24" src="/earnit/static/icons/arrows-both-ways.svg" alt="both way arrow">
-                </button>
+                </div>
             </section>
 
             <!--        This is the section for companie overview-->
@@ -59,7 +59,7 @@
                     <div class="dropdown relative">
                         <button id="dropdown-company-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleCompany()">
-                            <div id="company" class="text-text font-bold">Choose company</div>
+                            <div id="company" class="text-text">Choose company</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
                         </button>
                         <div id="dropdown-company-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
@@ -87,34 +87,28 @@
             </section>
         </div>
 <!--        The next big element in the page-->
-        <div class="flex flex-col gap-4 bg-secondary rounded-2xl bg-secondary p-4 h-full">
+        <div class="flex flex-col gap-2 bg-secondary rounded-2xl bg-secondary p-4 h-full">
 <!--            this is for the filtering options-->
-            <div class="flex flex-row gap-4">
+            <div class="flex flex-row gap-2">
                 <div class="dropdown relative">
-                    <button id="dropdown-position-button" class="rounded-xl bg-white px-4 py-4 flex mr-5 items-center w-full justify-between"
-                        onclick="togglePosition()">
-                        <div class="text-black font-bold">Position</div>
-                        <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class=""/>
+                    <button id="user-button"
+                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
+                            onclick="togglePosition()">
+                        <div class="flex items-center justify-between">
+                            <div class="text-black text-left mr-2" id="user-header">Position</div>
+                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
+                        </div>
                     </button>
-                    <div id="dropdown-position-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
-                        <!-- Dropdown options -->
-                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
-                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
-                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
-                    </div>
                 </div>
                 <div class="dropdown relative">
-                    <button id="dropdown-type-button" class="rounded-xl bg-white px-4 py-4 flex mr-5 items-center w-full justify-between"
-                    onclick="toggleType()">
-                        <div class="text-black font-bold">Type</div>
-                        <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down" class=""/>
+                    <button id="company-button"
+                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
+                            onclick="togglePosition()">
+                        <div class="flex items-center justify-between">
+                            <div class="text-black text-left mr-2" id="company-header">Date</div>
+                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
+                        </div>
                     </button>
-                    <div id="dropdown-type-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden">
-                        <!-- Dropdown options -->
-                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
-                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
-                        <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
-                    </div>
                 </div>
             </div>
 <!--            now comes all the different positions for the employees to have-->
@@ -139,9 +133,9 @@
                 </ol>
             </div>
         </div>
-        <div>
+        <div class="mt-4">
             <span class="before:text-white before:font-bold before:flex before:items-center before:right-4 before:bottom-0 relative before:top-0 before:absolute before:block before:content-['€']">
-                <input onchange="updateHourlyWage(this)" type="number" class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-bold py-4 flex justify-center text-text bg-primary rounded-xl w-full pl-4 placeholder-gray-300" id="hourly-wage" placeholder="Enter the hourly wage"></input>
+                <input onchange="updateHourlyWage(this)" type="number" class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none py-4 flex justify-center text-text bg-primary rounded-xl w-full pl-4 placeholder-gray-300" id="hourly-wage" placeholder="Enter the hourly wage"></input>
             </span>
         </div>
         <div>

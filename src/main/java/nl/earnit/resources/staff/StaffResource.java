@@ -60,8 +60,28 @@ public class StaffResource {
 
     @GET
     @Path("/rejects/{workedWeekId}")
-    public Response getRejectDetails(@PathParam("workedWeekId") String workedWeekId) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getRejectDetails(@PathParam("workedWeekId") String workedWeekId,
+                                     @QueryParam("company") @DefaultValue("false") boolean company,
+                                     @QueryParam("contract") @DefaultValue("false")
+                                         boolean contract,
+                                     @QueryParam("userContract") @DefaultValue("false")
+                                         boolean userContract,
+                                     @QueryParam("user") @DefaultValue("false") boolean user,
+                                     @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                     @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                                     @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED_WEEK);
+
+            return Response.ok(
+                workedWeekDAO.getWorkedWeekById(workedWeekId, company, contract, userContract, user,
+                    hours, totalHours, order)).build();
+        } catch (SQLException e) {
+            System.out.println(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @POST

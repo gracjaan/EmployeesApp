@@ -143,11 +143,15 @@ public class UserContractWorkedResource {
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.removeConfirmWorkedWeek(userContractId, year, week);
+
+            if (!workedWeekDAO.removeConfirmWorkedWeek(userContractId, year, week)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            return Response.ok().build();
         }catch (SQLException e) {
             return Response.serverError().build();
         }
-        return Response.ok().build();
     }
 
     @PUT
