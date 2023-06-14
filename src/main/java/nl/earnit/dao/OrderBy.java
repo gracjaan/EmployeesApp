@@ -29,6 +29,8 @@ public class OrderBy {
     }
 
     public boolean isValid(String query) {
+        if (query.length() < 1) return true;
+
         if (!isValidQuery(query)) {
             return false;
         }
@@ -61,6 +63,8 @@ public class OrderBy {
         String[] orders = query.split(",");
         StringBuilder sqlBuilder = new StringBuilder();
         for (String order : orders) {
+            if (order.length() < 1) continue;
+
             String[] items = order.split(":");
             String column = items[0];
             String direction = items[1];
