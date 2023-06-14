@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Earnit</title>
     <script src="/earnit/static/js/helpers.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/earnit/static/js/staff/index.js" defer></script>
-    <link rel="stylesheet" href="/earnit/static/style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body class="bg-black flex justify-center overflow-x-hidden font-montserrat">
 <div class="lg:max-w-5xl md:max-w-3xl w-full">
@@ -20,30 +20,36 @@
             <h1 id="name" class="flex text-text text-2xl font-bold">
 
             </h1>
-            <div class="flex justify-center">
-                <a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/earnit/settings">
+            <div class="flex justify-center gap-2">
+                <a class="flex h-10 w-fit flex px-2 items-center justify-center bg-primary rounded-lg text-text"
+                   href="/earnit/contract">
+                    Create contract
+                </a>
+                <a class="flex h-10 w-10 bg-text rounded-lg" href="/earnit/settings">
                     <img src="/earnit/static/icons/settings.svg" class="flex w-7 mx-auto">
                 </a>
-                <a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/earnit/logout">
+                <a class="flex h-10 w-10 bg-text rounded-lg" href="/earnit/logout">
                     <img src="/earnit/static/icons/logout.svg" class="flex w-7 mx-auto">
-                </a>
-            </div>
+                </a></div>
         </div>
         <nav
                 class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0">
-            <a href="/earnit/all-requests" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+            <a href="/earnit/all-requests"
+               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
                 <h2 class="text-text text-2xl font-bold">Requests</h2>
                 <p class="text-text text-base">
                     Process rejected requests
                 </p>
             </a>
-            <a href="/earnit/links" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+            <a href="/earnit/links"
+               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
                 <h2 class="text-text text-2xl font-bold">Create links</h2>
                 <p class="text-text text-base">
                     Create links between users and companies via contracts
                 </p>
             </a>
-            <a href="/earnit/overview" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+            <a href="/earnit/overview"
+               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
                 <h2 class="text-text text-2xl font-bold">Overview</h2>
                 <p class="text-text text-base">
                     An overview of all companies and users
@@ -55,7 +61,7 @@
     </header>
     <main class="flex gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
 
-<!--        This is the section for the dashboard graph-->
+        <!--        This is the section for the dashboard graph-->
         <section class="w-full gap-2 flex flex-col">
             <h2 class="text-text text-2xl font-bold">Dashboard</h2>
             <div class="rounded-2xl bg-secondary">
@@ -63,12 +69,12 @@
             </div>
         </section>
 
-<!--        This is the section for the notifications-->
+        <!--        This is the section for the notifications-->
         <section class="w-full gap-2 flex flex-col">
             <h2 class="text-text text-2xl font-bold">Notifications</h2>
             <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
 
-<!--     This is a sample notification, later to be replaced by real notifcations with JS&ndash;&gt;-->
+                <!--     This is a sample notification, later to be replaced by real notifcations with JS&ndash;&gt;-->
                 <a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
                     <div class="text-text font-bold uppercase">
                         week 11 approved
@@ -78,7 +84,7 @@
                             class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"></div>
                 </a>
 
-<!--   This is a sample notification, later to be replaced by real notifcations with JS&ndash;&gt;-->
+                <!--   This is a sample notification, later to be replaced by real notifcations with JS&ndash;&gt;-->
                 <a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
                     <div class="text-text font-bold uppercase">
                         week 10 approved
@@ -89,7 +95,7 @@
                     ></div>
                 </a>
 
-<!--     This is a sample notification, later to be replaced by real notifcations with JS-->
+                <!--     This is a sample notification, later to be replaced by real notifcations with JS-->
                 <a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
                     <div class="text-text font-bold uppercase">
                         week 9 approved
