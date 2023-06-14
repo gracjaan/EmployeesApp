@@ -2,10 +2,7 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.CompanyDAO;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.UserContractDAO;
-import nl.earnit.dao.UserDAO;
+import nl.earnit.dao.*;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
@@ -92,6 +89,14 @@ public class CompaniesResource {
             // Create company
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             company = companyDAO.createCompany(createCompany.getName());
+
+            // Link company user
+            CompanyUserDAO companyUserDAO = (CompanyUserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY_USER);
+            if (!companyUserDAO.isUserWorkingForCompany(company.getId(), createCompany.getUserId())) {
+                if (!companyUserDAO.createCompanyUser(company.getId(), createCompany.getUserId())) {
+                    company = null;
+                }
+            }
         } catch (Exception e) {
             System.out.println(e);
             return Response.serverError().build();
