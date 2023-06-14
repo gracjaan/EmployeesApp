@@ -10,14 +10,9 @@ window.addEventListener("helpersLoaded", async () => {
     const rejectedWeeksElement = document.getElementById("dropdown-company-content");
     rejectedWeeksElement.innerText = ""
 
-
-
     for (const rejectedWeek of rejectedWeeks) {
         rejectedWeeksElement.append(createRejectedWeek(rejectedWeek));
     }
-
-
-
 
 })
 

@@ -397,6 +397,86 @@ public class WorkedWeekDAO extends GenericDAO<User> {
     }
 
     /**
+     * Gets all worked weeks for staff and is ready for approval.
+     *
+     * @throws SQLException If a database error occurs.
+     */
+    public List<WorkedWeekDTO> getWorkedWeeksToApproveForStaff(boolean withCompany,
+                                                                 boolean withContract,
+                                                                 boolean withUserContract,
+                                                                 boolean withUser, boolean withHours, boolean withTotalHours, String order)
+            throws SQLException, InvalidOrderByException {
+
+        int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
+
+        String query = """
+            SELECT DISTINCT ww.id as worked_week_id,
+                ww.contract_id as worked_week_contract_id,
+                ww.year as worked_week_year,
+                ww.week as worked_week_week,
+                ww.note as worked_week_note,
+                ww.confirmed as worked_week_confirmed,
+                ww.approved as worked_week_approved,
+                ww.solved as worked_week_solved,
+                
+                uc.id as user_contract_id,
+                uc.contract_id as user_contract_contract_id,
+                uc.user_id as user_contract_user_id,
+                uc.hourly_wage as user_contract_hourly_wage,
+                uc.active as user_contract_active,
+                
+                u.id as user_id,
+                u.first_name as user_first_name,
+                u.last_name as user_last_name,
+                u.last_name_prefix as user_last_name_prefix,
+                u.email as user_email,
+                u.type as user_type,
+                
+                c.id as contract_id,
+                c.company_id as contract_company_id,
+                c.role as contract_role,
+                c.description as contract_description,
+                
+                cy.id as company_id,
+                cy.name as company_name,
+                
+                w.hours,
+                w.minutes
+                
+                FROM "%s" ww
+                        
+                JOIN user_contract uc ON uc.id = ww.contract_id
+                JOIN "user" u ON u.id = uc.user_id
+                JOIN contract c ON c.id = uc.contract_id
+                JOIN company cy ON cy.id = c.company_id
+                
+                LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
+                                
+                WHERE ww.confirmed IS TRUE AND ww.approved IS NOT TRUE AND ww.solved IS NULL AND (ww.year < ? OR (ww.year = ? AND ww.week < ?))
+                %3$s
+            """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), orderBy.getSQLOrderBy(order, true));
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        statement.setInt(1, currentYear);
+        statement.setInt(2, currentYear);
+        statement.setInt(3, currentWeek);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return
+        List<WorkedWeekDTO> workedWeeks = new ArrayList<>();
+
+        while (res.next()) {
+            workedWeeks.add(getWorkedWeekFromRow(res, "worked_week_", withCompany, withContract, withUserContract, withUser, withHours, withTotalHours));
+        }
+
+        return workedWeeks;
+    }
+
+    /**
      * Get the worked week.
      *
      * @param workedWeekId The id of the worked week.
@@ -708,32 +788,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return currentYear > y || (currentYear == y && currentWeek > w);
     }
 
-    public List<WorkedWeek> getRejectedWorkedWeeks() throws SQLException{
-        ArrayList<WorkedWeek> rejectedWeeks = new ArrayList<>();
 
-        String query = "SELECT id,contract_id, year, week, note, confirmed, approved, solved FROM  " + tableName + " WHERE approved=false AND solved = false";
-
-        PreparedStatement statement = this.con.prepareStatement(query);
-
-
-        // Execute query
-        ResultSet res = statement.executeQuery();
-
-        while(res.next()) {
-            WorkedWeek workedWeek = new WorkedWeek();
-            workedWeek.setId(res.getString("id"));
-            workedWeek.setContractId(res.getString("contract_id"));
-            workedWeek.setYear(res.getInt("year"));
-            workedWeek.setWeek(res.getInt("week"));
-            workedWeek.setNote(res.getString("note"));
-            workedWeek.setConfirmed(res.getBoolean("confirmed"));
-            workedWeek.setApproved(res.getBoolean("approved"));
-            workedWeek.setSolved(res.getBoolean("solved"));
-            rejectedWeeks.add(workedWeek);
-        }
-
-        return rejectedWeeks;
-    }
 
     public void resolveRejectedWeek(String id) throws SQLException {
         String query = "UPDATE " + tableName + " SET approved = true, solved = true WHERE id = ? RETURNING id";

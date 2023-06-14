@@ -5,10 +5,14 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.WorkedWeek;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/staff")
 public class StaffResource {
@@ -42,11 +46,12 @@ public class StaffResource {
     @Path("/rejects")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getRejects() {
+
         try {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-
-            return Response.ok(workedWeekDAO.getRejectedWorkedWeeks()).build();
+            List<WorkedWeekDTO> rejectedWeeks = workedWeekDAO.getWorkedWeeksToApproveForStaff(true, true, true , true, true, true, "");
+            return Response.ok(rejectedWeeks).build();
 
         } catch (SQLException e) {
             return Response.serverError().build();
