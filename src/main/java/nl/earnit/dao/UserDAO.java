@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserDAO extends GenericDAO<User> {
@@ -77,19 +78,22 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     public List<User> getAllUsers(String order) throws SQLException {
+        OrderBy orderBy = new OrderBy(new HashMap<>() {{
+            put("user.first_name", "first_name");
+            put("user.last_name", "last_name");
+            put("user.last_name_prefix", "last_name_prefix");
+            put("user.email", "email");
+            put("user.id", "id");
+        }});
+
         ArrayList<User> userList = new ArrayList<>();
 
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix FROM \"" + tableName + "\" WHERE active = true ORDER BY ? " ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true and type = 'STUDENT' ORDER BY " + orderBy.getSQLOrderBy(order, true) ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
 
-        if(order.equals("name")) {
-            statement.setString(1, "last_name");
-        } else {
-            statement.setString(1, "id");
-        }
 
         ResultSet res = statement.executeQuery();
 
