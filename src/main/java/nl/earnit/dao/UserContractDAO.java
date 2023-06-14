@@ -41,7 +41,7 @@ public class UserContractDAO extends GenericDAO<User> {
      */
     public int countContractsForUser(String userId) throws SQLException {
         // Create query
-        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" WHERE \"u.user_id\" = ? and u.active = true";
+        String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" u WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 

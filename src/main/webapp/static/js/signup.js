@@ -290,6 +290,8 @@ function companyInfo() {
     })
 }
 
+let userId = null;
+
 function companyAccount() {
     const back = document.getElementById("company-account-back");
     const submit = document.getElementById("submit");
@@ -298,7 +300,7 @@ function companyAccount() {
         updateContent("company-info");
     });
 
-    submit.addEventListener("click", () => {
+    submit.addEventListener("click", async () => {
         if (state !== 'company-account') return;
 
         const email = document.getElementById("company-email").value.trim();
@@ -329,55 +331,67 @@ function companyAccount() {
         const lastName = document.getElementById("company-last").value.trim();
         const lastNamePrefix = document.getElementById("company-last-prefix").value.trim();
 
-        fetch('/earnit/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                email,
-                firstName,
-                lastName,
-                lastNamePrefix,
-                password
+        if (userId === null) {
+            const user = await fetch('/earnit/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    firstName,
+                    lastName,
+                    lastNamePrefix,
+                    password
+                })
+            }).then(async res => {
+                let error = null;
+
+                switch (res.status) {
+                    case 400:
+                        error = "Request failed";
+                        break;
+                    case 422:
+                        const field = (await res.json()).field;
+                        let fieldName = field;
+
+                        switch (field) {
+                            case "firstName":
+                                fieldName = "first name";
+                                break;
+                            case "lastName":
+                                fieldName = "last name";
+                                break;
+                            case "lastNamePrefix":
+                                fieldName = "last name prefix";
+                                break;
+                        }
+
+                        error = "Value for " + fieldName + " is invalid";
+                        break;
+                    case 409:
+                        error = "There is already an account registered with this email address"
+                        break;
+                }
+
+                if (error != null) {
+                    document.getElementById("error").innerText = error;
+                    document.getElementById("error").classList.remove("hidden");
+                    return null;
+                }
+
+                return await res.json();
             })
-        }).then(async res => {
-            let error = null;
 
-            switch (res.status) {
-                case 400:
-                    error = "Request failed";
-                    break;
-                case 422:
-                    const field = (await res.json()).field;
-                    let fieldName = field;
-
-                    switch (field) {
-                        case "firstName":
-                            fieldName = "first name";
-                            break;
-                        case "lastName":
-                            fieldName = "last name";
-                            break;
-                        case "lastNamePrefix":
-                            fieldName = "last name prefix";
-                            break;
-                    }
-
-                    error = "Value for " + fieldName + " is invalid";
-                    break;
-                case 409:
-                    error = "There is already an account registered with this email address"
-                    break;
+            if (user !== null && user.id !== null) {
+                userId = user.id;
             }
+        }
 
-            if (error != null) {
-                document.getElementById("error").innerText = error;
-                document.getElementById("error").classList.remove("hidden");
-                return;
-            }
+        const name = document.getElementById("company-name").value.trim();
 
+        if (userId !== null) {
             fetch('/earnit/api/companies', {
                 method: 'POST',
                 headers: {
@@ -386,7 +400,7 @@ function companyAccount() {
                 },
                 body: JSON.stringify({
                     name,
-                    userId: (await res.json()).id
+                    userId: userId
                 })
             }).then(async res => {
                 error = null;
@@ -419,9 +433,15 @@ function companyAccount() {
                     return;
                 }
 
+                if (res.status !== 200) {
+                    document.getElementById("error").innerText = "Could not create company, try again";
+                    document.getElementById("error").classList.remove("hidden");
+                    return;
+                }
+
                 // Account created goto login
                 window.location.replace("/earnit/login");
             });
-        })
+        }
     });
 }
