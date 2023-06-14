@@ -83,7 +83,7 @@ window.addEventListener("helpersLoaded", ()=> {
 
     function createYearItem(year) {
         const container = document.createElement("div");
-        container.classList.add("py-2", "px-4", "font-bold");
+        container.classList.add("py-2", "px-4", "font-bold", "whitespace-nowrap");
         container.innerText = year;
 
         return container;
@@ -91,7 +91,7 @@ window.addEventListener("helpersLoaded", ()=> {
 
     function createWeekItem(year, week) {
         const container = document.createElement("div");
-        container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer");
+        container.classList.add("py-2", "px-4", "hover:bg-gray-100", "cursor-pointer", "whitespace-nowrap");
         container.innerText = "Week " + week;
         container.setAttribute("data-year", year);
         container.setAttribute("data-week", week);
