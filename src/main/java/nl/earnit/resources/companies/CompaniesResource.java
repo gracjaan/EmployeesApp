@@ -35,7 +35,7 @@ public class CompaniesResource {
             List<Company> companies = companyDAO.getAllCompanies(order);
 
             return Response.ok(companies).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -92,7 +92,7 @@ public class CompaniesResource {
             // Create company
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             company = companyDAO.createCompany(createCompany.getName());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e);
             return Response.serverError().build();
         }

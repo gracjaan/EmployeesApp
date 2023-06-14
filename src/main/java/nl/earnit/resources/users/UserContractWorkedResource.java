@@ -62,10 +62,9 @@ public class UserContractWorkedResource {
             } else if (this.year != null && this.week != null) {
                 workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, totalHours, order);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
-
         if (workedWeek == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -83,7 +82,7 @@ public class UserContractWorkedResource {
             if (!flag) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -99,7 +98,8 @@ public class UserContractWorkedResource {
             if (!flag) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -115,7 +115,7 @@ public class UserContractWorkedResource {
             if (!flag) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -129,7 +129,7 @@ public class UserContractWorkedResource {
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             workedWeekDAO.confirmWorkedWeek(userContractId, year, week);
-        }catch (SQLException e) {
+        }catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -149,7 +149,7 @@ public class UserContractWorkedResource {
             }
 
             return Response.ok().build();
-        }catch (SQLException e) {
+        }catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -162,7 +162,7 @@ public class UserContractWorkedResource {
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             workedWeekDAO.updateWorkedWeekNote(note, userContractId, year, week);
-        }catch (SQLException e) {
+        }catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok().build();

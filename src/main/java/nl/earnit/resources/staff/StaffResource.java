@@ -63,7 +63,7 @@ public class StaffResource {
             List<WorkedWeekDTO> rejectedWeeks = workedWeekDAO.getWorkedWeeksToApproveForStaff(company, contract, userContract , user, hours, totalHours, order);
             return Response.ok(rejectedWeeks).build();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -112,7 +112,7 @@ public class StaffResource {
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
 
             return Response.ok(workedWeekDAO.setSolvedWorkedWeek(workedWeekId, true, company, contract, userContract, user, hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e);
             return Response.serverError().build();
         }
@@ -135,7 +135,7 @@ public class StaffResource {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             return Response.ok(workedWeekDAO.setSolvedWorkedWeek(workedWeekId, false, company, contract, userContract, user, hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -161,7 +161,7 @@ public class StaffResource {
 
             return Response.ok(workedWeekDAO.setSolvedWorkedWeek(workedWeekId, workedWeekUndoSolvedDTO.getSolved(), company, contract, userContract, user,
                 hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
