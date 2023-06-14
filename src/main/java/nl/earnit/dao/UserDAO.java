@@ -89,7 +89,7 @@ public class UserDAO extends GenericDAO<User> {
         ArrayList<User> userList = new ArrayList<>();
 
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true and type = 'STUDENT' ORDER BY " + orderBy.getSQLOrderBy(order, true) ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true and type = 'STUDENT'  ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
@@ -97,14 +97,13 @@ public class UserDAO extends GenericDAO<User> {
 
         ResultSet res = statement.executeQuery();
 
-        // None found
-        if(!res.next()) return null;
 
         // Return all users
         while(res.next()) {
             User user = new User();
             user.setId(res.getString("id"));
             user.setFirstName(res.getString("first_name"));
+            user.setEmail(res.getString("email"));
             user.setLastName(res.getString("last_name"));
             user.setLastNamePrefix(res.getString("last_name_prefix"));
             userList.add(user);
