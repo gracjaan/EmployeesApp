@@ -121,7 +121,7 @@ function disableUser(user, statusDiv){
         .catch(() => null)
 }
 
-function createCompany(company) {
+async function createCompany(company) {
     const li = document.createElement("li");
 
     const itemContainer = document.createElement("div");
