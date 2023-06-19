@@ -22,92 +22,86 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 
-function displayPopUpUser(user, enabling) {
-
-
+function displayPopUpUser(user, enabling, enableDiv, disableDiv) {
     const popUpElement = document.getElementById("popUp");
+    const confirmButton = document.getElementById("confirmButton")
+    const cancelButton = document.getElementById("cancelButton")
     popUpElement.classList.remove("hidden");
+
     const paragraph = document.getElementById("popUpParagraph");
+    if (enabling) {
+        paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
+    }
+    else{
+        paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
+    }
+
+    confirmButton.addEventListener("click", async () => {
         if (enabling) {
-            paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
-        } else {
-            paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
+            enableUser(user)
+            enableDiv.classList.add("hidden")
+            disableDiv.classList.remove("hidden")
         }
+        else{
+            disableUser(user)
+            disableDiv.classList.add("hidden")
+            enableDiv.classList.remove("hidden")
+        }
+        popUpElement.classList.add("hidden")
 
-    const cancelButton = document.getElementById("cancelButton");
-    const confirmButton = document.getElementById("confirmButton");
-
-    cancelButton.addEventListener("click", () => {
-        popUpElement.classList.add("hidden");
     })
 
-    confirmButton.addEventListener("click", () => {
-        if (enabling) {
-            console.log(enableUser(user));
-            popUpElement.classList.add("hidden");
-
-            return true;
-        } else {
-            console.log(disableUser(user));
-            popUpElement.classList.add("hidden");
-            return true;
-        }
-        popUpElement.classList.add("hidden");
+    cancelButton.addEventListener("click", async () => {
+        popUpElement.classList.add("hidden")
     })
 }
 
-function displayPopUpCompany(company, enabling) {
+function displayPopUpCompany(company, enabling, enableDiv, disableDiv) {
     const popUpElement = document.getElementById("popUp");
+    const confirmButton = document.getElementById("confirmButton")
+    const cancelButton = document.getElementById("cancelButton")
     popUpElement.classList.remove("hidden");
-    const paragraph = document.getElementById("popUpParagraph");
 
+    const paragraph = document.getElementById("popUpParagraph");
     if (enabling) {
         paragraph.innerText = "Are you sure you want to enable " + company.name + "'s account?";
-    } else {
+    }
+    else{
         paragraph.innerText = "Are you sure you want to disable " + company.name + "'s account?";
     }
 
-    const cancelButton = document.getElementById("cancelButton");
-    const confirmButton = document.getElementById("confirmButton");
+    confirmButton.addEventListener("click", async () => {
+        if (enabling) {
+            enableCompany(company)
+            enableDiv.classList.add("hidden")
+            disableDiv.classList.remove("hidden")
+        }
+        else{
+            disableCompany(company)
+            disableDiv.classList.add("hidden")
+            enableDiv.classList.remove("hidden")
+        }
+        popUpElement.classList.add("hidden")
 
-    cancelButton.addEventListener("click", () => {
-        popUpElement.classList.add("hidden");
     })
 
-    confirmButton.addEventListener("click", () => {
-        if (enabling) {
-            console.log(enableCompany(company));
-            popUpElement.classList.add("hidden");
-
-            return true;
-        } else {
-            console.log(disableCompany(company));
-            popUpElement.classList.add("hidden");
-            return true;
-        }
-        popUpElement.classList.add("hidden");
+    cancelButton.addEventListener("click", async () => {
+        popUpElement.classList.add("hidden")
     })
 }
 
-
 function createUser(user) {
     const li = document.createElement("li");
-
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
-
     const nameDiv = document.createElement("div");
     const name = document.createElement("p");
     name.classList.add("text-text", "font-montserrat");
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     nameDiv.append(name);
-
     const statusDiv = document.createElement("div");
-
     const buttonDiv = document.createElement("div");
     buttonDiv.classList.add("flex", "flex-row", "gap-2");
-
-
     const disableDiv = document.createElement("div");
     disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
     const crossImage = document.createElement("img");
@@ -115,14 +109,6 @@ function createUser(user) {
     crossImage.classList.add("h-4", "w-4")
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
-
-    disableDiv.addEventListener("click", async () => {
-        if (await displayPopUpUser(user, false)) {
-            disableDiv.classList.add("hidden")
-            disableDiv.classList.remove("hidden")
-        }
-    })
-    buttonDiv.append(disableDiv);
 
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
@@ -133,12 +119,14 @@ function createUser(user) {
     enableDiv.append(checkmarkImage)
 
     enableDiv.addEventListener("click", async () => {
-        if (await displayPopUpUser(user, true)) {
-            disableDiv.classList.add("hidden");
-            disableDiv.classList.remove("hidden");
-        }
+        displayPopUpUser(user, true, enableDiv, disableDiv)
     })
     buttonDiv.append(enableDiv);
+
+    disableDiv.addEventListener("click", async () => {
+        displayPopUpUser(user, false, enableDiv, disableDiv)
+    })
+    buttonDiv.append(disableDiv);
 
     if(user.active === true) {
         enableDiv.classList.add("hidden");
@@ -190,19 +178,15 @@ function disableUser(user){
 
 function createCompany(company) {
     const li = document.createElement("li");
-
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
-
     const nameDiv = document.createElement("div");
     const name = document.createElement("p");
     name.classList.add("text-text", "font-montserrat");
     name.innerText = company.name;
     nameDiv.append(name);
-
     const buttonDiv = document.createElement("div");
     buttonDiv.classList.add("flex", "flex-row", "gap-2");
-
     const disableDiv = document.createElement("div");
     disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
     const crossImage = document.createElement("img");
@@ -210,14 +194,6 @@ function createCompany(company) {
     crossImage.classList.add("h-4", "w-4")
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
-
-    disableDiv.addEventListener("click", async () => {
-        if (await displayPopUpCompany(company, false)) {
-            disableDiv.classList.add("hidden")
-            disableDiv.classList.remove("hidden")
-        }
-    })
-    buttonDiv.append(disableDiv);
 
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
@@ -227,13 +203,15 @@ function createCompany(company) {
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
 
+    disableDiv.addEventListener("click", async () => {
+        displayPopUpCompany(company, false, enableDiv, disableDiv)
+    })
+
     enableDiv.addEventListener("click", async () => {
-        if (await displayPopUpCompany(company, true)) {
-            disableDiv.classList.add("hidden")
-            disableDiv.classList.remove("hidden")
-        }
+        displayPopUpCompany(company, true, enableDiv, disableDiv)
     })
     buttonDiv.append(enableDiv);
+    buttonDiv.append(disableDiv);
 
     if(company.active === true) {
         enableDiv.classList.add("hidden")
