@@ -21,14 +21,22 @@ window.addEventListener("helpersLoaded", async () => {
     }
 });
 
+
 function displayPopUp(user, enabling) {
+
+    let ok=true;
+    let value = false;
+    console.log(user)
+
     const popUpElement = document.getElementById("popUp");
     popUpElement.classList.remove("hidden")
     const paragraph = document.getElementById("popUpParagraph")
     if(user.type === "STUDENT") {
         if (enabling) {
+            console.log("name: " + user.firstName)
             paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
         } else {
+            console.log("name: " + user.firstName)
             paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
         }
     } else {
@@ -41,15 +49,39 @@ function displayPopUp(user, enabling) {
     }
     const cancelButton = document.getElementById("cancelButton")
     const confirmButton = document.getElementById("confirmButton")
+
     cancelButton.addEventListener("click", () => {
         popUpElement.classList.add("hidden")
-        return false;
+        console.log("canceled")
+        value = false
+        ok = false
     })
 
     confirmButton.addEventListener("click", () => {
+        if (user.type === "STUDENT") {
+            if (enabling) {
+                enableUser(user)
+                popUpElement.classList.add("hidden")
+                return true
+            } else {
+                disableUser(user)
+                popUpElement.classList.add("hidden")
+                return true
+            }
+        } else {
+            if (enabling) {
+                enableCompany(user)
+                popUpElement.classList.add("hidden")
+                return true
+            } else {
+                disableCompany(user)
+                popUpElement.classList.add("hidden")
+                return true
+            }
+        }
         popUpElement.classList.add("hidden")
-        return true;
     })
+
 }
 
 
@@ -79,12 +111,10 @@ function createUser(user) {
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
 
-    disableDiv.addEventListener("click", () => {
-        if (displayPopUp(user, false)) {
-            disableUser(user, statusDiv)
-            disableDiv.classList.add("hidden")
-            enableDiv.classList.remove("hidden")
-        }
+    disableDiv.addEventListener("click", async () => {
+        displayPopUp(user, false, disableDiv, enableDiv)
+        disableDiv.classList.add("hidden")
+        enableDiv.classList.remove("hidden")
     })
     buttonDiv.append(disableDiv);
 
@@ -96,9 +126,8 @@ function createUser(user) {
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
 
-    enableDiv.addEventListener("click", () => {
-        if (displayPopUp(user, true)) {
-            enableUser(user, statusDiv)
+    enableDiv.addEventListener("click", async () => {
+        if (displayPopUp(user, false, disableDiv, enableDiv)) {
             enableDiv.classList.add("hidden")
             disableDiv.classList.remove("hidden")
         }
@@ -153,7 +182,7 @@ function disableUser(user, statusDiv){
         .catch(() => null)
 }
 
-async function createCompany(company) {
+function createCompany(company) {
     const li = document.createElement("li");
 
     const itemContainer = document.createElement("div");
@@ -179,7 +208,7 @@ async function createCompany(company) {
     disableDiv.addEventListener("click", async () => {
         if (await displayPopUp(company, false)) {
             console.log("disabled company")
-            disableCompany(company, statusDiv)
+            disableCompany(company)
             disableDiv.classList.add("hidden")
             disableDiv.classList.remove("hidden")
         }
@@ -197,7 +226,7 @@ async function createCompany(company) {
     enableDiv.addEventListener("click", async () => {
         if (displayPopUp(company, true)) {
             console.log("enabled company")
-            enableCompany(company, statusDiv)
+            enableCompany(company)
             enableDiv.classList.add("hidden")
             disableDiv.classList.remove("hidden")
         }
@@ -234,7 +263,7 @@ function enableCompany(company, statusDiv){
     }))
         .catch(() => null)
 }
-function disableCompany(company, statusDiv){
+function disableCompany(company){
     company.active = false;
     return fetch("/earnit/api/companies/" + company.id, {
         method: 'delete',
