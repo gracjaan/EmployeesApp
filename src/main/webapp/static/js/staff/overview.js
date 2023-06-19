@@ -1,8 +1,6 @@
 window.addEventListener("helpersLoaded", async () => {
     const companies = await getCompanies();
     const users = await getStudents();
-    console.log(users)
-    console.log(companies)
 
     if (companies === null || users === null) {
         alert("Could not load users or companies");
@@ -14,11 +12,12 @@ window.addEventListener("helpersLoaded", async () => {
 
     const companiesElement = document.getElementById("companies");
     companiesElement.innerText = "";
+    console.log(users)
+    console.log(companies)
 
     for (const user of users) {
         usersElement.append(createUser(user));
     }
-
     for (const company of companies) {
         companiesElement.append(createCompany(company));
     }
@@ -37,13 +36,10 @@ function createUser(user) {
     nameDiv.append(name);
 
     const statusDiv = document.createElement("div");
-    const status = document.createElement("p");
-    status.classList.add("text-text", "font-montserrat");
-    status.innerText = "Status: " + user.active
-    statusDiv.append(status);
 
     const buttonDiv = document.createElement("div");
     buttonDiv.classList.add("flex", "flex-row", "gap-2");
+
 
     const disableDiv = document.createElement("div");
     disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
@@ -53,9 +49,12 @@ function createUser(user) {
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
 
-    disableDiv.addEventListener("click", ()=>{
-        enableUser(user, statusDiv)
+    disableDiv.addEventListener("click", () => {
+        disableUser(user, statusDiv)
+        disableDiv.classList.add("hidden")
+        enableDiv.classList.remove("hidden")
     })
+    buttonDiv.append(disableDiv);
 
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
@@ -65,12 +64,22 @@ function createUser(user) {
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
 
-    enableDiv.addEventListener("click", ()=>{
-        disableUser(user, statusDiv)
-    })
+    enableDiv.addEventListener("click", () => {
+        enableUser(user, statusDiv)
+        enableDiv.classList.add("hidden")
+        disableDiv.classList.remove("hidden")
 
+    })
     buttonDiv.append(enableDiv);
-    buttonDiv.append(disableDiv);
+
+    if(user.active === true) {
+        enableDiv.classList.add("hidden")
+        disableDiv.classList.remove("hidden")
+    } else {
+        disableDiv.classList.add("hidden")
+        enableDiv.classList.remove("hidden")
+    }
+
     itemContainer.append(nameDiv);
     itemContainer.append(statusDiv);
     itemContainer.append(buttonDiv);
@@ -97,9 +106,8 @@ function enableUser(user, statusDiv){
 }
 function disableUser(user, statusDiv){
     user.active = false;
-    console.log(JSON.stringify(user))
     return fetch("/earnit/api/users/" + user.id, {
-        method: 'PUT',
+        method: 'delete',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             'Accept': 'application/json',
@@ -116,20 +124,92 @@ function disableUser(user, statusDiv){
 function createCompany(company) {
     const li = document.createElement("li");
 
-    const a = document.createElement("a");
-
-    li.append(a);
-
     const itemContainer = document.createElement("div");
-    itemContainer.classList.add("bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2");
-    a.append(itemContainer);
+    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
 
+    const nameDiv = document.createElement("div");
     const name = document.createElement("p");
-    name.classList.add("text-text");
+    name.classList.add("text-text", "font-montserrat");
     name.innerText = company.name;
-    itemContainer.append(name);
+    nameDiv.append(name);
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.classList.add("flex", "flex-row", "gap-2");
+
+    const disableDiv = document.createElement("div");
+    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
+    const crossImage = document.createElement("img");
+    crossImage.src = "/earnit/static/icons/white-cross.svg";
+    crossImage.classList.add("h-4", "w-4")
+    crossImage.alt = "disable"
+    disableDiv.append(crossImage);
+
+    disableDiv.addEventListener("click", () => {
+        disableCompany(company, statusDiv)
+        disableDiv.classList.add("hidden")
+        disableDiv.classList.remove("hidden")
+    })
+    buttonDiv.append(disableDiv);
+
+    const enableDiv = document.createElement("div");
+    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
+    const checkmarkImage = document.createElement("img");
+    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
+    checkmarkImage.classList.add("h-4", "w-4")
+    checkmarkImage.alt = "enable"
+    enableDiv.append(checkmarkImage)
+
+    enableDiv.addEventListener("click", () => {
+        enableCompany(company, statusDiv)
+        enableDiv.classList.add("hidden")
+        disableDiv.classList.remove("hidden")
+    })
+    buttonDiv.append(enableDiv);
+
+    if(company.active === true) {
+        enableDiv.classList.add("hidden")
+        disableDiv.classList.remove("hidden")
+    } else {
+        disableDiv.classList.add("hidden")
+        enableDiv.classList.remove("hidden")
+    }
+    itemContainer.append(nameDiv);
+    itemContainer.append(buttonDiv);
+    li.append(itemContainer);
 
     return li;
+}
+
+function enableCompany(company, statusDiv){
+    company.active = true;
+    return fetch("/earnit/api/companies/" + company.id, {
+        method: 'put',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(company)
+    }).then(async res => ({
+        status: res.status,
+        json: await res.json()
+    }))
+        .catch(() => null)
+}
+function disableCompany(company, statusDiv){
+    company.active = false;
+    return fetch("/earnit/api/companies/" + company.id, {
+        method: 'delete',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    }).then(async res => ({
+        status: res.status,
+        json: await res.json()
+    }))
+        .catch(() => null)
 }
 
 async function getStudents() {
