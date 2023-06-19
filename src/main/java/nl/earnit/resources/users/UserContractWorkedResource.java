@@ -158,7 +158,7 @@ public class UserContractWorkedResource {
     @Path("/note")
     @Consumes({MediaType.TEXT_PLAIN})
     public Response addWorkedWeekNote(String note) {
-        boolean success = false;
+        boolean success;
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
