@@ -105,6 +105,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         try {
             statement.setInt(3, Integer.parseInt(year));
             statement.setInt(4, Integer.parseInt(week));
+            statement.executeUpdate();
         } catch(NumberFormatException e) {
             System.out.println(e);
             return false;
