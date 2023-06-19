@@ -31,8 +31,7 @@ function displayPopUpUser(user, enabling) {
         if (enabling) {
             paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
         } else {
-            console.log("name: " + user.firstName)
-            paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
+            paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
         }
 
     const cancelButton = document.getElementById("cancelButton");
@@ -53,9 +52,44 @@ function displayPopUpUser(user, enabling) {
             popUpElement.classList.add("hidden");
             return true;
         }
-        popUpElement.classList.add("hidden")
+        popUpElement.classList.add("hidden");
     })
 }
+
+function displayPopUpCompany(company, enabling) {
+    const popUpElement = document.getElementById("popUp");
+    popUpElement.classList.remove("hidden");
+    const paragraph = document.getElementById("popUpParagraph");
+
+    if (enabling) {
+        paragraph.innerText = "Are you sure you want to enable " + company.name + "'s account?";
+    } else {
+        paragraph.innerText = "Are you sure you want to disable " + company.name + "'s account?";
+    }
+
+    const cancelButton = document.getElementById("cancelButton");
+    const confirmButton = document.getElementById("confirmButton");
+
+    cancelButton.addEventListener("click", () => {
+        popUpElement.classList.add("hidden");
+    })
+
+    confirmButton.addEventListener("click", () => {
+        if (enabling) {
+            console.log(enableCompany(company));
+            popUpElement.classList.add("hidden");
+
+            return true;
+        } else {
+            console.log(disableCompany(company));
+            popUpElement.classList.add("hidden");
+            return true;
+        }
+        popUpElement.classList.add("hidden");
+    })
+}
+
+
 function createUser(user) {
     const li = document.createElement("li");
 
@@ -83,9 +117,10 @@ function createUser(user) {
     disableDiv.append(crossImage);
 
     disableDiv.addEventListener("click", async () => {
-        displayPopUp(user, false, disableDiv, enableDiv)
-        disableDiv.classList.add("hidden")
-        enableDiv.classList.remove("hidden")
+        if (await displayPopUpUser(user, false)) {
+            disableDiv.classList.add("hidden")
+            disableDiv.classList.remove("hidden")
+        }
     })
     buttonDiv.append(disableDiv);
 
@@ -98,19 +133,19 @@ function createUser(user) {
     enableDiv.append(checkmarkImage)
 
     enableDiv.addEventListener("click", async () => {
-        if (displayPopUp(user, false, disableDiv, enableDiv)) {
-            enableDiv.classList.add("hidden")
-            disableDiv.classList.remove("hidden")
+        if (await displayPopUpUser(user, true)) {
+            disableDiv.classList.add("hidden");
+            disableDiv.classList.remove("hidden");
         }
     })
     buttonDiv.append(enableDiv);
 
     if(user.active === true) {
-        enableDiv.classList.add("hidden")
-        disableDiv.classList.remove("hidden")
+        enableDiv.classList.add("hidden");
+        disableDiv.classList.remove("hidden");
     } else {
-        disableDiv.classList.add("hidden")
-        enableDiv.classList.remove("hidden")
+        disableDiv.classList.add("hidden");
+        enableDiv.classList.remove("hidden");
     }
 
     itemContainer.append(nameDiv);
@@ -144,8 +179,8 @@ function disableUser(user){
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
+            'Content-Type': 'application/json'
+        }
     }).then(async res => ({
         status: res.status,
         json: await res.json()
@@ -214,7 +249,7 @@ function createCompany(company) {
     return li;
 }
 
-function enableCompany(company, statusDiv){
+function enableCompany(company){
     company.active = true;
     return fetch("/earnit/api/companies/" + company.id, {
         method: 'put',
@@ -237,8 +272,8 @@ function disableCompany(company){
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
+            'Content-Type': 'application/json'
+        }
     }).then(async res => ({
         status: res.status,
         json: await res.json()

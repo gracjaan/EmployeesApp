@@ -101,6 +101,7 @@ public class UserResource {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             userDAO.disableUserById(userId);
         } catch (Exception e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok().build();
