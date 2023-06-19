@@ -74,11 +74,24 @@ async function updateContracts() {
     return contracts;
 }
 
-async function confirmWorkedWeek() {
-    if (document.getElementById("confirm-button").getAttribute("data-checked") === "1") {
-        unconfirmWorkedWeek();
-        return;
+function toggleNote() {
+    if (document.getElementById("confirm-button").getAttribute("data-checked") === "0") {
+        const companyDialog = document.getElementById("company-dialog");
+        companyDialog.classList.toggle("hidden");
+    } else {
+        unconfirmWorkedWeek()
     }
+}
+
+function cancelNote() {
+    const note = document.getElementById("note");
+    note.value = "";
+
+    const companyDialog = document.getElementById("company-dialog");
+    companyDialog.classList.toggle("hidden");
+}
+
+async function confirmWorkedWeek() {
 
     const error = document.getElementById("confirm-error");
     error.classList.add("hidden");
@@ -92,24 +105,47 @@ async function confirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
             {
-                method: "POST",
+                method: "PUT",
+                body: document.getElementById("note").value.toString(),
                 headers: {
                     'authorization': `token ${getJWTCookie()}`,
-                    "Content-type": "application/json",
-                    "Accept": "application/json"
+                    "Content-type": "text/plain"
                 }
             })
-            .then(() => {
-                document.getElementById("confirm-button").setAttribute("data-checked", "1");
+            .then((res) => {
+                if (res.status !== 200) {
+                    throw new Error();
+                }
+
+                fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+                    {
+                        method: "POST",
+                        headers: {
+                            'authorization': `token ${getJWTCookie()}`,
+                            "Content-type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })
+                    .then(() => {
+                        document.getElementById("confirm-button").setAttribute("data-checked", "1");
+                    })
+                    .catch(() => {
+                        const error = document.getElementById("confirm-error");
+                        error.classList.remove("hidden");
+                        error.innerText = "Could not confirm worked week";
+                    })
             })
             .catch(() => {
                 const error = document.getElementById("confirm-error");
                 error.classList.remove("hidden");
-                error.innerText = "Could not confirm worked week";
+                error.innerText = "Could not update note";
             })
     })
+
+    const companyDialog = document.getElementById("company-dialog");
+    companyDialog.classList.toggle("hidden");
 }
 
 async function unconfirmWorkedWeek() {
@@ -297,7 +333,7 @@ function fetchSheet(userid, contract) {
 
 function getQueryParams() {
     const order = getOrder();
-    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}`: ""}`
+    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
 function getOrder() {
@@ -364,7 +400,7 @@ function sendFormDataToServer(uid, ucid, formData) {
         })
 }
 
-function deleteWorkedFromServer (uid, ucid, hid) {
+function deleteWorkedFromServer(uid, ucid, hid) {
     fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
         {
             method: "DELETE",
@@ -390,9 +426,10 @@ async function submitEdittedForm(data) {
         return false;
     }
 
-    let json = {day: data.day, minutes: data.minutes, work: data.work, id: data.id
-            //position: data.position
-        }
+    let json = {
+        day: data.day, minutes: data.minutes, work: data.work, id: data.id
+        //position: data.position
+    }
     const updated = await fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
         {
             method: "PUT",
@@ -469,7 +506,7 @@ async function toggleEdit(button) {
         };
 
         // Send the updatedData to the server or perform any necessary actions
-        if(!(await submitEdittedForm(updatedData))) {
+        if (!(await submitEdittedForm(updatedData))) {
             textElements.forEach((element, index) => {
                 if (index !== 2 && index !== 0) {
                     const isEditable = element.contentEditable === 'true';
@@ -590,5 +627,5 @@ function formatNumber(number) {
 
 // todo when pencil clicked, bin should change into cross button
 // todo when bin clicked, be asked to confirm your action
-// todo sorting buttons
+// todo alert should dissapear when other week is selected
 // todo when submit button clicked, input fields should go blank
