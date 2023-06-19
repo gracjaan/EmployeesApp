@@ -51,19 +51,48 @@
                                 <p>The name</p>
                             </div>
                             <div class="flex flex-row gap-2">
-                                <div class="rounded-xl bg-accent-fail p-2 items-center text-white w-fit aspect-square flex justify-center">
-                                    <img class="h-4 w-4"src="/earnit/static/icons/white-cross.svg" alt="deactivate">
-                                    <div class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap">
-                                    Approves week
+                                <div class="rounded-xl bg-accent-fail p-2 items-center group-hover:gap-1 transition-all flex justify-center group">
+                                    <img class="h-4 w-4" src="/earnit/static/icons/white-cross.svg" alt="deactivate">
+                                    <div class="w-0 hidden group-hover:block group-hover:w-fit transition-all">
+                                        <!--                                        <div class="text-center px-2 w-fit visible text-text pr-2 rounded-xl overflow-y-hidden">-->
+                                        <p>Disable User</p>
                                     </div>
                                 </div>
-                                <div class="rounded-xl bg-accent-success p-2 items-center text-white w-fit aspect-square flex justify-center">
-                                    <img class="h-4 w-4" src="/earnit/static/icons/checkmark.svg" alt="enable">
+<!--                                -->
+<!--                                <div class="rounded-xl bg-accent-fail p-2 items-center text-white w-fit gap-1 flex justify-center group">-->
+<!--                                    <img class="h-4 w-4"src="/earnit/static/icons/white-cross.svg" alt="deactivate">-->
+<!--                                    <div class="opacity-0 group-hover:w-fit group-hover:opacity-100 duration-300 text-sm text-text w-0 rounded-xl overflow-y-hidden">-->
+<!--&lt;!&ndash;                                        <div class="text-center px-2 w-fit visible text-text pr-2 rounded-xl overflow-y-hidden">&ndash;&gt;-->
+<!--                                        <p>Disable User</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex flex-row justify-between bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2 items-center">
+                            <div class="text-text font-montserrat">
+                                <p>The name</p>
+                            </div>
+                            <div class="rounded-xl bg-accent-fail p-2 items-center text-white w-fit gap-1 flex justify-center group">
+                                <img class="h-4 w-4"src="/earnit/static/icons/white-cross.svg" alt="deactivate">
+                                <div class="group-hover:w-fit duration-300 text-sm text-text w-0 rounded-xl overflow-y-hidden">
+                                    <p class="whitespace-nowrap">Disable User</p>
                                 </div>
                             </div>
                         </div>
                     </li>
                 </ol>
+                <div id="popUp" class="hidden">
+                    <div class="z-10 flex gap-2 flex-col bg-primary rounded-xl p-4 translate-x-[-50%] translate-y-[-50%] fixed top-1/2 left-1/2 " id="confirm-pop-up">
+                        <p id="popUpParagraph" class="text-text"></p>
+                        <div class="flex flex-row gap-2">
+                            <button id="confirmButton" class="w-full bg-accent-success rounded-xl p-2 text-text">Confirm</button>
+                            <button id="cancelButton" class="w-full bg-accent-fail rounded-xl p-2 text-text">Cancel</button>
+                        </div>
+                    </div>
+                    <div class=" pointer-events-auto fixed top-0 right-0 left-0 bottom-0 bg-black opacity-50"></div>
+                </div>
 
             </div>
         </section>

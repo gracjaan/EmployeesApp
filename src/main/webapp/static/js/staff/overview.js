@@ -8,12 +8,10 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     const usersElement = document.getElementById("users");
-    usersElement.innerText = "";
+    //usersElement.innerText = "";
 
     const companiesElement = document.getElementById("companies");
     companiesElement.innerText = "";
-    console.log(users)
-    console.log(companies)
 
     for (const user of users) {
         usersElement.append(createUser(user));
@@ -22,6 +20,38 @@ window.addEventListener("helpersLoaded", async () => {
         companiesElement.append(createCompany(company));
     }
 });
+
+function displayPopUp(user, enabling) {
+    const popUpElement = document.getElementById("popUp");
+    popUpElement.classList.remove("hidden")
+    const paragraph = document.getElementById("popUpParagraph")
+    if(user.type === "STUDENT") {
+        if (enabling) {
+            paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
+        } else {
+            paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
+        }
+    } else {
+        if (enabling) {
+            paragraph.innerText = "Are you sure you want to enable " + user.name + "'s account?"
+        } else {
+            paragraph.innerText = "Are you sure you want to disable " + user.name + "'s account?"
+
+        }
+    }
+    const cancelButton = document.getElementById("cancelButton")
+    const confirmButton = document.getElementById("confirmButton")
+    cancelButton.addEventListener("click", () => {
+        popUpElement.classList.add("hidden")
+        return false;
+    })
+
+    confirmButton.addEventListener("click", () => {
+        popUpElement.classList.add("hidden")
+        return true;
+    })
+}
+
 
 function createUser(user) {
     const li = document.createElement("li");
@@ -35,7 +65,6 @@ function createUser(user) {
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     nameDiv.append(name);
 
-    console.log(user)
     const statusDiv = document.createElement("div");
 
     const buttonDiv = document.createElement("div");
@@ -51,9 +80,11 @@ function createUser(user) {
     disableDiv.append(crossImage);
 
     disableDiv.addEventListener("click", () => {
-        disableUser(user, statusDiv)
-        disableDiv.classList.add("hidden")
-        enableDiv.classList.remove("hidden")
+        if (displayPopUp(user, false)) {
+            disableUser(user, statusDiv)
+            disableDiv.classList.add("hidden")
+            enableDiv.classList.remove("hidden")
+        }
     })
     buttonDiv.append(disableDiv);
 
@@ -66,10 +97,11 @@ function createUser(user) {
     enableDiv.append(checkmarkImage)
 
     enableDiv.addEventListener("click", () => {
-        enableUser(user, statusDiv)
-        enableDiv.classList.add("hidden")
-        disableDiv.classList.remove("hidden")
-
+        if (displayPopUp(user, true)) {
+            enableUser(user, statusDiv)
+            enableDiv.classList.add("hidden")
+            disableDiv.classList.remove("hidden")
+        }
     })
     buttonDiv.append(enableDiv);
 
@@ -144,10 +176,13 @@ async function createCompany(company) {
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
 
-    disableDiv.addEventListener("click", () => {
-        disableCompany(company, statusDiv)
-        disableDiv.classList.add("hidden")
-        disableDiv.classList.remove("hidden")
+    disableDiv.addEventListener("click", async () => {
+        if (await displayPopUp(company, false)) {
+            console.log("disabled company")
+            disableCompany(company, statusDiv)
+            disableDiv.classList.add("hidden")
+            disableDiv.classList.remove("hidden")
+        }
     })
     buttonDiv.append(disableDiv);
 
@@ -160,9 +195,12 @@ async function createCompany(company) {
     enableDiv.append(checkmarkImage)
 
     enableDiv.addEventListener("click", () => {
-        enableCompany(company, statusDiv)
-        enableDiv.classList.add("hidden")
-        disableDiv.classList.remove("hidden")
+        if (awaidisplayPopUp(company, true)) {
+            console.log("enabled company")
+            enableCompany(company, statusDiv)
+            enableDiv.classList.add("hidden")
+            disableDiv.classList.remove("hidden")
+        }
     })
     buttonDiv.append(enableDiv);
 
