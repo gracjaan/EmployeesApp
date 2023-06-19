@@ -34,7 +34,7 @@ public class UsersResource {
 
         try {
             UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            List<User> users = userDAO.getAllUsers(order);
+            List<UserResponse> users = userDAO.getAllUsers(order);
             return Response.ok(users).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

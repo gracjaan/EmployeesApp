@@ -50,6 +50,12 @@ public class CompanyResource {
             return Response.status(400).build();
         }
 
+        if (company.getActive() != null) {
+            RequestHelper.handleAccessToStaff(RequestHelper.validateUser(httpHeaders));
+        } else {
+            company.setActive(true);
+        }
+
         // Validate company
         if (company.getName().length() <= 2) {
             return Response.status(422).entity(new InvalidEntry("name")).build();

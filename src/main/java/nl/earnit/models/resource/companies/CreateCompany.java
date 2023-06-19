@@ -7,6 +7,7 @@ public class CreateCompany {
     private String name;
     private String userId;
 
+
     public CreateCompany() {
 
     }

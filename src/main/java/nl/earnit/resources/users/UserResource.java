@@ -1,11 +1,14 @@
 package nl.earnit.resources.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.dto.workedweek.UserContractDTO;
+import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
@@ -47,10 +50,15 @@ public class UserResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateUser(UserResponse user) {
+    public Response updateUser(@Context HttpHeaders httpHeaders, UserResponse user) {
         // Validate create user
         if (user == null || user.getEmail() == null || user.getFirstName() == null || user.getLastName() == null) {
             return Response.status(400).build();
+        }
+        if (user.getActive() != null) {
+            RequestHelper.handleAccessToStaff(RequestHelper.validateUser(httpHeaders));
+        } else {
+            user.setActive(true);
         }
 
         // Validate user
@@ -89,6 +97,7 @@ public class UserResource {
     @Path("/users/{userId}")
     public Response disableUser(@PathParam("userId") String userId) {
         UserDAO userDAO;
+        RequestHelper.handleAccessToStaff(RequestHelper.validateUser(httpHeaders));
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             userDAO.disableUserById(userId);

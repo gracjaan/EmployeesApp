@@ -100,7 +100,7 @@ public class UserDAO extends GenericDAO<User> {
 
         // Return all users
         while(res.next()) {
-            User user = new User();
+            UserResponse user = new UserResponse();
             user.setId(res.getString("id"));
             user.setFirstName(res.getString("first_name"));
             user.setEmail(res.getString("email"));
@@ -163,7 +163,6 @@ public class UserDAO extends GenericDAO<User> {
         statement.setString(1, id);
 
         statement.executeQuery();
-
     }
 
     public void renableUserById(String id) throws SQLException {
