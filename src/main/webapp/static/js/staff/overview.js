@@ -83,8 +83,6 @@ function displayPopUp(user, enabling) {
     })
 
 }
-
-
 function createUser(user) {
     const li = document.createElement("li");
 
@@ -150,7 +148,7 @@ function createUser(user) {
     return li;
 }
 
-function enableUser(user, statusDiv){
+function enableUser(user){
     user.active = true;
     return fetch("/earnit/api/users/" + user.id, {
         method: 'put',
@@ -166,7 +164,7 @@ function enableUser(user, statusDiv){
     }))
         .catch(() => null)
 }
-function disableUser(user, statusDiv){
+function disableUser(user){
     user.active = false;
     return fetch("/earnit/api/users/" + user.id, {
         method: 'delete',
@@ -178,8 +176,8 @@ function disableUser(user, statusDiv){
     }).then(async res => ({
         status: res.status,
         json: await res.json()
-    }, statusDiv.innerText = user.active))
-        .catch(() => null)
+    })
+        .catch(() => null))
 }
 
 function createCompany(company) {
