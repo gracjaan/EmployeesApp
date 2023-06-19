@@ -163,7 +163,74 @@ function createEntry(year, week, contract, entry) {
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
+    const editContainer = document.createElement("div");
+    editContainer.classList.add("flex", "items-center");
+    entryContainer.appendChild(editContainer);
+
+    const edit1 = document.createElement("button");
+    edit1.classList.add("edit-button", "mr-5");
+    edit1.setAttribute("id", "edit1")
+    edit1.addEventListener("click", () => toggleEdit(edit1));
+    editContainer.appendChild(edit1);
+
+    const image1 = document.createElement("img");
+    image1.classList.add("h-6", "w-6");
+    image1.src = "/earnit/static/icons/pencil.svg"
+    edit1.appendChild(image1);
+
     return entryContainer;
+}
+
+async function toggleEdit(button) {
+    const entry = button.parentNode.parentNode;
+    const textElements = entry.querySelectorAll('.text-text');
+    const editButton = entry.querySelector('.edit-button');
+
+    textElements.forEach((element, index) => {
+        if (index === 1) {
+            const isEditable = element.contentEditable === 'true';
+            element.contentEditable = !isEditable;
+        }
+    });
+
+    const isEditing = entry.classList.contains('editing');
+    entry.classList.toggle('editing', !isEditing);
+    editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+
+    if (isEditing) {
+        // Submission logic here
+        const updatedData = {
+            id: entry.getAttribute("data-id"),
+            day: entry.getAttribute("data-day"),
+            minutes: parseInt(textElements[1].textContent) * 60,
+            // position: textElements[2].textContent,
+            work: textElements[3].textContent,
+            ucid: entry.getAttribute("contract-id"),
+            week: entry.getAttribute("data-week"),
+            year: entry.getAttribute("data-year")
+
+        };
+
+        // Send the updatedData to the server or perform any necessary actions
+        if(!(await submitEdittedForm(updatedData))) {
+            textElements.forEach((element, index) => {
+                if (index === 1) {
+                    const isEditable = element.contentEditable === 'true';
+                    element.contentEditable = !isEditable;
+                }
+            });
+
+            const isEditing = entry.classList.contains('editing');
+            entry.classList.toggle('editing', !isEditing);
+            editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+        } else {
+            const error = document.getElementById("edit-error");
+            error.classList.add("hidden");
+        }
+    } else {
+        const error = document.getElementById("edit-error");
+        error.classList.add("hidden");
+    }
 }
 
 function getQueryParams() {
