@@ -788,23 +788,28 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return currentYear > y || (currentYear == y && currentWeek > w);
     }
 
-
-
-    public void resolveRejectedWeek(String id) throws SQLException {
-        String query = "UPDATE " + tableName + " SET approved = true, solved = true WHERE id = ? RETURNING id";
-
-        PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, id);
-        statement.executeQuery();
-
-    }
-
-    public void denyRejectedWeek(String id) throws SQLException {
-        String query = "UPDATE " + tableName + " SET approved = false, solved = true WHERE id = ? RETURNING id";
+    public WorkedWeekDTO setSolvedWorkedWeek(String workedWeekId, Boolean status, boolean withCompany,
+                                              boolean withContract, boolean withUserContract,
+                                              boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+        // Create query
+        String query = """
+            UPDATE "%s" ww SET solved = ?
+                WHERE "id" = ? RETURNING id""".formatted(tableName);
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, id);
-        statement.executeQuery();
+        PostgresJDBCHelper.setBoolean(statement, 1, status);
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
 
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if (!res.next()) {
+            return null;
+        }
+
+        // Return worked week
+        return getWorkedWeekById(res.getString("id"), withCompany, withContract, withUserContract, withUser, withHours, withTotalHours, order);
     }
+
 }

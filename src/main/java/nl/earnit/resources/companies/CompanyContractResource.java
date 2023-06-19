@@ -74,7 +74,7 @@ public class CompanyContractResource {
                 contractDAO.updateContractRole(contractId, role);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
 
@@ -91,7 +91,7 @@ public class CompanyContractResource {
             ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
             contractDAO.disableContract(contractId);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
 
@@ -110,7 +110,7 @@ public class CompanyContractResource {
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
              return userContractDAO.getUserContractsByContractId(contractId);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -129,7 +129,7 @@ public class CompanyContractResource {
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
 
             return Response.ok(userContractDAO.addNewUserContract(addUserToContract.getUserId(), contractId, addUserToContract.getHourlyWage())).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -148,7 +148,7 @@ public class CompanyContractResource {
 
             result = userContractDAO.getUserContractById(userContractId);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
         return result;
@@ -170,7 +170,7 @@ public class CompanyContractResource {
 
             userContractDAO.changeHourlyWage(userContractId, hourlyWage);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
 
@@ -189,7 +189,7 @@ public class CompanyContractResource {
 
             userContractDAO.disableUserContract(userContractId);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
 

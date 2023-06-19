@@ -37,7 +37,7 @@ public class UserContractResource {
         try {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             uc = userContractDAO.getUserContract(this.userId, this.userContractId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok(uc).build();
@@ -52,7 +52,7 @@ public class UserContractResource {
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
             workedList = workedDAO.getWorkedHours(userContractId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok(workedList).build();

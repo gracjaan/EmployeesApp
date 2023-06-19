@@ -68,6 +68,7 @@ window.addEventListener("helpersLoaded", () => {
         if (!dropdownHeader.hasAttribute("data-company")) {
             companyError.innerText = "No company selected";
             companyError.classList.remove("hidden");
+            companyDialog.classList.add("hidden");
             return;
         }
 

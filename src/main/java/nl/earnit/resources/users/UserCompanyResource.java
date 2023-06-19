@@ -33,7 +33,7 @@ public class UserCompanyResource {
         try {
             companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             company = companyDAO.getCompanyById(this.companyId);
-        } catch (SQLException e){
+        } catch (Exception e){
             return Response.serverError().build();
         }
         return Response.ok(company).build();
@@ -48,7 +48,7 @@ public class UserCompanyResource {
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
             userContracts = workedDAO.getUserContracts(this.userId);
-        } catch (SQLException e){
+        } catch (Exception e){
             return Response.serverError().build();
         }
         return Response.ok(userContracts).build();
@@ -65,7 +65,7 @@ public class UserCompanyResource {
         try {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             uc = userContractDAO.getUserContract(this.userId, userContractId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok(uc).build();

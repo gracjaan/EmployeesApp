@@ -31,7 +31,7 @@ public class LoginResource {
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             user = userDAO.getUserByEmail(login.getEmail());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
 
@@ -62,7 +62,7 @@ public class LoginResource {
                         companyId = login.getCompanyId();
                     }
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 return Response.serverError().build();
             }
         }

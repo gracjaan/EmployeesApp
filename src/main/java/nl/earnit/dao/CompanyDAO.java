@@ -230,7 +230,7 @@ public class CompanyDAO extends GenericDAO<User> {
 
                 if (withUserContractsContract) {
                     String role = dataStrings[7];
-                    role = role.substring(1, role.length() - 1);
+                    if (role.startsWith("\"") && role.endsWith("\"")) role = role.substring(1, role.length() - 1);
 
                     String description = dataStrings[8];
                     description = description.substring(1, description.length() - 1);

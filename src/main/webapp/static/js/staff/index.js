@@ -14,7 +14,4 @@ window.addEventListener("helpersLoaded", async () => {
             const json = await res.json();
             name.innerText = "Welcome back, " + json.firstName;
         })
-
-    const workedWeeks = await getHours(getUserCompany(), getJWTCookie());
-    updateChart(workedWeeks)
 });
