@@ -97,13 +97,19 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return true;
     }
 
-    public void updateWorkedWeekNote(String note, String userContractId, String year, String week) throws SQLException {
+    public boolean addWorkedWeekNote(String note, String userContractId, String year, String week) throws SQLException {
         String query = "UPDATE worked_week SET note = ? WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
         statement.setString(1, note);
         PostgresJDBCHelper.setUuid(statement, 2, userContractId);
-        statement.setInt(3, Integer.parseInt(year));
-        statement.setInt(4, Integer.parseInt(week));
+        try {
+            statement.setInt(3, Integer.parseInt(year));
+            statement.setInt(4, Integer.parseInt(week));
+        } catch(NumberFormatException e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
     }
 
     /**

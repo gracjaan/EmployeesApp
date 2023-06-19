@@ -157,14 +157,18 @@ public class UserContractWorkedResource {
     @PUT
     @Path("/note")
     @Consumes({MediaType.TEXT_PLAIN})
-    public Response updateWorkedWeekNote(String note) {
+    public Response addWorkedWeekNote(String note) {
+        boolean success = false;
         WorkedWeekDAO workedWeekDAO;
         try {
             workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            workedWeekDAO.updateWorkedWeekNote(note, userContractId, year, week);
+            success = workedWeekDAO.addWorkedWeekNote(note, userContractId, year, week);
         }catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok().build();
+        if (success) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.fromStatusCode(406)).build();
     }
 }
