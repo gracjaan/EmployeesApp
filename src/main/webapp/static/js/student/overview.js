@@ -1,10 +1,16 @@
 window.addEventListener("helpersLoaded", async () => {
 
     const date = document.getElementById("date");
-    date.addEventListener("click", () => select("date"));
+    date.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
 
     const hours = document.getElementById("hours");
-    hours.addEventListener("click", () => select("hours"));
+    hours.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
 
     const ctx = document.getElementById('myChart');
     new Chart(ctx, {
@@ -35,6 +41,12 @@ window.addEventListener("helpersLoaded", async () => {
     });
 
     updatePage(await obtainContractsForUser(getUserId()))
+
+    const week = document.getElementById("week");
+    week.addEventListener("change", async (e) => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    })
 })
 
 function obtainContractsForUser(uid) {
@@ -48,7 +60,7 @@ function obtainContractsForUser(uid) {
 }
 
 function fetchSheet(userid, contract) {
-    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getCurrentYear()}/${getCurrentWeek()}?${getQueryParams()}`, {
+    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getSelectedYear()}/${getSelectedWeek()}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -61,13 +73,41 @@ async function updatePage(contracts) {
     const entries = document.getElementById("entries");
     entries.innerText = "";
 
+    const workEntries = [];
+
     for (const contract of contracts) {
         const workedHours = await fetchSheet(getUserId(), contract);
         if (workedHours === null) continue;
 
         for (const hour of workedHours.hours) {
-            entries.appendChild(createEntry(hour, contract.contract, getCurrentWeek(), getCurrentYear()))
+            workEntries.push({hour, contract: contract.contract});
         }
+    }
+
+    const date = document.getElementById("date");
+    const dateSelected = date.getAttribute("data-selected");
+
+    const hours = document.getElementById("hours");
+    const hoursSelected = hours.getAttribute("data-selected");
+
+    let order = 0;
+    let key = "";
+    if (dateSelected > 0) {
+        order = (dateSelected === "1" ? 1 : -1);
+        key = "day"
+    } else if (hoursSelected > 0) {
+        order = (hoursSelected === "1" ? 1 : -1);
+        key = "minutes"
+    }
+
+    workEntries.sort((a, b) => a.hour[key] - b.hour[key]);
+    if (order < 0) {
+        workEntries.reverse();
+    }
+
+    entries.innerText = "";
+    for (const workEntry of workEntries) {
+        entries.appendChild(createEntry(workEntry.hour, workEntry.contract, getSelectedWeek(), getSelectedYear()))
     }
 }
 
@@ -151,20 +191,14 @@ function getOrder() {
     return order;
 }
 
-function getCurrentYear() {
-    const currentDate = new Date();
-    return currentDate.getFullYear();
+function getSelectedYear() {
+    const header = document.getElementById("week");
+    return header.getAttribute("data-year").toString();
 }
 
-function getCurrentWeek() {
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), 0, 1);
-    const days = Math.floor((currentDate - startDate) /
-        (24 * 60 * 60 * 1000));
-
-    const weekNumber = Math.ceil(days / 7);
-
-    return weekNumber;
+function getSelectedWeek() {
+    const header = document.getElementById("week");
+    return header.getAttribute("data-week").toString();
 }
 
 function getDateOfISOWeek(w, y) {
@@ -195,47 +229,6 @@ function formatNumber(number) {
     });
 }
 
-function weeksInYear(year) {
-    return Math.max(
-        getWeek(new Date(year, 11, 31))
-        , getWeek(new Date(year, 11, 31-7))
-    );
-}
-
-function getWeek(ofDate) {
-    const date = new Date(ofDate);
-    date.setHours(0, 0, 0, 0);
-    // Thursday in current week decides the year.
-    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
-    // January 4 is always in week 1.
-    const week1 = new Date(date.getFullYear(), 0, 4);
-    // Adjust to Thursday in week 1 and count number of weeks from date to week1.
-    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
-        - 3 + (week1.getDay() + 6) % 7) / 7);
-}
-
-function togglePosition() {
-    const dropdown = document.getElementById("position-content");
-    dropdown.classList.toggle("hidden");
-}
-
-function selectPosition(option) {
-    const header = document.getElementById("position-header");
-    header.setAttribute('data-role', option.getAttribute("data-role"));
-    header.setAttribute('data-id', option.getAttribute("data-id"));
-    header.textContent = option.textContent;
-    togglePosition();
-}
-
-document.addEventListener("click", function (event) {
-    const dropdown = document.getElementById("position-content");
-    const button = document.getElementById("position-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
 
 async function updateContracts() {
     const contracts = await obtainContractsForUser(getUserId())
@@ -243,19 +236,6 @@ async function updateContracts() {
     if (contracts === null) {
         return null;
     }
-
-    const positionContent = document.getElementById('position-content');
-    positionContent.innerText = "";
-
-    contracts.forEach(c => {
-        const option = document.createElement('div');
-        option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
-        option.textContent = c.contract.role;
-        option.setAttribute('data-role', c.contract.role);
-        option.setAttribute('data-id', c.contract.id);
-        option.addEventListener('click', () => selectPosition(option));
-        positionContent.appendChild(option);
-    });
 
     return contracts;
 }
