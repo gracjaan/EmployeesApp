@@ -94,8 +94,7 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("/users/{userId}")
-    public Response disableUser(@PathParam("userId") String userId) {
+    public Response disableUser(@Context HttpHeaders httpHeaders) {
         UserDAO userDAO;
         RequestHelper.handleAccessToStaff(RequestHelper.validateUser(httpHeaders));
         try {

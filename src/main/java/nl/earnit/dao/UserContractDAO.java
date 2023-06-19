@@ -152,5 +152,14 @@ public class UserContractDAO extends GenericDAO<User> {
         return result;
 
     }
+
+    public void disableUserContractsByUserId(String userId) throws SQLException {
+        String query = "UPDATE " + tableName + " SET active = false WHERE user_id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, userId);
+
+        ResultSet res = statement.executeQuery();
+    }
 }
 

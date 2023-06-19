@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.UserContract;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
@@ -77,7 +78,7 @@ public class UserDAO extends GenericDAO<User> {
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
     }
 
-    public List<User> getAllUsers(String order) throws SQLException {
+    public List<UserResponse> getAllUsers(String order) throws SQLException {
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
             put("user.first_name", "first_name");
             put("user.last_name", "last_name");
@@ -86,10 +87,10 @@ public class UserDAO extends GenericDAO<User> {
             put("user.id", "id");
         }});
 
-        ArrayList<User> userList = new ArrayList<>();
+        ArrayList<UserResponse> userList = new ArrayList<>();
 
 
-        String query = "SELECT id, first_name, last_name, last_name_prefix, email FROM \"" + tableName + "\" WHERE active = true and type = 'STUDENT'  ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
+        String query = "SELECT id, first_name, last_name, last_name_prefix, email, active FROM \"" + tableName + "\"WHERE type = 'STUDENT'  ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
@@ -106,6 +107,7 @@ public class UserDAO extends GenericDAO<User> {
             user.setEmail(res.getString("email"));
             user.setLastName(res.getString("last_name"));
             user.setLastNamePrefix(res.getString("last_name_prefix"));
+            user.setActive(res.getBoolean("active"));
             userList.add(user);
         }
         return userList;
@@ -138,14 +140,15 @@ public class UserDAO extends GenericDAO<User> {
 
     public User updateUser(UserResponse user) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, user.getEmail());
         statement.setString(2, user.getFirstName());
         statement.setString(3, user.getLastName());
         statement.setString(4, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());
-        PostgresJDBCHelper.setUuid(statement, 5, user.getId());
+        statement.setBoolean(5, user.getActive());
+        PostgresJDBCHelper.setUuid(statement, 6, user.getId());
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -158,18 +161,16 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     public void disableUserById(String id) throws SQLException {
-        String query = "UPDATE" + tableName + "SET active = false WHERE id = ?";
+        String query = "UPDATE \"" + tableName + "\" SET active = false WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
-
+        PostgresJDBCHelper.setUuid(statement, 1, id);
         statement.executeQuery();
     }
 
     public void renableUserById(String id) throws SQLException {
-        String query = "UPDATE" + tableName + "SET active = true WHERE id = ?";
+        String query = "UPDATE \"" + tableName + "\" SET active = true WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, id);
-
+        PostgresJDBCHelper.setUuid(statement, 1, id);
         statement.executeQuery();
 
     }
@@ -202,5 +203,7 @@ public class UserDAO extends GenericDAO<User> {
         // None found
         return res.next();
     }
+
+
 }
 

@@ -1,5 +1,6 @@
 package nl.earnit.models.resource.companies;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -32,4 +33,5 @@ public class CreateCompany {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
 }

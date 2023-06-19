@@ -2,12 +2,10 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.CompanyDAO;
-import nl.earnit.dao.ContractDAO;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
+import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
@@ -44,7 +42,7 @@ public class CompanyResource {
     }
 
     @PUT
-    public Response updateCompany(Company company) {
+    public Response updateCompany(@Context HttpHeaders httpHeaders, Company company) {
         // Validate create company
         if (company == null || company.getName() == null) {
             return Response.status(400).build();
@@ -73,8 +71,16 @@ public class CompanyResource {
     }
 
     @DELETE
-    public Response deleteCompany() {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    public Response disableCompany(@Context HttpHeaders httpHeaders) {
+        CompanyDAO companyDAO;
+        RequestHelper.handleAccessToStaff(RequestHelper.validateUser(httpHeaders));
+        try {
+            companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            companyDAO.disableCompanyById(companyId);
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 
     @GET
