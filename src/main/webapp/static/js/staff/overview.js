@@ -194,8 +194,8 @@ async function createCompany(company) {
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
 
-    enableDiv.addEventListener("click", () => {
-        if (awaidisplayPopUp(company, true)) {
+    enableDiv.addEventListener("click", async () => {
+        if (displayPopUp(company, true)) {
             console.log("enabled company")
             enableCompany(company, statusDiv)
             enableDiv.classList.add("hidden")
