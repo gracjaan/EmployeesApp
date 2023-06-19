@@ -35,6 +35,7 @@ function createUser(user) {
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     nameDiv.append(name);
 
+    console.log(user)
     const statusDiv = document.createElement("div");
 
     const buttonDiv = document.createElement("div");
@@ -113,7 +114,6 @@ function disableUser(user, statusDiv){
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user)
     }).then(async res => ({
         status: res.status,
         json: await res.json()
