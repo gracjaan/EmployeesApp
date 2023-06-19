@@ -22,66 +22,39 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 
-function displayPopUp(user, enabling) {
+function displayPopUpUser(user, enabling) {
 
-    let ok=true;
-    let value = false;
-    console.log(user)
 
     const popUpElement = document.getElementById("popUp");
-    popUpElement.classList.remove("hidden")
-    const paragraph = document.getElementById("popUpParagraph")
-    if(user.type === "STUDENT") {
+    popUpElement.classList.remove("hidden");
+    const paragraph = document.getElementById("popUpParagraph");
         if (enabling) {
-            console.log("name: " + user.firstName)
-            paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
+            paragraph.innerText = "Are you sure you want to enable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
         } else {
             console.log("name: " + user.firstName)
             paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?"
         }
-    } else {
-        if (enabling) {
-            paragraph.innerText = "Are you sure you want to enable " + user.name + "'s account?"
-        } else {
-            paragraph.innerText = "Are you sure you want to disable " + user.name + "'s account?"
 
-        }
-    }
-    const cancelButton = document.getElementById("cancelButton")
-    const confirmButton = document.getElementById("confirmButton")
+    const cancelButton = document.getElementById("cancelButton");
+    const confirmButton = document.getElementById("confirmButton");
 
     cancelButton.addEventListener("click", () => {
-        popUpElement.classList.add("hidden")
-        console.log("canceled")
-        value = false
-        ok = false
+        popUpElement.classList.add("hidden");
     })
 
     confirmButton.addEventListener("click", () => {
-        if (user.type === "STUDENT") {
-            if (enabling) {
-                enableUser(user)
-                popUpElement.classList.add("hidden")
-                return true
-            } else {
-                disableUser(user)
-                popUpElement.classList.add("hidden")
-                return true
-            }
+        if (enabling) {
+            console.log(enableUser(user));
+            popUpElement.classList.add("hidden");
+
+            return true;
         } else {
-            if (enabling) {
-                enableCompany(user)
-                popUpElement.classList.add("hidden")
-                return true
-            } else {
-                disableCompany(user)
-                popUpElement.classList.add("hidden")
-                return true
-            }
+            console.log(disableUser(user));
+            popUpElement.classList.add("hidden");
+            return true;
         }
         popUpElement.classList.add("hidden")
     })
-
 }
 function createUser(user) {
     const li = document.createElement("li");
@@ -204,9 +177,7 @@ function createCompany(company) {
     disableDiv.append(crossImage);
 
     disableDiv.addEventListener("click", async () => {
-        if (await displayPopUp(company, false)) {
-            console.log("disabled company")
-            disableCompany(company)
+        if (await displayPopUpCompany(company, false)) {
             disableDiv.classList.add("hidden")
             disableDiv.classList.remove("hidden")
         }
@@ -222,10 +193,8 @@ function createCompany(company) {
     enableDiv.append(checkmarkImage)
 
     enableDiv.addEventListener("click", async () => {
-        if (displayPopUp(company, true)) {
-            console.log("enabled company")
-            enableCompany(company)
-            enableDiv.classList.add("hidden")
+        if (await displayPopUpCompany(company, true)) {
+            disableDiv.classList.add("hidden")
             disableDiv.classList.remove("hidden")
         }
     })
