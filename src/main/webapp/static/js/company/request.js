@@ -14,6 +14,7 @@ const undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", () => undo(getUserCompany(), getWorkedWeekId(), getJWTCookie()));
 
 window.addEventListener("helpersLoaded", async () => {
+
     const name = document.getElementById("name");
     name.addEventListener("click", () => {
         location.href = "/earnit/user?id=" + name.getAttribute("data-user-id")
@@ -21,6 +22,7 @@ window.addEventListener("helpersLoaded", async () => {
 
     await updateHours();
 });
+
 
 async function updateHours() {
     const request = await getRequestForCompany(getUserCompany(), getWorkedWeekId(), getJWTCookie());
@@ -103,6 +105,13 @@ function updatePage(request) {
     const name = document.getElementById("name");
     name.innerHTML = getName(escapeHtml(request.user.firstName), escapeHtml(request.user.lastName), escapeHtml(request.user.lastNamePrefix), "<br />");
     name.setAttribute("data-user-id", request.user.id);
+
+    const noteText = document.getElementById("noteText");
+    if (request.note === null || request.note === "") {
+        noteText.innerText = request.user.firstName + " did not add a note";
+    } else {
+        noteText.innerText = request.note;
+    }
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
