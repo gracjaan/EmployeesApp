@@ -3,12 +3,20 @@ let currentPage = 0;
 let lastIndex = 0;
 window.addEventListener("helpersLoaded", async () => {
     updatePage(await obtainContractsForUser(getUserId()))
-    arrayOfDivs[0].classList.toggle("hidden");
-    lastIndex = arrayOfDivs.length - 1;
 })
 
 function obtainContractsForUser(uid) {
     return fetch("/earnit/api/users/" + uid + "/contracts", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(e => null);
+}
+
+function obtainInvoice(contract) {
+    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -22,17 +30,20 @@ async function updatePage(contracts) {
     entries.innerText = "";
 
     for (const contract of contracts) {
-        arrayOfDivs.push(entries.appendChild(createEntry(contract)))
+        const invoice = await obtainInvoice(contract);
+        arrayOfDivs.push(entries.appendChild(createEntry(contract, invoice)))
     }
+
+    arrayOfDivs[0].classList.toggle("hidden");
+    lastIndex = arrayOfDivs.length - 1;
 }
 
-function handleRightClick () {
-    if (currentPage < lastIndex){
+function handleRightClick() {
+    if (currentPage < lastIndex) {
         currentPage += 1;
-        arrayOfDivs[currentPage-1].classList.toggle("hidden");
+        arrayOfDivs[currentPage - 1].classList.toggle("hidden");
         arrayOfDivs[currentPage].classList.toggle("hidden");
-    }
-    else {
+    } else {
         arrayOfDivs[currentPage].classList.toggle("hidden");
         currentPage = 0;
         arrayOfDivs[currentPage].classList.toggle("hidden");
@@ -41,22 +52,27 @@ function handleRightClick () {
 
 }
 
-function handleLeftClick () {
-    if (currentPage == 0){
+function handleLeftClick() {
+    if (currentPage == 0) {
         arrayOfDivs[currentPage].classList.toggle("hidden");
         currentPage = lastIndex;
         arrayOfDivs[currentPage].classList.toggle("hidden");
-    }
-    else {
+    } else {
         currentPage -= 1;
-        arrayOfDivs[currentPage+1].classList.toggle("hidden");
+        arrayOfDivs[currentPage + 1].classList.toggle("hidden");
         arrayOfDivs[currentPage].classList.toggle("hidden");
     }
 }
 
-function createEntry(contract) {
+function createEntry(contract, invoice) {
     const entryContainer = document.createElement("div");
-    entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "justify-between", "w-full", "h-full", "hidden");
+    entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "gap-2", "justify-between", "w-full", "h-full", "hidden");
+    entryContainer.style.overflowY = "auto";
+
+    const entryInfo0 = document.createElement("div");
+    entryInfo0.classList.add("text-text", "font-bold", "uppercase");
+    entryInfo0.innerText = invoice[0].company.name;
+    entryContainer.appendChild(entryInfo0);
 
     const entryInfo1 = document.createElement("div");
     entryInfo1.classList.add("text-text", "font-bold", "uppercase");
@@ -67,6 +83,19 @@ function createEntry(contract) {
     entryInfo2.classList.add("text-text");
     entryInfo2.innerText = contract.contract.description;
     entryContainer.appendChild(entryInfo2);
+
+    const entryInfo3 = document.createElement("div");
+    entryInfo3.classList.add("overflow-auto");
+
+    for (const i of invoice) {
+        const ei = document.createElement("div");
+        ei.classList.add("bg-primary", "rounded-lg", "text-text", "mt-4", "p-4");
+
+        ei.innerText = "Week " + i.week + " " + (i.totalMinutes)/60 + "H";
+        entryInfo3.appendChild(ei);
+    }
+
+    entryContainer.appendChild(entryInfo3);
 
     return entryContainer;
 }
