@@ -302,7 +302,7 @@ function disableCompany(company){
 }
 
 async function getStudents() {
-    return await fetch("/earnit/api/users",
+    return await fetch(`/earnit/api/users${getQueryParams()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -312,7 +312,7 @@ async function getStudents() {
 }
 
 async function getCompanies() {
-    return await fetch("/earnit/api/companies",
+    return await fetch(`/earnit/api/companies${getQueryParams()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -320,4 +320,20 @@ async function getCompanies() {
             }}
     ).then((res) => res.json())
     .catch(() => null);
+}
+
+function getOrder() {
+    const name = document.getElementById("name");
+    const nameSelected = name.getAttribute("data-selected");
+
+    let order = "";
+    if (name > 0) {
+        order += "user.last_name:" + (nameSelected === "1" ? "asc" : "desc");
+    }
+    return order;
+}
+
+function getQueryParams() {
+    const order = getOrder();
+    return `${order.length > 0 ? `order=${order}`: ""}`
 }

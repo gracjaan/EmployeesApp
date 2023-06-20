@@ -7,6 +7,7 @@
     <script src="/earnit/static/js/helpers.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/earnit/static/js/staff/overview.js" defer></script>
+    <script src="/earnit/static/js/components/order-selector.js"></script>
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -27,73 +28,32 @@
             <div class="rounded-2xl bg-secondary p-4 h-full">
                 <div class="flex flex-row items-center justify-between">
                     <h2 class="text-text text-2xl font-bold">Users</h2>
-
-                    <button id="user-button"
-                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
-                            onclick="togglePosition()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-black text-left mr-2" id="user-header">Name</div>
-                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
-                        </div>
-                    </button>
+                    <div class="flex gap-2">
+                        <order-selector id="name-user" group="1" title="Name"></order-selector>
+                    </div>
                 </div>
 
                 <!--        here there needs to be added the filters and search bar-->
-                <div>
-
-                </div>
 
                 <!--        This will list the different students-->
                 <ol class="overflow-y-auto gap-2" id="users">
-                    <li>
-                        <div class="flex flex-row justify-between bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2 items-center">
-                            <div class="text-text font-montserrat">
-                                <p>The name</p>
-                            </div>
-                            <div class="flex flex-row gap-2">
-                                <div class="rounded-xl bg-accent-fail p-2 items-center group-hover:gap-1 transition-all flex justify-center group">
-                                    <img class="h-4 w-4" src="/earnit/static/icons/white-cross.svg" alt="deactivate">
-                                    <div class="w-0 hidden group-hover:block group-hover:w-fit transition-all">
-                                        <!--                                        <div class="text-center px-2 w-fit visible text-text pr-2 rounded-xl overflow-y-hidden">-->
-                                        <p>Disable User</p>
-                                    </div>
-                                </div>
-<!--                                -->
-<!--                                <div class="rounded-xl bg-accent-fail p-2 items-center text-white w-fit gap-1 flex justify-center group">-->
-<!--                                    <img class="h-4 w-4"src="/earnit/static/icons/white-cross.svg" alt="deactivate">-->
-<!--                                    <div class="opacity-0 group-hover:w-fit group-hover:opacity-100 duration-300 text-sm text-text w-0 rounded-xl overflow-y-hidden">-->
-<!--&lt;!&ndash;                                        <div class="text-center px-2 w-fit visible text-text pr-2 rounded-xl overflow-y-hidden">&ndash;&gt;-->
-<!--                                        <p>Disable User</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="flex flex-row justify-between bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2 items-center">
-                            <div class="text-text font-montserrat">
-                                <p>The name</p>
-                            </div>
-                            <div class="rounded-xl bg-accent-fail p-2 items-center text-white gap-2 flex justify-center group">
-                                <img class="h-4 w-4"src="/earnit/static/icons/white-cross.svg" alt="deactivate">
-                                <div class="group-hover:flex hidden h-4 text-center items-center justify-center">
-<!--                                    <div class="group-hover:w-fit duration-300 text-sm text-text w-0 rounded-xl overflow-y-hidden">-->
-                                    <p class="text-sm text-text whitespace-nowrap">Disable User</p>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                 </ol>
-                <div id="popUp" class="hidden">
-                    <div class="z-10 flex gap-2 flex-col bg-primary rounded-xl p-4 translate-x-[-50%] translate-y-[-50%] fixed top-1/2 left-1/2 " id="confirm-pop-up">
-                        <p id="popUpParagraph" class="text-text"></p>
-                        <div class="flex flex-row gap-2">
-                            <div id="confirmButton" class="w-full bg-accent-success rounded-xl p-2 text-text">Confirm</div>
-                            <div id="cancelButton" class="w-full bg-accent-fail rounded-xl p-2 text-text">Cancel</div>
+                <div id="popUp" class="absolute z-100 top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center hidden">
+                    <div class="bg-secondary p-8 rounded-2xl flex flex-col gap-8">
+                        <div class="flex flex-col gap-1">
+                            <p id="popUpParagraph" class="w-60 text-text"></p>
+                        </div>
+                        <div class="flex w-full justify-between items-center">
+                            <button id="cancelButton">
+                                <div class="text-text font-bold">Cancel</div>
+                            </button>
+                            <button id="confirmButton" class="px-4 py-2 bg-text rounded-lg text-background" onclick="confirmWorkedWeek()">
+                                <img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
+                            </button>
                         </div>
                     </div>
-                    <div class=" pointer-events-auto fixed top-0 right-0 left-0 bottom-0 bg-black opacity-50"></div>
                 </div>
+
 
             </div>
         </section>
@@ -103,15 +63,9 @@
             <div class="rounded-2xl bg-secondary p-4 h-full">
                 <div class="flex flex-row items-center justify-between">
                     <h2 class="text-text text-2xl font-bold">Company</h2>
-
-                    <button id="company-button"
-                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
-                            onclick="togglePosition()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-black text-left mr-2" id="company-header">Name</div>
-                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
-                        </div>
-                    </button>
+                    <div class="flex gap-2">
+                        <order-selector id="name-company" group="1" title="Name"></order-selector>
+                    </div>
                 </div>
                 <!--        here there needs to be added the filters and search bar-->
                 <div>
