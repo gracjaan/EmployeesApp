@@ -19,6 +19,7 @@ public class ContractDTO {
     private List<UserContractDTO> userContracts;
 
     public ContractDTO(){}
+
     public ContractDTO(String id, String role, String description) {
         this.id = id;
         this.role = role;
