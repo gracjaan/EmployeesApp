@@ -224,22 +224,60 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param userId The id of the user.
      * @throws SQLException If a database error occurs.
      */
-    public List<WorkedWeekDTO> getWorkedWeeksForUser(String userId) throws SQLException {
+    public List<WorkedWeekDTO> getWorkedWeeksForUser(String userId, String userContractId, boolean withCompany,
+                                                     boolean withContract, boolean withUserContract,
+                                                     boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+
         String query = """
-            SELECT DISTINCT ww.* FROM "%s" ww
+            SELECT DISTINCT ww.id as worked_week_id,
+                ww.contract_id as worked_week_contract_id,
+                ww.year as worked_week_year,
+                ww.week as worked_week_week,
+                ww.note as worked_week_note,
+                ww.confirmed as worked_week_confirmed,
+                ww.approved as worked_week_approved,
+                ww.solved as worked_week_solved,
+                
+                uc.id as user_contract_id,
+                uc.contract_id as user_contract_contract_id,
+                uc.user_id as user_contract_user_id,
+                uc.hourly_wage as user_contract_hourly_wage,
+                uc.active as user_contract_active,
+                
+                u.id as user_id,
+                u.first_name as user_first_name,
+                u.last_name as user_last_name,
+                u.last_name_prefix as user_last_name_prefix,
+                u.email as user_email,
+                u.type as user_type,
+                
+                c.id as contract_id,
+                c.company_id as contract_company_id,
+                c.role as contract_role,
+                c.description as contract_description,
+                
+                cy.id as company_id,
+                cy.name as company_name,
+                
+                w.hours,
+                w.minutes
+                
+                FROM "%s" ww
                         
                 JOIN user_contract uc ON uc.id = ww.contract_id
+                JOIN "user" u ON u.id = uc.user_id
                 JOIN contract c ON c.id = uc.contract_id
                 JOIN company cy ON cy.id = c.company_id
-                JOIN company_user cu ON cu.company_id = cy.id
                 
-                WHERE uc.user_id = ? OR cu.user_id = ?
-            """.formatted(tableName);
+                LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
+                
+                WHERE u.id = ? %3$s
+            """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), userContractId != null ? " AND uc.id = ?" : "");
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
         PostgresJDBCHelper.setUuid(statement, 1, userId);
-        PostgresJDBCHelper.setUuid(statement, 2, userId);
+        if (userContractId != null) PostgresJDBCHelper.setUuid(statement, 2, userContractId);
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -248,7 +286,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         List<WorkedWeekDTO> workedWeeks = new ArrayList<>();
 
         while (res.next()) {
-            workedWeeks.add(getWorkedWeekFromRow(res));
+            workedWeeks.add(getWorkedWeekFromRow(res, "worked_week_", withCompany, withContract, withUserContract, withUser, withHours, withTotalHours));
         }
 
         return workedWeeks;

@@ -1,17 +1,12 @@
 package nl.earnit.resources.users;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.UserContractDAO;
-import nl.earnit.dao.WorkedDAO;
+import nl.earnit.dao.*;
+import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserContractResource {
@@ -66,5 +61,24 @@ public class UserContractResource {
     @Path("/worked/{weekId}")
     public UserContractWorkedResource getWorkedWeek(@PathParam("weekId") String weekId) {
         return new UserContractWorkedResource(uriInfo, request, userId, userContractId, weekId);
+    }
+
+    @Path("/invoices")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getInvoices(@QueryParam("company") @DefaultValue("false") boolean company,
+                                @QueryParam("contract") @DefaultValue("false") boolean contract,
+                                @QueryParam("userContract") @DefaultValue("false")
+                                boolean userContract,
+                                @QueryParam("user") @DefaultValue("false") boolean user,
+                                @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                                @QueryParam("order") @DefaultValue("worked_week.year:asc,worked_week.week:asc") String order) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, company,contract,userContract, user,hours,totalHours, order);
+            return Response.ok(workedWeeks).build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
     }
 }
