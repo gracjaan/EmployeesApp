@@ -45,7 +45,7 @@ function createUser(user) {
     disableDiv.append(crossImage);
 
     const disableTextDiv = document.createElement("div");
-    disableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    disableTextDiv.classList.add("cursor-pointer", "justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
     const disableText = document.createElement("p");
     disableText.innerText = "Disable User";
     disableText.classList.add("whitespace-nowrap");
@@ -55,7 +55,7 @@ function createUser(user) {
     itemContainer.append(disableDiv);
 
     const enableDiv = document.createElement("div");
-    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    enableDiv.classList.add("cursor-pointer", "rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
     const checkmarkImage = document.createElement("img");
     checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
@@ -154,7 +154,7 @@ function createCompany(company) {
     disableDiv.append(crossImage);
 
     const disableTextDiv = document.createElement("div");
-    disableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    disableTextDiv.classList.add("cursor-pointer", "justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
     const disableText = document.createElement("p");
     disableText.innerText = "Disable User";
     disableText.classList.add("whitespace-nowrap");
@@ -164,7 +164,7 @@ function createCompany(company) {
     itemContainer.append(disableDiv);
 
     const enableDiv = document.createElement("div");
-    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    enableDiv.classList.add("cursor-pointer","rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
     const checkmarkImage = document.createElement("img");
     checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")

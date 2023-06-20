@@ -126,7 +126,6 @@ async function editCompanyInfo(company){
     const contractsList = document.getElementById("contract-list");
     contractsList.innerText = "";
     let contracts = await getContracts(company.id)
-    console.log(contracts);
     for (const contract of contracts) {
         contractsList.append(createContract(contract));
     }
@@ -240,10 +239,6 @@ function sendFormDataServer() {
 }
 
 
-
-
-
-
 document.addEventListener("click", function(event) {
     const dropdown = document.getElementById("dropdown-student-content");
     const button = document.getElementById("dropdown-student-button");
@@ -263,26 +258,6 @@ document.addEventListener("click", function(event) {
         dropdown.classList.add("hidden");
     }
 });
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-position-content");
-    const button = document.getElementById("dropdown-position-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-type-content");
-    const button = document.getElementById("dropdown-type-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
 // --------------------------------------------------------------------------------
 // Toggles all the dropdown menu's to show up
 
@@ -293,16 +268,6 @@ function toggleStudent() {
 
 function toggleCompany() {
     const dropdown = document.getElementById("dropdown-company-content");
-    dropdown.classList.toggle("hidden");
-}
-
-function toggleType() {
-    const dropdown = document.getElementById("dropdown-type-content");
-    dropdown.classList.toggle("hidden");
-}
-
-function togglePosition() {
-    const dropdown = document.getElementById("dropdown-position-content");
     dropdown.classList.toggle("hidden");
 }
 
