@@ -5,13 +5,9 @@ import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
+import nl.earnit.models.resource.companies.CreateSuggestion;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.temporal.IsoFields;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +150,51 @@ public class WorkedDAO extends GenericDAO<User> {
         return resultSet.getBoolean("confirmed");
     }
 
+    public boolean isWorkedWeekConfirmedOfWorked(String workedId) throws SQLException {
+        String query = "SELECT ww.confirmed FROM worked_week ww JOIN worked w ON w.worked_week_id = ww.id WHERE w.id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedId);
+        ResultSet resultSet = statement.executeQuery();
+        if (!resultSet.next()) return false;
+        return resultSet.getBoolean("confirmed");
+    }
 
+    public boolean hasCompanyAccessToWorked(String companyId, String workedId) throws SQLException {
+        String query = """
+            SELECT COUNT(DISTINCT ww.id) as count FROM "%s" w
+                
+                JOIN worked_week ww ON ww.id = w.worked_week_id
+                JOIN user_contract uc ON uc.id = ww.contract_id
+                JOIN contract c ON c.id = uc.contract_id
+                JOIN company cy ON cy.id = c.company_id
+                
+                WHERE cy.id = ? AND w.id = ?
+            """.formatted(tableName);
 
+        PreparedStatement statement = this.con.prepareStatement(query);
 
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
+        PostgresJDBCHelper.setUuid(statement, 2, workedId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return
+        res.next();
+        return res.getInt("count") > 0;
+    }
+
+    public boolean setSuggestion(String workedId, CreateSuggestion suggestion) throws SQLException {
+        String query = "UPDATE \"" + tableName + "\" SET suggestion = ? WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        if (suggestion.getSuggestion() == null) {
+            statement.setNull(1, Types.INTEGER);
+        } else {
+            statement.setInt(1, suggestion.getSuggestion());
+        }
+        PostgresJDBCHelper.setUuid(statement, 2, workedId);
+        statement.executeUpdate();
+
+        return true;
+    }
 }

@@ -107,7 +107,7 @@ function updatePage(request) {
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
     for (const hour of request.hours) {
-        entries.appendChild(createEntry(request.year, request.week, request.contract, hour));
+        entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.approved !== null));
     }
 
     if (request.approved !== null) {
@@ -133,12 +133,12 @@ function updatePage(request) {
     }
 }
 
-function createEntry(year, week, contract, entry) {
+function createEntry(year, week, contract, entry, sent) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_1fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr]", "grid");
+    entryInfo.classList.add("w-full", "grid-cols-[1fr_3fr]", "sm:grid-cols-[1fr_2fr_2fr_5fr]", "grid");
     entryContainer.appendChild(entryInfo);
 
     const calculatedDate = addDays(getDateOfISOWeek(week, year), entry.day);
@@ -148,13 +148,32 @@ function createEntry(year, week, contract, entry) {
     date.innerText = `${formatNumber(calculatedDate.getDate())}.${formatNumber(calculatedDate.getMonth() + 1)}`;
     entryInfo.appendChild(date);
 
+    const hoursDiv = document.createElement("div");
+    hoursDiv.classList.add("flex", "gap-1", "justify-center", "sm:justify-start")
+    entryInfo.appendChild(hoursDiv);
+
+    const hasSuggestion = entry.suggestion !== undefined && entry.suggestion !== null;
     const hours = document.createElement("div");
     hours.classList.add("text-text", "font-bold", "sm:font-normal");
     hours.innerText = `${entry.minutes / 60}H`;
-    entryInfo.appendChild(hours);
+    hoursDiv.append(hours);
+
+    if (hasSuggestion) {
+        const arrow = document.createElement("img");
+        arrow.src = "/earnit/static/icons/arrow-right-white.svg";
+        arrow.classList.add("w-4");
+        hoursDiv.append(arrow);
+
+        const suggestedHours = document.createElement("div");
+        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal", "hour-input");
+        suggestedHours.innerText = `${entry.suggestion / 60}H`;
+        hoursDiv.append(suggestedHours);
+    } else {
+        hours.classList.add("hour-input");
+    }
 
     const role = document.createElement("div");
-    role.classList.add("text-text", "font-bold", "sm:font-normal");
+    role.classList.add("text-text", "font-bold", "sm:font-normal", "col-span-3", "sm:col-span-1");
     role.innerText = contract.role;
     entryInfo.appendChild(role);
 
@@ -163,20 +182,22 @@ function createEntry(year, week, contract, entry) {
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
-    const editContainer = document.createElement("div");
-    editContainer.classList.add("flex", "items-center");
-    entryContainer.appendChild(editContainer);
+    if (!sent) {
+        const editContainer = document.createElement("div");
+        editContainer.classList.add("flex", "items-center");
+        entryContainer.appendChild(editContainer);
 
-    const edit1 = document.createElement("button");
-    edit1.classList.add("edit-button", "mr-5");
-    edit1.setAttribute("id", "edit1")
-    edit1.addEventListener("click", () => toggleEdit(edit1));
-    editContainer.appendChild(edit1);
+        const edit1 = document.createElement("button");
+        edit1.classList.add("edit-button", "mr-5");
+        edit1.setAttribute("id", "edit1")
+        edit1.addEventListener("click", () => toggleEdit(edit1, entry));
+        editContainer.appendChild(edit1);
 
-    const image1 = document.createElement("img");
-    image1.classList.add("h-6", "w-6");
-    image1.src = "/earnit/static/icons/pencil.svg"
-    edit1.appendChild(image1);
+        const image1 = document.createElement("img");
+        image1.classList.add("h-6", "w-6");
+        image1.src = "/earnit/static/icons/pencil.svg"
+        edit1.appendChild(image1);
+    }
 
     return entryContainer;
 }
@@ -292,55 +313,43 @@ async function unconfirmWorkedWeek() {
     })
 }
 
+function toggleEditIcon(entryElement, editButton, hourElement) {
+    // Toggle editable element
+    const isEditable = hourElement.contentEditable === 'true';
+    hourElement.contentEditable = !isEditable;
 
-
-
-
-async function toggleEdit(button) {
-    const entry = button.parentNode.parentNode;
-    const textElements = entry.querySelectorAll('.text-text');
-    const editButton = entry.querySelector('.edit-button');
-
-    textElements.forEach((element, index) => {
-        if (index === 1) {
-            const isEditable = element.contentEditable === 'true';
-            element.contentEditable = !isEditable;
-        }
-    });
-
-    const isEditing = entry.classList.contains('editing');
-    entry.classList.toggle('editing', !isEditing);
+    // Update icon
+    const isEditing = entryElement.classList.contains('editing');
+    entryElement.classList.toggle('editing', !isEditing);
     editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
 
-    if (isEditing) {
+    return !isEditing;
+}
+
+async function toggleEdit(button, entry) {
+    const entryElement = button.parentNode.parentNode;
+    const hourElement = entryElement.querySelector('.hour-input');
+    const editButton = entryElement.querySelector('.edit-button');
+
+    const isEditing = toggleEditIcon(entryElement, editButton, hourElement);
+
+    if (!isEditing) {
+        const suggestedMinutes = parseFloat(hourElement.textContent) * 60;
+
         // Submission logic here
         const updatedData = {
-            id: entry.getAttribute("data-id"),
-            day: entry.getAttribute("data-day"),
-            minutes: parseInt(textElements[1].textContent) * 60,
-            // position: textElements[2].textContent,
-            work: textElements[3].textContent,
-            ucid: entry.getAttribute("contract-id"),
-            week: entry.getAttribute("data-week"),
-            year: entry.getAttribute("data-year")
-
+            id: entry.id,
+            suggestion: suggestedMinutes === entry.minutes ? null : suggestedMinutes,
         };
 
         // Send the updatedData to the server or perform any necessary actions
         if(!(await submitEdittedForm(updatedData))) {
-            textElements.forEach((element, index) => {
-                if (index === 1) {
-                    const isEditable = element.contentEditable === 'true';
-                    element.contentEditable = !isEditable;
-                }
-            });
-
-            const isEditing = entry.classList.contains('editing');
-            entry.classList.toggle('editing', !isEditing);
-            editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+            toggleEditIcon(entryElement, editButton, hourElement);
         } else {
             const error = document.getElementById("edit-error");
             error.classList.add("hidden");
+
+            await updateHours();
         }
     } else {
         const error = document.getElementById("edit-error");
@@ -362,6 +371,31 @@ function getRequestForCompany(companyId, workedWeekId, token) {
     })
         .then(async (res) => await res.json())
         .catch(() => null);
+}
+
+async function submitEdittedForm(data) {
+    let json = { suggestion: data.suggestion }
+
+    const updated = await fetch("/earnit/api/companies/" + getUserCompany() + "/approves/suggest/" + data.id,
+        {
+            method: "POST",
+            body: JSON.stringify(json),
+            headers: {
+                'authorization': `token ${getJWTCookie()}`,
+                "Content-type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+        .then((res) => res.status === 200)
+        .catch(() => false);
+
+    if (!updated) {
+        const error = document.getElementById("edit-error");
+        error.classList.remove("hidden");
+        error.innerText = "Could not update"
+    }
+
+    return updated;
 }
 
 async function select(type) {

@@ -41,28 +41,28 @@
 							class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
 						>
 							<img
-								src="/earnit/static/icons/red-cross.svg"
+								src="/earnit/static/icons/light.svg"
 								alt="checkmark"
 								onclick="toggleNote()"
 							/>
 							<div
 								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
 							>
-								Reject week
+								Send suggestion
 							</div>
 						</div>
 						<div
 								id="rejected"
-								class="w-14 h-14 p-3 rounded-xl flex justify-center items-center aspect-square cursor-pointer relative group bg-accent-fail hidden"
+								class="w-14 h-14 p-3 rounded-xl flex justify-center items-center aspect-square cursor-pointer relative group bg-[#FD8E28] hidden"
 						>
 							<img
-									src="/earnit/static/icons/white-cross.svg"
+									src="/earnit/static/icons/light-white.svg"
 									alt="checkmark"
 							/>
 							<div
 									class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
 							>
-								Week Rejected
+								Suggestion sent
 							</div>
 						</div>
 						<div
@@ -145,6 +145,7 @@
 								/>
 							</button>
 						</div>
+						<div id="edit-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
 						<div class="flex flex-col gap-2" id="entries"></div>
 					</div>
 				</section>

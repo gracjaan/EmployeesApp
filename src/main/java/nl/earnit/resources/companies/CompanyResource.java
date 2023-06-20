@@ -2,20 +2,16 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.CompanyDAO;
-import nl.earnit.dao.ContractDAO;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyResource {
@@ -347,6 +343,36 @@ public class CompanyResource {
 
             return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, false, company, contract, userContract, user,
                 hours, totalHours, order)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
+    @Path("/approves/suggest/{workedId}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response acceptWorkedWeek(@PathParam("workedId") String workedId, CreateSuggestion suggestion) {
+        try {
+            WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED);
+
+            if (!workedDAO.hasCompanyAccessToWorked(companyId, workedId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            if (suggestion == null || (suggestion.getSuggestion() != null && suggestion.getSuggestion() < 0)) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            if (workedDAO.isWorkedWeekConfirmedOfWorked(workedId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            if (workedDAO.setSuggestion(workedId, suggestion)) {
+                return Response.ok().build();
+            }
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
