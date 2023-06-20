@@ -302,7 +302,7 @@ function disableCompany(company){
 }
 
 async function getStudents() {
-    return await fetch(`/earnit/api/users${getQueryParams()}`,
+    return await fetch(`/earnit/api/users${getQueryParamsUsers()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -312,7 +312,7 @@ async function getStudents() {
 }
 
 async function getCompanies() {
-    return await fetch(`/earnit/api/companies${getQueryParams()}`,
+    return await fetch(`/earnit/api/companies${getQueryParamsCompany()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -322,18 +322,31 @@ async function getCompanies() {
     .catch(() => null);
 }
 
-function getOrder() {
-    const name = document.getElementById("name");
-    const nameSelected = name.getAttribute("data-selected");
 
+function getOrderCompany() {
+    const nameCompany = document.getElementById("name-company");
+    const companySelected = nameCompany.getAttribute("data-selected");
+
+    let order = "";
+    if (name > 0) {
+        order += "company.id:" + (nameSelected === "1" ? "asc" : "desc");
+    }
+    return order;
+}
+function getOrderUsers() {
+    const nameUser = document.getElementById("name-user");
+    const nameSelected = nameUser.getAttribute("data-selected");
     let order = "";
     if (name > 0) {
         order += "user.last_name:" + (nameSelected === "1" ? "asc" : "desc");
     }
     return order;
 }
-
-function getQueryParams() {
-    const order = getOrder();
+function getQueryParamsCompany() {
+    const order = getOrderCompany();
+    return `${order.length > 0 ? `order=${order}`: ""}`
+}
+function getQueryParamsUsers() {
+    const order = getOrderUsers();
     return `${order.length > 0 ? `order=${order}`: ""}`
 }
