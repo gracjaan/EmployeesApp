@@ -1,8 +1,6 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const companies = await getStudentsPerCompany();
-    console.log(companies);
-
     fetch("/earnit/api/users/" + getUserId(), {
             method: "GET",
             headers: {

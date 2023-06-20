@@ -169,7 +169,7 @@ public class UserContractDAO extends GenericDAO<User> {
     public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
 
         List<CompanyCounts> result = new ArrayList<>();
-        String query = "SELECT uc.COUNT(*) as count, c.company_id, cy.name   FROM \"" + tableName + "\" uc JOIN contract c ON c.id = uc.contract_id JOIN company cy ON cy.id = c.company_id  WHERE c.company_id = ? AND active = true GROUP BY c.id";
+        String query = "SELECT COUNT(uc.id) as count, c.company_id, cy.name   FROM user_contract uc JOIN contract c ON c.id = uc.contract_id JOIN company cy ON cy.id = c.company_id  WHERE  uc.active = true GROUP BY c.company_id, cy.name";
         PreparedStatement statement = this.con.prepareStatement(query);
 
         ResultSet res = statement.executeQuery();
