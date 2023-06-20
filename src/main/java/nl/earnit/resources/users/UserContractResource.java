@@ -63,6 +63,7 @@ public class UserContractResource {
         return new UserContractWorkedResource(uriInfo, request, userId, userContractId, weekId);
     }
 
+    @GET
     @Path("/invoices")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getInvoices(@QueryParam("company") @DefaultValue("false") boolean company,
