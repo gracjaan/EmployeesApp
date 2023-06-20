@@ -22,6 +22,185 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 
+function createUser(user) {
+    const li = document.createElement("li");
+    const itemContainer = document.createElement("div");
+    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
+    const nameDiv = document.createElement("div");
+    const name = document.createElement("p");
+    name.classList.add("text-text", "font-montserrat");
+    name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
+    nameDiv.append(name);
+    const statusDiv = document.createElement("div");
+    const buttonDiv = document.createElement("div");
+    buttonDiv.classList.add("flex", "flex-row", "gap-2");
+
+    const disableDiv = document.createElement("div");
+    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+
+    const crossImage = document.createElement("img");
+    crossImage.src = "/earnit/static/icons/white-cross.svg";
+    crossImage.classList.add("h-4", "w-4")
+    crossImage.alt = "disable"
+    disableDiv.append(crossImage);
+
+    const disableTextDiv = document.createElement("div");
+    disableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    const disableText = document.createElement("p");
+    disableText.innerText = "Disable User";
+    disableText.classList.add("whitespace-nowrap");
+    disableTextDiv.append(disableText);
+    disableDiv.append(disableTextDiv);
+
+    itemContainer.append(disableDiv);
+
+    const enableDiv = document.createElement("div");
+    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    const checkmarkImage = document.createElement("img");
+    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
+    checkmarkImage.classList.add("h-4", "w-4")
+    checkmarkImage.alt = "enable"
+    enableDiv.append(checkmarkImage)
+    const enableTextDiv = document.createElement("div");
+    enableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    const enableText = document.createElement("p");
+    enableText.innerText = "Enable User";
+    enableText.classList.add("whitespace-nowrap");
+    enableTextDiv.append(enableText);
+    enableDiv.append(enableTextDiv);
+
+    itemContainer.append(enableDiv);
+
+    enableDiv.addEventListener("click", async () => {
+        displayPopUpUser(user, true, enableDiv, disableDiv)
+    })
+    buttonDiv.append(enableDiv);
+
+    disableDiv.addEventListener("click", async () => {
+        displayPopUpUser(user, false, enableDiv, disableDiv)
+    })
+    buttonDiv.append(disableDiv);
+
+    if(user.active === true) {
+        enableDiv.classList.add("hidden");
+        disableDiv.classList.remove("hidden");
+    } else {
+        disableDiv.classList.add("hidden");
+        enableDiv.classList.remove("hidden");
+    }
+
+    itemContainer.append(nameDiv);
+    itemContainer.append(statusDiv);
+    itemContainer.append(buttonDiv);
+    li.append(itemContainer);
+
+    return li;
+}
+
+function enableUser(user){
+    user.active = true;
+    return fetch("/earnit/api/users/" + user.id, {
+        method: 'put',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user)
+    }).then(async res => ({
+        status: res.status,
+        json: await res.json()
+    }))
+        .catch(() => null)
+}
+
+function disableUser(user){
+    user.active = false;
+    return fetch("/earnit/api/users/" + user.id, {
+        method: 'delete',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then(async res => ({
+        status: res.status,
+        json: await res.json()
+    })
+        .catch(() => null))
+}
+function createCompany(company) {
+    const li = document.createElement("li");
+
+    const itemContainer = document.createElement("div");
+    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
+
+    const nameDiv = document.createElement("div");
+
+    const name = document.createElement("p");
+    name.classList.add("text-text", "font-montserrat");
+    name.innerText = company.name;
+
+    nameDiv.append(name);
+    itemContainer.append(nameDiv)
+
+    const disableDiv = document.createElement("div");
+    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+
+    const crossImage = document.createElement("img");
+    crossImage.src = "/earnit/static/icons/white-cross.svg";
+    crossImage.classList.add("h-4", "w-4")
+    crossImage.alt = "disable"
+    disableDiv.append(crossImage);
+
+    const disableTextDiv = document.createElement("div");
+    disableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    const disableText = document.createElement("p");
+    disableText.innerText = "Disable User";
+    disableText.classList.add("whitespace-nowrap");
+    disableTextDiv.append(disableText);
+    disableDiv.append(disableTextDiv);
+
+    itemContainer.append(disableDiv);
+
+    const enableDiv = document.createElement("div");
+    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    const checkmarkImage = document.createElement("img");
+    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
+    checkmarkImage.classList.add("h-4", "w-4")
+    checkmarkImage.alt = "enable"
+    enableDiv.append(checkmarkImage)
+    const enableTextDiv = document.createElement("div");
+    enableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    const enableText = document.createElement("p");
+    enableText.innerText = "Enable User";
+    enableText.classList.add("whitespace-nowrap");
+    enableTextDiv.append(enableText);
+    enableDiv.append(enableTextDiv);
+
+    itemContainer.append(enableDiv);
+
+    disableDiv.addEventListener("click", async () => {
+        displayPopUpCompany(company, false, enableDiv, disableDiv)
+    })
+
+    enableDiv.addEventListener("click", async () => {
+        displayPopUpCompany(company, true, enableDiv, disableDiv)
+    })
+
+    if(company.active === true) {
+        enableDiv.classList.add("hidden")
+        disableDiv.classList.remove("hidden")
+    } else {
+        disableDiv.classList.add("hidden")
+        enableDiv.classList.remove("hidden")
+    }
+
+    li.append(itemContainer);
+
+    return li;
+}
+
 function displayPopUpUser(user, enabling, enableDiv, disableDiv) {
     const popUpElement = document.getElementById("popUp");
     const confirmButton = document.getElementById("confirmButton")
@@ -88,143 +267,6 @@ function displayPopUpCompany(company, enabling, enableDiv, disableDiv) {
     cancelButton.addEventListener("click", async () => {
         popUpElement.classList.add("hidden")
     })
-}
-
-function createUser(user) {
-    const li = document.createElement("li");
-    const itemContainer = document.createElement("div");
-    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
-    const nameDiv = document.createElement("div");
-    const name = document.createElement("p");
-    name.classList.add("text-text", "font-montserrat");
-    name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
-    nameDiv.append(name);
-    const statusDiv = document.createElement("div");
-    const buttonDiv = document.createElement("div");
-    buttonDiv.classList.add("flex", "flex-row", "gap-2");
-    const disableDiv = document.createElement("div");
-    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
-    const crossImage = document.createElement("img");
-    crossImage.src = "/earnit/static/icons/white-cross.svg";
-    crossImage.classList.add("h-4", "w-4")
-    crossImage.alt = "disable"
-    disableDiv.append(crossImage);
-
-    const enableDiv = document.createElement("div");
-    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
-    const checkmarkImage = document.createElement("img");
-    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
-    checkmarkImage.classList.add("h-4", "w-4")
-    checkmarkImage.alt = "enable"
-    enableDiv.append(checkmarkImage)
-
-    enableDiv.addEventListener("click", async () => {
-        displayPopUpUser(user, true, enableDiv, disableDiv)
-    })
-    buttonDiv.append(enableDiv);
-
-    disableDiv.addEventListener("click", async () => {
-        displayPopUpUser(user, false, enableDiv, disableDiv)
-    })
-    buttonDiv.append(disableDiv);
-
-    if(user.active === true) {
-        enableDiv.classList.add("hidden");
-        disableDiv.classList.remove("hidden");
-    } else {
-        disableDiv.classList.add("hidden");
-        enableDiv.classList.remove("hidden");
-    }
-
-    itemContainer.append(nameDiv);
-    itemContainer.append(statusDiv);
-    itemContainer.append(buttonDiv);
-    li.append(itemContainer);
-
-    return li;
-}
-
-function enableUser(user){
-    user.active = true;
-    return fetch("/earnit/api/users/" + user.id, {
-        method: 'put',
-        headers: {
-            'authorization': `token ${getJWTCookie()}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user)
-    }).then(async res => ({
-        status: res.status,
-        json: await res.json()
-    }))
-        .catch(() => null)
-}
-function disableUser(user){
-    user.active = false;
-    return fetch("/earnit/api/users/" + user.id, {
-        method: 'delete',
-        headers: {
-            'authorization': `token ${getJWTCookie()}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    }).then(async res => ({
-        status: res.status,
-        json: await res.json()
-    })
-        .catch(() => null))
-}
-
-function createCompany(company) {
-    const li = document.createElement("li");
-    const itemContainer = document.createElement("div");
-    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
-    const nameDiv = document.createElement("div");
-    const name = document.createElement("p");
-    name.classList.add("text-text", "font-montserrat");
-    name.innerText = company.name;
-    nameDiv.append(name);
-    const buttonDiv = document.createElement("div");
-    buttonDiv.classList.add("flex", "flex-row", "gap-2");
-    const disableDiv = document.createElement("div");
-    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
-    const crossImage = document.createElement("img");
-    crossImage.src = "/earnit/static/icons/white-cross.svg";
-    crossImage.classList.add("h-4", "w-4")
-    crossImage.alt = "disable"
-    disableDiv.append(crossImage);
-
-    const enableDiv = document.createElement("div");
-    enableDiv.classList.add("rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center");
-    const checkmarkImage = document.createElement("img");
-    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
-    checkmarkImage.classList.add("h-4", "w-4")
-    checkmarkImage.alt = "enable"
-    enableDiv.append(checkmarkImage)
-
-    disableDiv.addEventListener("click", async () => {
-        displayPopUpCompany(company, false, enableDiv, disableDiv)
-    })
-
-    enableDiv.addEventListener("click", async () => {
-        displayPopUpCompany(company, true, enableDiv, disableDiv)
-    })
-    buttonDiv.append(enableDiv);
-    buttonDiv.append(disableDiv);
-
-    if(company.active === true) {
-        enableDiv.classList.add("hidden")
-        disableDiv.classList.remove("hidden")
-    } else {
-        disableDiv.classList.add("hidden")
-        enableDiv.classList.remove("hidden")
-    }
-    itemContainer.append(nameDiv);
-    itemContainer.append(buttonDiv);
-    li.append(itemContainer);
-
-    return li;
 }
 
 function enableCompany(company){
