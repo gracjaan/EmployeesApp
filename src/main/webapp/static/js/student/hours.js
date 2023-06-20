@@ -496,7 +496,7 @@ async function toggleEdit(button) {
         const updatedData = {
             id: entry.getAttribute("data-id"),
             day: entry.getAttribute("data-day"),
-            minutes: parseInt(textElements[1].textContent) * 60,
+            minutes: parseFloat(textElements[1].textContent) * 60,
             // position: textElements[2].textContent,
             work: textElements[3].textContent,
             ucid: entry.getAttribute("contract-id"),
