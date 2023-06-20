@@ -6,12 +6,14 @@ import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.companies.CompanyCounts;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserContractDAO extends GenericDAO<User> {
@@ -162,6 +164,25 @@ public class UserContractDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 1, userId);
 
         ResultSet res = statement.executeQuery();
+    }
+
+    public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
+
+        List<CompanyCounts> result = new ArrayList<>();
+        String query = "SELECT uc.COUNT(*) as count, c.company_id, cy.name   FROM \"" + tableName + "\" uc JOIN contract c ON c.id = uc.contract_id JOIN company cy ON cy.id = c.company_id  WHERE c.company_id = ? AND active = true GROUP BY c.id";
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        ResultSet res = statement.executeQuery();
+        while(res.next()) {
+            CompanyCounts count = new CompanyCounts();
+            count.setId(res.getString("company_id"));
+            count.setName(res.getString("name"));
+            count.setCount(res.getInt("count"));
+
+            result.add(count);
+
+        }
+        return result;
     }
 }
 

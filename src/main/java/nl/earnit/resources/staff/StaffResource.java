@@ -2,15 +2,14 @@ package nl.earnit.resources.staff;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.ContractDAO;
-import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoSolvedDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.db.WorkedWeek;
+import nl.earnit.models.resource.companies.CompanyCounts;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -165,4 +164,22 @@ public class StaffResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+    @GET
+    @Path("/companies")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getEmployeeCountPerCompany() {
+        UserContractDAO userContractDAO;
+        List<CompanyCounts> count;
+        try {
+            userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            count = userContractDAO.getNumberOfEmployeesByCompany();
+        } catch (Exception e) {
+            System.out.println(e);
+            return Response.serverError().build();
+        }
+        return Response.ok(count).build();
+    }
+
 }

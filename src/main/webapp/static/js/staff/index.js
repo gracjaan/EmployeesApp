@@ -1,5 +1,7 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
+    const companies = await getStudentsPerCompany();
+    console.log(companies);
 
     fetch("/earnit/api/users/" + getUserId(), {
             method: "GET",
@@ -14,25 +16,44 @@ window.addEventListener("helpersLoaded", async () => {
             const json = await res.json();
             name.innerText = "Welcome back, " + json.firstName;
         })
+
+    updateChart(companies)
 });
 
 
-function updateChart(workedWeeks) {
+
+async function getStudentsPerCompany() {
+    return await fetch("/earnit/api/staff/companies",
+        {
+            method: "GET",
+            headers: {
+                "accept-type": "application/json",
+                'authorization': `token ${getJWTCookie()}`
+            }
+        }
+    ).then((res) => res.json())
+        .catch(() => null);
+
+}
+
+
+function updateChart(companies) {
     const labels = [];
     const ids = [];
     const dataset = [];
 
-    for (const workedWeek of workedWeeks) {
-        const label = escapeHtml(workedWeek.user.firstName);
-        const hours = workedWeek.totalMinutes / 60
-        const id = workedWeek.user.id;
+    for (const company of companies) {
+        const label = escapeHtml(company.name);
+        const count = company.count;
+
+        const id = company.id;
 
         if (ids.includes(id)) {
-            dataset[ids.indexOf(id)] += hours;
+            dataset[ids.indexOf(id)] += count;
         } else {
             ids.push(id);
             labels.push(label);
-            dataset.push(hours);
+            dataset.push(count);
         }
     }
 
@@ -43,7 +64,7 @@ function updateChart(workedWeeks) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Hours worked this week per student',
+                label: 'Students per company',
                 data: dataset,
                 backgroundColor: ['rgb(237,76,76)'],
                 color: "white",
