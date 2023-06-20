@@ -33,7 +33,7 @@
 							<div
 								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
 							>
-								Approves week
+								Approves week, without suggestions
 							</div>
 						</div>
 						<div
@@ -43,7 +43,6 @@
 							<img
 								src="/earnit/static/icons/light.svg"
 								alt="checkmark"
-								onclick="toggleNote()"
 							/>
 							<div
 								class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
@@ -173,7 +172,7 @@
 					<button id="company-cancel" onclick="cancelNote()">
 						<div class="text-text font-bold">Cancel</div>
 					</button>
-					<button id="company-submit" class="px-4 py-2 bg-text rounded-lg text-background" onclick="confirmWorkedWeek()">
+					<button id="company-submit" class="px-4 py-2 bg-text rounded-lg text-background" onclick="rejectConfirm()">
 						<img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
 					</button>
 				</div>

@@ -95,7 +95,7 @@ public class WorkedDAO extends GenericDAO<User> {
 
             worked.setWorkedWeekId(ww.getId());
 
-            if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+            if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
                 return false;
             }
 
@@ -115,7 +115,7 @@ public class WorkedDAO extends GenericDAO<User> {
 
 
     public boolean updateWorkedWeekTask(Worked worked) throws SQLException {
-        if (this.isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
+        if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
             return false;
         }
 
@@ -131,7 +131,7 @@ public class WorkedDAO extends GenericDAO<User> {
     }
 
     public boolean deleteWorkedWeekTask(String workedId) throws SQLException {
-        if (this.isWorkedWeekConfirmed(workedId)) {
+        if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(workedId)) {
             return false;
         }
         String query = "DELETE FROM \"" + tableName + "\" WHERE id = ?;";
@@ -139,15 +139,6 @@ public class WorkedDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 1, workedId);
         statement.executeUpdate();
         return true;
-    }
-
-    public boolean isWorkedWeekConfirmed(String workedWeekId) throws SQLException {
-        String query = "SELECT confirmed FROM worked_week WHERE id = ?";
-        PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
-        ResultSet resultSet = statement.executeQuery();
-        if (!resultSet.next()) return false;
-        return resultSet.getBoolean("confirmed");
     }
 
     public boolean isWorkedWeekConfirmedOfWorked(String workedId) throws SQLException {
@@ -184,7 +175,7 @@ public class WorkedDAO extends GenericDAO<User> {
         return res.getInt("count") > 0;
     }
 
-    public boolean setSuggestion(String workedId, CreateSuggestion suggestion) throws SQLException {
+    public void setSuggestion(String workedId, CreateSuggestion suggestion) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET suggestion = ? WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         if (suggestion.getSuggestion() == null) {
@@ -194,7 +185,5 @@ public class WorkedDAO extends GenericDAO<User> {
         }
         PostgresJDBCHelper.setUuid(statement, 2, workedId);
         statement.executeUpdate();
-
-        return true;
     }
 }

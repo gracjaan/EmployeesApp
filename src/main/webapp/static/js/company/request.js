@@ -67,19 +67,46 @@ function approve(companyId, workedWeekId, token) {
         .catch(() => null);
 }
 
-function reject(companyId, workedWeekId, token) {
-    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
-        method: 'DELETE',
+let noteConfirmation = null;
+
+function rejectConfirm() {
+    if (noteConfirmation === null) return;
+
+    toggleNote();
+
+    fetch(`/earnit/api/companies/${noteConfirmation.companyId}/approves/${noteConfirmation.workedWeekId}/note`, {
+        method: 'POST',
         headers: {
-            'authorization': `token ${token}`,
-            'accept-type': 'application/json'
-        }
+            'authorization': `token ${noteConfirmation.token}`,
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            note: document.getElementById("note").value
+        })
     })
-        .then(async (res) => await res.json())
-        .then((request) => {
-            updatePage(request);
+        .then(async (res) => {
+            if (res.status !== 200) throw new Error();
+
+            fetch(`/earnit/api/companies/${noteConfirmation.companyId}/approves/${noteConfirmation.workedWeekId}?${getQueryParams()}`, {
+                method: 'DELETE',
+                headers: {
+                    'authorization': `token ${noteConfirmation.token}`,
+                    'accept-type': 'application/json'
+                }
+            })
+                .then(async (res) => await res.json())
+                .then((request) => {
+                    updatePage(request);
+                })
+                .catch(() => null);
         })
         .catch(() => null);
+}
+
+function reject(companyId, workedWeekId, token) {
+    noteConfirmation = {companyId, workedWeekId, token};
+
+    toggleNote();
 }
 
 function undo(companyId, workedWeekId, token) {
@@ -108,7 +135,7 @@ function updatePage(request) {
 
     const noteText = document.getElementById("noteText");
     if (request.note === null || request.note === "") {
-        noteText.innerText = request.user.firstName + " did not add a note";
+        noteText.innerText = "No note added";
     } else {
         noteText.innerText = request.note;
     }
@@ -116,7 +143,7 @@ function updatePage(request) {
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
     for (const hour of request.hours) {
-        entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.approved !== null));
+        entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.approved !== null, request.approved === true));
     }
 
     if (request.approved !== null) {
@@ -142,7 +169,7 @@ function updatePage(request) {
     }
 }
 
-function createEntry(year, week, contract, entry, sent) {
+function createEntry(year, week, contract, entry, sent, approved) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
 
@@ -161,7 +188,7 @@ function createEntry(year, week, contract, entry, sent) {
     hoursDiv.classList.add("flex", "gap-1", "justify-center", "sm:justify-start")
     entryInfo.appendChild(hoursDiv);
 
-    const hasSuggestion = entry.suggestion !== undefined && entry.suggestion !== null;
+    const hasSuggestion = entry.suggestion !== undefined && entry.suggestion !== null && !approved;
     const hours = document.createElement("div");
     hours.classList.add("text-text", "font-bold", "sm:font-normal");
     hours.innerText = `${entry.minutes / 60}H`;
@@ -211,9 +238,6 @@ function createEntry(year, week, contract, entry, sent) {
     return entryContainer;
 }
 
-
-
-
 function toggleNote() {
     const companyDialog = document.getElementById("company-dialog");
     companyDialog.classList.toggle("hidden");
@@ -225,101 +249,6 @@ function cancelNote() {
 
     const companyDialog = document.getElementById("company-dialog");
     companyDialog.classList.toggle("hidden");
-}
-
-async function confirmWorkedWeek() {
-
-    const error = document.getElementById("confirm-error");
-    error.classList.add("hidden");
-
-    const contracts = await obtainContractsForUser(getUserId())
-    if (contracts === null) {
-        const error = document.getElementById("confirm-error");
-        error.classList.remove("hidden");
-        error.innerText = "Could not confirm worked week";
-        return;
-    }
-
-    contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
-            {
-                method: "PUT",
-                body: document.getElementById("note").value.toString(),
-                headers: {
-                    'authorization': `token ${getJWTCookie()}`,
-                    "Content-type": "text/plain"
-                }
-            })
-            .then((res) => {
-                if (res.status !== 200) {
-                    throw new Error();
-                }
-
-                fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
-                    {
-                        method: "POST",
-                        headers: {
-                            'authorization': `token ${getJWTCookie()}`,
-                            "Content-type": "application/json",
-                            "Accept": "application/json"
-                        }
-                    })
-                    .then(() => {
-                        document.getElementById("confirm-button").setAttribute("data-checked", "1");
-                    })
-                    .catch(() => {
-                        const error = document.getElementById("confirm-error");
-                        error.classList.remove("hidden");
-                        error.innerText = "Could not confirm worked week";
-                    })
-            })
-            .catch(() => {
-                const error = document.getElementById("confirm-error");
-                error.classList.remove("hidden");
-                error.innerText = "Could not update note";
-            })
-    })
-
-    const companyDialog = document.getElementById("company-dialog");
-    companyDialog.classList.toggle("hidden");
-}
-
-async function unconfirmWorkedWeek() {
-    const error = document.getElementById("confirm-error");
-    error.classList.add("hidden");
-
-    const contracts = await obtainContractsForUser(getUserId())
-    if (contracts === null) {
-        const error = document.getElementById("confirm-error");
-        error.classList.remove("hidden");
-        error.innerText = "Could not unconfirm worked week";
-        return;
-    }
-
-    contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
-            {
-                method: "DELETE",
-                headers: {
-                    'authorization': `token ${getJWTCookie()}`,
-                    "Content-type": "application/json",
-                    "Accept": "application/json"
-                }
-            })
-            .then((res) => {
-                if (res.status === 200) document.getElementById("confirm-button").setAttribute("data-checked", "0");
-                else {
-                    const error = document.getElementById("confirm-error");
-                    error.classList.remove("hidden");
-                    error.innerText = "Could not unconfirm worked week, because the week has passed";
-                }
-            })
-            .catch(() => {
-                const error = document.getElementById("confirm-error");
-                error.classList.remove("hidden");
-                error.innerText = "Could not unconfirm worked week";
-            })
-    })
 }
 
 function toggleEditIcon(entryElement, editButton, hourElement) {

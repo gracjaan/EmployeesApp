@@ -7,6 +7,7 @@ import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.resource.InvalidEntry;
+import nl.earnit.models.resource.companies.CreateNote;
 import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
@@ -349,9 +350,36 @@ public class CompanyResource {
     }
 
     @POST
+    @Path("/approves/{workedWeekId}/note")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response setWorkedWeekNote(@PathParam("workedWeekId") String workedWeekId, CreateNote note) {
+        try {
+            WorkedWeekDAO workedDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED_WEEK);
+
+            if (!workedDAO.hasCompanyAccessToWorkedWeek(companyId, workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            if (note == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            if (!workedDAO.isWorkedWeekConfirmed(workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            workedDAO.setCompanyNote(workedWeekId, note);
+                return Response.ok().build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
     @Path("/approves/suggest/{workedId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response acceptWorkedWeek(@PathParam("workedId") String workedId, CreateSuggestion suggestion) {
+    public Response suggestWorked(@PathParam("workedId") String workedId, CreateSuggestion suggestion) {
         try {
             WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED);
@@ -364,14 +392,11 @@ public class CompanyResource {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            if (workedDAO.isWorkedWeekConfirmedOfWorked(workedId)) {
+            if (!workedDAO.isWorkedWeekConfirmedOfWorked(workedId)) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            if (workedDAO.setSuggestion(workedId, suggestion)) {
-                return Response.ok().build();
-            }
-
+            workedDAO.setSuggestion(workedId, suggestion);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

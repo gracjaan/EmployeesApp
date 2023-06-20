@@ -33,6 +33,8 @@ public class WorkedWeekDTO {
     private List<Worked> hours;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer totalMinutes;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String companyNote;
 
     public WorkedWeekDTO(String id, String contractId, Integer year, Integer week,
                          String note,
@@ -167,5 +169,13 @@ public class WorkedWeekDTO {
 
     public void setTotalMinutes(Integer totalMinutes) {
         this.totalMinutes = totalMinutes;
+    }
+
+    public String getCompanyNote() {
+        return companyNote;
+    }
+
+    public void setCompanyNote(String companyNote) {
+        this.companyNote = companyNote;
     }
 }

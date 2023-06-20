@@ -4,6 +4,7 @@ import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.exceptions.InvalidOrderByException;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.*;
+import nl.earnit.models.resource.companies.CreateNote;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
@@ -155,6 +156,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 ww.confirmed as worked_week_confirmed,
                 ww.approved as worked_week_approved,
                 ww.solved as worked_week_solved,
+                ww.company_note as worked_week_company_note,
                 
                 uc.id as user_contract_id,
                 uc.contract_id as user_contract_contract_id,
@@ -265,6 +267,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 ww.confirmed as worked_week_confirmed,
                 ww.approved as worked_week_approved,
                 ww.solved as worked_week_solved,
+                ww.company_note as worked_week_company_note,
                 
                 uc.id as user_contract_id,
                 uc.contract_id as user_contract_contract_id,
@@ -340,6 +343,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 ww.confirmed as worked_week_confirmed,
                 ww.approved as worked_week_approved,
                 ww.solved as worked_week_solved,
+                ww.company_note as worked_week_company_note,
                 
                 uc.id as user_contract_id,
                 uc.contract_id as user_contract_contract_id,
@@ -419,6 +423,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 ww.confirmed as worked_week_confirmed,
                 ww.approved as worked_week_approved,
                 ww.solved as worked_week_solved,
+                ww.company_note as worked_week_company_note,
                 
                 uc.id as user_contract_id,
                 uc.contract_id as user_contract_contract_id,
@@ -494,6 +499,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 ww.confirmed as worked_week_confirmed,
                 ww.approved as worked_week_approved,
                 ww.solved as worked_week_solved,
+                ww.company_note as worked_week_company_note,
                 
                 uc.id as user_contract_id,
                 uc.contract_id as user_contract_contract_id,
@@ -572,6 +578,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 ww.confirmed as worked_week_confirmed,
                 ww.approved as worked_week_approved,
                 ww.solved as worked_week_solved,
+                ww.company_note as worked_week_company_note,
                 
                 uc.id as user_contract_id,
                 uc.contract_id as user_contract_contract_id,
@@ -732,7 +739,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             }
         }
 
-        return new WorkedWeekDTO(res.getString(prefix + "id"),
+        WorkedWeekDTO dto = new WorkedWeekDTO(res.getString(prefix + "id"),
             res.getString(prefix + "contract_id"),
             PostgresJDBCHelper.getInteger(res, prefix + "year"),
             PostgresJDBCHelper.getInteger(res, prefix + "week"),
@@ -759,6 +766,10 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             withHours ? hours : null,
             withTotalHours ? res.getInt("minutes") : null
         );
+
+        dto.setCompanyNote(res.getString(prefix + "company_note"));
+
+        return dto;
     }
 
     public void addWorkedWeek(String contractId, String year, String week) throws SQLException {
@@ -814,4 +825,21 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(res.getString("id"), withCompany, withContract, withUserContract, withUser, withHours, withTotalHours, order);
     }
 
+    public void setCompanyNote(String workedWeekId, CreateNote note) throws SQLException {
+        String query = "UPDATE \"" + tableName + "\" SET company_note = ? WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        statement.setString(1, note.getNote());
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
+
+        statement.executeUpdate();
+    }
+
+    public boolean isWorkedWeekConfirmed(String workedWeekId) throws SQLException {
+        String query = "SELECT confirmed FROM worked_week WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        ResultSet resultSet = statement.executeQuery();
+        if (!resultSet.next()) return false;
+        return resultSet.getBoolean("confirmed");
+    }
 }
