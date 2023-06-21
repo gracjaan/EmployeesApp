@@ -142,12 +142,12 @@ public class WorkedDAO extends GenericDAO<User> {
     }
 
     public boolean isWorkedWeekConfirmedOfWorked(String workedId) throws SQLException {
-        String query = "SELECT ww.confirmed FROM worked_week ww JOIN worked w ON w.worked_week_id = ww.id WHERE w.id = ?";
+        String query = "SELECT ww.status FROM worked_week ww JOIN worked w ON w.worked_week_id = ww.id WHERE w.id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, workedId);
         ResultSet resultSet = statement.executeQuery();
         if (!resultSet.next()) return false;
-        return resultSet.getBoolean("confirmed");
+        return !resultSet.getString("status").equals("NOT_CONFIRMED");
     }
 
     public boolean hasCompanyAccessToWorked(String companyId, String workedId) throws SQLException {

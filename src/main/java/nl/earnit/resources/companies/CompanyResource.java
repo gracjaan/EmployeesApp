@@ -284,7 +284,7 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, workedWeekUndoApprovalDTO.getApprove(), company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, workedWeekUndoApprovalDTO.getApprove(), company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -313,7 +313,7 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, true, company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, true, company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -342,7 +342,7 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, false, company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, false, company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
