@@ -284,7 +284,16 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, workedWeekUndoApprovalDTO.getApprove(), company, contract, userContract, user,
+            String status;
+            if (workedWeekUndoApprovalDTO.getApprove() == null) {
+                status = "CONFIRMED";
+            } else if (workedWeekUndoApprovalDTO.getApprove()) {
+                status = "APPROVED";
+            } else {
+                status = "SUGGESTED";
+            }
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, status, company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -313,7 +322,7 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, true, company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -342,7 +351,7 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, false, company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

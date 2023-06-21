@@ -800,4 +800,19 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         if (!resultSet.next()) return false;
         return !resultSet.getString("status").equals("NOT_CONFIRMED");
     }
+
+    public boolean acceptCompanySuggestion(String workedWeekId) throws SQLException {
+        // Create query
+        String query = """
+            UPDATE "%s" SET minutes = suggestion, suggestion = null where worked_week_id = ? RETURNING id""".formatted(tableName);
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return success
+        return res.next();
+    }
 }
