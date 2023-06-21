@@ -226,7 +226,7 @@ function sendFormDataServer() {
                 'content-type': "application/json"
             },
         body:JSON.stringify({
-            userId, hourlyWage
+            userId, hourlyWage : hourlyWage/100
         })}
     ).then((res) => {
         if(res.status === 200) {
