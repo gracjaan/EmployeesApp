@@ -12,6 +12,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
@@ -26,11 +27,16 @@
             <div
                     class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
             >
-                <div class="overflow-x-auto flex gap-2 scrollbar-none">
-                    <week-selector id="week"></week-selector>
-                    <order-selector id="contract" group="1" title="Contract"></order-selector>
-                    <order-selector id="hours" group="1" title="Hours"></order-selector>
-                    <order-selector id="user" group="1" title="User"></order-selector>
+                <div class="flex justify-between">
+                    <div class="overflow-x-auto flex gap-2 scrollbar-none">
+                        <week-selector id="week"></week-selector>
+                        <order-selector id="contract" group="1" title="Contract"></order-selector>
+                        <order-selector id="hours" group="1" title="Hours"></order-selector>
+                        <order-selector id="user" group="1" title="User"></order-selector>
+                    </div>
+                    <div class="h-10 w-10" onclick="downloadAllInvoice()">
+                        <img src="/earnit/static/icons/download.svg">
+                    </div>
                 </div>
                 <div class="flex flex-col gap-2" id="entries"></div>
             </div>

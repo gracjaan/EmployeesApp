@@ -70,9 +70,10 @@ function updatePage(request) {
 }
 
 function createEntry(workedWeek) {
-    const entryContainer = document.createElement("a");
+    // const testcontainter = document.createElement("a");
+
+    const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", workedWeek.approved === null ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
-    entryContainer.href = "/earnit/request?worked_week=" + workedWeek.id;
 
     const entryInfo = document.createElement("div");
     entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr]", "grid", "items-center");
@@ -93,6 +94,28 @@ function createEntry(workedWeek) {
     role.innerText = workedWeek.contract.role;
     entryInfo.appendChild(role);
 
+    const downloadContainer = document.createElement("div");
+    downloadContainer.classList.add("flex", "items-center");
+    entryContainer.appendChild(downloadContainer);
+
+    const download1 = document.createElement("button");
+    download1.classList.add("mr-5");
+    download1.setAttribute("id", "download1")
+    downloadContainer.appendChild(download1);
+
+    entryContainer.addEventListener("click",(e) => {
+        if (download1 === e.target || download1.contains(e.target)) {
+            downloadInvoice();
+        } else {
+            window.location.href = "/earnit/request?worked_week=" + workedWeek.id;
+        }
+    });
+
+    const image1 = document.createElement("img");
+    image1.classList.add("h-6", "w-6");
+    image1.src = "/earnit/static/icons/downloadSingle.svg"
+    download1.appendChild(image1);
+
     if (workedWeek.approved !== null) {
         const statusContainer = document.createElement("div");
         statusContainer.classList.add("w-full", "flex", "justify-end")
@@ -110,6 +133,14 @@ function createEntry(workedWeek) {
     }
 
     return entryContainer;
+}
+
+function downloadInvoice() {
+    alert("Download Single")
+}
+
+function downloadAllInvoice() {
+    alert("jeMoederPoeder")
 }
 
 function getQueryParams() {
