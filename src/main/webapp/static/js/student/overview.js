@@ -16,20 +16,15 @@ window.addEventListener("helpersLoaded", async () => {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.3
-            }, {
-                label: 'My Second Dataset',
-                data: [20, 30, 90, 37, 56, 88, 44],
-                fill: false,
-                borderColor: 'rgb(77, 20, 100)',
-                tension: 0.3
-            }]
+            labels: [
+                "Week " + (getCurrentWeek() - 5),
+                "Week " + (getCurrentWeek() - 4),
+                "Week " + (getCurrentWeek() - 3),
+                "Week " + (getCurrentWeek() - 2),
+                "Week " + (getCurrentWeek() - 1),
+                "Week " + getCurrentWeek()
+            ],
+            datasets: await getData()
         },
         options: {
             scales: {
@@ -51,6 +46,16 @@ window.addEventListener("helpersLoaded", async () => {
 
 function obtainContractsForUser(uid) {
     return fetch("/earnit/api/users/" + uid + "/contracts", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(e => null);
+}
+
+function obtainInvoices(contract) {
+    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -238,6 +243,75 @@ async function updateContracts() {
     }
 
     return contracts;
+}
+
+function getCurrentWeek() {
+    return getWeek(new Date());
+}
+
+function getWeek(ofDate) {
+    const date = new Date(ofDate);
+    date.setHours(0, 0, 0, 0);
+    // Thursday in current week decides the year.
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    // January 4 is always in week 1.
+    const week1 = new Date(date.getFullYear(), 0, 4);
+    // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
+        - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+
+async function getData() {
+    let data = [];
+    const contracts = await obtainContractsForUser(getUserId());
+    let arrayOfInvoices = [];
+    for (let contract of contracts) {
+        arrayOfInvoices.push(await obtainInvoices(contract))
+    }
+
+    console.log(arrayOfInvoices)
+    console.log(contracts)
+
+    const defined = [{borderColor: 'rgb(237, 76, 76)', name: "My first data"}, {borderColor: 'rgb(255, 172, 28)', name: "My second data"}, {borderColor: 'rgb(231,226,95)', name: "My third data"}, {borderColor: 'rgb(75, 192, 192)', name: "My fourth data"}];
+
+    let index = 0;
+    arrayOfInvoices.forEach(invoice => {
+        let week0 = 0;
+        let week1 = 0;
+        let week2 = 0;
+        let week3 = 0;
+        let week4 = 0;
+        let week5 = 0;
+
+        invoice.forEach(i => {
+
+            if (i.week === getCurrentWeek() - 5) {
+                week0 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 4) {
+                week1 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 3) {
+                week2 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 2) {
+                week3 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 1) {
+                week4 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek()) {
+                week5 += i.totalMinutes;
+            }
+        })
+
+        data.push({
+            label: contracts[index].contract.role,
+            data: [week0/60, week1/60, week2/60, week3/60, week4/60, week5/60],
+            fill: false,
+            borderColor: defined[index%3].borderColor,
+            tension: 0.3
+        })
+
+        index ++;
+    })
+    console.log(data)
+    return data;
 }
 
 
