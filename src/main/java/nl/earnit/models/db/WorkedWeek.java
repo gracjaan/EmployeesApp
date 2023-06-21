@@ -9,22 +9,18 @@ public class WorkedWeek {
     private Integer year;
     private Integer week;
     private String note;
-    private Boolean confirmed;
-    private Boolean approved;
-    private Boolean solved;
+    private String status;
 
     public WorkedWeek() {}
 
     public WorkedWeek(String id, String contractId, Integer year, Integer week, String note,
-                      Boolean confirmed, Boolean approved, Boolean solved) {
+                      String status) {
         this.id = id;
         this.contractId = contractId;
         this.year = year;
         this.week = week;
         this.note = note;
-        this.confirmed = confirmed;
-        this.approved = approved;
-        this.solved = solved;
+        this.status = status;
     }
 
     public String getId() {
@@ -67,28 +63,12 @@ public class WorkedWeek {
         this.note = note;
     }
 
-    public Boolean getConfirmed() {
-        return confirmed;
+    public String getStatus() {
+        return status;
     }
 
-    public void setConfirmed(Boolean confirmed) {
-        this.confirmed = confirmed;
-    }
-
-    public Boolean getApproved() {
-        return approved;
-    }
-
-    public void setApproved(Boolean approved) {
-        this.approved = approved;
-    }
-
-    public Boolean getSolved() {
-        return solved;
-    }
-
-    public void setSolved(Boolean solved) {
-        this.solved = solved;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -99,9 +79,7 @@ public class WorkedWeek {
             ", year=" + year +
             ", week=" + week +
             ", note='" + note + '\'' +
-            ", confirmed=" + confirmed +
-            ", approved=" + approved +
-            ", solved=" + solved +
+            ", status=" + status +
             '}';
     }
 }
