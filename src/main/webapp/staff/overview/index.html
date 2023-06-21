@@ -28,14 +28,19 @@
             <div class="rounded-2xl bg-secondary p-4 h-full">
                 <div class="flex flex-row items-center justify-between">
                     <h2 class="text-text text-2xl font-bold">Users</h2>
-                    <div class="flex gap-2">
-                        <order-selector id="name-user" group="1" title="Name"></order-selector>
-                    </div>
                 </div>
 
                 <!--        here there needs to be added the filters and search bar-->
 
                 <!--        This will list the different students-->
+                <div class="w-full py-2 flex gap-2 flex-col sm:flex-row sm:justify-start">
+                    <div class="w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between p-1">
+                        <input id="searchUsers" onkeyup="searchUser()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search User...">
+                    </div>
+                    <div class="flex gap-2">
+                        <order-selector id="name-user" group="1" title="Name"></order-selector>
+                    </div>
+                </div>
                 <ol class="overflow-y-auto gap-2" id="users">
                 </ol>
                 <div id="popUp" class="absolute z-100 top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center hidden">
@@ -61,17 +66,18 @@
         <!--        This is the section for company overview-->
         <section class="w-full gap-2 flex flex-col">
             <div class="rounded-2xl bg-secondary p-4 h-full">
-                <div class="flex flex-row items-center justify-between">
+                <div class="flex flex-row items-center">
                     <h2 class="text-text text-2xl font-bold">Company</h2>
+                </div>
+                <!--        here there needs to be added the filters and search bar-->
+                <div class="w-full gap-2 py-2 flex flex-col sm:flex-row sm:justify-start">
+                    <div class="w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between p-1">
+                        <input id="searchCompany" onkeyup="searchCompany()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search User...">
+                    </div>
                     <div class="flex gap-2">
                         <order-selector id="name-company" group="1" title="Name"></order-selector>
                     </div>
                 </div>
-                <!--        here there needs to be added the filters and search bar-->
-                <div>
-
-                </div>
-
                 <!--        This will list the different companies-->
                 <ol class="overflow-y-auto" id="companies">
 
