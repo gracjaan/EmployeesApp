@@ -70,12 +70,13 @@ function updatePage(request) {
 }
 
 function createEntry(workedWeek) {
-    const entryContainer = document.createElement("a");
-    entryContainer.classList.add("rounded-xl", "bg-primary", workedWeek.approved === null ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
-    entryContainer.href = "/earnit/request?worked_week=" + workedWeek.id;
+    // const testcontainter = document.createElement("a");
+
+    const entryContainer = document.createElement("div");
+    entryContainer.classList.add("rounded-xl", "bg-primary", "cursor-pointer", workedWeek.approved === null ? "py-3" : "py-2", "px-4", "relative", "flex", "justify-between");
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr]", "grid", "items-center");
+    entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr_1fr]", "grid", "items-center");
     entryContainer.appendChild(entryInfo);
 
     const name = document.createElement("div");
@@ -109,7 +110,61 @@ function createEntry(workedWeek) {
         status.append(img);
     }
 
+    const downloadContainer = document.createElement("div");
+    downloadContainer.classList.add("flex", "items-center", "justify-end", "w-full");
+    entryInfo.appendChild(downloadContainer);
+
+    const downloadButton = document.createElement("button");
+    downloadContainer.appendChild(downloadButton);
+
+    entryContainer.addEventListener("click",(e) => {
+        if (downloadButton === e.target || downloadButton.contains(e.target)) {
+            downloadInvoice(workedWeek);
+        } else {
+            window.location.href = "/earnit/request?worked_week=" + workedWeek.id;
+        }
+    });
+
+    const downloadImage = document.createElement("img");
+    downloadImage.classList.add("h-6", "w-6");
+    downloadImage.src = "/earnit/static/icons/downloadSingle.svg"
+    downloadButton.appendChild(downloadImage);
+
     return entryContainer;
+}
+
+function downloadInvoice(workedWeek) {
+    fetch(`/earnit/api/companies/${getUserCompany()}/invoices/download/week/${workedWeek.id}`, {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+        }
+    })
+        .then(async res =>  ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] }))
+        .then(({ data, filename }) => {
+            const a = document.createElement("a");
+            a.href = window.URL.createObjectURL(data);
+            a.download = filename;
+            a.click();
+        });
+}
+
+function downloadAllInvoice() {
+    const weekSelector = document.getElementById("week");
+    const year = parseInt(weekSelector.getAttribute("data-year"));
+    const week = parseInt(weekSelector.getAttribute("data-week"));
+
+    fetch(`/earnit/api/companies/${getUserCompany()}/invoices/download/${year}/${week}`, {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+        }
+    })
+        .then(async res =>  ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] }))
+        .then(({ data, filename }) => {
+            const a = document.createElement("a");
+            a.href = window.URL.createObjectURL(data);
+            a.download = filename;
+            a.click();
+        });
 }
 
 function getQueryParams() {

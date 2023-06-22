@@ -82,4 +82,25 @@ public class UserContractResource {
             return Response.serverError().build();
         }
     }
+
+//
+//    @GET
+//    @Path("/invoices/download")
+//    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+//    public Response getInvoicesPerStudent() {
+//        try {
+//            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+//            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+//
+//            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, true, true, true, true, false, true, "");
+//
+//            return Response
+//                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+//                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+//                .header("content-disposition","attachment; filename = invoices.zip")
+//                .build();
+//        } catch (Exception e) {
+//            return Response.serverError().build();
+//        }
+//    }
 }

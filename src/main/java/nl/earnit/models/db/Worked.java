@@ -1,5 +1,6 @@
 package nl.earnit.models.db;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -9,6 +10,9 @@ public class Worked {
     private int day;
     private int minutes;
     private String work;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer suggestion;
 
     public Worked() {
 
@@ -60,5 +64,13 @@ public class Worked {
 
     public void setWork(String work) {
         this.work = work;
+    }
+
+    public Integer getSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion(Integer suggestion) {
+        this.suggestion = suggestion;
     }
 }
