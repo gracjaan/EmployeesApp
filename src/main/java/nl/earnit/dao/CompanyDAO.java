@@ -59,7 +59,7 @@ public class CompanyDAO extends GenericDAO<User> {
         if(!res.next()) return null;
 
         // Return Company
-        return new Company(res.getString("id"), res.getString("name"));
+        return new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
     }
 
     public Company createCompany(String name)
@@ -215,7 +215,7 @@ public class CompanyDAO extends GenericDAO<User> {
         UserDTO user =
             new UserDTO(res.getString("id"), res.getString("email"),
                 res.getString("first_name"), res.getString("last_name"),
-                res.getString("last_name_prefix"), res.getString("type"));
+                res.getString("last_name_prefix"), res.getString("type"), res.getString("kvk"),res.getString("btw"), res.getString("address"));
 
         if (withUserContracts) {
             List<UserContractDTO> userContracts = new ArrayList<>();
