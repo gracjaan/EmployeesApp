@@ -1,9 +1,8 @@
 package nl.earnit.resources.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.Auth;
+import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
@@ -11,7 +10,6 @@ import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.UserResponse;
@@ -156,8 +154,27 @@ public class UserResource {
                                 @QueryParam("order") @DefaultValue("worked_week.year:asc,worked_week.week:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, null, company,contract,userContract, user,hours,totalHours, order);
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, null, null, null, company, contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download/{year}/{week}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoicesPerStudent(@PathParam("year") String year, @PathParam("week") String week) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, null, Integer.parseInt(year), Integer.parseInt(week), true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = invoices.zip")
+                .build();
         } catch (Exception e) {
             return Response.serverError().build();
         }

@@ -15,9 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class WorkedWeekDAO extends GenericDAO<User> {
     private final OrderBy orderBy = new OrderBy(new HashMap<>() {{
@@ -148,10 +146,22 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(id, false, false, false, false, false, false, "hours.day:asc");
     }
 
-    public WorkedWeekDTO getWorkedWeekByDate(String userContractId, int year, int week, boolean withCompany,
-                                             boolean withContract, boolean withUserContract,
-                                             boolean withUser, boolean withHours, boolean withTotalHours, String order)
-        throws SQLException {
+    /**
+     * Gets all worked weeks the user has access to. Either via a company user or a contract user.
+     *
+     * @param userId The id of the user.
+     * @throws SQLException If a database error occurs.
+     */
+    public List<WorkedWeekDTO> getWorkedWeeksForUser(String userId, String userContractId, Integer year, Integer week, boolean withCompany,
+                                                     boolean withContract, boolean withUserContract,
+                                                     boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+        List<String> where = new ArrayList<>();
+        if (userId != null) where.add("u.id");
+        if (userContractId != null) where.add("uc.id");
+        if (year != null) where.add("ww.year");
+        if (week != null) where.add("ww.week");
+
+        if (where.isEmpty() || (userId == null && userContractId == null)) throw new IllegalArgumentException();
 
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
@@ -195,88 +205,15 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                 
-                WHERE ww.year = ? AND ww.week = ? AND uc.id = ?
-                LIMIT 1
-            """.formatted(tableName, orderByHours.getSQLOrderBy(order, true));
+                WHERE %3$s
+            """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), String.join(" AND ", where.stream().map(x -> x + " = ?").toList()));
 
         PreparedStatement statement = this.con.prepareStatement(query);
 
-        statement.setInt(1, year);
-        statement.setInt(2, week);
-        PostgresJDBCHelper.setUuid(statement, 3, userContractId);
-
-        // Execute query
-        ResultSet res = statement.executeQuery();
-
-        // Return
-
-        if (!res.next()) {
-            return null;
-        }
-
-        return getWorkedWeekFromRow(res, "worked_week_", withCompany, withContract, withUserContract, withUser, withHours, withTotalHours);
-    }
-
-    /**
-     * Gets all worked weeks the user has access to. Either via a company user or a contract user.
-     *
-     * @param userId The id of the user.
-     * @throws SQLException If a database error occurs.
-     */
-    public List<WorkedWeekDTO> getWorkedWeeksForUser(String userId, String userContractId, boolean withCompany,
-                                                     boolean withContract, boolean withUserContract,
-                                                     boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
-
-        String query = """
-            SELECT DISTINCT ww.id as worked_week_id,
-                ww.contract_id as worked_week_contract_id,
-                ww.year as worked_week_year,
-                ww.week as worked_week_week,
-                ww.note as worked_week_note,
-                ww.confirmed as worked_week_confirmed,
-                ww.approved as worked_week_approved,
-                ww.solved as worked_week_solved,
-                
-                uc.id as user_contract_id,
-                uc.contract_id as user_contract_contract_id,
-                uc.user_id as user_contract_user_id,
-                uc.hourly_wage as user_contract_hourly_wage,
-                uc.active as user_contract_active,
-                
-                u.id as user_id,
-                u.first_name as user_first_name,
-                u.last_name as user_last_name,
-                u.last_name_prefix as user_last_name_prefix,
-                u.email as user_email,
-                u.type as user_type,
-                
-                c.id as contract_id,
-                c.company_id as contract_company_id,
-                c.role as contract_role,
-                c.description as contract_description,
-                
-                cy.id as company_id,
-                cy.name as company_name,
-                
-                w.hours,
-                w.minutes
-                
-                FROM "%s" ww
-                        
-                JOIN user_contract uc ON uc.id = ww.contract_id
-                JOIN "user" u ON u.id = uc.user_id
-                JOIN contract c ON c.id = uc.contract_id
-                JOIN company cy ON cy.id = c.company_id
-                
-                LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
-                
-                WHERE u.id = ? %3$s
-            """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), userContractId != null ? " AND uc.id = ?" : "");
-
-        PreparedStatement statement = this.con.prepareStatement(query);
-
-        PostgresJDBCHelper.setUuid(statement, 1, userId);
-        if (userContractId != null) PostgresJDBCHelper.setUuid(statement, 2, userContractId);
+        if (userId != null)  PostgresJDBCHelper.setUuid(statement, where.indexOf("u.id") + 1, userId);
+        if (userContractId != null)  PostgresJDBCHelper.setUuid(statement, where.indexOf("uc.id") + 1, userContractId);
+        if (year != null) statement.setInt(where.indexOf("ww.year") + 1, year);
+        if (week != null) statement.setInt(where.indexOf("ww.week") + 1, week);
 
         // Execute query
         ResultSet res = statement.executeQuery();

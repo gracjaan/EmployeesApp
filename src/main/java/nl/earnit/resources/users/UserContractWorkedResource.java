@@ -7,9 +7,8 @@ import nl.earnit.dao.WorkedDAO;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.models.db.Worked;
-import nl.earnit.models.db.WorkedWeek;
 
-import java.sql.SQLException;
+import java.util.List;
 
 public class UserContractWorkedResource {
     @Context
@@ -60,7 +59,8 @@ public class UserContractWorkedResource {
             if (this.weekId != null) {
                 workedWeek = workedWeekDAO.getWorkedWeekById(weekId, company, contract, userContract, user, hours, totalHours, order);
             } else if (this.year != null && this.week != null) {
-                workedWeek = workedWeekDAO.getWorkedWeekByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, totalHours, order);
+                List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(null, userContractId, Integer.parseInt(year), Integer.parseInt(week), company, contract, userContract, user, hours, totalHours, order);
+                if (!workedWeeks.isEmpty()) workedWeek = workedWeeks.get(0);
             }
         } catch (Exception e) {
             return Response.serverError().build();

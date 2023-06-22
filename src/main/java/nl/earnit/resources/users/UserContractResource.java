@@ -2,6 +2,7 @@ package nl.earnit.resources.users;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.models.db.UserContract;
@@ -76,31 +77,50 @@ public class UserContractResource {
                                 @QueryParam("order") @DefaultValue("worked_week.year:asc,worked_week.week:asc") String order) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, company,contract,userContract, user,hours,totalHours, order);
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, null, null, company, contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
+        } catch (Exception e) {
+            System.out.println(e);
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoicesPerStudent() {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, null, null, true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = invoices.zip")
+                .build();
         } catch (Exception e) {
             return Response.serverError().build();
         }
     }
 
-//
-//    @GET
-//    @Path("/invoices/download")
-//    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-//    public Response getInvoicesPerStudent() {
-//        try {
-//            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-//            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
-//
-//            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, true, true, true, true, false, true, "");
-//
-//            return Response
-//                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
-//                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
-//                .header("content-disposition","attachment; filename = invoices.zip")
-//                .build();
-//        } catch (Exception e) {
-//            return Response.serverError().build();
-//        }
-//    }
+    @GET
+    @Path("/invoices/download/{year}/{week}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoicesPerStudent(@PathParam("year") String year, @PathParam("week") String week) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(null, userContractId, Integer.parseInt(year), Integer.parseInt(week), true, true, true, true, false, true, "");
+            if (workedWeeks.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
+
+            return Response
+                .ok(InvoicePDFHandler.createSingleInvoice(InvoicePDFHandler.InvoiceInformation.fromWorkedWeek(workedWeeks.get(0))), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = " +
+                    InvoicePDFHandler.InvoiceInformation.getInvoiceNameFromWorkedWeek(workedWeeks.get(0)))
+                .build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
 }

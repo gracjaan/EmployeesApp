@@ -92,7 +92,7 @@ function createEntry(contract, invoice) {
     leftrow.appendChild(entryInfo1);
 
     const rightrow = document.createElement("button");
-    ea.addEventListener("click", () => generateAllInvoices(contract));
+    rightrow.addEventListener("click", () => generateAllInvoices(contract));
 
     const img = document.createElement("img");
     img.alt = "download-all"
