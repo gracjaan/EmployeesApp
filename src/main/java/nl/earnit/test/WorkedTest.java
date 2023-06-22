@@ -2,16 +2,11 @@ package nl.earnit.test;
 
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
-import nl.earnit.dao.WorkedWeekDAO;
-import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,7 +89,7 @@ public class WorkedTest {
         insertDummyWorkedEntry(worked);
 
         // Perform the isWorkedWeekConfirmed operation
-        boolean confirmed = workedDAO.isWorkedWeekConfirmed(worked.getWorkedWeekId());
+        boolean confirmed = workedDAO.isWorkedWeekConfirmedOfWorked(worked.getId());
 
         // Assert the result
         assertFalse(confirmed);

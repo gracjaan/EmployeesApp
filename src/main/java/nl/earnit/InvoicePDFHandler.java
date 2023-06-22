@@ -66,7 +66,7 @@ public class InvoicePDFHandler {
         html = html.replaceAll("&lt;student_kvk&gt;", invoiceInformation.getStudentKVK());
         html = html.replaceAll("&lt;student_btw&gt;", invoiceInformation.getStudentBTW());
 
-        html = html.replaceAll("&lt;week_number&gt;", String.valueOf(invoiceInformation));
+        html = html.replaceAll("&lt;week_number&gt;", String.valueOf(invoiceInformation.week));
 
         float salary = invoiceInformation.getHourlyWageInCents() / 100f * invoiceInformation.getMinutesWorked() / 60f;
         html = html.replaceAll("&lt;role&gt;", invoiceInformation.getRole());
