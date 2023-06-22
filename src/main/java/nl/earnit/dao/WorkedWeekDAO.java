@@ -745,7 +745,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 res.getString("user_last_name_prefix"),
                 res.getString("user_type")) : null,
             withCompany ? new Company(res.getString("company_id"),
-                res.getString("company_name")) : null,
+                res.getString("company_name"), res.getString("company_kvk"), res.getString("company_address")) : null,
             withUserContract ? new UserContract(res.getString("user_contract_id"),
                 res.getString("user_contract_contract_id"),
                 res.getString("user_contract_user_id"),

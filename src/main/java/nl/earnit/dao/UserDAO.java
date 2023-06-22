@@ -60,7 +60,7 @@ public class UserDAO extends GenericDAO<User> {
     private User getUser(String colum, String value, String type) throws SQLException {
         // Create query
         String query =
-            "SELECT id, email, first_name, last_name, last_name_prefix, password, type FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
+            "SELECT id, email, first_name, last_name, last_name_prefix, password, type, kvk, address, btw FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PGobject toInsert = new PGobject();
         toInsert.setType(type);
@@ -75,7 +75,7 @@ public class UserDAO extends GenericDAO<User> {
 
         // Return User
         return new User(res.getString("id"), res.getString("email"), res.getString("first_name"),
-            res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
+            res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"), res.getString("address"), res.getString("btw"), res.getString("kvk"));
     }
 
     public List<UserResponse> getAllUsers(String order) throws SQLException {
@@ -183,7 +183,7 @@ public class UserDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
 
         while (res.next()) {
-            Company c = new Company(res.getString("id"), res.getString("name"));
+            Company c = new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
             companies.add(c);
         }
         return companies;
