@@ -2,6 +2,7 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
@@ -178,6 +179,70 @@ public class CompanyResource {
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year), Integer.parseInt(week), company,contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
         } catch (SQLException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download/{studentId}")
+    public Response getInvoicesPerStudent(@PathParam("studentId") String studentId) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            if (!companyDAO.hasCompanyAccessToUser(companyId, studentId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompanyForUser(companyId, studentId, true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = invoices.zip")
+                .build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download/{year}/{week}")
+    public Response getInvoices(@PathParam("year") String year,
+                                @PathParam("week") String week) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year),  Integer.parseInt(week), true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = invoices.zip")
+                .build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download/week/{workedWeekId}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoices(@PathParam("workedWeekId") String workedWeekId) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            if (!workedWeekDAO.hasCompanyAccessToWorkedWeek(companyId, workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            WorkedWeekDTO workedWeek = workedWeekDAO.getWorkedWeekById(workedWeekId, true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createSingleInvoice(InvoicePDFHandler.InvoiceInformation.fromWorkedWeek(workedWeek)), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = " +
+                    InvoicePDFHandler.InvoiceInformation.getInvoiceNameFromWorkedWeek(workedWeek))
+                .build();
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
