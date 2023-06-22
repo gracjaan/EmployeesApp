@@ -34,6 +34,13 @@ async function updatePage(contracts) {
         arrayOfDivs.push(entries.appendChild(createEntry(contract, invoice)))
     }
 
+    if (arrayOfDivs === null || arrayOfDivs.length < 1){
+        const noContracts = document.createElement("div");
+        noContracts.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noContracts.innerText = "No contracts yet";
+        entries.append(noContracts)
+    }
+
     arrayOfDivs[0].classList.toggle("hidden");
     lastIndex = arrayOfDivs.length - 1;
 }
