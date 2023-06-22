@@ -185,6 +185,7 @@ public class CompanyResource {
 
     @GET
     @Path("/invoices/download/{studentId}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getInvoicesPerStudent(@PathParam("studentId") String studentId) {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
@@ -207,6 +208,7 @@ public class CompanyResource {
 
     @GET
     @Path("/invoices/download/{year}/{week}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getInvoices(@PathParam("year") String year,
                                 @PathParam("week") String week) {
         try {

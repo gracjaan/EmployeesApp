@@ -11,7 +11,6 @@ import nl.earnit.dao.WorkedDAO;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.db.Worked;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserContractResource {
@@ -67,4 +66,25 @@ public class UserContractResource {
     public UserContractWorkedResource getWorkedWeek(@PathParam("weekId") String weekId) {
         return new UserContractWorkedResource(uriInfo, request, userId, userContractId, weekId);
     }
+
+//
+//    @GET
+//    @Path("/invoices/download")
+//    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+//    public Response getInvoicesPerStudent() {
+//        try {
+//            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+//            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+//
+//            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, true, true, true, true, false, true, "");
+//
+//            return Response
+//                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+//                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+//                .header("content-disposition","attachment; filename = invoices.zip")
+//                .build();
+//        } catch (Exception e) {
+//            return Response.serverError().build();
+//        }
+//    }
 }
