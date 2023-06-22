@@ -273,3 +273,36 @@ function toggleCompany() {
 
 // ------------------------------------------------------------------------------------
 
+function searchUser() {
+    let input = document.getElementById('searchUsers');
+    let filter = input.value.toUpperCase();
+    let ol = document.getElementById("users");
+    let li = ol.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        let p = li[i].getElementsByTagName("p")[0];
+        let txtValue = p.textContent || p.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+function searchCompany(){
+    let input = document.getElementById('searchCompany');
+    let filter = input.value.toUpperCase();
+    let ol = document.getElementById("companies");
+    let li = ol.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        let p = li[i].getElementsByTagName("p")[0];
+        let txtValue = p.textContent || p.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
