@@ -4,13 +4,16 @@ const validateLastName = (lastName) => validateName(lastName);
 const validateName = (name) => name.length > 2;
 
 //Validating company details
-const validateCompanyName = (companyName) => validateName(companyName);
 const validateAddress1 = (address1) => address1.length > 6;
 const validateAddress2 = (address2) => address2.length > 0;
 const validateKVK = (kvkNumber) => {
     let kvkNumberRegex = /^\d{8}$/;
     return kvkNumberRegex.test(kvkNumber);
 };
+const validateBTW = (btwNumber) => {
+    let btwNumberRegex = /^(NL)?\d{9}B\d{2}$/;
+    return btwNumberRegex.test(btwNumber);
+}
 
 // At least 8 characters, min 1: number, lowercase, uppercase and special character
 const validatePassword = (password) => /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/.test(password);
@@ -30,6 +33,7 @@ const states = {
     'choose': choose,
     'student-info': studentInfo,
     'student-account': studentAccount,
+    'student-details': studentDetails,
     'company-info': companyInfo,
     'company-account': companyAccount,
     'company-details': companyDetails,
@@ -166,7 +170,7 @@ function studentInfo() {
             return;
         }
 
-        updateContent("student-account");
+        updateContent("student-details");
     })
 }
 
@@ -175,7 +179,7 @@ function studentAccount() {
     const submit = document.getElementById("submit");
 
     back.addEventListener('click', () => {
-        updateContent("student-info");
+        updateContent("student-details");
     });
 
     submit.addEventListener("click", () => {
@@ -202,6 +206,8 @@ function studentAccount() {
             return;
         }
 
+        const kvk = document.getElementById("student-kvk").value.trim();
+        const btw = document.getElementById("student-btw").value.trim();
         const firstName = document.getElementById("student-first").value.trim();
         const lastName = document.getElementById("student-last").value.trim();
         const lastNamePrefix = document.getElementById("student-last-prefix").value.trim();
@@ -220,7 +226,9 @@ function studentAccount() {
                 firstName,
                 lastName,
                 lastNamePrefix,
-                password
+                password,
+                kvk,
+                btw
             })
         }).then(async res => {
             let error = null;
@@ -262,6 +270,49 @@ function studentAccount() {
             window.location.replace("/earnit/login");
         })
     });
+}
+
+function studentDetails() {
+    const back = document.getElementById("student-details-back");
+    const submit = document.getElementById("submit");
+
+    back.addEventListener('click', () => {
+        updateContent("student-info");
+    });
+
+    submit.addEventListener("click", () => {
+        if (state !== 'student-details') return;
+
+        const address1 = document.getElementById("student-address-1").value.trim();
+        if (!validateAddress1(address1)) {
+            document.getElementById("error").innerText = "Address 1 needs to be at least 6 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const address2 = document.getElementById("student-address-2").value.trim();
+        if (!validateAddress2(address2)) {
+            document.getElementById("error").innerText = "Address 2 needs to be at least 1 character";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const kvk = document.getElementById("student-kvk").value.trim();
+        if (!validateKVK(kvk)) {
+            document.getElementById("error").innerText = "KVK number needs to be in valid format";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const btw = document.getElementById("student-btw").value.trim();
+        if (!validateBTW(btw)) {
+            document.getElementById("error").innerText = "BTW number needs to be in valid format";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        updateContent("student-account");
+    })
 }
 
 function companyInfo() {
