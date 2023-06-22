@@ -38,13 +38,14 @@ public class UserResource {
     public Response getUser() {
         UserDAO userDAO;
         User user;
+        UserResponse userResponse;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             user = userDAO.getUserById(this.userId);
         } catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok(user).build();
+        return Response.ok(new UserResponse(user)).build();
     }
 
     @PUT
@@ -90,7 +91,7 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok(dbUser).build();
+        return Response.ok(new UserResponse(dbUser)).build();
     }
 
     @DELETE
