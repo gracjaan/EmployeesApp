@@ -87,7 +87,7 @@ public class UsersResource {
             // Create user
             user = userDAO.createUser(createUser.getEmail(), createUser.getFirstName(),
                 createUser.getLastNamePrefix(), createUser.getLastName(), passwordHash,
-                "STUDENT"); // Make user student by default
+                "STUDENT", createUser.getKvk(), createUser.getBtw(), createUser.getAddress()); // Make user student by default
         } catch (Exception e) {
             return Response.serverError().build();
         }
