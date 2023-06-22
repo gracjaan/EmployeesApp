@@ -256,6 +256,8 @@ document.addEventListener("click", function(event) {
 document.addEventListener("click", function(event) {
     const dropdown = document.getElementById("dropdown-company-content");
     const button = document.getElementById("dropdown-company-button");
+    const searchbar = document.getElementById("searchbarCompany");
+
     const targetElement = event.target;
 
     if (!dropdown.classList.contains("hidden") && !button.contains(targetElement) && targetElement !== searchbar && !searchbar.contains(targetElement)) {
@@ -280,12 +282,14 @@ function toggleCompany() {
 function searchUser() {
     let input = document.getElementById('searchUsers');
     let filter = input.value.toUpperCase();
-    let ol = document.getElementById("users");
+    let ol = document.getElementById("searchUser");
     let li = ol.getElementsByTagName('li');
 
     for (let i = 0; i < li.length; i++) {
         let p = li[i].getElementsByTagName("p")[0];
+        console.log(p)
         let txtValue = p.textContent || p.innerText;
+        console.log(txtValue)
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {
@@ -295,14 +299,17 @@ function searchUser() {
 }
 
 function searchCompany(){
-    let input = document.getElementById('searchCompany');
+    let input = document.getElementById('searchCompanies');
     let filter = input.value.toUpperCase();
-    let ol = document.getElementById("companies");
+    let ol = document.getElementById("searchCompany");
     let li = ol.getElementsByTagName('li');
 
     for (let i = 0; i < li.length; i++) {
         let p = li[i].getElementsByTagName("p")[0];
+        console.log(p)
+
         let txtValue = p.textContent || p.innerText;
+        console.log(txtValue)
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {
