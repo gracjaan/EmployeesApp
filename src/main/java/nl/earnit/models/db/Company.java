@@ -1,11 +1,15 @@
 package nl.earnit.models.db;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Company {
     private String id;
     private String name;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean active;
 
     public Company() {}
 
@@ -28,5 +32,13 @@ public class Company {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

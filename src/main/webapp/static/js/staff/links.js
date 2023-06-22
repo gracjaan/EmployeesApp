@@ -8,10 +8,10 @@ window.addEventListener("helpersLoaded", async () => {
         return;
     }
 
-    const usersElement = document.getElementById("dropdown-student-content");
+    const usersElement = document.getElementById("searchUser");
     usersElement.innerText = "";
 
-    const companiesElement = document.getElementById("dropdown-company-content");
+    const companiesElement = document.getElementById("searchCompany");
     companiesElement.innerText = ""
 
 
@@ -34,15 +34,15 @@ let contractId = null;
 let companyId = null;
 
 function createUser(user) {
-    const div = document.createElement("div");
-    div.addEventListener("click", ()=>{
+    const li = document.createElement("li");
+    li.addEventListener("click", ()=>{
         editUserInfo(user)
         userId=user.id;
     })
 
     const a = document.createElement("a");
 
-    div.append(a);
+    li.append(a);
 
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("hover:bg-gray-100", "cursor-pointer", "color-text", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4");
@@ -53,18 +53,18 @@ function createUser(user) {
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     itemContainer.append(name);
 
-    return div;
+    return li;
 }
 
 function createCompany(company) {
-    const div = document.createElement("div");
-    div.addEventListener("click", ()=>{
+    const li = document.createElement("li");
+    li.addEventListener("click", ()=>{
         editCompanyInfo(company)
         companyId=company.id;
     })
     const a = document.createElement("a");
 
-    div.append(a);
+    li.append(a);
 
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("hover:bg-gray-100", "cursor-pointer", "color-text", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4");
@@ -75,7 +75,7 @@ function createCompany(company) {
     name.innerText = company.name;
     itemContainer.append(name);
 
-    return div;
+    return li;
 }
 
 function editUserInfo(user){
@@ -126,7 +126,6 @@ async function editCompanyInfo(company){
     const contractsList = document.getElementById("contract-list");
     contractsList.innerText = "";
     let contracts = await getContracts(company.id)
-    console.log(contracts);
     for (const contract of contracts) {
         contractsList.append(createContract(contract));
     }
@@ -227,59 +226,41 @@ function sendFormDataServer() {
                 'content-type': "application/json"
             },
         body:JSON.stringify({
-            userId, hourlyWage
+            userId, hourlyWage: hourlyWage*100
         })}
     ).then((res) => {
         if(res.status === 200) {
             alert("Successfully created link");
+
         } else {
             alert("Link failed, try again, code: " + res.status);
+
         }
     })
         .catch(() => null);
 }
 
 
-
-
-
-
 document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-student-content");
-    const button = document.getElementById("dropdown-student-button");
+    const dropdown = document.getElementById("dropdown-user-content");
+    const choosingUser = document.getElementById("dropdown-user-button");
+    const searchbar = document.getElementById("searchbarUser");
     const targetElement = event.target;
 
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+    if (!dropdown.classList.contains("hidden") && !choosingUser.contains(targetElement) && targetElement !== searchbar && !searchbar.contains(targetElement)) {
         dropdown.classList.add("hidden");
+
     }
 });
 
 document.addEventListener("click", function(event) {
     const dropdown = document.getElementById("dropdown-company-content");
     const button = document.getElementById("dropdown-company-button");
+    const searchbar = document.getElementById("searchbarCompany");
+
     const targetElement = event.target;
 
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-position-content");
-    const button = document.getElementById("dropdown-position-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-type-content");
-    const button = document.getElementById("dropdown-type-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement) && targetElement !== searchbar && !searchbar.contains(targetElement)) {
         dropdown.classList.add("hidden");
     }
 });
@@ -287,7 +268,7 @@ document.addEventListener("click", function(event) {
 // Toggles all the dropdown menu's to show up
 
 function toggleStudent() {
-    const dropdown = document.getElementById("dropdown-student-content");
+    const dropdown = document.getElementById("dropdown-user-content");
     dropdown.classList.toggle("hidden");
 }
 
@@ -296,15 +277,43 @@ function toggleCompany() {
     dropdown.classList.toggle("hidden");
 }
 
-function toggleType() {
-    const dropdown = document.getElementById("dropdown-type-content");
-    dropdown.classList.toggle("hidden");
-}
-
-function togglePosition() {
-    const dropdown = document.getElementById("dropdown-position-content");
-    dropdown.classList.toggle("hidden");
-}
-
 // ------------------------------------------------------------------------------------
 
+function searchUser() {
+    let input = document.getElementById('searchUsers');
+    let filter = input.value.toUpperCase();
+    let ol = document.getElementById("searchUser");
+    let li = ol.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        let p = li[i].getElementsByTagName("p")[0];
+        console.log(p)
+        let txtValue = p.textContent || p.innerText;
+        console.log(txtValue)
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+function searchCompany(){
+    let input = document.getElementById('searchCompanies');
+    let filter = input.value.toUpperCase();
+    let ol = document.getElementById("searchCompany");
+    let li = ol.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        let p = li[i].getElementsByTagName("p")[0];
+        console.log(p)
+
+        let txtValue = p.textContent || p.innerText;
+        console.log(txtValue)
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}

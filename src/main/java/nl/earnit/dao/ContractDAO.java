@@ -195,4 +195,13 @@ public class ContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    public void disableContractsByCompanyId(String companyId) throws SQLException {
+        String query = "UPDATE " + tableName + " SET active = false WHERE company_id = ?";
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, companyId);
+
+        ResultSet res = statement.executeQuery();
+    }
+
 }

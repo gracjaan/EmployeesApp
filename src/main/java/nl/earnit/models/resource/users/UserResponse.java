@@ -1,5 +1,6 @@
 package nl.earnit.models.resource.users;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import nl.earnit.models.db.User;
 
@@ -14,6 +15,9 @@ public class UserResponse {
     private String lastName;
     private String lastNamePrefix;
     private String type;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean active;
 
     /**
      * Creates a user model without password, without values.
@@ -98,5 +102,13 @@ public class UserResponse {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setActive(Boolean active){
+        this.active = active;
+    }
+
+    public Boolean getActive(){
+        return this.active;
     }
 }

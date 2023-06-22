@@ -7,18 +7,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/earnit/static/js/staff/links.js" defer></script>
     <script src="/earnit/static/js/helpers.js" defer></script>
+    <script src="/earnit/static/js/components/back.js"></script>
     <link rel="stylesheet" href="/earnit/static/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 </head>
 <body class="bg-black flex flex-col justify-center overflow-x-hidden font-montserrat h-screen">
-
-<a href="javascript:history.back()" class="flex items-center">
-    <header class="flex bg-primary w-fit p-2 rounded-br-lg">
-        <img src="/earnit/static/icons/arrow-left.svg" alt="arrow down" class="mr-3">
-        <div class="text-text">Back</div>
-    </header>
-</a>
+<back data-home></back>
 
 <div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
     <main class="gap-4 flex flex-col p-4">
@@ -26,15 +21,20 @@
             <section class="w-full gap-2 flex flex-col">
                 <!--            dropdown menu for the name of the student you want to link-->
                 <div class="py-4 space-y-4">
-                    <div class="dropdown relative">
-                        <button id="dropdown-student-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
+                    <div id="choosingUser" class="dropdown relative z-20">
+                        <button id="dropdown-user-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleStudent()">
                             <div id="user" class="text-text">Choose user</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
                         </button>
-                        <div id="dropdown-student-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute mt-2 hidden w-full">
-                            <!-- Dropdown options -->
-
+                        <div id="dropdown-user-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
+                            <div id="searchbarUser"class="p-1 mt-2 w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between">
+                                <input id="searchUsers" onkeyup="searchUser()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search User...">
+                                <img src="/earnit/static/icons/search-white.svg"class="p-1 h-8 aspect-square">
+                            </div>
+                            <ol id="searchUser" class="mt-2 w-full">
+                                <!-- Dropdown options -->
+                            </ol>
                         </div>
                     </div>
                     <div id="user-name-display" class="bg-secondary rounded-xl flex flex-col gap-4 p-4">
@@ -62,11 +62,14 @@
                             <div id="company" class="text-text">Choose company</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
                         </button>
-                        <div id="dropdown-company-content" class="dropdown-content bg-white shadow-lg rounded-lg absolute top-full left-0 mt-2 hidden w-full">
-                            <!-- Dropdown options -->
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 1</div>
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 2</div>
-                            <div class="py-2 px-4 hover:bg-gray-100 cursor-pointer">Option 3</div>
+                        <div id="dropdown-company-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
+                            <div id="searchbarCompany" class="p-1 mt-2 w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between">
+                                <input id="searchCompanies" onkeyup="searchCompany()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search Company...">
+                                <img src="/earnit/static/icons/search-white.svg"class="p-1 h-8 aspect-square">
+                            </div>
+                            <ol id="searchCompany" class="mt-2 w-full">
+                                <!-- Dropdown options -->
+                            </ol>
                         </div>
                     </div>
                     <!--                company display-->
