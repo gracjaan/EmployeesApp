@@ -8,10 +8,10 @@ window.addEventListener("helpersLoaded", async () => {
         return;
     }
 
-    const usersElement = document.getElementById("dropdown-student-content");
+    const usersElement = document.getElementById("searchUser");
     usersElement.innerText = "";
 
-    const companiesElement = document.getElementById("dropdown-company-content");
+    const companiesElement = document.getElementById("searchCompany");
     companiesElement.innerText = ""
 
 
@@ -34,15 +34,15 @@ let contractId = null;
 let companyId = null;
 
 function createUser(user) {
-    const div = document.createElement("div");
-    div.addEventListener("click", ()=>{
+    const li = document.createElement("li");
+    li.addEventListener("click", ()=>{
         editUserInfo(user)
         userId=user.id;
     })
 
     const a = document.createElement("a");
 
-    div.append(a);
+    li.append(a);
 
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("hover:bg-gray-100", "cursor-pointer", "color-text", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4");
@@ -53,18 +53,18 @@ function createUser(user) {
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     itemContainer.append(name);
 
-    return div;
+    return li;
 }
 
 function createCompany(company) {
-    const div = document.createElement("div");
-    div.addEventListener("click", ()=>{
+    const li = document.createElement("li");
+    li.addEventListener("click", ()=>{
         editCompanyInfo(company)
         companyId=company.id;
     })
     const a = document.createElement("a");
 
-    div.append(a);
+    li.append(a);
 
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("hover:bg-gray-100", "cursor-pointer", "color-text", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4");
@@ -75,7 +75,7 @@ function createCompany(company) {
     name.innerText = company.name;
     itemContainer.append(name);
 
-    return div;
+    return li;
 }
 
 function editUserInfo(user){
@@ -242,12 +242,14 @@ function sendFormDataServer() {
 
 
 document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("dropdown-student-content");
-    const button = document.getElementById("dropdown-student-button");
+    const dropdown = document.getElementById("dropdown-user-content");
+    const choosingUser = document.getElementById("dropdown-user-button");
+    const searchbar = document.getElementById("searchbarUser");
     const targetElement = event.target;
 
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+    if (!dropdown.classList.contains("hidden") && !choosingUser.contains(targetElement) && targetElement !== searchbar && !searchbar.contains(targetElement)) {
         dropdown.classList.add("hidden");
+
     }
 });
 
@@ -256,7 +258,7 @@ document.addEventListener("click", function(event) {
     const button = document.getElementById("dropdown-company-button");
     const targetElement = event.target;
 
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
+    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement) && targetElement !== searchbar && !searchbar.contains(targetElement)) {
         dropdown.classList.add("hidden");
     }
 });
@@ -264,7 +266,7 @@ document.addEventListener("click", function(event) {
 // Toggles all the dropdown menu's to show up
 
 function toggleStudent() {
-    const dropdown = document.getElementById("dropdown-student-content");
+    const dropdown = document.getElementById("dropdown-user-content");
     dropdown.classList.toggle("hidden");
 }
 
