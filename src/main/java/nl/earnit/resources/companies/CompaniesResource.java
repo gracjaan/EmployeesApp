@@ -88,7 +88,7 @@ public class CompaniesResource {
 
             // Create company
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
-            company = companyDAO.createCompany(createCompany.getName());
+            company = companyDAO.createCompany(createCompany.getName(), createCompany.getKvk(), createCompany.getAddress());
 
             // Link company user
             CompanyUserDAO companyUserDAO = (CompanyUserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY_USER);

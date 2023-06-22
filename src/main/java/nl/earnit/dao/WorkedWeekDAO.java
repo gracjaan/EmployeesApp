@@ -168,6 +168,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 u.last_name_prefix as user_last_name_prefix,
                 u.email as user_email,
                 u.type as user_type,
+                u.kvk as user_kvk,
+                u.btw as user_btw, 
+                u.address as user_address
                 
                 c.id as contract_id,
                 c.company_id as contract_company_id,
@@ -176,6 +179,8 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 cy.id as company_id,
                 cy.name as company_name,
+                cy.kvk as company_kvk, 
+                cy.address as company_address
                 
                 w.hours,
                 w.minutes
@@ -743,7 +748,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 res.getString("user_first_name"),
                 res.getString("user_last_name"),
                 res.getString("user_last_name_prefix"),
-                res.getString("user_type")) : null,
+                res.getString("user_type"), res.getString("user_kvk"), res.getString("user_btw"), res.getString("user_address")) : null,
             withCompany ? new Company(res.getString("company_id"),
                 res.getString("company_name"), res.getString("company_kvk"), res.getString("company_address")) : null,
             withUserContract ? new UserContract(res.getString("user_contract_id"),

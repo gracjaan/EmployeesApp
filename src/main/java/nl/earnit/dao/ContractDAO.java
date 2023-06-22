@@ -66,10 +66,10 @@ public class ContractDAO extends GenericDAO<User> {
         List<ContractDTO> result = new ArrayList<>();
 
         String query = """
-                SELECT c.id, c.role, c.description, cy.id as company_id, cy.name as company_name, uc.user_contracts FROM "%s" c
+                SELECT c.id, c.role, c.description, cy.id as company_id, cy.name as company_name, cy.kvk as company_kvk, cy.address as company_address, uc.user_contracts FROM "%s" c
                 JOIN company cy ON cy.id = c.company_id
                 LEFT JOIN (select uc.contract_id,
-                            array_agg((uc.id, uc.contract_id, uc.user_id, uc.hourly_wage, u.id, u.email, u.first_name, u.last_name, u.last_name_prefix, u.type)%s) as user_contracts
+                            array_agg((uc.id, uc.contract_id, uc.user_id, uc.hourly_wage, u.id, u.email, u.first_name, u.last_name, u.last_name_prefix, u.type, u.kvk, u.btw, u.address)%s) as user_contracts
                             from user_contract uc
                             join "user" u on u.id = uc.user_id
                             where uc.active IS TRUE
@@ -87,7 +87,7 @@ public class ContractDAO extends GenericDAO<User> {
             ContractDTO contract = new ContractDTO(res.getString("id"), res.getString("role"), res.getString("description"));
 
             if (withCompany) {
-                contract.setCompany(new Company(res.getString("company_id"), res.getString("company_name"), res.getString("kvk"), res.getString("address")));
+                contract.setCompany(new Company(res.getString("company_id"), res.getString("company_name"), res.getString("company_kvk"), res.getString("company_address")));
             }
 
             if (withUserContracts) {
@@ -115,7 +115,7 @@ public class ContractDAO extends GenericDAO<User> {
                             String lastNamePrefix = dataStrings[8];
                             if (lastNamePrefix.startsWith("\"") && lastNamePrefix.endsWith("\"")) lastNamePrefix = lastNamePrefix.substring(1, lastNamePrefix.length() - 1);
 
-                            userContract.setUser(new UserResponse(dataStrings[4], dataStrings[5], firstName, lastName, lastNamePrefix, dataStrings[9]));
+                            userContract.setUser(new UserResponse(dataStrings[4], dataStrings[5], firstName, lastName, lastNamePrefix, dataStrings[9], dataStrings[10], dataStrings[11], dataStrings[12]));
                         }
 
                         userContracts.add(userContract);
