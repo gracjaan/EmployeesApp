@@ -28,14 +28,14 @@ function getHours(companyId, token) {
     }).then(res => res.json()).catch(() => null)
 }
 
-function updateChart(workedWeeks) {
+function updateChart(studentsPerCompany) {
     const labels = [];
     const ids = [];
     const dataset = [];
 
-    for (const workedWeek of workedWeeks) {
+    for (const workedWeek of studentsPerCompany) {
         const label = escapeHtml(workedWeek.user.firstName);
-        const hours = workedWeek.totalMinutes / 60
+        
         const id = workedWeek.user.id;
 
         if (ids.includes(id)) {
@@ -54,7 +54,7 @@ function updateChart(workedWeeks) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Hours worked this week per student',
+                label: 'Number of students per company',
                 data: dataset,
                 backgroundColor: ['rgb(237,76,76)'],
                 color: "white",

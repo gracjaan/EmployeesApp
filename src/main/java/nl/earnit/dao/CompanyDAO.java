@@ -82,11 +82,12 @@ public class CompanyDAO extends GenericDAO<User> {
 
     public Company updateCompany(Company company) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET name = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET name = ?, active = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, company.getName());
-        PostgresJDBCHelper.setUuid(statement, 2, company.getId());
+        statement.setBoolean(2, company.getActive());
+        PostgresJDBCHelper.setUuid(statement, 3, company.getId());
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -105,7 +106,7 @@ public class CompanyDAO extends GenericDAO<User> {
         }});
 
         ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name FROM " + tableName + " WHERE active = true ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
+        String query = "SELECT id, name, active FROM " + tableName + " ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
         PreparedStatement statement = this.con.prepareStatement(query);
 
         ResultSet res = statement.executeQuery();
@@ -114,6 +115,7 @@ public class CompanyDAO extends GenericDAO<User> {
             Company company = new Company();
             company.setId(res.getString("id"));
             company.setName(res.getString("name"));
+            company.setActive(res.getBoolean("active"));
             companyList.add(company);
         }
 
@@ -246,6 +248,13 @@ public class CompanyDAO extends GenericDAO<User> {
         }
 
         return user;
+    }
+
+    public void disableCompanyById(String id) throws SQLException {
+        String query = "UPDATE \"" + tableName + "\" SET active = false WHERE id = ? returning id";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, id);
+        statement.executeQuery();
     }
 }
 

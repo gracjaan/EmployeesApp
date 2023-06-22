@@ -3,16 +3,18 @@ window.addEventListener("helpersLoaded", () => {
         backElement.addEventListener("click", () => select(backElement));
         backElement.setAttribute("data-selected", "0");
         backElement.classList.add("group");
-        backElement.addEventListener("click", () => {
-            if (backElement.hasAttribute("data-home")) {
-                location.href = "/earnit"
-            } else {
-                history.back();
-            }
-        })
+
 
         const header = document.createElement("header");
         header.classList.add("flex", "bg-primary", "w-fit", "p-2", "rounded-br-lg", "cursor-pointer");
+        header.addEventListener("click", () => {
+                    if (header.hasAttribute("data-home")) {
+                        location.href = "/earnit"
+                    } else {
+                        history.back();
+                    }
+                })
+
         backElement.append(header);
 
         const imgLeft = document.createElement("img");

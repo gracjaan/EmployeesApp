@@ -7,6 +7,7 @@
     <script src="/earnit/static/js/helpers.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/earnit/static/js/staff/overview.js" defer></script>
+    <script src="/earnit/static/js/components/order-selector.js"></script>
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -27,40 +28,40 @@
             <div class="rounded-2xl bg-secondary p-4 h-full">
                 <div class="flex flex-row items-center justify-between">
                     <h2 class="text-text text-2xl font-bold">Users</h2>
-
-                    <button id="user-button"
-                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
-                            onclick="togglePosition()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-black text-left mr-2" id="user-header">Name</div>
-                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
-                        </div>
-                    </button>
                 </div>
 
                 <!--        here there needs to be added the filters and search bar-->
-                <div>
-
-                </div>
 
                 <!--        This will list the different students-->
+                <div class="w-full py-2 flex gap-2 flex-col sm:flex-row sm:justify-start">
+                    <div class="w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between p-1">
+                        <input id="searchUsers" onkeyup="searchUser()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search User...">
+                        <img src="/earnit/static/icons/search-white.svg"class="p-1 h-8 aspect-square">
+                    </div>
+                    <div class="flex gap-2">
+                        <order-selector id="name-user" group="1" title="Name"></order-selector>
+                    </div>
+
+
+                </div>
                 <ol class="overflow-y-auto gap-2" id="users">
-                    <li>
-                        <div class="flex flex-row justify-between bg-primary rounded-xl w-full h-fit p-2 pl-4 my-2 items-center">
-                            <div class="text-text font-montserrat">
-                                <p>The name</p>
-                            </div>
-                            <div class="flex flex-row gap-2">
-                                <div class="rounded-xl bg-accent-fail p-2 items-center text-white w-fit aspect-square flex justify-center">
-                                    <img class="h-4 w-4"src="/earnit/static/icons/white-cross.svg" alt="deactivate">
-                                </div>
-                                <div class="rounded-xl bg-accent-success p-2 items-center text-white w-fit aspect-square flex justify-center">
-                                    <img class="h-4 w-4" src="/earnit/static/icons/checkmark.svg" alt="enable">
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                 </ol>
+                <div id="popUp" class="absolute z-100 top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center hidden">
+                    <div class="bg-secondary p-8 rounded-2xl flex flex-col gap-8">
+                        <div class="flex flex-col gap-1">
+                            <p id="popUpParagraph" class="w-60 text-text"></p>
+                        </div>
+                        <div class="flex w-full justify-between items-center">
+                            <button id="cancelButton">
+                                <div class="text-text font-bold">Cancel</div>
+                            </button>
+                            <button id="confirmButton" class="px-4 py-2 bg-text rounded-lg text-background">
+                                <img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
         </section>
@@ -68,23 +69,19 @@
         <!--        This is the section for company overview-->
         <section class="w-full gap-2 flex flex-col">
             <div class="rounded-2xl bg-secondary p-4 h-full">
-                <div class="flex flex-row items-center justify-between">
+                <div class="flex flex-row items-center">
                     <h2 class="text-text text-2xl font-bold">Company</h2>
-
-                    <button id="company-button"
-                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
-                            onclick="togglePosition()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-black text-left mr-2" id="company-header">Name</div>
-                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
-                        </div>
-                    </button>
                 </div>
                 <!--        here there needs to be added the filters and search bar-->
-                <div>
-
+                <div class="w-full gap-2 py-2 flex flex-col sm:flex-row sm:justify-start">
+                    <div class="w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between p-1">
+                        <input id="searchCompany" onkeyup="searchCompany()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search Company...">
+                        <img src="/earnit/static/icons/search-white.svg"class="p-1 h-8 aspect-square">
+                    </div>
+                    <div class="flex gap-2">
+                        <order-selector id="name-company" group="1" title="Name"></order-selector>
+                    </div>
                 </div>
-
                 <!--        This will list the different companies-->
                 <ol class="overflow-y-auto" id="companies">
 
