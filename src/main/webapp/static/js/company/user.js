@@ -61,7 +61,7 @@ function createUserContractItem(userContract) {
 
 function createInvoiceItem(workedWeek) {
     const entryContainer = document.createElement("a");
-    entryContainer.classList.add("rounded-xl", "bg-primary", workedWeek.approved === null ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
+    entryContainer.classList.add("rounded-xl", "bg-primary", (workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED") ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
     entryContainer.href = "/earnit/request?worked_week=" + workedWeek.id;
 
     const entryInfo = document.createElement("div");
@@ -83,18 +83,18 @@ function createInvoiceItem(workedWeek) {
     role.innerText = workedWeek.contract.role;
     entryInfo.appendChild(role);
 
-    if (workedWeek.approved !== null) {
+    if (!(workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED")) {
         const statusContainer = document.createElement("div");
         statusContainer.classList.add("w-full", "flex", "justify-end")
         entryInfo.appendChild(statusContainer);
 
         const status = document.createElement("div");
-        status.classList.add("rounded-xl", workedWeek.approved ? "bg-accent-success" : "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center", "items-center")
+        status.classList.add("rounded-xl", workedWeek.status === "APPROVED" ? "bg-accent-success" : "bg-[#FD8E28]", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center", "items-center")
         statusContainer.appendChild(status);
 
         const img = document.createElement("img");
         img.alt = "checkmark";
-        img.src = `/earnit/static/icons/${workedWeek.approved ? "checkmark" : "white-cross"}.svg`;
+        img.src = `/earnit/static/icons/${workedWeek.status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
         img.classList.add("w-4", "h-4")
         status.append(img);
     }

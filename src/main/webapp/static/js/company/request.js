@@ -128,30 +128,30 @@ function undo(companyId, workedWeekId, token) {
         .catch(() => null);
 }
 
-function updatePage(request) {
+function updatePage(workedWeek) {
     const name = document.getElementById("name");
-    name.innerHTML = getName(escapeHtml(request.user.firstName), escapeHtml(request.user.lastName), escapeHtml(request.user.lastNamePrefix), "<br />");
-    name.setAttribute("data-user-id", request.user.id);
+    name.innerHTML = getName(escapeHtml(workedWeek.user.firstName), escapeHtml(workedWeek.user.lastName), escapeHtml(workedWeek.user.lastNamePrefix), "<br />");
+    name.setAttribute("data-user-id", workedWeek.user.id);
 
     const noteText = document.getElementById("noteText");
-    if (request.note === null || request.note === "") {
+    if (workedWeek.note === null || workedWeek.note === "") {
         noteText.innerText = "No note added";
     } else {
-        noteText.innerText = request.note;
+        noteText.innerText = workedWeek.note;
     }
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
-    for (const hour of request.hours) {
-        entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.approved !== null, request.approved === true));
+    for (const hour of workedWeek.hours) {
+        entries.appendChild(createEntry(workedWeek.year, workedWeek.week, workedWeek.contract, hour, workedWeek.status !== "CONFIRMED", workedWeek.status === "APPROVED"));
     }
 
-    if (request.approved !== null) {
+    if (!(workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED")) {
         document.getElementById("accept").classList.add("hidden");
         document.getElementById("reject").classList.add("hidden");
         document.getElementById("undo").classList.remove("hidden");
 
-        if (request.approved) {
+        if (workedWeek.status === "APPROVED") {
             document.getElementById("rejected").classList.add("hidden");
             document.getElementById("accepted").classList.remove("hidden");
         } else {

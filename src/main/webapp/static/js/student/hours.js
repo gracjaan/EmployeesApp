@@ -197,7 +197,7 @@ async function updatePage(contracts) {
         if (workedHours === null) continue;
 
         workedHoursCreated = true;
-        if (!workedHours.confirmed) confirmed = false;
+        if (workedHours.status === "NOT_CONFIRMED") confirmed = false;
 
         for (const hour of workedHours.hours) {
             workEntries.push({hour, contract: contract.contract});

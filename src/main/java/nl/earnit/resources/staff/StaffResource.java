@@ -3,13 +3,12 @@ package nl.earnit.resources.staff;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.WorkedWeekDAO;
-import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoSolvedDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
-import nl.earnit.models.db.WorkedWeek;
 import nl.earnit.models.resource.companies.CompanyCounts;
 
 import java.sql.SQLException;
@@ -110,6 +109,10 @@ public class StaffResource {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
 
+            if (!workedWeekDAO.acceptStudentSuggestion(workedWeekId)) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user, hours, totalHours, order)).build();
         } catch (Exception e) {
             System.out.println(e);
@@ -167,13 +170,18 @@ public class StaffResource {
                 status = "SUGGESTION_DENIED";
             } else {
                 status = "APPROVED";
-            }
 
-            if (!workedWeekUndoSolvedDTO.getSolved()) {
-                if (!workedWeekDAO.acceptCompanySuggestion(workedWeekId)) {
-                    return Response.status(Response.Status.NOT_FOUND).build();
+                if (!workedWeekUndoSolvedDTO.getSolved()) {
+                    if (!workedWeekDAO.acceptCompanySuggestion(workedWeekId)) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
+                } else {
+                    if (!workedWeekDAO.acceptStudentSuggestion(workedWeekId)) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
                 }
             }
+
 
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user, hours, totalHours, order)).build();
         } catch (Exception e) {
