@@ -226,13 +226,15 @@ function sendFormDataServer() {
                 'content-type': "application/json"
             },
         body:JSON.stringify({
-            userId, hourlyWage : hourlyWage/100
+            userId, hourlyWage: hourlyWage*100
         })}
     ).then((res) => {
         if(res.status === 200) {
             alert("Successfully created link");
+
         } else {
             alert("Link failed, try again, code: " + res.status);
+
         }
     })
         .catch(() => null);
