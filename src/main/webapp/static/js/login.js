@@ -129,7 +129,6 @@ window.addEventListener("helpersLoaded", () => {
     submit.addEventListener("click", () => {
         const emailValue = email.value.trim();
         const passwordValue = password.value.trim();
-
         // Simple client validation
         if (!validateEmail(emailValue)) {
             error.innerText = "Email invalid";
