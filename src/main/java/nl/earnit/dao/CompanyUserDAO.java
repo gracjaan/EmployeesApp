@@ -60,7 +60,7 @@ public class CompanyUserDAO extends GenericDAO<User> {
      */
     public List<Company> getCompaniesUserIsWorkingFor(String userId) throws SQLException {
         // Create query
-        String query = "SELECT c.* AS count FROM  \"" + tableName + "\" t join company c on c.id = t.company_id WHERE \"user_id\" = ?";
+        String query = "SELECT c.* AS count FROM  \"" + tableName + "\" t join company c on c.id = t.company_id WHERE c.active IS TRUE AND \"user_id\" = ?";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 

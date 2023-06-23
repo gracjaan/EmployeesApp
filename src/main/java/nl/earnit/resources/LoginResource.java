@@ -16,7 +16,6 @@ import nl.earnit.models.db.User;
 import nl.earnit.models.resource.login.Login;
 import nl.earnit.models.resource.login.Token;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("/login")
@@ -31,13 +30,17 @@ public class LoginResource {
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             user = userDAO.getUserByEmail(login.getEmail());
+
+            // User does not exist
+            if (user == null) {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+
+            if (!userDAO.isActive(user.getId())) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } catch (Exception e) {
             return Response.serverError().build();
-        }
-
-        // User does not exist
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         // Check password

@@ -4,7 +4,6 @@ import jakarta.annotation.Nullable;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
-import nl.earnit.models.db.UserContract;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
@@ -204,6 +203,19 @@ public class UserDAO extends GenericDAO<User> {
         return res.next();
     }
 
+    public boolean isActive(String userId) throws SQLException {
+        String query = "SELECT active FROM \"" + tableName + "\" u WHERE u.id = ?";
 
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, userId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // None found
+        if (!res.next()) return false;
+
+        return res.getBoolean("active");
+    }
 }
 
