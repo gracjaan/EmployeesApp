@@ -141,7 +141,7 @@ function createCompany(company) {
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
 
     const nameDiv = document.createElement("a");
-    nameDiv.href = "/earnit/info-company?company=" + company.id;
+    nameDiv.href = "/earnit/info-company?id=" + company.id;
 
     const name = document.createElement("p");
     name.classList.add("text-text", "font-montserrat");
@@ -162,7 +162,7 @@ function createCompany(company) {
     const disableTextDiv = document.createElement("div");
     disableTextDiv.classList.add("cursor-pointer", "justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
     const disableText = document.createElement("p");
-    disableText.innerText = "Disable User";
+    disableText.innerText = "Disable Company";
     disableText.classList.add("whitespace-nowrap");
     disableTextDiv.append(disableText);
     disableDiv.append(disableTextDiv);
@@ -179,7 +179,7 @@ function createCompany(company) {
     const enableTextDiv = document.createElement("div");
     enableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
     const enableText = document.createElement("p");
-    enableText.innerText = "Enable User";
+    enableText.innerText = "Enable Company";
     enableText.classList.add("whitespace-nowrap");
     enableTextDiv.append(enableText);
     enableDiv.append(enableTextDiv);

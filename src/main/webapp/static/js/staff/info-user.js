@@ -3,8 +3,6 @@ window.addEventListener("helpersLoaded", async () => {
     const user = await getUser(userId);
     const userContracts = await getUserContracts(userId)
     const companies = await getCompanies(userId)
-    console.log(companies);
-
 
     const hours = document.getElementById("hours");
     hours.addEventListener("change", () => updateInvoices())
@@ -24,7 +22,7 @@ window.addEventListener("helpersLoaded", async () => {
         location.href = "/earnit/error/404"
         return;
     }
-    console.log(user.email)
+
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     email.innerText = user.email;
 

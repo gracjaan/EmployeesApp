@@ -1,6 +1,40 @@
 window.addEventListener("helpersLoaded", async () => {
-    const companies = await getCompany();
-    const users = await getUser();
+    const companyId = getIdCompany();
+    const company = await getCompany(companyId);
+    const roles = await getCompanyRoles(company.id)
+
+
+    const name = document.getElementById("name");
+    const status = document.getElementById("status")
+    const roleList = document.getElementById("roles");
+    const employeeList = document.getElementById("employeeList");
+    roleList.innerText = "";
+    employeeList.innerText = "";
+
+    if (company === null) {
+        location.href = "/earnit/error/404"
+        return;
+    }
+
+    name.innerText = company.name;
+    if (company.active){
+        status.innerText = "Enabled";
+    }
+    else {
+        status.innerText = "Disabled";
+    }
+    for (const role of roles) {
+        roleList.append(createRoleElement(role));
+        const employees = await getEmployees(company.id, role.id)
+
+
+        if (employees === null){
+            continue;
+        }
+        // for (const employee of employees){
+        //     employeeList.append(createEmployeeElement(employee))
+        // }
+    }
 });
 
 
@@ -120,16 +154,5 @@ function createRoleElement(role) {
 //
 //
 
-}
 
-function getIdCompany() {
-    const search = new URLSearchParams(location.search);
-    if ((!search.has("user") && !search.has("company")) || (!search.has("user") && !search.has("company"))) {
-        location.replace("/earnit/overview");
-        return;
-    }
-    if (search.has("company")) {
-        return search.get("company");
-    }
-    return null;
-}
+
