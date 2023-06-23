@@ -252,6 +252,8 @@ async function updatePage(contracts) {
             for (const hour of workedHours.hours) {
                 suggestionEntries.append(createEntry(hour, workedHours.contract, workedHours.status !== "NOT_CONFIRMED", workedHours.status === "APPROVED", workedHours.status, getSuggestionYear(), getSuggestionWeek(), true))
             }
+        } else {
+            suggestionDialog.classList.toggle("hidden", true);
         }
     }
 
