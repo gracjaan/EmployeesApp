@@ -38,7 +38,6 @@ public class UserResource {
     public Response getUser() {
         UserDAO userDAO;
         User user;
-        UserResponse userResponse;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             user = userDAO.getUserById(this.userId);
