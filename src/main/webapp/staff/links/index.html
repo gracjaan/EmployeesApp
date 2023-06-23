@@ -13,7 +13,7 @@
 
 </head>
 <body class="bg-black flex flex-col justify-center overflow-x-hidden font-montserrat h-screen">
-<back data-home></back>
+<back data-home=""></back>
 
 <div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
     <main class="gap-4 flex flex-col p-4">
@@ -28,9 +28,9 @@
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
                         </button>
                         <div id="dropdown-user-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
-                            <div id="searchbarUser"class="p-1 mt-2 w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between">
-                                <input id="searchUsers" onkeyup="searchUser()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search User...">
-                                <img src="/earnit/static/icons/search-white.svg"class="p-1 h-8 aspect-square">
+                            <div id="searchbarUser"class="p-1 mt-2 w-full flex flex-row justify-between">
+                                <input id="searchUsers" onkeyup="searchUser()" type="text" class="border-b border-b-1 border-background w-full p-1 text-background placeholder-primary outline-0" placeholder="Search User...">
+                                <img src="/earnit/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                             </div>
                             <ol id="searchUser" class="mt-2 w-full">
                                 <!-- Dropdown options -->
@@ -56,16 +56,16 @@
                 <!--            dropdown menu for the name of the company you want to link-->
                 <div class="py-4 space-y-4">
                     <!--                company dropdown menu-->
-                    <div class="dropdown relative">
+                    <div class="dropdown relative z-20">
                         <button id="dropdown-company-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleCompany()">
                             <div id="company" class="text-text">Choose company</div>
                             <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
                         </button>
                         <div id="dropdown-company-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
-                            <div id="searchbarCompany" class="p-1 mt-2 w-full bg-primary border border-none rounded-xl focus:border-text flex flex-row justify-between">
-                                <input id="searchCompanies" onkeyup="searchCompany()" type="text" class="w-full p-1 rounded-xl text-text bg-primary placeholder-primary outline-0" placeholder="Search Company...">
-                                <img src="/earnit/static/icons/search-white.svg"class="p-1 h-8 aspect-square">
+                            <div id="searchbarCompany" class="p-1 mt-2 w-full flex flex-row justify-between">
+                                <input id="searchCompanies" onkeyup="searchCompany()" type="text" class="border-b border-b-1 border-background w-full p-1 text-background placeholder-primary outline-0" placeholder="Search Company...">
+                                <img src="/earnit/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                             </div>
                             <ol id="searchCompany" class="mt-2 w-full">
                                 <!-- Dropdown options -->
@@ -93,25 +93,9 @@
         <div class="flex flex-col gap-2 bg-secondary rounded-2xl bg-secondary p-4 h-full">
 <!--            this is for the filtering options-->
             <div class="flex flex-row gap-2">
-                <div class="dropdown relative">
-                    <button id="user-button"
-                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
-                            onclick="togglePosition()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-black text-left mr-2" id="user-header">Position</div>
-                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
-                        </div>
-                    </button>
-                </div>
-                <div class="dropdown relative">
-                    <button id="company-button"
-                            class="py-2 px-4 bg-text text-text rounded-xl outline-none placeholder-white flex-row"
-                            onclick="togglePosition()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-black text-left mr-2" id="company-header">Date</div>
-                            <img src="/earnit/static/icons/arrow-down-black.svg" alt="arrow down"/>
-                        </div>
-                    </button>
+                <div id="searchBarRoles" class="w-3/8 hidden bg-text border border-none rounded-xl focus:border-text flex flex-row justify-between p-1">
+                    <input id="searchRoles" onkeyup="searchRole()" type="text" class="w-full p-1 rounded-xl text-background placeholder-primary outline-0" placeholder="Search Role...">
+                    <img src="/earnit/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                 </div>
             </div>
 <!--            now comes all the different positions for the employees to have-->

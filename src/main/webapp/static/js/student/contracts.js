@@ -97,7 +97,7 @@ function createEntry(contract, invoice) {
     const img = document.createElement("img");
     img.alt = "download-all"
     img.classList.add("h-8", "w-8");
-    img.src = "/earnit/static/icons/download-single.svg"
+    img.src = "/earnit/static/icons/download.svg"
     rightrow.appendChild(img)
 
     rowcontainer.appendChild(leftrow);

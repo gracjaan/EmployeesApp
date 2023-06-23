@@ -37,15 +37,5 @@ function getIdCompany() {
     }
     return null;
 }
-function getIdUser() {
-    const search = new URLSearchParams(location.search);
-    if ((!search.has("user") && !search.has("company")) || (!search.has("user") && !search.has("company"))) {
-        location.replace("/earnit/overview");
-        return;
-    }
-    if (search.has("user")){
-        return search.get("user");
-    }
-    return null;
 
 }

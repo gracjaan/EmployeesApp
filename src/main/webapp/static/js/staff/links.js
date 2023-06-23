@@ -61,6 +61,7 @@ function createCompany(company) {
     li.addEventListener("click", ()=>{
         editCompanyInfo(company)
         companyId=company.id;
+        toggleSearchBar();
     })
     const a = document.createElement("a");
 
@@ -277,6 +278,11 @@ function toggleCompany() {
     dropdown.classList.toggle("hidden");
 }
 
+function toggleSearchBar() {
+    const searchBar = document.getElementById("searchBarRoles");
+    searchBar.classList.toggle("hidden");
+}
+
 // ------------------------------------------------------------------------------------
 
 function searchUser() {
@@ -302,6 +308,26 @@ function searchCompany(){
     let input = document.getElementById('searchCompanies');
     let filter = input.value.toUpperCase();
     let ol = document.getElementById("searchCompany");
+    let li = ol.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        let p = li[i].getElementsByTagName("p")[0];
+        console.log(p)
+
+        let txtValue = p.textContent || p.innerText;
+        console.log(txtValue)
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+function searchRole(){
+    let input = document.getElementById('searchRoles');
+    let filter = input.value.toUpperCase();
+    let ol = document.getElementById("contract-list");
     let li = ol.getElementsByTagName('li');
 
     for (let i = 0; i < li.length; i++) {
