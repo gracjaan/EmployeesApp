@@ -88,9 +88,9 @@ public class CompanyDAO extends GenericDAO<User> {
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, company.getName());
-        statement.setBoolean(2, company.getActive());
-        statement.setString(3, company.getKvk());
-        statement.setString(4, company.getAddress());
+        statement.setString(2, company.getKvk());
+        statement.setString(3, company.getAddress());
+        statement.setBoolean(4, company.getActive());
         PostgresJDBCHelper.setUuid(statement, 5, company.getId());
 
         // Execute query
