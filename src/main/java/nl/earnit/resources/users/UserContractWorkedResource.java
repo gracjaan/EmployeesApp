@@ -8,6 +8,7 @@ import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.models.db.Worked;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserContractWorkedResource {
@@ -121,6 +122,72 @@ public class UserContractWorkedResource {
         return Response.ok().build();
     }
 
+    @POST
+    @Path("/suggestions")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response acceptWorkedWeek(@QueryParam("company") @DefaultValue("false") boolean company,
+                                     @QueryParam("contract") @DefaultValue("false")
+                                     boolean contract,
+                                     @QueryParam("userContract") @DefaultValue("false")
+                                     boolean userContract,
+                                     @QueryParam("user") @DefaultValue("false") boolean user,
+                                     @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                     @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                                     @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
+        String workedWeekId = getWeekId();
+
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED_WEEK);
+            WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED);
+
+            if (!workedWeekDAO.isWorkedWeekSuggested(workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            if (!workedDAO.acceptCompanySuggestion(workedWeekId)) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user,
+                hours, totalHours, order)).build();
+        } catch (Exception e) {
+            System.out.println(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DELETE
+    @Path("/suggestions")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response rejectWorkedWeek(@QueryParam("company") @DefaultValue("false") boolean company,
+                                     @QueryParam("contract") @DefaultValue("false")
+                                     boolean contract,
+                                     @QueryParam("userContract") @DefaultValue("false")
+                                     boolean userContract,
+                                     @QueryParam("user") @DefaultValue("false") boolean user,
+                                     @QueryParam("hours") @DefaultValue("false") boolean hours,
+                                     @QueryParam("totalHours") @DefaultValue("false") boolean totalHours,
+                                     @QueryParam("order") @DefaultValue("hours.day:asc") String order) {
+        String workedWeekId = getWeekId();
+
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED_WEEK);
+
+            if (!workedWeekDAO.isWorkedWeekSuggested(workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTION_DENIED", company, contract, userContract, user,
+                hours, totalHours, order)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @POST
     @Path("/confirm")
@@ -170,5 +237,33 @@ public class UserContractWorkedResource {
             return Response.ok().build();
         }
         return Response.status(Response.Status.fromStatusCode(406)).build();
+    }
+
+    /**
+     * Gets the worked week number from either id or year/week and checks if the user has access to it.
+     * @return Worked week id
+     */
+    public String getWeekId() {
+        String workedWeekId = weekId;
+
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            if (workedWeekId == null && year != null && week != null) {
+                workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContractId, Integer.parseInt(year), Integer.parseInt(week));
+            }
+
+            if (workedWeekId == null) {
+                throw new ServerErrorException(Response.Status.NOT_FOUND);
+            }
+
+            if (!workedWeekDAO.hasStudentAccessToWorkedWeek(userId, workedWeekId)) {
+                throw new ServerErrorException(Response.Status.FORBIDDEN);
+            }
+
+            return workedWeekId;
+        } catch (Exception e) {
+            throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -783,31 +783,55 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return !resultSet.getString("status").equals("NOT_CONFIRMED");
     }
 
-    public boolean acceptCompanySuggestion(String workedWeekId) throws SQLException {
-        // Create query
+    public boolean hasStudentAccessToWorkedWeek(String userId, String workedWeekId) throws SQLException {
         String query = """
-            UPDATE "%s" SET minutes = suggestion where worked_week_id = ? and suggestion IS NOT NULL RETURNING id""".formatted(tableName);
+            SELECT COUNT(DISTINCT ww.id) as count FROM "%s" ww
+                JOIN user_contract uc ON uc.id = ww.contract_id
+                
+                WHERE uc.user_id = ? AND ww.id = ?
+            """.formatted(tableName);
+
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+
+        PostgresJDBCHelper.setUuid(statement, 1, userId);
+        PostgresJDBCHelper.setUuid(statement, 2, workedWeekId);
 
         // Execute query
         ResultSet res = statement.executeQuery();
 
-        // Return success
-        return res.next();
+        // Return
+        res.next();
+        return res.getInt("count") > 0;
     }
 
-    public boolean acceptStudentSuggestion(String workedWeekId) throws SQLException {
-        // Create query
+    public String getWorkedWeekIdByDate(String userContractId, int year, int week) throws SQLException {
         String query = """
-            UPDATE "%s" SET suggestion = null where worked_week_id = ? RETURNING id""".formatted(tableName);
+            SELECT ww.id FROM "%s" ww
+                JOIN user_contract uc ON uc.id = ww.contract_id
+                
+                WHERE uc.id = ? AND ww.year = ? AND ww.week = ?
+            """.formatted(tableName);
+
         PreparedStatement statement = this.con.prepareStatement(query);
-        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        statement.setInt(2, year);
+        statement.setInt(3, week);
 
         // Execute query
         ResultSet res = statement.executeQuery();
 
-        // Return success
-        return res.next();
+        // Return
+        if (!res.next()) return null;
+        return res.getString("id");
+    }
+
+    public boolean isWorkedWeekSuggested(String workedWeekId) throws SQLException {
+        String query = "SELECT status FROM worked_week WHERE id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+        ResultSet resultSet = statement.executeQuery();
+        if (!resultSet.next()) return false;
+        return resultSet.getString("status").equals("SUGGESTED");
     }
 }
