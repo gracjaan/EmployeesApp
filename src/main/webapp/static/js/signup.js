@@ -25,7 +25,8 @@ const validateEmail = (email) => {
     return String(email)
         .toLowerCase()
         .match(
-            /([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"(\[]!#-[^-~ \t]|(\\[\t -~]))+")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+/);
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
 };
 
 // State handler
@@ -211,6 +212,7 @@ function studentAccount() {
         const firstName = document.getElementById("student-first").value.trim();
         const lastName = document.getElementById("student-last").value.trim();
         const lastNamePrefix = document.getElementById("student-last-prefix").value.trim();
+        const address = document.getElementById("student-address-1").value.trim() + " " + document.getElementById("student-address-2").value.trim();
 
         document.getElementById("error").innerText = "";
         document.getElementById("error").classList.add("hidden");
@@ -228,7 +230,8 @@ function studentAccount() {
                 lastNamePrefix,
                 password,
                 kvk,
-                btw
+                btw,
+                address
             })
         }).then(async res => {
             let error = null;
@@ -385,6 +388,10 @@ function companyAccount() {
         const lastName = document.getElementById("company-last").value.trim();
         const lastNamePrefix = document.getElementById("company-last-prefix").value.trim();
 
+        let kvk = null;
+        const btw = null;
+        let address = null;
+
         if (userId === null) {
             const user = await fetch('/earnit/api/users', {
                 method: 'POST',
@@ -397,7 +404,10 @@ function companyAccount() {
                     firstName,
                     lastName,
                     lastNamePrefix,
-                    password
+                    password,
+                    kvk,
+                    btw,
+                    address
                 })
             }).then(async res => {
                 let error = null;
@@ -444,8 +454,8 @@ function companyAccount() {
         }
 
         const name = document.getElementById("company-name").value.trim();
-        const address = document.getElementById("company-address-1").value.trim() + " " + document.getElementById("company-address-2").value.trim();
-        const kvkNumber = document.getElementById("company-kvk").value.trim();
+        address = document.getElementById("company-address-1").value.trim() + " " + document.getElementById("company-address-2").value.trim();
+        kvk = document.getElementById("company-kvk").value.trim();
 
         if (userId !== null) {
             fetch('/earnit/api/companies', {
@@ -457,8 +467,8 @@ function companyAccount() {
                 body: JSON.stringify({
                     name,
                     userId: userId,
-                    address,
-                    kvkNumber
+                    kvk,
+                    address
                 })
             }).then(async res => {
                 error = null;
