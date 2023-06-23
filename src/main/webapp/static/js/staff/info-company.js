@@ -5,7 +5,7 @@ window.addEventListener("helpersLoaded", async () => {
 
 
     const name = document.getElementById("name");
-    const status = document.getElementById("status")
+    //const status = document.getElementById("status")
     const roleList = document.getElementById("roles");
     const employeeList = document.getElementById("employeeList");
     roleList.innerText = "";
@@ -17,12 +17,12 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     name.innerText = company.name;
-    if (company.active){
-        status.innerText = "Enabled";
-    }
-    else {
-        status.innerText = "Disabled";
-    }
+    // if (company.active){
+    //     status.innerText = "Enabled";
+    // }
+    // else {
+    //     status.innerText = "Disabled";
+    // }
     for (const role of roles) {
         roleList.append(createRoleElement(role));
         const employees = await getEmployees(company.id, role.id)
