@@ -11,8 +11,6 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     function updatePage(user, company) {
-        console.log(user)
-        console.log(company)
         if (user !== null) {
             const email = document.getElementById("email");
             const firstName = document.getElementById("firstname");
@@ -87,12 +85,18 @@ window.addEventListener("helpersLoaded", async () => {
         const firstName = document.getElementById("firstname");
         const lastName = document.getElementById("lastname");
         const lastNamePrefix = document.getElementById("lastnameprefix");
+        const address = document.getElementById("address");
+        const kvk = document.getElementById("kvk");
+        const btw = document.getElementById("btw");
 
         const updatedUser = await updateUser({
             email: email.value,
             firstName: firstName.value,
             lastName: lastName.value,
             lastNamePrefix: lastNamePrefix.value,
+            address: address.value,
+            kvk: kvk.value,
+            btw: btw.value
         })
 
         if (updatedUser.status === 200) {
