@@ -96,6 +96,22 @@ function updatePage(request) {
         entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.status === "APPROVED"));
     }
 
+    const usernote = document.getElementById("user-note");
+    if (request.note === undefined) {
+        usernote.innerText = "Not provided";
+    }
+    else {
+        usernote.innerText = request.note;
+    }
+
+    const companynote = document.getElementById("company-note");
+    if (request.companyNote === undefined){
+        companynote.innerText = "Not provided";
+    }
+    else{
+        companynote.innerText = request.companyNote;
+    }
+
     if (request.status !== "SUGGESTION_DENIED") {
         document.getElementById("accept").classList.add("hidden");
         document.getElementById("reject").classList.add("hidden");
