@@ -17,7 +17,7 @@ window.addEventListener("helpersLoaded", async () => {
 
     const name = document.getElementById("name");
     const email = document.getElementById("email");
-    //const status = document.getElementById("status")
+    const status = document.getElementById("status")
     const contracts = document.getElementById("contracts");
 
     if (user === null) {
@@ -27,12 +27,13 @@ window.addEventListener("helpersLoaded", async () => {
     console.log(user.email)
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     email.innerText = user.email;
-    // if (user.active){
-    //     status.innerText = "enabled";
-    // }
-    // else {
-    //     status.innerText = "disabled";
-    // }
+
+    if (user.active){
+        status.innerText = "Enabled";
+    }
+    else {
+        status.innerText = "Disabled";
+    }
 
     for (const userContract of userContracts) {
         contracts.append(createUserContractItem(userContract));
