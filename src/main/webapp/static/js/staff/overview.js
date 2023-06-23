@@ -27,7 +27,11 @@ function createUser(user) {
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
     const nameDiv = document.createElement("a");
-    nameDiv.href = "/earnit/info-user?user=" + user.id
+    nameDiv.href = "/earnit/info-user?id=" + user.id
+    // nameDiv.addEventListener("click", () => {
+    //     location.href = "/earnit/info-user?id=" + user.id
+    // })
+
     const name = document.createElement("p");
     name.classList.add("text-text", "font-montserrat");
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);

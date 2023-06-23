@@ -1,27 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-x-hidden">
 <head>
     <meta charset="UTF-8"/>
-    <title>Earnit</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/earnit/static/js/helpers.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Request</title>
+    <script src="/earnit/static/js/helpers.js"></script>
     <script src="/earnit/static/js/staff/info-company.js" defer></script>
-    <script src="/earnit/static/js/components/order-selector.js"></script>
+
     <script src="/earnit/static/js/components/back.js"></script>
+    <script src="/earnit/static/js/components/order-selector.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/earnit/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
 </head>
-<body class="bg-black flex flex-col justify-center overflow-x-hidden font-montserrat h-screen">
+<body
+        class="bg-black flex flex-col overflow-x-hidden w-full font-montserrat"
+>
 <back data-home></back>
-
-<div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
-    <main class="flex gap-8 mt-8 w-full h-full">
-        <!--        This is the section for the students overview-->
-        <section class="w-full gap-2 flex flex-col">
-
-        </section>
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
+    <main class="flex gap-4 my-8 flex-col px-2 md:px-0">
+        <div><h2 class="text-text text-2xl font-bold" id="name">companyName</h2>
+            <h2 class="text-text" id="email">e-mail</h2>
+            <h2 class="text-text" id="status">status</h2>
+        </div>
+        <div class="w-full gap-2 flex flex-col">
+            <h2 class="text-text text-xl font-bold">employees</h2>
+            <div class="bg-secondary rounded-2xl p-4 w-full">
+                <div class="flex gap-2 overflow-x-auto w-full scrollbar-custom scrollbar-rounded-xl scrollbar-track-secondary scrollbar-thumb-text"
+                     id="contracts">
+                </div>
+            </div>
+        </div>
+        <div class="w-full gap-2 flex flex-col">
+            <h2 class="text-text text-xl font-bold">Invoices</h2>
+            <div
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+            >
+                <div class="overflow-x-auto flex gap-2 scrollbar-none">
+                    <order-selector id="week" group="1" title="Week"></order-selector>
+                    <order-selector id="contract" group="1" title="Contract"></order-selector>
+                    <order-selector id="hours" group="1" title="Hours"></order-selector>
+                </div>
+                <div class="flex flex-col gap-2" id="invoices">
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 </body>
