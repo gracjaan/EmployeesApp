@@ -56,7 +56,7 @@ function createContractItem(contract) {
         userContractElement.append(userContractElementName);
 
         const userContractElementWage = document.createElement("div");
-        userContractElementWage.innerText = userContract.hourlyWage * 100 + ' €';
+        userContractElementWage.innerText = userContract.hourlyWage / 100 + ' €';
         userContractElement.append(userContractElementWage);
     }
 

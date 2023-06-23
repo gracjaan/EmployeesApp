@@ -3,17 +3,19 @@ package nl.earnit.resources.companies;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.*;
+import nl.earnit.InvoicePDFHandler;
+import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.resource.companies.CreateNote;
+import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
+import nl.earnit.models.resource.users.UserResponse;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyResource {
@@ -198,6 +200,72 @@ public class CompanyResource {
     }
 
     @GET
+    @Path("/invoices/download/{studentId}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoicesPerStudent(@PathParam("studentId") String studentId) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            if (!companyDAO.hasCompanyAccessToUser(companyId, studentId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompanyForUser(companyId, studentId, true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = invoices.zip")
+                .build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download/{year}/{week}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoices(@PathParam("year") String year,
+                                @PathParam("week") String week) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year),  Integer.parseInt(week), true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
+                    InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = invoices.zip")
+                .build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("/invoices/download/week/{workedWeekId}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getInvoices(@PathParam("workedWeekId") String workedWeekId) {
+        try {
+            WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+
+            if (!workedWeekDAO.hasCompanyAccessToWorkedWeek(companyId, workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            WorkedWeekDTO workedWeek = workedWeekDAO.getWorkedWeekById(workedWeekId, true, true, true, true, false, true, "");
+
+            return Response
+                .ok(InvoicePDFHandler.createSingleInvoice(InvoicePDFHandler.InvoiceInformation.fromWorkedWeek(workedWeek)), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = " +
+                    InvoicePDFHandler.InvoiceInformation.getInvoiceNameFromWorkedWeek(workedWeek))
+                .build();
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
     @Path("/invoices/{studentId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getInvoices(@PathParam("studentId") String studentId,
@@ -299,7 +367,16 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, workedWeekUndoApprovalDTO.getApprove(), company, contract, userContract, user,
+            String status;
+            if (workedWeekUndoApprovalDTO.getApprove() == null) {
+                status = "CONFIRMED";
+            } else if (workedWeekUndoApprovalDTO.getApprove()) {
+                status = "APPROVED";
+            } else {
+                status = "SUGGESTED";
+            }
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, status, company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -328,7 +405,7 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, true, company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -357,8 +434,62 @@ public class CompanyResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
 
-            return Response.ok(workedWeekDAO.setApproveWorkedWeek(workedWeekId, false, company, contract, userContract, user,
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
+    @Path("/approves/{workedWeekId}/note")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response setWorkedWeekNote(@PathParam("workedWeekId") String workedWeekId, CreateNote note) {
+        try {
+            WorkedWeekDAO workedDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED_WEEK);
+
+            if (!workedDAO.hasCompanyAccessToWorkedWeek(companyId, workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            if (note == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            if (!workedDAO.isWorkedWeekConfirmed(workedWeekId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            workedDAO.setCompanyNote(workedWeekId, note);
+                return Response.ok().build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
+    @Path("/approves/suggest/{workedId}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response suggestWorked(@PathParam("workedId") String workedId, CreateSuggestion suggestion) {
+        try {
+            WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED);
+
+            if (!workedDAO.hasCompanyAccessToWorked(companyId, workedId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            if (suggestion == null || (suggestion.getSuggestion() != null && suggestion.getSuggestion() < 0)) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            if (!workedDAO.isWorkedWeekConfirmedOfWorked(workedId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            workedDAO.setSuggestion(workedId, suggestion);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

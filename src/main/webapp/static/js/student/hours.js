@@ -74,11 +74,24 @@ async function updateContracts() {
     return contracts;
 }
 
-async function confirmWorkedWeek() {
-    if (document.getElementById("confirm-button").getAttribute("data-checked") === "1") {
-        unconfirmWorkedWeek();
-        return;
+function toggleNote() {
+    if (document.getElementById("confirm-button").getAttribute("data-checked") === "0") {
+        const companyDialog = document.getElementById("company-dialog");
+        companyDialog.classList.toggle("hidden");
+    } else {
+        unconfirmWorkedWeek()
     }
+}
+
+function cancelNote() {
+    const note = document.getElementById("note");
+    note.value = "";
+
+    const companyDialog = document.getElementById("company-dialog");
+    companyDialog.classList.toggle("hidden");
+}
+
+async function confirmWorkedWeek() {
 
     const error = document.getElementById("confirm-error");
     error.classList.add("hidden");
@@ -92,24 +105,47 @@ async function confirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
             {
-                method: "POST",
+                method: "PUT",
+                body: document.getElementById("note").value.toString(),
                 headers: {
                     'authorization': `token ${getJWTCookie()}`,
-                    "Content-type": "application/json",
-                    "Accept": "application/json"
+                    "Content-type": "text/plain"
                 }
             })
-            .then(() => {
-                document.getElementById("confirm-button").setAttribute("data-checked", "1");
+            .then((res) => {
+                if (res.status !== 200) {
+                    throw new Error();
+                }
+
+                fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+                    {
+                        method: "POST",
+                        headers: {
+                            'authorization': `token ${getJWTCookie()}`,
+                            "Content-type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })
+                    .then(() => {
+                        document.getElementById("confirm-button").setAttribute("data-checked", "1");
+                    })
+                    .catch(() => {
+                        const error = document.getElementById("confirm-error");
+                        error.classList.remove("hidden");
+                        error.innerText = "Could not confirm worked week";
+                    })
             })
             .catch(() => {
                 const error = document.getElementById("confirm-error");
                 error.classList.remove("hidden");
-                error.innerText = "Could not confirm worked week";
+                error.innerText = "Could not update note";
             })
     })
+
+    const companyDialog = document.getElementById("company-dialog");
+    companyDialog.classList.toggle("hidden");
 }
 
 async function unconfirmWorkedWeek() {
@@ -161,10 +197,10 @@ async function updatePage(contracts) {
         if (workedHours === null) continue;
 
         workedHoursCreated = true;
-        if (!workedHours.confirmed) confirmed = false;
+        if (workedHours.status === "NOT_CONFIRMED") confirmed = false;
 
         for (const hour of workedHours.hours) {
-            workEntries.push({hour, contract: contract.contract});
+            workEntries.push({hour, contract: contract.contract, workedWeek: workedHours });
         }
     }
 
@@ -198,11 +234,18 @@ async function updatePage(contracts) {
 
     entries.innerText = "";
     for (const workEntry of workEntries) {
-        entries.appendChild(createEntry(workEntry.hour, workEntry.contract, getSelectedWeek(), getSelectedYear()))
+        entries.appendChild(createEntry(workEntry.hour, workEntry.contract, workEntry.workedWeek.status !== "NOT_CONFIRMED", workEntry.workedWeek.status === "APPROVED", workEntry.workedWeek.status, getSelectedWeek(), getSelectedYear()))
+    }
+    
+    if (workEntries === null || workEntries.length < 1){
+        const noInvoices = document.createElement("div");
+        noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noInvoices.innerText = "No invoices";
+        entries.append(noInvoices)
     }
 }
 
-function createEntry(entry, contract, week, year) {
+function createEntry(entry, contract, confirmed, approved, status, week, year) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
     entryContainer.setAttribute("contract-id", contract.id)
@@ -212,7 +255,7 @@ function createEntry(entry, contract, week, year) {
     entryContainer.setAttribute("data-day", entry.day)
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_2fr_5fr]", "grid");
+    entryInfo.classList.add("w-full", "grid-cols-[1fr_3fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr_1fr]", "grid");
     entryContainer.appendChild(entryInfo);
 
     const calculatedDate = addDays(getDateOfISOWeek(week, year), entry.day);
@@ -222,45 +265,82 @@ function createEntry(entry, contract, week, year) {
     date.innerText = `${formatNumber(calculatedDate.getDate())}.${formatNumber(calculatedDate.getMonth() + 1)}`;
     entryInfo.appendChild(date);
 
+    const hoursDiv = document.createElement("div");
+    hoursDiv.classList.add("flex", "gap-1", "justify-center", "items-center", "sm:justify-start")
+    entryInfo.appendChild(hoursDiv);
+
+    const hasSuggestion = entry.suggestion !== undefined && entry.suggestion !== null && !approved;
     const hours = document.createElement("div");
-    hours.classList.add("text-text");
+    hours.classList.add("text-text", "font-bold", "sm:font-normal");
     hours.innerText = `${entry.minutes / 60}H`;
-    entryInfo.appendChild(hours);
+    hoursDiv.append(hours);
+
+    if (hasSuggestion) {
+        const arrow = document.createElement("img");
+        arrow.src = "/earnit/static/icons/arrow-right-white.svg";
+        arrow.classList.add("w-4");
+        hoursDiv.append(arrow);
+
+        const suggestedHours = document.createElement("div");
+        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal", "hour-input");
+        suggestedHours.innerText = `${entry.suggestion / 60}H`;
+        hoursDiv.append(suggestedHours);
+    } else {
+        hours.classList.add("hour-input");
+    }
 
     const role = document.createElement("div");
-    role.classList.add("text-text");
+    role.classList.add("text-text", "sm:col-span-1", "col-span-2");
     role.innerText = contract.role;
     entryInfo.appendChild(role);
 
     const description = document.createElement("div");
-    description.classList.add("text-text");
+    description.classList.add("text-text", "sm:col-span-1", "col-span-2");
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
+    const statusContainer = document.createElement("div");
+    statusContainer.classList.add("w-full", "flex", "justify-end", "sm:col-span-1", "col-span-2")
+    entryInfo.appendChild(statusContainer);
+
+    if (!(status === "NOT_CONFIRMED" || status === "CONFIRMED")) {
+        const statusElement = document.createElement("div");
+        statusElement.classList.add("rounded-xl", status === "APPROVED" ? "bg-accent-success" : "bg-[#FD8E28]", "p-2", "items-center", "text-white", "w-fit", "aspect-square", "flex", "justify-center", "items-center")
+        statusContainer.appendChild(statusElement);
+
+        const img = document.createElement("img");
+        img.alt = "checkmark";
+        img.src = `/earnit/static/icons/${status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
+        img.classList.add("w-4", "h-4")
+        statusElement.append(img);
+    }
+
     const editContainer = document.createElement("div");
-    editContainer.classList.add("flex", "items-center");
+    editContainer.classList.add("flex", "items-center", "flex-col", "sm:flex-row", "justify-center", "gap-5");
     entryContainer.appendChild(editContainer);
 
-    const edit1 = document.createElement("button");
-    edit1.classList.add("edit-button", "mr-5");
-    edit1.setAttribute("id", "edit1")
-    edit1.addEventListener("click", () => toggleEdit(edit1));
-    editContainer.appendChild(edit1);
+    if (!confirmed) {
+        const edit1 = document.createElement("button");
+        edit1.classList.add("edit-button");
+        edit1.setAttribute("id", "edit1")
+        edit1.addEventListener("click", () => toggleEdit(edit1));
+        editContainer.appendChild(edit1);
 
-    const edit2 = document.createElement("button");
-    edit2.classList.add("edit-button");
-    edit2.addEventListener("click", () => deleteWorkedFromServer(getUserId(), entryContainer.getAttribute("contract-id"), entryContainer.getAttribute("data-id")));
-    editContainer.appendChild(edit2);
+        const edit2 = document.createElement("button");
+        edit2.classList.add("edit-button");
+        edit2.addEventListener("click", () => deleteWorkedFromServer(getUserId(), entryContainer.getAttribute("contract-id"), entryContainer.getAttribute("data-id")));
+        editContainer.appendChild(edit2);
 
-    const image1 = document.createElement("img");
-    image1.classList.add("h-6", "w-6");
-    image1.src = "/earnit/static/icons/pencil.svg"
-    edit1.appendChild(image1);
+        const image1 = document.createElement("img");
+        image1.classList.add("h-6", "w-6");
+        image1.src = "/earnit/static/icons/pencil.svg"
+        edit1.appendChild(image1);
 
-    const image2 = document.createElement("img");
-    image2.classList.add("h-5", "w-5");
-    image2.src = "/earnit/static/icons/bin.svg"
-    edit2.appendChild(image2);
+        const image2 = document.createElement("img");
+        image2.classList.add("h-5", "w-5");
+        image2.src = "/earnit/static/icons/bin.svg"
+        edit2.appendChild(image2);
+    }
 
     return entryContainer;
 }
@@ -297,7 +377,7 @@ function fetchSheet(userid, contract) {
 
 function getQueryParams() {
     const order = getOrder();
-    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}`: ""}`
+    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
 function getOrder() {
@@ -364,7 +444,7 @@ function sendFormDataToServer(uid, ucid, formData) {
         })
 }
 
-function deleteWorkedFromServer (uid, ucid, hid) {
+function deleteWorkedFromServer(uid, ucid, hid) {
     fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
         {
             method: "DELETE",
@@ -390,9 +470,10 @@ async function submitEdittedForm(data) {
         return false;
     }
 
-    let json = {day: data.day, minutes: data.minutes, work: data.work, id: data.id
-            //position: data.position
-        }
+    let json = {
+        day: data.day, minutes: data.minutes, work: data.work, id: data.id
+        //position: data.position
+    }
     const updated = await fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
         {
             method: "PUT",
@@ -459,7 +540,7 @@ async function toggleEdit(button) {
         const updatedData = {
             id: entry.getAttribute("data-id"),
             day: entry.getAttribute("data-day"),
-            minutes: parseInt(textElements[1].textContent) * 60,
+            minutes: parseFloat(textElements[1].textContent) * 60,
             // position: textElements[2].textContent,
             work: textElements[3].textContent,
             ucid: entry.getAttribute("contract-id"),
@@ -469,7 +550,7 @@ async function toggleEdit(button) {
         };
 
         // Send the updatedData to the server or perform any necessary actions
-        if(!(await submitEdittedForm(updatedData))) {
+        if (!(await submitEdittedForm(updatedData))) {
             textElements.forEach((element, index) => {
                 if (index !== 2 && index !== 0) {
                     const isEditable = element.contentEditable === 'true';
@@ -590,5 +671,5 @@ function formatNumber(number) {
 
 // todo when pencil clicked, bin should change into cross button
 // todo when bin clicked, be asked to confirm your action
-// todo sorting buttons
+// todo alert should dissapear when other week is selected
 // todo when submit button clicked, input fields should go blank

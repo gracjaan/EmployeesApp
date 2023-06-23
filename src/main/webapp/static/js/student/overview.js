@@ -1,29 +1,30 @@
 window.addEventListener("helpersLoaded", async () => {
 
     const date = document.getElementById("date");
-    date.addEventListener("click", () => select("date"));
+    date.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
 
     const hours = document.getElementById("hours");
-    hours.addEventListener("click", () => select("hours"));
+    hours.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
 
     const ctx = document.getElementById('myChart');
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.3
-            }, {
-                label: 'My Second Dataset',
-                data: [20, 30, 90, 37, 56, 88, 44],
-                fill: false,
-                borderColor: 'rgb(77, 20, 100)',
-                tension: 0.3
-            }]
+            labels: [
+                "Week " + (getCurrentWeek() - 5),
+                "Week " + (getCurrentWeek() - 4),
+                "Week " + (getCurrentWeek() - 3),
+                "Week " + (getCurrentWeek() - 2),
+                "Week " + (getCurrentWeek() - 1),
+                "Week " + getCurrentWeek()
+            ],
+            datasets: await getData()
         },
         options: {
             scales: {
@@ -35,6 +36,12 @@ window.addEventListener("helpersLoaded", async () => {
     });
 
     updatePage(await obtainContractsForUser(getUserId()))
+
+    const week = document.getElementById("week");
+    week.addEventListener("change", async (e) => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    })
 })
 
 function obtainContractsForUser(uid) {
@@ -47,8 +54,18 @@ function obtainContractsForUser(uid) {
         .catch(e => null);
 }
 
+function obtainInvoices(contract) {
+    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(e => null);
+}
+
 function fetchSheet(userid, contract) {
-    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getCurrentYear()}/${getCurrentWeek()}?${getQueryParams()}`, {
+    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getSelectedYear()}/${getSelectedWeek()}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -61,13 +78,48 @@ async function updatePage(contracts) {
     const entries = document.getElementById("entries");
     entries.innerText = "";
 
+    const workEntries = [];
+
     for (const contract of contracts) {
         const workedHours = await fetchSheet(getUserId(), contract);
         if (workedHours === null) continue;
 
         for (const hour of workedHours.hours) {
-            entries.appendChild(createEntry(hour, contract.contract, getCurrentWeek(), getCurrentYear()))
+            workEntries.push({hour, contract: contract.contract});
         }
+    }
+
+    const date = document.getElementById("date");
+    const dateSelected = date.getAttribute("data-selected");
+
+    const hours = document.getElementById("hours");
+    const hoursSelected = hours.getAttribute("data-selected");
+
+    let order = 0;
+    let key = "";
+    if (dateSelected > 0) {
+        order = (dateSelected === "1" ? 1 : -1);
+        key = "day"
+    } else if (hoursSelected > 0) {
+        order = (hoursSelected === "1" ? 1 : -1);
+        key = "minutes"
+    }
+
+    workEntries.sort((a, b) => a.hour[key] - b.hour[key]);
+    if (order < 0) {
+        workEntries.reverse();
+    }
+
+    entries.innerText = "";
+    for (const workEntry of workEntries) {
+        entries.appendChild(createEntry(workEntry.hour, workEntry.contract, getSelectedWeek(), getSelectedYear()))
+    }
+
+    if (workEntries === null || workEntries.length < 1){
+        const noInvoices = document.createElement("div");
+        noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noInvoices.innerText = "No invoices";
+        entries.append(noInvoices)
     }
 }
 
@@ -151,20 +203,14 @@ function getOrder() {
     return order;
 }
 
-function getCurrentYear() {
-    const currentDate = new Date();
-    return currentDate.getFullYear();
+function getSelectedYear() {
+    const header = document.getElementById("week");
+    return header.getAttribute("data-year").toString();
 }
 
-function getCurrentWeek() {
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), 0, 1);
-    const days = Math.floor((currentDate - startDate) /
-        (24 * 60 * 60 * 1000));
-
-    const weekNumber = Math.ceil(days / 7);
-
-    return weekNumber;
+function getSelectedWeek() {
+    const header = document.getElementById("week");
+    return header.getAttribute("data-week").toString();
 }
 
 function getDateOfISOWeek(w, y) {
@@ -195,11 +241,19 @@ function formatNumber(number) {
     });
 }
 
-function weeksInYear(year) {
-    return Math.max(
-        getWeek(new Date(year, 11, 31))
-        , getWeek(new Date(year, 11, 31-7))
-    );
+
+async function updateContracts() {
+    const contracts = await obtainContractsForUser(getUserId())
+
+    if (contracts === null) {
+        return null;
+    }
+
+    return contracts;
+}
+
+function getCurrentWeek() {
+    return getWeek(new Date());
 }
 
 function getWeek(ofDate) {
@@ -214,50 +268,57 @@ function getWeek(ofDate) {
         - 3 + (week1.getDay() + 6) % 7) / 7);
 }
 
-function togglePosition() {
-    const dropdown = document.getElementById("position-content");
-    dropdown.classList.toggle("hidden");
-}
-
-function selectPosition(option) {
-    const header = document.getElementById("position-header");
-    header.setAttribute('data-role', option.getAttribute("data-role"));
-    header.setAttribute('data-id', option.getAttribute("data-id"));
-    header.textContent = option.textContent;
-    togglePosition();
-}
-
-document.addEventListener("click", function (event) {
-    const dropdown = document.getElementById("position-content");
-    const button = document.getElementById("position-button");
-    const targetElement = event.target;
-
-    if (!dropdown.classList.contains("hidden") && !button.contains(targetElement)) {
-        dropdown.classList.add("hidden");
-    }
-});
-
-async function updateContracts() {
-    const contracts = await obtainContractsForUser(getUserId())
-
-    if (contracts === null) {
-        return null;
+async function getData() {
+    let data = [];
+    const contracts = await obtainContractsForUser(getUserId());
+    let arrayOfInvoices = [];
+    for (let contract of contracts) {
+        arrayOfInvoices.push(await obtainInvoices(contract))
     }
 
-    const positionContent = document.getElementById('position-content');
-    positionContent.innerText = "";
+    console.log(arrayOfInvoices)
+    console.log(contracts)
 
-    contracts.forEach(c => {
-        const option = document.createElement('div');
-        option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
-        option.textContent = c.contract.role;
-        option.setAttribute('data-role', c.contract.role);
-        option.setAttribute('data-id', c.contract.id);
-        option.addEventListener('click', () => selectPosition(option));
-        positionContent.appendChild(option);
-    });
+    const defined = [{borderColor: 'rgb(237, 76, 76)', name: "My first data"}, {borderColor: 'rgb(255, 172, 28)', name: "My second data"}, {borderColor: 'rgb(231,226,95)', name: "My third data"}, {borderColor: 'rgb(75, 192, 192)', name: "My fourth data"}];
 
-    return contracts;
+    let index = 0;
+    arrayOfInvoices.forEach(invoice => {
+        let week0 = 0;
+        let week1 = 0;
+        let week2 = 0;
+        let week3 = 0;
+        let week4 = 0;
+        let week5 = 0;
+
+        invoice.forEach(i => {
+
+            if (i.week === getCurrentWeek() - 5) {
+                week0 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 4) {
+                week1 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 3) {
+                week2 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 2) {
+                week3 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek() - 1) {
+                week4 += i.totalMinutes;
+            } else if (i.week === getCurrentWeek()) {
+                week5 += i.totalMinutes;
+            }
+        })
+
+        data.push({
+            label: contracts[index].contract.role,
+            data: [week0/60, week1/60, week2/60, week3/60, week4/60, week5/60],
+            fill: false,
+            borderColor: defined[index%3].borderColor,
+            tension: 0.3
+        })
+
+        index ++;
+    })
+    console.log(data)
+    return data;
 }
 
 

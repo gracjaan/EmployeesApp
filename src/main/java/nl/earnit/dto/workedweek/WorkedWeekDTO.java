@@ -17,9 +17,7 @@ public class WorkedWeekDTO {
     private Integer year;
     private Integer week;
     private String note;
-    private Boolean confirmed;
-    private Boolean approved;
-    private Boolean solved;
+    private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserResponse user;
@@ -33,10 +31,12 @@ public class WorkedWeekDTO {
     private List<Worked> hours;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer totalMinutes;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String companyNote;
 
     public WorkedWeekDTO(String id, String contractId, Integer year, Integer week,
                          String note,
-                         Boolean confirmed, Boolean approved, Boolean solved,
+                         String status,
                          UserResponse user, Company company, UserContract userContract,
                          Contract contract, List<Worked> hours, Integer totalHours) {
         this.id = id;
@@ -44,9 +44,7 @@ public class WorkedWeekDTO {
         this.year = year;
         this.week = week;
         this.note = note;
-        this.confirmed = confirmed;
-        this.approved = approved;
-        this.solved = solved;
+        this.status = status;
         this.user = user;
         this.company = company;
         this.userContract = userContract;
@@ -97,28 +95,12 @@ public class WorkedWeekDTO {
         this.note = note;
     }
 
-    public Boolean getConfirmed() {
-        return confirmed;
+    public String getStatus() {
+        return status;
     }
 
-    public void setConfirmed(Boolean confirmed) {
-        this.confirmed = confirmed;
-    }
-
-    public Boolean getApproved() {
-        return approved;
-    }
-
-    public void setApproved(Boolean approved) {
-        this.approved = approved;
-    }
-
-    public Boolean getSolved() {
-        return solved;
-    }
-
-    public void setSolved(Boolean solved) {
-        this.solved = solved;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public UserResponse getUser() {
@@ -167,5 +149,13 @@ public class WorkedWeekDTO {
 
     public void setTotalMinutes(Integer totalMinutes) {
         this.totalMinutes = totalMinutes;
+    }
+
+    public String getCompanyNote() {
+        return companyNote;
+    }
+
+    public void setCompanyNote(String companyNote) {
+        this.companyNote = companyNote;
     }
 }

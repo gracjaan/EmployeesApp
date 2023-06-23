@@ -35,7 +35,7 @@ function updateChart(studentsPerCompany) {
 
     for (const workedWeek of studentsPerCompany) {
         const label = escapeHtml(workedWeek.user.firstName);
-        
+        const hours = workedWeek.totalMinutes / 60;
         const id = workedWeek.user.id;
 
         if (ids.includes(id)) {

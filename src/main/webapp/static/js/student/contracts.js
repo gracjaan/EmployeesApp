@@ -3,12 +3,20 @@ let currentPage = 0;
 let lastIndex = 0;
 window.addEventListener("helpersLoaded", async () => {
     updatePage(await obtainContractsForUser(getUserId()))
-    arrayOfDivs[0].classList.toggle("hidden");
-    lastIndex = arrayOfDivs.length - 1;
 })
 
 function obtainContractsForUser(uid) {
     return fetch("/earnit/api/users/" + uid + "/contracts", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(e => null);
+}
+
+function obtainInvoice(contract) {
+    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -22,17 +30,27 @@ async function updatePage(contracts) {
     entries.innerText = "";
 
     for (const contract of contracts) {
-        arrayOfDivs.push(entries.appendChild(createEntry(contract)))
+        const invoice = await obtainInvoice(contract);
+        arrayOfDivs.push(entries.appendChild(createEntry(contract, invoice)))
     }
+
+    if (arrayOfDivs === null || arrayOfDivs.length < 1){
+        const noContracts = document.createElement("div");
+        noContracts.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noContracts.innerText = "No contracts yet";
+        entries.append(noContracts)
+    }
+
+    arrayOfDivs[0].classList.toggle("hidden");
+    lastIndex = arrayOfDivs.length - 1;
 }
 
-function handleRightClick () {
-    if (currentPage < lastIndex){
+function handleRightClick() {
+    if (currentPage < lastIndex) {
         currentPage += 1;
-        arrayOfDivs[currentPage-1].classList.toggle("hidden");
+        arrayOfDivs[currentPage - 1].classList.toggle("hidden");
         arrayOfDivs[currentPage].classList.toggle("hidden");
-    }
-    else {
+    } else {
         arrayOfDivs[currentPage].classList.toggle("hidden");
         currentPage = 0;
         arrayOfDivs[currentPage].classList.toggle("hidden");
@@ -41,34 +59,120 @@ function handleRightClick () {
 
 }
 
-function handleLeftClick () {
-    if (currentPage == 0){
+function handleLeftClick() {
+    if (currentPage == 0) {
         arrayOfDivs[currentPage].classList.toggle("hidden");
         currentPage = lastIndex;
         arrayOfDivs[currentPage].classList.toggle("hidden");
-    }
-    else {
+    } else {
         currentPage -= 1;
-        arrayOfDivs[currentPage+1].classList.toggle("hidden");
+        arrayOfDivs[currentPage + 1].classList.toggle("hidden");
         arrayOfDivs[currentPage].classList.toggle("hidden");
     }
 }
 
-function createEntry(contract) {
+function createEntry(contract, invoice) {
     const entryContainer = document.createElement("div");
-    entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "justify-between", "w-full", "h-full", "hidden");
+    entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "gap-2", "justify-between", "w-full", "h-full", "hidden");
+    entryContainer.style.overflowY = "auto";
+
+    const rowcontainer = document.createElement("div");
+    rowcontainer.classList.add("w-full", "flex", "flex-row", "justify-between", "items-center")
+
+    const leftrow = document.createElement("div");
+
+    const entryInfo0 = document.createElement("div");
+    entryInfo0.classList.add("text-text", "font-bold", "uppercase");
+    entryInfo0.innerText = invoice[0].company.name;
+    leftrow.appendChild(entryInfo0);
 
     const entryInfo1 = document.createElement("div");
     entryInfo1.classList.add("text-text", "font-bold", "uppercase");
     entryInfo1.innerText = contract.contract.role;
-    entryContainer.appendChild(entryInfo1);
+    leftrow.appendChild(entryInfo1);
+
+    const rightrow = document.createElement("button");
+    rightrow.addEventListener("click", () => generateAllInvoices(contract));
+
+    const img = document.createElement("img");
+    img.alt = "download-all"
+    img.classList.add("h-8", "w-8");
+    img.src = "/earnit/static/icons/download-single.svg"
+    rightrow.appendChild(img)
+
+    rowcontainer.appendChild(leftrow);
+    rowcontainer.appendChild(rightrow)
+    entryContainer.appendChild(rowcontainer);
 
     const entryInfo2 = document.createElement("div");
-    entryInfo2.classList.add("text-text");
+    entryInfo2.classList.add("text-text", "mt-4", "mb-4", "text-justify");
     entryInfo2.innerText = contract.contract.description;
     entryContainer.appendChild(entryInfo2);
 
+    const entryInfo3 = document.createElement("div");
+    entryInfo3.classList.add("overflow-auto");
+
+    for (const i of invoice) {
+        const ei = document.createElement("div");
+        ei.classList.add("bg-primary", "rounded-lg", "mt-2", "p-4", "flex", "flex-row", "justify-between");
+
+        const eo = document.createElement("div");
+        eo.classList.add("text-text", "font-bold")
+        eo.innerText = "Week " + i.week;
+        ei.appendChild(eo)
+
+        const ep = document.createElement("div");
+        ep.classList.add("text-text")
+        ep.innerText = (i.totalMinutes)/60 + "H";
+        ei.appendChild(ep)
+
+        const ea = document.createElement("button");
+        ea.addEventListener("click", () => generateInvoice(contract, i));
+        //onclick and others
+
+        const image1 = document.createElement("img");
+        image1.classList.add("h-6", "w-6");
+        image1.src = "/earnit/static/icons/download-single.svg"
+        ea.appendChild(image1);
+
+        ei.appendChild(ea)
+
+        entryInfo3.appendChild(ei);
+    }
+
+    entryContainer.appendChild(entryInfo3);
+
     return entryContainer;
+}
+
+function generateInvoice (contract, invoice) {
+    fetch(`/earnit/api/users/${getUserId()}/contracts/${contract.id}/invoices/download/${invoice.year}/${invoice.week}`, {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+        }
+    })
+        .then(async res =>  ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] }))
+        .then(({ data, filename }) => {
+            const a = document.createElement("a");
+            a.href = window.URL.createObjectURL(data);
+            a.download = filename;
+            a.click();
+        });
+}
+
+function generateAllInvoices (contract) {
+    fetch(`/earnit/api/users/${getUserId()}/contracts/${contract.id}/invoices/download`, {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+        }
+    })
+        .then(async res =>  ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] }))
+        .then(({ data, filename }) => {
+            const a = document.createElement("a");
+            a.href = window.URL.createObjectURL(data);
+            a.download = filename;
+            a.click();
+        });
 }
 
 

@@ -2,17 +2,16 @@ package nl.earnit.resources.staff;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.*;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
+import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
-import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoSolvedDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
-import nl.earnit.models.db.WorkedWeek;
 import nl.earnit.models.resource.companies.CompanyCounts;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/staff")
@@ -110,7 +109,11 @@ public class StaffResource {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
 
-            return Response.ok(workedWeekDAO.setSolvedWorkedWeek(workedWeekId, true, company, contract, userContract, user, hours, totalHours, order)).build();
+            if (!workedWeekDAO.acceptStudentSuggestion(workedWeekId)) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user, hours, totalHours, order)).build();
         } catch (Exception e) {
             System.out.println(e);
             return Response.serverError().build();
@@ -133,7 +136,11 @@ public class StaffResource {
         try {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            return Response.ok(workedWeekDAO.setSolvedWorkedWeek(workedWeekId, false, company, contract, userContract, user, hours, totalHours, order)).build();
+            if (!workedWeekDAO.acceptCompanySuggestion(workedWeekId)) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user, hours, totalHours, order)).build();
         } catch (Exception e) {
             return Response.serverError().build();
         }
@@ -158,8 +165,25 @@ public class StaffResource {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
 
-            return Response.ok(workedWeekDAO.setSolvedWorkedWeek(workedWeekId, workedWeekUndoSolvedDTO.getSolved(), company, contract, userContract, user,
-                hours, totalHours, order)).build();
+            String status;
+            if (workedWeekUndoSolvedDTO.getSolved() == null) {
+                status = "SUGGESTION_DENIED";
+            } else {
+                status = "APPROVED";
+
+                if (!workedWeekUndoSolvedDTO.getSolved()) {
+                    if (!workedWeekDAO.acceptCompanySuggestion(workedWeekId)) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
+                } else {
+                    if (!workedWeekDAO.acceptStudentSuggestion(workedWeekId)) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
+                }
+            }
+
+
+            return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user, hours, totalHours, order)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

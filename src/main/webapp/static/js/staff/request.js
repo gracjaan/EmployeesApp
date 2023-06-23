@@ -22,6 +22,8 @@ window.addEventListener("helpersLoaded", async () => {
     await updateHours();
 });
 
+// @TODO: change to either accept company or student
+
 async function updateHours() {
     const request = await getRequestForStaff(getWorkedWeekId(), getJWTCookie());
     if (request === null) {
@@ -99,6 +101,12 @@ function undo(workedWeekId, token) {
         .catch(() => null);
 }
 
+function isCompanyAccepted(workedWeek) {
+    if (typeof workedWeek.hours === 'undefined' || workedWeek.hours.length < 1) return null;
+
+    return workedWeek.hours[0].minutes === workedWeek.hours[0].suggestion;
+}
+
 function updatePage(request) {
     const name = document.getElementById("name");
     name.innerHTML = getName(escapeHtml(request.user.firstName), escapeHtml(request.user.lastName), escapeHtml(request.user.lastNamePrefix), "<br />");
@@ -110,12 +118,12 @@ function updatePage(request) {
         entries.appendChild(createEntry(request.year, request.week, request.contract, hour));
     }
 
-    if (request.solved !== null) {
+    if (request.status !== "SUGGESTION_DENIED") {
         document.getElementById("accept").classList.add("hidden");
         document.getElementById("reject").classList.add("hidden");
         document.getElementById("undo").classList.remove("hidden");
 
-        if (request.solved) {
+        if (!isCompanyAccepted(request)) {
             document.getElementById("rejected").classList.add("hidden");
             document.getElementById("accepted").classList.remove("hidden");
         } else {
