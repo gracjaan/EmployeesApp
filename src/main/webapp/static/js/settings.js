@@ -5,7 +5,6 @@ const validateName = (name) => name.length > 2;
 
 //Validating company details
 const validateAddress1 = (address1) => address1.length > 6;
-const validateAddress2 = (address2) => address2.length > 0;
 const validateKVK = (kvkNumber) => {
     let kvkNumberRegex = /^\d{8}$/;
     return kvkNumberRegex.test(kvkNumber);
@@ -131,6 +130,27 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     function updateCompany(company) {
+        const name = document.getElementById("name").value.trim();
+        if (!validateName(name)) {
+            document.getElementById("company-error").innerText = "Name needs to be at least 3 characters";
+            document.getElementById("company-error").classList.remove("hidden");
+            return;
+        }
+
+        const address = document.getElementById("company-address").value.trim();
+        if (!validateAddress1(address)) {
+            document.getElementById("company-error").innerText = "Address needs to be at least 6 characters";
+            document.getElementById("company-error").classList.remove("hidden");
+            return;
+        }
+
+        const kvk = document.getElementById("company-kvk").value.trim();
+        if (!validateKVK(kvk)) {
+            document.getElementById("company-error").innerText = "Invalid KVK format";
+            document.getElementById("company-error").classList.remove("hidden");
+            return;
+        }
+
         return fetch("/earnit/api/companies/" + getUserCompany(), {
             method: 'put',
             headers: {
