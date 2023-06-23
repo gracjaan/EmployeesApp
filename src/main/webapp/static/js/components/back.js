@@ -1,6 +1,5 @@
 window.addEventListener("helpersLoaded", () => {
     function setupOrderSelector(backElement) {
-        backElement.addEventListener("click", () => select(backElement));
         backElement.setAttribute("data-selected", "0");
         backElement.classList.add("group");
 
@@ -8,12 +7,12 @@ window.addEventListener("helpersLoaded", () => {
         const header = document.createElement("header");
         header.classList.add("flex", "bg-primary", "w-fit", "p-2", "rounded-br-lg", "cursor-pointer");
         header.addEventListener("click", () => {
-                    if (header.hasAttribute("data-home")) {
-                        location.href = "/earnit"
-                    } else {
-                        history.back();
-                    }
-                })
+            if (header.hasAttribute("data-home")) {
+                location.href = "/earnit"
+            } else {
+                history.back();
+            }
+        })
 
         backElement.append(header);
 
