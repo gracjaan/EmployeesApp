@@ -1,19 +1,16 @@
 window.addEventListener("helpersLoaded", () => {
-    function setupOrderSelector(backElement) {
-        backElement.addEventListener("click", () => select(backElement));
-        backElement.setAttribute("data-selected", "0");
+    function setupBackElement(backElement) {
         backElement.classList.add("group");
-
 
         const header = document.createElement("header");
         header.classList.add("flex", "bg-primary", "w-fit", "p-2", "rounded-br-lg", "cursor-pointer");
         header.addEventListener("click", () => {
-                    if (header.hasAttribute("data-home")) {
-                        location.href = "/earnit"
-                    } else {
-                        history.back();
-                    }
-                })
+            if (backElement.hasAttribute("data-home")) {
+                location.href = "/earnit"
+            } else {
+                history.back();
+            }
+        })
 
         backElement.append(header);
 
@@ -32,6 +29,6 @@ window.addEventListener("helpersLoaded", () => {
     const backElements = document.getElementsByTagName("back");
 
     for (const backElement of backElements) {
-        setupOrderSelector(backElement);
+        setupBackElement(backElement);
     }
 });

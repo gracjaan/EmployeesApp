@@ -10,9 +10,6 @@ acceptButton.addEventListener("click", () => approve(getWorkedWeekId(), getJWTCo
 const rejectButton = document.getElementById("reject");
 rejectButton.addEventListener("click", () => reject(getWorkedWeekId(), getJWTCookie()));
 
-const undoButton = document.getElementById("undo");
-undoButton.addEventListener("click", () => undo(getWorkedWeekId(), getJWTCookie()));
-
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     name.addEventListener("click", () => {
@@ -82,25 +79,6 @@ function reject(workedWeekId, token) {
         .catch(() => null);
 }
 
-function undo(workedWeekId, token) {
-    fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
-        method: 'PUT',
-        headers: {
-            'authorization': `token ${token}`,
-            'accept-type': 'application/json',
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            solved: null
-        })
-    })
-        .then(async (res) => await res.json())
-        .then((request) => {
-            updatePage(request);
-        })
-        .catch(() => null);
-}
-
 function isCompanyAccepted(workedWeek) {
     if (typeof workedWeek.hours === 'undefined' || workedWeek.hours.length < 1) return null;
 
@@ -115,13 +93,28 @@ function updatePage(request) {
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
     for (const hour of request.hours) {
-        entries.appendChild(createEntry(request.year, request.week, request.contract, hour));
+        entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.status === "APPROVED"));
+    }
+
+    const usernote = document.getElementById("user-note");
+    if (request.note === undefined) {
+        usernote.innerText = "Not provided";
+    }
+    else {
+        usernote.innerText = request.note;
+    }
+
+    const companynote = document.getElementById("company-note");
+    if (request.companyNote === undefined){
+        companynote.innerText = "Not provided";
+    }
+    else{
+        companynote.innerText = request.companyNote;
     }
 
     if (request.status !== "SUGGESTION_DENIED") {
         document.getElementById("accept").classList.add("hidden");
         document.getElementById("reject").classList.add("hidden");
-        document.getElementById("undo").classList.remove("hidden");
 
         if (!isCompanyAccepted(request)) {
             document.getElementById("rejected").classList.add("hidden");
@@ -136,12 +129,10 @@ function updatePage(request) {
 
         document.getElementById("rejected").classList.add("hidden");
         document.getElementById("accepted").classList.add("hidden");
-
-        document.getElementById("undo").classList.add("hidden");
     }
 }
 
-function createEntry(year, week, contract, entry) {
+function createEntry(year, week, contract, entry, approved) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
 
@@ -156,10 +147,27 @@ function createEntry(year, week, contract, entry) {
     date.innerText = `${formatNumber(calculatedDate.getDate())}.${formatNumber(calculatedDate.getMonth() + 1)}`;
     entryInfo.appendChild(date);
 
+    const hoursDiv = document.createElement("div");
+    hoursDiv.classList.add("flex", "gap-1", "justify-center", "items-center", "sm:justify-start")
+    entryInfo.appendChild(hoursDiv);
+
+    const hasSuggestion = entry.suggestion !== undefined && entry.suggestion !== null && !approved;
     const hours = document.createElement("div");
     hours.classList.add("text-text", "font-bold", "sm:font-normal");
     hours.innerText = `${entry.minutes / 60}H`;
-    entryInfo.appendChild(hours);
+    hoursDiv.append(hours);
+
+    if (hasSuggestion) {
+        const arrow = document.createElement("img");
+        arrow.src = "/earnit/static/icons/arrow-right-white.svg";
+        arrow.classList.add("w-4");
+        hoursDiv.append(arrow);
+
+        const suggestedHours = document.createElement("div");
+        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal");
+        suggestedHours.innerText = `${entry.suggestion / 60}H`;
+        hoursDiv.append(suggestedHours);
+    }
 
     const role = document.createElement("div");
     role.classList.add("text-text", "font-bold", "sm:font-normal");

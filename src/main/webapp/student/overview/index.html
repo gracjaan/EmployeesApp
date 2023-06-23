@@ -37,10 +37,15 @@
             <div
                     class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
             >
-                <div class="flex gap-2">
-                    <week-selector id="week"></week-selector>
-                    <order-selector id="date" group="1" title="Date"></order-selector>
-                    <order-selector id="hours" group="1" title="Hours"></order-selector>
+                <div class="flex justify-between">
+                    <div class="flex gap-2">
+                        <week-selector id="week"></week-selector>
+                        <order-selector id="date" group="1" title="Date"></order-selector>
+                        <order-selector id="hours" group="1" title="Hours"></order-selector>
+                    </div>
+                    <button onclick="generateAllInvoices()">
+                        <img src="/earnit/static/icons/download.svg" class="flex w-7 mx-auto">
+                    </button>
                 </div>
                 <div class="flex flex-col gap-2" id="entries">
                     <!-- entries -->

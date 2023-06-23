@@ -11,6 +11,24 @@ window.addEventListener("helpersLoaded", async () => {
         await updatePage(contracts);
     });
 
+    const suggestionDate = document.getElementById("suggestion-date");
+    suggestionDate.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
+
+    const suggestionHours = document.getElementById("suggestion-hours");
+    suggestionHours.addEventListener("change", async () => {
+        const contracts = await updateContracts();
+        await updatePage(contracts);
+    });
+
+    const acceptButton = document.getElementById("accept");
+    acceptButton.addEventListener("click", () => approveSuggestion(getSuggestionContractId(), getSuggestionYear(), getSuggestionWeek(), getJWTCookie()));
+
+    const rejectButton = document.getElementById("reject");
+    rejectButton.addEventListener("click", () => rejectSuggestion(getSuggestionContractId(), getSuggestionYear(), getSuggestionWeek(), getJWTCookie()));
+
     const dropdown = document.getElementById("day-content");
 
     dropdown.addEventListener("click", async (e) => {
@@ -186,14 +204,64 @@ async function unconfirmWorkedWeek() {
     })
 }
 
+function getSuggestionContractId() {
+    const search = new URLSearchParams(location.search);
+    if (!search.has("suggestion")) {
+        return null;
+    }
+
+    return search.get("suggestion").split("!")[0];
+}
+
+function getSuggestionYear() {
+    const search = new URLSearchParams(location.search);
+    if (!search.has("suggestion")) {
+        return null;
+    }
+
+    return search.get("suggestion").split("!")[1];
+}
+
+function getSuggestionWeek() {
+    const search = new URLSearchParams(location.search);
+    if (!search.has("suggestion")) {
+        return null;
+    }
+
+    return search.get("suggestion").split("!")[2];
+}
+
 async function updatePage(contracts) {
     const entries = document.getElementById("entries");
+    const suggestionEntries = document.getElementById("suggestion-entries");
+
+    const suggestionId = getSuggestionContractId();
+    const showSuggestion = suggestionId !== null;
+
+    const suggestionDialog = document.getElementById("suggestion");
+    suggestionDialog.classList.toggle("hidden", !showSuggestion);
+
+    if (showSuggestion) {
+        const workedHours = await fetchSheet(getUserId(), { id: suggestionId }, getSuggestionYear(), getSuggestionWeek(), true);
+
+        suggestionEntries.innerText = "";
+        if (workedHours !== null) {
+            const suggestionRole = document.getElementById("suggestion-role");
+            suggestionRole.innerText = workedHours.contract.role;
+
+            for (const hour of workedHours.hours) {
+                suggestionEntries.append(createEntry(hour, workedHours.contract, workedHours.status !== "NOT_CONFIRMED", workedHours.status === "APPROVED", workedHours.status, getSuggestionYear(), getSuggestionWeek(), true))
+            }
+        } else {
+            suggestionDialog.classList.toggle("hidden", true);
+        }
+    }
 
     const workEntries = [];
     let confirmed = true;
     let workedHoursCreated = false;
     for (const contract of contracts) {
-        const workedHours = await fetchSheet(getUserId(), contract);
+        const workedHours = await fetchSheet(getUserId(), contract, getSelectedYear(), getSelectedWeek());
         if (workedHours === null) continue;
 
         workedHoursCreated = true;
@@ -245,9 +313,9 @@ async function updatePage(contracts) {
     }
 }
 
-function createEntry(entry, contract, confirmed, approved, status, week, year) {
+function createEntry(entry, contract, confirmed, approved, status, week, year, forSuggestion = false) {
     const entryContainer = document.createElement("div");
-    entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
+    entryContainer.classList.add("rounded-xl", "bg-primary", "px-4", status === "NOT_CONFIRMED" || status === "CONFIRMED" ? "py-3" : "py-2", "relative", "flex", "justify-between");
     entryContainer.setAttribute("contract-id", contract.id)
     entryContainer.setAttribute("data-id", entry.id)
     entryContainer.setAttribute("data-week", week)
@@ -255,7 +323,7 @@ function createEntry(entry, contract, confirmed, approved, status, week, year) {
     entryContainer.setAttribute("data-day", entry.day)
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[1fr_3fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr_1fr]", "grid");
+    entryInfo.classList.add("w-full", "grid-cols-[1fr_3fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr_1fr]", "grid", "items-center");
     entryContainer.appendChild(entryInfo);
 
     const calculatedDate = addDays(getDateOfISOWeek(week, year), entry.day);
@@ -313,6 +381,21 @@ function createEntry(entry, contract, confirmed, approved, status, week, year) {
         img.src = `/earnit/static/icons/${status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
         img.classList.add("w-4", "h-4")
         statusElement.append(img);
+
+        if (status === "SUGGESTED" && !forSuggestion) {
+            entryContainer.classList.add("cursor-pointer");
+            entryContainer.addEventListener("click", async () => {
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?suggestion=' + contract.id + `!${getSelectedYear()}!${getSelectedWeek()}`;
+
+                if (history.pushState) {
+                    window.history.pushState({ path: newUrl }, '', newUrl);
+                    const contracts = await updateContracts();
+                    await updatePage(contracts);
+                } else {
+                    window.location.href = newUrl;
+                }
+            })
+        }
     }
 
     const editContainer = document.createElement("div");
@@ -365,8 +448,8 @@ function getSelectedYear() {
     return header.getAttribute("data-year").toString();
 }
 
-function fetchSheet(userid, contract) {
-    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getSelectedYear()}/${getSelectedWeek()}?${getQueryParams()}`, {
+function fetchSheet(userid, contract, year, week, suggestion = false) {
+    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${year}/${week}?${getQueryParams(suggestion)}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -375,16 +458,16 @@ function fetchSheet(userid, contract) {
         .catch(() => null);
 }
 
-function getQueryParams() {
-    const order = getOrder();
+function getQueryParams(suggestion = false) {
+    const order = getOrder(suggestion);
     return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
-function getOrder() {
-    const date = document.getElementById("date");
+function getOrder(suggestion = false) {
+    const date = document.getElementById(suggestion ? "suggestion-date" : "date");
     const dateSelected = date.getAttribute("data-selected");
 
-    const hours = document.getElementById("hours");
+    const hours = document.getElementById(suggestion ? "suggestion-hours" : "hours");
     const hoursSelected = hours.getAttribute("data-selected");
 
     let order = "";
@@ -395,6 +478,54 @@ function getOrder() {
     }
 
     return order;
+}
+
+function approveSuggestion(contractId, year, week, token) {
+    fetch(`/earnit/api/users/${getUserId()}/contracts/${contractId}/worked/${year}/${week}/suggestions?${getQueryParams(true)}`, {
+        method: 'POST',
+        headers: {
+            'authorization': `token ${token}`,
+            'accept-type': 'application/json'
+        }
+    })
+        .then(async (res) => {
+            if (res.status !== 200) throw new Error();
+
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+
+            if (history.pushState) {
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                const contracts = await updateContracts();
+                await updatePage(contracts);
+            } else {
+                window.location.href = newUrl;
+            }
+        })
+        .catch(() => null);
+}
+
+function rejectSuggestion(contractId, year, week, token) {
+    fetch(`/earnit/api/users/${getUserId()}/contracts/${contractId}/worked/${year}/${week}/suggestions?${getQueryParams(true)}`, {
+        method: 'DELETE',
+        headers: {
+            'authorization': `token ${token}`,
+            'accept-type': 'application/json'
+        }
+    })
+        .then(async (res) => {
+            if (res.status !== 200) throw new Error();
+
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+
+            if (history.pushState) {
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                const contracts = await updateContracts();
+                await updatePage(contracts);
+            } else {
+                window.location.href = newUrl;
+            }
+        })
+        .catch(() => null);
 }
 
 async function submitForm() {

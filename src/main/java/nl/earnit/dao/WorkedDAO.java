@@ -190,4 +190,32 @@ public class WorkedDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 2, workedId);
         statement.executeUpdate();
     }
+
+    public boolean acceptCompanySuggestion(String workedWeekId) throws SQLException {
+        // Create query
+        String query = """
+            UPDATE "%s" SET minutes = suggestion where worked_week_id = ? and suggestion IS NOT NULL RETURNING id""".formatted(tableName);
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return success
+        return res.next();
+    }
+
+    public boolean acceptStudentSuggestion(String workedWeekId) throws SQLException {
+        // Create query
+        String query = """
+            UPDATE "%s" SET suggestion = null where worked_week_id = ? RETURNING id""".formatted(tableName);
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
+
+        // Execute query
+        ResultSet res = statement.executeQuery();
+
+        // Return success
+        return res.next();
+    }
 }

@@ -33,10 +33,9 @@
                         <order-selector id="contract" group="1" title="Contract"></order-selector>
                         <order-selector id="hours" group="1" title="Hours"></order-selector>
                         <order-selector id="user" group="1" title="User"></order-selector>
+                        <img src="/earnit/static/icons/download.svg" class="w-10 h-10 flex sm:hidden cursor-pointer" onclick="downloadAllInvoice()">
                     </div>
-                    <div class="h-10 w-10 cursor-pointer" onclick="downloadAllInvoice()">
-                        <img src="/earnit/static/icons/download.svg">
-                    </div>
+                    <img src="/earnit/static/icons/download.svg" class="w-10 h-10 hidden sm:flex cursor-pointer" onclick="downloadAllInvoice()">
                 </div>
                 <div class="flex flex-col gap-2" id="entries"></div>
             </div>

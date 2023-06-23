@@ -4,6 +4,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
+import nl.earnit.dao.WorkedDAO;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoSolvedDTO;
@@ -108,8 +109,10 @@ public class StaffResource {
         try {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED);
 
-            if (!workedWeekDAO.acceptStudentSuggestion(workedWeekId)) {
+            if (!workedDAO.acceptStudentSuggestion(workedWeekId)) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 
@@ -136,7 +139,10 @@ public class StaffResource {
         try {
             WorkedWeekDAO workedWeekDAO =
                     (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
-            if (!workedWeekDAO.acceptCompanySuggestion(workedWeekId)) {
+            WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED);
+
+            if (!workedDAO.acceptCompanySuggestion(workedWeekId)) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 
@@ -164,6 +170,8 @@ public class StaffResource {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
+            WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
+                DAOManager.DAO.WORKED);
 
             String status;
             if (workedWeekUndoSolvedDTO.getSolved() == null) {
@@ -172,11 +180,11 @@ public class StaffResource {
                 status = "APPROVED";
 
                 if (!workedWeekUndoSolvedDTO.getSolved()) {
-                    if (!workedWeekDAO.acceptCompanySuggestion(workedWeekId)) {
+                    if (!workedDAO.acceptCompanySuggestion(workedWeekId)) {
                         return Response.status(Response.Status.NOT_FOUND).build();
                     }
                 } else {
-                    if (!workedWeekDAO.acceptStudentSuggestion(workedWeekId)) {
+                    if (!workedDAO.acceptStudentSuggestion(workedWeekId)) {
                         return Response.status(Response.Status.NOT_FOUND).build();
                     }
                 }

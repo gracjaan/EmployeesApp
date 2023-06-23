@@ -112,6 +112,13 @@ window.addEventListener("helpersLoaded", () => {
                 return;
             }
 
+            if (res.status === 404) {
+                error.innerText = "Account not found";
+                error.classList.remove("hidden");
+                companyDialog.classList.add("hidden");
+                return;
+            }
+
             if (res.status !== 200) {
                 error.innerText = "An error occurred, try again later";
                 error.classList.remove("hidden");
@@ -160,6 +167,12 @@ window.addEventListener("helpersLoaded", () => {
         ).then(async res => {
             if (res.status === 401) {
                 error.innerText = "Invalid credentials";
+                error.classList.remove("hidden");
+                return;
+            }
+
+            if (res.status === 404) {
+                error.innerText = "Account not found";
                 error.classList.remove("hidden");
                 return;
             }

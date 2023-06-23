@@ -16,7 +16,7 @@
 </head>
 <body class="bg-black flex flex-col w-full font-montserrat">
 <back data-home></back>
-<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
+<div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4 relative">
     <header class="w-full">
         <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 px-2 sm:px-0 ">
             <div class="flex-1 rounded-2xl bg-secondary p-8 drop-shadow-md flex flex-col gap-2 z-30">
@@ -99,12 +99,12 @@
         </section>
     </main>
 </div>
-<div class="absolute z-100 top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center hidden" id="company-dialog">
-    <div class="bg-secondary p-8 rounded-2xl flex flex-col gap-8">
+<div class="absolute z-[100] top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center hidden" id="company-dialog">
+    <div class="bg-secondary p-8 rounded-2xl flex flex-col gap-8 w-full max-w-xl">
         <div id="company-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
         <div class="flex flex-col gap-1">
-            <div class="dropdown relative w-56">
-                <input class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white flex-row" placeholder="Add note" type="text" name="note" id="note"/>
+            <div class="dropdown relative w-full">
+                <textarea rows="5" class="p-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white flex-row" placeholder="Add note" type="text" name="note" id="note"></textarea>
             </div>
         </div>
 
@@ -116,6 +116,86 @@
                 <img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
             </button>
         </div>
+    </div>
+</div>
+
+<div id="suggestion" class="absolute z-[100] top-0 left-0 h-full right-0 bg-black backdrop-blur bg-opacity-60 hidden ">
+    <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4 relative gap-4 flex flex-col px-2 sm:px-0">
+        <header class="w-full flex justify-between items-end">
+            <h2 class="text-text text-4xl font-bold cursor-pointer" id="suggestion-role"></h2>
+            <div class="flex gap-2">
+                <div
+                        id="accept"
+                        class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+                >
+                    <img
+                            src="/earnit/static/icons/checkmark-green.svg"
+                            alt="checkmark"
+                    />
+                    <div
+                            class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+                    >
+                        Accept suggestion
+                    </div>
+                </div>
+                <div
+                        id="reject"
+                        class="w-14 h-14 p-3 rounded-xl bg-primary flex justify-center items-center aspect-square cursor-pointer relative group"
+                >
+                    <img
+                            src="/earnit/static/icons/red-cross.svg"
+                            alt="checkmark"
+                    />
+                    <div
+                            class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+                    >
+                        Reject suggestion
+                    </div>
+                </div>
+                <div
+                        id="rejected"
+                        class="w-14 h-14 p-3 rounded-xl flex justify-center items-center aspect-square cursor-pointer relative group bg-accent-fail hidden"
+                >
+                    <img
+                            src="/earnit/static/icons/white-cross.svg"
+                            alt="checkmark"
+                    />
+                    <div
+                            class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+                    >
+                        Rejected suggestion
+                    </div>
+                </div>
+                <div
+                        id="accepted"
+                        class="w-14 h-14 p-3 rounded-xl flex justify-center items-center aspect-square cursor-pointer relative group bg-accent-success hidden"
+                >
+                    <img
+                            src="/earnit/static/icons/checkmark-white.svg"
+                            alt="checkmark"
+                    />
+                    <div
+                            class="opacity-0 cursor-auto duration-300 invisible transition-[opacity,_visibility] absolute group-hover:visible group-hover:opacity-100 bg-text text-background w-fit p-2 rounded-xl translate-y-full -bottom-2 whitespace-nowrap"
+                    >
+                        Accepted suggestion
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="w-full h-full gap-2 flex flex-col">
+            <div
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+            >
+                <div class="flex gap-2">
+                    <order-selector id="suggestion-date" group="2" title="Date"></order-selector>
+                    <order-selector id="suggestion-hours" group="2" title="Hours"></order-selector>
+                </div>
+                <div id="suggestion-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+                <div class="flex flex-col gap-2" id="suggestion-entries">
+                    <!-- entries -->
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 </body>
