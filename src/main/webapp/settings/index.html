@@ -24,8 +24,10 @@
             <div
                     class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
             >
-                <div id="user-success" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-success text-text hidden"></div>
-                <div id="user-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+                <div id="user-success"
+                     class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-success text-text hidden"></div>
+                <div id="user-error"
+                     class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
                 <div class="font-bold text-text">E-mail
                 </div>
                 <input placeholder="E-mail" type="text" name="email" id="email"
@@ -45,7 +47,26 @@
                            class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
 
                 </div>
-                <button id="update-user" class="rounded-xl bg-text py-2 px-4 text-background text-center font-bold">
+                <div class="font-bold text-text"
+                >Address
+                </div>
+                <div class="flex flex-col gap-2">
+                    <input placeholder="Address" type="text" name="address" id="address"
+                           class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+                </div>
+                <div class="font-bold text-text"
+                >Business
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex sm:flex-row flex-col gap-2">
+                        <input placeholder="KVK" type="text" name="kvk" id="kvk"
+                               class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+                        <input placeholder="BTW" type="text" name="btw" id="btw"
+                               class="py-2 px-4 bg-primary text-text rounded-xl outline-none w-full placeholder-white"/>
+                    </div>
+                </div>
+
+                <button id="update-user" class="rounded-xl bg-text py-2 px-4 text-background text-center font-bold mt-4">
                     Update
                 </button>
             </div>
@@ -55,8 +76,10 @@
             <div
                     class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
             >
-                <div id="company-success" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-success text-text hidden"></div>
-                <div id="company-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+                <div id="company-success"
+                     class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-success text-text hidden"></div>
+                <div id="company-error"
+                     class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
                 <div class="font-bold text-text">Name
                 </div>
                 <input placeholder="Name" type="text" name="name" id="name"
