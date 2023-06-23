@@ -321,6 +321,21 @@ async function getData() {
     return data;
 }
 
+function generateAllInvoices () {
+    fetch(`/earnit/api/users/${getUserId()}/invoices/download/${getSelectedYear()}/${getSelectedWeek()}`, {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+        }
+    })
+        .then(async res =>  ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] }))
+        .then(({ data, filename }) => {
+            const a = document.createElement("a");
+            a.href = window.URL.createObjectURL(data);
+            a.download = filename;
+            a.click();
+        });
+}
+
 
 // todo deletbutton and edit button should not exist
 // todo filtering buttons (position, week)
