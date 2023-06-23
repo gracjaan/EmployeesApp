@@ -11,16 +11,24 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     function updatePage(user, company) {
+        console.log(user)
+        console.log(company)
         if (user !== null) {
             const email = document.getElementById("email");
             const firstName = document.getElementById("firstname");
             const lastName = document.getElementById("lastname");
             const lastNamePrefix = document.getElementById("lastnameprefix");
+            const address = document.getElementById("address");
+            const kvk = document.getElementById("kvk");
+            const btw = document.getElementById("btw");
 
             email.value = user.email;
             firstName.value = user.firstName;
             lastName.value = user.lastName;
             lastNamePrefix.value = user.lastNamePrefix;
+            address.value = user.address;
+            kvk.value = user.kvk;
+            btw.value = user.btw;
         }
 
         if (company !== null && company !== undefined) {
