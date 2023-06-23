@@ -34,7 +34,13 @@ window.addEventListener("helpersLoaded", async () => {
             companyElement.classList.remove("hidden")
 
             const name = document.getElementById("name");
+            const ca = document.getElementById("company-address");
+            const ck = document.getElementById("company-kvk");
+
             name.value = company.name;
+            ca.value = company.address;
+            ck.value = company.kvk;
+
         } else if (company === undefined) {
             const companyElement = document.getElementById("company");
             companyElement.classList.add("hidden")
@@ -129,9 +135,13 @@ window.addEventListener("helpersLoaded", async () => {
         success.classList.add("hidden");
 
         const name = document.getElementById("name");
+        const ca = document.getElementById("company-address");
+        const ck = document.getElementById("company-kvk");
 
         const updatedCompany = await updateCompany({
-            name: name.value
+            name: name.value,
+            address: ca.value,
+            kvk: ck.value
         })
 
         if (updatedCompany.status === 200) {
@@ -156,3 +166,5 @@ window.addEventListener("helpersLoaded", async () => {
         error.innerText = "There was an error while trying to update";
     })
 })
+
+// todo: validation of input fields
