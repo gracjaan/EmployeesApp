@@ -280,7 +280,7 @@ function toggleCompany() {
 
 function toggleSearchBar() {
     const searchBar = document.getElementById("searchBarRoles");
-    searchBar.classList.toggle("hidden");
+    searchBar.classList.remove("hidden");
 }
 
 // ------------------------------------------------------------------------------------
