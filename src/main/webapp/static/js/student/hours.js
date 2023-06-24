@@ -110,6 +110,13 @@ function cancelNote() {
 }
 
 async function confirmWorkedWeek() {
+    const note = document.getElementById("note").value.trim();
+    if (note.length < 10) {
+        const err = document.getElementById("error");
+        err.innerText = "Note needs to be at least 10 characters long"
+        err.classList.remove("hidden");
+        return;
+    }
 
     const error = document.getElementById("confirm-error");
     error.classList.add("hidden");
