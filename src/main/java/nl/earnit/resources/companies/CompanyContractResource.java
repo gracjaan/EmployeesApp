@@ -102,7 +102,6 @@ public class CompanyContractResource {
     @Path("/employees")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<UserContract> getUserContracts(@PathParam("contractId") String contractId) {
-        System.out.println("Got int the students function");
         if (contractId == null) {
             return null;
         }

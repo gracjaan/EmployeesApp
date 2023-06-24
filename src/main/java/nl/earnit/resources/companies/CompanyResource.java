@@ -130,7 +130,6 @@ public class CompanyResource {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             users = companyDAO.getStudentsForCompany(companyId);
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok(users).build();
@@ -151,7 +150,6 @@ public class CompanyResource {
 
             return Response.ok(companyDAO.getStudentForCompany(companyId, studentId, userContracts, userContractsContract, order)).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }
@@ -166,7 +164,6 @@ public class CompanyResource {
             contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
             contractDAO.createContract(contract, companyId);
         } catch (SQLException e){
-            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -288,7 +285,6 @@ public class CompanyResource {
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompanyForUser(companyId, studentId, company,contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
         } catch (SQLException e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }
