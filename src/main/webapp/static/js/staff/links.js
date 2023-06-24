@@ -343,3 +343,29 @@ function searchRole(){
         }
     }
 }
+
+function handlePopUp(){
+    const createLink = document.getElementById("createLink");
+    createLink.addEventListener("click", async () => {
+        displayPopUp()
+    })
+}
+
+function displayPopUp(){
+    const popUpElement = document.getElementById("popUp");
+    const confirmButton = document.getElementById("confirmButton")
+    const cancelButton = document.getElementById("cancelButton")
+    popUpElement.classList.remove("hidden");
+
+    const paragraph = document.getElementById("popUpParagraph");
+    paragraph.innerText = "are you sure you want to create the link"
+
+    confirmButton.addEventListener("click", async () => {
+        await sendFormDataServer()
+        popUpElement.classList.add("hidden")
+    })
+
+    cancelButton.addEventListener("click", async () => {
+        popUpElement.classList.add("hidden")
+    })
+}
