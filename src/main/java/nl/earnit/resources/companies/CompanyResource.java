@@ -130,6 +130,7 @@ public class CompanyResource {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             users = companyDAO.getStudentsForCompany(companyId);
         } catch (SQLException e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok(users).build();
