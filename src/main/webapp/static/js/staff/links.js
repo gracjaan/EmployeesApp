@@ -14,7 +14,10 @@ window.addEventListener("helpersLoaded", async () => {
     const companiesElement = document.getElementById("searchCompany");
     companiesElement.innerText = ""
 
-
+    const createLink = document.getElementById("createLink");
+    createLink.addEventListener("click", async () => {
+        displayPopUp()
+    })
 
     for (const user of users) {
         usersElement.append(createUser(user));
@@ -344,13 +347,6 @@ function searchRole(){
     }
 }
 
-function handlePopUp(){
-    const createLink = document.getElementById("createLink");
-    createLink.addEventListener("click", async () => {
-        displayPopUp()
-    })
-}
-
 function displayPopUp(){
     const popUpElement = document.getElementById("popUp");
     const confirmButton = document.getElementById("confirmButton")
@@ -361,8 +357,8 @@ function displayPopUp(){
     paragraph.innerText = "are you sure you want to create the link"
 
     confirmButton.addEventListener("click", async () => {
-        await sendFormDataServer()
         popUpElement.classList.add("hidden")
+        sendFormDataServer()
     })
 
     cancelButton.addEventListener("click", async () => {
