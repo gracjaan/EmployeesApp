@@ -4,7 +4,7 @@ window.addEventListener("helpersLoaded", async () => {
 
 
     if (companies === null || users === null) {
-        alert("Could not load users or companies");
+        alertPopUp("Could not load users or companies", false);
         return;
     }
 
@@ -214,12 +214,12 @@ async function getContracts(cid) {
 }
 function sendFormDataServer() {
     if (hourlyWage < 0) {
-        alert("Negative hourly wage is not allowed");
+        alertPopUp("Negative hourly wage is not allowed", false);
         return;
     }
 
     if (hourlyWage === null || userId === null || contractId === null || companyId === null) {
-        alert("Fill in all inputs");
+        alertPopUp("Fill in all inputs", false);
         return;
     }
     return fetch("/earnit/api/companies/" + companyId + "/contracts/" + contractId +"/employees",
@@ -234,10 +234,10 @@ function sendFormDataServer() {
         })}
     ).then((res) => {
         if(res.status === 200) {
-            alert("Successfully created link");
+            alertPopUp("Successfully created link", true);
 
         } else {
-            alert("Link failed, try again, code: " + res.status);
+            alertPopUp("Link failed, try again, code: " + res.status, false);
 
         }
     })
@@ -358,10 +358,39 @@ function displayPopUp(){
 
     confirmButton.addEventListener("click", async () => {
         popUpElement.classList.add("hidden")
-        sendFormDataServer()
+        await sendFormDataServer()
     })
 
     cancelButton.addEventListener("click", async () => {
         popUpElement.classList.add("hidden")
     })
+}
+
+function alertPopUp(message, positive) {
+    let confirmation = document.getElementById("successfulContractCreation");
+    let accent = document.getElementById("accent")
+    let image = document.getElementById("confirmationIcon")
+    let p = document.getElementById("popUpAlertParagraph")
+    p.innerText = message
+
+    if (positive){
+        accent.classList.add("bg-accent-success")
+        image.src = "/earnit/static/icons/checkmark.svg"
+    }
+    else{
+        accent.classList.add("bg-accent-fail")
+        image.src = "/earnit/static/icons/white-cross.svg"
+    }
+    confirmation.classList.remove("hidden");
+    setTimeout(function (){
+            confirmation.classList.add("hidden");
+            if (positive){
+                accent.classList.remove("bg-accent-success")
+            }
+            else{
+                accent.classList.remove("bg-accent-fail")
+            }
+        }, 2000
+    );
+
 }

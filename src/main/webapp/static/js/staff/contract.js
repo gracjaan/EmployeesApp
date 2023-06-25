@@ -105,7 +105,36 @@ function submitForm () {
                 'content-type': "application/json"
             }
         })
-        .then (response => alert("Form submitted successfully"))
+        .then (response => alertPopUp("Created contract successfully", true))
         .catch(e => console.error(e))
+}
+
+function alertPopUp(message, positive) {
+    let confirmation = document.getElementById("successfulContractCreation");
+    let accent = document.getElementById("accent")
+    let image = document.getElementById("confirmationIcon")
+    let p = document.getElementById("popUpParagraph")
+    p.innerText = message
+
+    if (positive){
+        accent.classList.add("bg-accent-success")
+        image.src = "/earnit/static/icons/checkmark.svg"
+    }
+    else{
+        accent.classList.add("bg-accent-fail")
+        image.src = "/earnit/static/icons/white-cross.svg"
+    }
+    confirmation.classList.remove("hidden");
+    setTimeout(function (){
+        confirmation.classList.add("hidden");
+        if (positive){
+            accent.classList.remove("bg-accent-success")
+        }
+        else{
+            accent.classList.remove("bg-accent-fail")
+        }
+        }, 2000
+    );
+
 }
 

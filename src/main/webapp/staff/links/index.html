@@ -14,7 +14,16 @@
 </head>
 <body class="bg-black flex flex-col justify-center overflow-x-hidden font-montserrat h-screen">
 <back data-home></back>
-
+<div id="successfulContractCreation" class="hidden fixed z-100 top-0 left-0 right-0 flex items-center justify-center">
+    <div id="accent" class="p-2 rounded-2xl flex flex-row mt-4 items-center justify-center gap-2">
+        <div>
+            <img id="confirmationIcon" class="h-4 w-4 aspect-square" alt="successfully Created Contract">
+        </div>
+        <div>
+            <p id="popUpAlertParagraph" class="w-60 text-text"></p>
+        </div>
+    </div>
+</div>
 <div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
     <main class="gap-4 flex flex-col p-4">
         <div class="flex gap-8 mt-8 w-full">
@@ -126,9 +135,9 @@
             </span>
         </div>
         <div>
-            <button id="createLink" onclick="handlePopUp()" class="font-bold py-4 flex justify-center text-black bg-white rounded-xl w-full">Create a link</button>
+            <button id="createLink" onclick="displayPopUp()" class="font-bold py-4 flex justify-center text-black bg-white rounded-xl w-full">Create a link</button>
         </div>
-        <div id="popUp" class="absolute z-20 top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center hidden">
+        <div id="popUp" class="fixed z-20 top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 flex items-center justify-center overflow-hidden hidden">
             <div class="bg-secondary p-8 rounded-2xl flex flex-col gap-8">
                 <div class="flex flex-col gap-1">
                     <p id="popUpParagraph" class="w-60 text-text"></p>
