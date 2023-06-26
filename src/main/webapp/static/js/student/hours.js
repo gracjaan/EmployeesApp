@@ -130,7 +130,7 @@ async function confirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
+        fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
             {
                 method: "PUT",
                 body: document.getElementById("note").value.toString(),
@@ -144,7 +144,7 @@ async function confirmWorkedWeek() {
                     throw new Error();
                 }
 
-                fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+                fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
                     {
                         method: "POST",
                         headers: {
@@ -186,7 +186,7 @@ async function unconfirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/earnit/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+        fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
             {
                 method: "DELETE",
                 headers: {
@@ -352,7 +352,7 @@ function createEntry(entry, contract, confirmed, approved, status, week, year, f
 
     if (hasSuggestion) {
         const arrow = document.createElement("img");
-        arrow.src = "/earnit/static/icons/arrow-right-white.svg";
+        arrow.src = "/static/icons/arrow-right-white.svg";
         arrow.classList.add("w-4");
         hoursDiv.append(arrow);
 
@@ -385,7 +385,7 @@ function createEntry(entry, contract, confirmed, approved, status, week, year, f
 
         const img = document.createElement("img");
         img.alt = "checkmark";
-        img.src = `/earnit/static/icons/${status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
+        img.src = `/static/icons/${status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
         img.classList.add("w-4", "h-4")
         statusElement.append(img);
 
@@ -423,12 +423,12 @@ function createEntry(entry, contract, confirmed, approved, status, week, year, f
 
         const image1 = document.createElement("img");
         image1.classList.add("h-6", "w-6");
-        image1.src = "/earnit/static/icons/pencil.svg"
+        image1.src = "/static/icons/pencil.svg"
         edit1.appendChild(image1);
 
         const image2 = document.createElement("img");
         image2.classList.add("h-5", "w-5");
-        image2.src = "/earnit/static/icons/bin.svg"
+        image2.src = "/static/icons/bin.svg"
         edit2.appendChild(image2);
     }
 
@@ -436,7 +436,7 @@ function createEntry(entry, contract, confirmed, approved, status, week, year, f
 }
 
 function obtainContractsForUser(uid) {
-    return fetch("/earnit/api/users/" + uid + "/contracts", {
+    return fetch("/api/users/" + uid + "/contracts", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -456,7 +456,7 @@ function getSelectedYear() {
 }
 
 function fetchSheet(userid, contract, year, week, suggestion = false) {
-    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${year}/${week}?${getQueryParams(suggestion)}`, {
+    return fetch(`/api/users/${userid}/contracts/${contract.id}/worked/${year}/${week}?${getQueryParams(suggestion)}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -488,7 +488,7 @@ function getOrder(suggestion = false) {
 }
 
 function approveSuggestion(contractId, year, week, token) {
-    fetch(`/earnit/api/users/${getUserId()}/contracts/${contractId}/worked/${year}/${week}/suggestions?${getQueryParams(true)}`, {
+    fetch(`/api/users/${getUserId()}/contracts/${contractId}/worked/${year}/${week}/suggestions?${getQueryParams(true)}`, {
         method: 'POST',
         headers: {
             'authorization': `token ${token}`,
@@ -512,7 +512,7 @@ function approveSuggestion(contractId, year, week, token) {
 }
 
 function rejectSuggestion(contractId, year, week, token) {
-    fetch(`/earnit/api/users/${getUserId()}/contracts/${contractId}/worked/${year}/${week}/suggestions?${getQueryParams(true)}`, {
+    fetch(`/api/users/${getUserId()}/contracts/${contractId}/worked/${year}/${week}/suggestions?${getQueryParams(true)}`, {
         method: 'DELETE',
         headers: {
             'authorization': `token ${token}`,
@@ -559,7 +559,7 @@ async function submitForm() {
 }
 
 function sendFormDataToServer(uid, ucid, formData) {
-    fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
+    fetch("/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
         {
             method: "POST",
             body: JSON.stringify(formData),
@@ -583,7 +583,7 @@ function sendFormDataToServer(uid, ucid, formData) {
 }
 
 function deleteWorkedFromServer(uid, ucid, hid) {
-    fetch("/earnit/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
+    fetch("/api/users/" + uid + "/contracts/" + ucid + "/worked/" + getSelectedYear() + "/" + getSelectedWeek(),
         {
             method: "DELETE",
             body: hid.toString(),
@@ -612,7 +612,7 @@ async function submitEdittedForm(data) {
         day: data.day, minutes: data.minutes, work: data.work, id: data.id
         //position: data.position
     }
-    const updated = await fetch("/earnit/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
+    const updated = await fetch("/api/users/" + getUserId() + "/contracts/" + data.ucid + "/worked/" + data.year + "/" + data.week,
         {
             method: "PUT",
             body: JSON.stringify(json),
@@ -671,7 +671,7 @@ async function toggleEdit(button) {
 
     const isEditing = entry.classList.contains('editing');
     entry.classList.toggle('editing', !isEditing);
-    editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+    editButton.innerHTML = isEditing ? '<img src="/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
 
     if (isEditing) {
         // Submission logic here
@@ -698,7 +698,7 @@ async function toggleEdit(button) {
 
             const isEditing = entry.classList.contains('editing');
             entry.classList.toggle('editing', !isEditing);
-            editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+            editButton.innerHTML = isEditing ? '<img src="/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
         } else {
             const error = document.getElementById("edit-error");
             error.classList.add("hidden");

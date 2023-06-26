@@ -13,7 +13,7 @@ rejectButton.addEventListener("click", () => reject(getWorkedWeekId(), getJWTCoo
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     name.addEventListener("click", () => {
-        location.href = "/earnit/user?id=" + name.getAttribute("data-user-id")
+        location.href = "/user?id=" + name.getAttribute("data-user-id")
     })
 
     await updateHours();
@@ -24,7 +24,7 @@ window.addEventListener("helpersLoaded", async () => {
 async function updateHours() {
     const request = await getRequestForStaff(getWorkedWeekId(), getJWTCookie());
     if (request === null) {
-        location.replace("/earnit/requests");
+        location.replace("/requests");
         return;
     }
 
@@ -50,7 +50,7 @@ function getOrder() {
 }
 
 function approve(workedWeekId, token) {
-    fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
+    fetch(`/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'POST',
         headers: {
             'authorization': `token ${token}`,
@@ -65,7 +65,7 @@ function approve(workedWeekId, token) {
 }
 
 function reject(workedWeekId, token) {
-    fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
+    fetch(`/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'DELETE',
         headers: {
             'authorization': `token ${token}`,
@@ -159,7 +159,7 @@ function createEntry(year, week, contract, entry, approved) {
 
     if (hasSuggestion) {
         const arrow = document.createElement("img");
-        arrow.src = "/earnit/static/icons/arrow-right-white.svg";
+        arrow.src = "/static/icons/arrow-right-white.svg";
         arrow.classList.add("w-4");
         hoursDiv.append(arrow);
 
@@ -188,7 +188,7 @@ function getQueryParams() {
 }
 
 function getRequestForStaff(workedWeekId, token) {
-    return fetch(`/earnit/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
+    return fetch(`/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'
@@ -254,7 +254,7 @@ function formatNumber(number) {
 function getWorkedWeekId() {
     const search = new URLSearchParams(location.search);
     if (!search.has("worked_week")) {
-        location.replace("/earnit/requests");
+        location.replace("/requests");
         return;
     }
 

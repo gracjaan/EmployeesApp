@@ -34,7 +34,7 @@ async function updatePage() {
 }
 
 async function getRejectedWeeks() {
-    return await fetch(`/earnit/api/staff/rejects?${getQueryParams()}`,
+    return await fetch(`/api/staff/rejects?${getQueryParams()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -74,7 +74,7 @@ function createRejectedWeek(rejectedWeek) {
     const listElement = document.createElement("li");
 
     const linkElement = document.createElement("a");
-    linkElement.href = "/earnit/request?worked_week=" + rejectedWeek.id;
+    linkElement.href = "/request?worked_week=" + rejectedWeek.id;
     listElement.append(linkElement);
 
     const weekDiv = document.createElement("div");

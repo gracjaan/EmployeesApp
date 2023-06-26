@@ -26,10 +26,10 @@
             .then(() => {
                 // Remove jwt token
                 Cookies.remove('earnit-token');
-                window.location.replace("/earnit/?nocache=" + new Date().getUTCMilliseconds());
+                window.location.replace("/?nocache=" + new Date().getUTCMilliseconds());
             })
             .catch(() => {
-                window.location.replace("/earnit/error/500.html");
+                window.location.replace("/error/500.html");
             });
     </script>
 </head>

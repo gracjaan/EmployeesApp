@@ -17,7 +17,7 @@ window.addEventListener("helpersLoaded", async () => {
 
     const name = document.getElementById("name");
     name.addEventListener("click", () => {
-        location.href = "/earnit/user?id=" + name.getAttribute("data-user-id")
+        location.href = "/user?id=" + name.getAttribute("data-user-id")
     })
 
     await updateHours();
@@ -27,7 +27,7 @@ window.addEventListener("helpersLoaded", async () => {
 async function updateHours() {
     const request = await getRequestForCompany(getUserCompany(), getWorkedWeekId(), getJWTCookie());
     if (request === null) {
-        location.replace("/earnit/requests");
+        location.replace("/requests");
         return;
     }
 
@@ -53,7 +53,7 @@ function getOrder() {
 }
 
 function approve(companyId, workedWeekId, token) {
-    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+    fetch(`/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
         method: 'POST',
         headers: {
             'authorization': `token ${token}`,
@@ -74,7 +74,7 @@ function rejectConfirm() {
 
     toggleNote();
 
-    fetch(`/earnit/api/companies/${noteConfirmation.companyId}/approves/${noteConfirmation.workedWeekId}/note`, {
+    fetch(`/api/companies/${noteConfirmation.companyId}/approves/${noteConfirmation.workedWeekId}/note`, {
         method: 'POST',
         headers: {
             'authorization': `token ${noteConfirmation.token}`,
@@ -87,7 +87,7 @@ function rejectConfirm() {
         .then(async (res) => {
             if (res.status !== 200) throw new Error();
 
-            fetch(`/earnit/api/companies/${noteConfirmation.companyId}/approves/${noteConfirmation.workedWeekId}?${getQueryParams()}`, {
+            fetch(`/api/companies/${noteConfirmation.companyId}/approves/${noteConfirmation.workedWeekId}?${getQueryParams()}`, {
                 method: 'DELETE',
                 headers: {
                     'authorization': `token ${noteConfirmation.token}`,
@@ -110,7 +110,7 @@ function reject(companyId, workedWeekId, token) {
 }
 
 function undo(companyId, workedWeekId, token) {
-    fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+    fetch(`/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
         method: 'PUT',
         headers: {
             'authorization': `token ${token}`,
@@ -196,7 +196,7 @@ function createEntry(year, week, contract, entry, sent, approved) {
 
     if (hasSuggestion) {
         const arrow = document.createElement("img");
-        arrow.src = "/earnit/static/icons/arrow-right-white.svg";
+        arrow.src = "/static/icons/arrow-right-white.svg";
         arrow.classList.add("w-4");
         hoursDiv.append(arrow);
 
@@ -231,7 +231,7 @@ function createEntry(year, week, contract, entry, sent, approved) {
 
         const image1 = document.createElement("img");
         image1.classList.add("h-6", "w-6");
-        image1.src = "/earnit/static/icons/pencil.svg"
+        image1.src = "/static/icons/pencil.svg"
         edit1.appendChild(image1);
     }
 
@@ -259,7 +259,7 @@ function toggleEditIcon(entryElement, editButton, hourElement) {
     // Update icon
     const isEditing = entryElement.classList.contains('editing');
     entryElement.classList.toggle('editing', !isEditing);
-    editButton.innerHTML = isEditing ? '<img src="/earnit/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/earnit/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
+    editButton.innerHTML = isEditing ? '<img src="/static/icons/pencil.svg" class="h-6 w-6" alt="pencil" />' : '<img src="/static/icons/checkmark.svg" class="h-6 w-6" alt="arrow" />';
 
     return !isEditing;
 }
@@ -301,7 +301,7 @@ function getQueryParams() {
 }
 
 function getRequestForCompany(companyId, workedWeekId, token) {
-    return fetch(`/earnit/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
+    return fetch(`/api/companies/${companyId}/approves/${workedWeekId}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'
@@ -314,7 +314,7 @@ function getRequestForCompany(companyId, workedWeekId, token) {
 async function submitEdittedForm(data) {
     let json = { suggestion: data.suggestion }
 
-    const updated = await fetch("/earnit/api/companies/" + getUserCompany() + "/approves/suggest/" + data.id,
+    const updated = await fetch("/api/companies/" + getUserCompany() + "/approves/suggest/" + data.id,
         {
             method: "POST",
             body: JSON.stringify(json),
@@ -392,7 +392,7 @@ function formatNumber(number) {
 function getWorkedWeekId() {
     const search = new URLSearchParams(location.search);
     if (!search.has("worked_week")) {
-        location.replace("/earnit/requests");
+        location.replace("/requests");
         return;
     }
 

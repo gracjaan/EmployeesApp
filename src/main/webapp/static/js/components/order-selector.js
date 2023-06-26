@@ -20,19 +20,19 @@ window.addEventListener("helpersLoaded", () => {
         const imgDown = document.createElement("img");
         imgDown.classList.add("group-data-[selected='1']:block", "hidden");
         imgDown.alt = "chevron down";
-        imgDown.src = "/earnit/static/icons/arrow-down-black.svg";
+        imgDown.src = "/static/icons/arrow-down-black.svg";
         imgDiv.append(imgDown);
 
         const imgUp = document.createElement("img");
         imgUp.classList.add("group-data-[selected='2']:block", "hidden");
         imgUp.alt = "chevron up";
-        imgUp.src = "/earnit/static/icons/arrow-up-black.svg";
+        imgUp.src = "/static/icons/arrow-up-black.svg";
         imgDiv.append(imgUp);
 
         const imgLine = document.createElement("img");
         imgLine.classList.add("group-data-[selected='0']:block", "hidden");
         imgLine.alt = "line";
-        imgLine.src = "/earnit/static/icons/line-black.svg";
+        imgLine.src = "/static/icons/line-black.svg";
         imgDiv.append(imgLine);
     }
 

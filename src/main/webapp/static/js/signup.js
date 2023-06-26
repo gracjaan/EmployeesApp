@@ -217,7 +217,7 @@ function studentAccount() {
         document.getElementById("error").innerText = "";
         document.getElementById("error").classList.add("hidden");
 
-        fetch('/earnit/api/users', {
+        fetch('/api/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ function studentAccount() {
             }
 
             // Account created goto login
-            window.location.replace("/earnit/login");
+            window.location.replace("/login");
         })
     });
 }
@@ -393,7 +393,7 @@ function companyAccount() {
         let address = null;
 
         if (userId === null) {
-            const user = await fetch('/earnit/api/users', {
+            const user = await fetch('/api/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -458,7 +458,7 @@ function companyAccount() {
         kvk = document.getElementById("company-kvk").value.trim();
 
         if (userId !== null) {
-            fetch('/earnit/api/companies', {
+            fetch('/api/companies', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -508,7 +508,7 @@ function companyAccount() {
                 }
 
                 // Account created goto login
-                window.location.replace("/earnit/login");
+                window.location.replace("/login");
             });
         }
     });

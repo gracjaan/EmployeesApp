@@ -14,7 +14,7 @@ window.addEventListener("helpersLoaded", async () => {
     employeeList.innerText = "";
 
     if (company === null) {
-        location.href = "/earnit/error/404"
+        location.href = "/error/404"
         return;
     }
 
@@ -48,7 +48,7 @@ window.addEventListener("helpersLoaded", async () => {
 function getIdCompany() {
     const search = new URLSearchParams(location.search);
     if ((!search.has("id"))) {
-        location.replace("/earnit/overview");
+        location.replace("/overview");
         return;
     }
     return search.get("id");
@@ -56,7 +56,7 @@ function getIdCompany() {
 }
 
 function getCompany(companyId) {
-    return fetch(`/earnit/api/companies/` + companyId, {
+    return fetch(`/api/companies/` + companyId, {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -70,7 +70,7 @@ function getCompany(companyId) {
 }
 
 function getCompanyRoles(companyId) {
-    return fetch(`/earnit/api/companies/` + companyId + "/contracts", {
+    return fetch(`/api/companies/` + companyId + "/contracts", {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -84,7 +84,7 @@ function getCompanyRoles(companyId) {
 }
 
 // function getEmployees(companyId, contractId){
-//     return fetch(`/earnit/api/companies/` + companyId + '/contracts/' + contractId + '/employees', {
+//     return fetch(`/api/companies/` + companyId + '/contracts/' + contractId + '/employees', {
 //             method: "GET",
 //             headers: {
 //                 'authorization': `token ${getJWTCookie()}`,
@@ -98,7 +98,7 @@ function getCompanyRoles(companyId) {
 // }
 
 function getEmployees(companyId){
-    return fetch("/earnit/api/companies/"+ companyId + "/students", {
+    return fetch("/api/companies/"+ companyId + "/students", {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -112,7 +112,7 @@ function getEmployees(companyId){
 }
 
 async function getUser(userId){
-    return await fetch("/earnit/api/users/" + userId,
+    return await fetch("/api/users/" + userId,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -143,7 +143,7 @@ function createEmployeeElement(user) {
 
     const entryContainer = document.createElement("a");
     entryContainer.classList.add("rounded-xl", "bg-primary", "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
-    entryContainer.href = "/earnit/info-user?id=" + user.id
+    entryContainer.href = "/info-user?id=" + user.id
     const entryInfo = document.createElement("div");
     entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr]", "grid", "items-center");
     entryContainer.appendChild(entryInfo);

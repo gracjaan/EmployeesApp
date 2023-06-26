@@ -4,9 +4,9 @@
     <meta charset="UTF-8"/>
     <title>Earnit - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/earnit/static/js/helpers.js" defer></script>
-    <script src="/earnit/static/js/login.js" defer></script>
-    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <script src="/static/js/helpers.js" defer></script>
+    <script src="/static/js/login.js" defer></script>
+    <link rel="stylesheet" href="/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body class="bg-black flex justify-center items-center h-full font-montserrat">
@@ -27,7 +27,7 @@
                     id="email"
                     class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
             />
-            <a href="/earnit/signup" class="text-primary underline text-sm">No account? Sign up</a>
+            <a href="/signup" class="text-primary underline text-sm">No account? Sign up</a>
         </div>
         <div class="flex flex-col gap-1">
             <label for="password" class="font-bold text-text"
@@ -39,12 +39,12 @@
                     id="password"
                     class="py-2 px-4 bg-primary text-text rounded-xl outline-none"
             />
-            <!-- <a href="/earnit/" class="text-primary underline text-sm">Forgot password?</a> -->
+            <!-- <a href="/" class="text-primary underline text-sm">Forgot password?</a> -->
         </div>
     </div>
     <div class="flex w-full justify-end items-center">
         <button id="submit" class="px-4 py-2 bg-text rounded-lg text-background">
-            <img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
+            <img src="/static/icons/arrow-right.svg" alt="right arrow"/>
         </button>
     </div>
 </div>
@@ -59,7 +59,7 @@
                     onclick="toggleCompany()">
                 <div class="flex items-center justify-between">
                     <div class="text-white text-left mr-2" id="company-header">Select Company</div>
-                    <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
+                    <img src="/static/icons/arrow-down.svg" alt="arrow down"/>
                 </div>
             </button>
             <div id="company-content"
@@ -71,7 +71,7 @@
 
         <div class="flex w-full justify-end items-center">
             <button id="company-submit" class="px-4 py-2 bg-text rounded-lg text-background">
-                <img src="/earnit/static/icons/arrow-right.svg" alt="right arrow"/>
+                <img src="/static/icons/arrow-right.svg" alt="right arrow"/>
             </button>
         </div>
     </div>

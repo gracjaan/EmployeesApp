@@ -92,7 +92,7 @@ window.addEventListener("helpersLoaded", () => {
         }
 
         // Send login request
-        fetch("/earnit/api/login", {
+        fetch("/api/login", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ window.addEventListener("helpersLoaded", () => {
             const data = (await res.json());
             Cookies.set('earnit-token', data.token, { expires: new Date(data.expires) })
 
-            window.location.replace("/earnit/");
+            window.location.replace("/");
         })
     })
 
@@ -152,7 +152,7 @@ window.addEventListener("helpersLoaded", () => {
         error.classList.add("hidden");
 
         // Send login request
-        fetch("/earnit/api/login", {
+        fetch("/api/login", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ window.addEventListener("helpersLoaded", () => {
                     await selectCompany(element);
                 });
 
-                const companies = await fetch(`/earnit/api/users/${getUserId()}/companies`, {
+                const companies = await fetch(`/api/users/${getUserId()}/companies`, {
                     headers: {
                         'authorization': `token ${getJWTCookie()}`,
                         'Accept': 'application/json',
@@ -211,7 +211,7 @@ window.addEventListener("helpersLoaded", () => {
                 const companyDialog = document.getElementById("company-dialog");
                 companyDialog.classList.remove("hidden");
             } else {
-                window.location.replace("/earnit/");
+                window.location.replace("/");
             }
         })
     })

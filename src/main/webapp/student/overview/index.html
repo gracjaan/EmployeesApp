@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Earnit</title>
-    <script src="/earnit/static/js/helpers.js"></script>
+    <script src="/static/js/helpers.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/earnit/static/js/student/overview.js"></script>
-    <script src="/earnit/static/js/components/week-selector.js"></script>
-    <script src="/earnit/static/js/components/order-selector.js"></script>
-    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <script src="/static/js/student/overview.js"></script>
+    <script src="/static/js/components/week-selector.js"></script>
+    <script src="/static/js/components/order-selector.js"></script>
+    <link rel="stylesheet" href="/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body class="bg-black flex flex-col w-full font-montserrat">
@@ -18,7 +18,7 @@
         onclick="history.back()"
 >
     <img
-            src="/earnit/static/icons/arrow-left.svg"
+            src="/static/icons/arrow-left.svg"
             alt="arrow down"
             class="mr-3"
     />
@@ -44,7 +44,7 @@
                         <order-selector id="hours" group="1" title="Hours"></order-selector>
                     </div>
                     <button onclick="generateAllInvoices()">
-                        <img src="/earnit/static/icons/download.svg" class="flex w-7 mx-auto">
+                        <img src="/static/icons/download.svg" class="flex w-7 mx-auto">
                     </button>
                 </div>
                 <div class="flex flex-col gap-2" id="entries">
