@@ -16,8 +16,6 @@ window.addEventListener("helpersLoaded", async () => {
         })
 
     const notifications = await obtainNotifications();
-    console.log("below we have notifications")
-    console.log(notifications)
     createEntries(notifications);
 
     updateChart(companies)
