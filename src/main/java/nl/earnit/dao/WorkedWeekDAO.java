@@ -195,8 +195,8 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 cy.id as company_id,
                 cy.name as company_name,
-                cy.kvk as company_kvk, 
-                cy.address as company_address
+                cy.kvk as company_kvk,
+                cy.address as company_address,
                 
                 w.hours,
                 w.minutes
