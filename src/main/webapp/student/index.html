@@ -3,12 +3,17 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Earnit</title>
-		<script src="/earnit/static/js/helpers.js" defer></script>
+		<script src="/static/js/helpers.js" defer></script>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<script src="/earnit/static/js/student/index.js" defer></script>
-		<link rel="stylesheet" href="/earnit/static/style.css" />
+		<script src="/static/js/student/index.js" defer></script>
+		<link rel="stylesheet" href="/static/style.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- To prevent caching when logging in, should only be on home pages -->
+		<meta http-equiv='cache-control' content='no-cache'>
+		<meta http-equiv='expires' content='0'>
+		<meta http-equiv='pragma' content='no-cache'>
 	</head>
 	<body class="bg-black flex justify-center overflow-x-hidden font-montserrat">
 		<div class="lg:max-w-5xl md:max-w-3xl w-full">
@@ -21,29 +26,29 @@
 
 					</h1>
 					<div class="flex justify-center">
-						<a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/earnit/settings">
-							<img src="/earnit/static/icons/settings.svg" class="flex w-7 mx-auto">
+						<a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/settings">
+							<img src="/static/icons/settings.svg" class="flex w-7 mx-auto">
 						</a>
-						<a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/earnit/logout">
-							<img src="/earnit/static/icons/logout.svg" class="flex w-7 mx-auto">
+						<a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/logout">
+							<img src="/static/icons/logout.svg" class="flex w-7 mx-auto">
 						</a>
 					</div>
 				</div>
 				<nav
 					class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0">
-					<a href="/earnit/hours" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+					<a href="/hours" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
 						<h2 id="week" class="text-text text-2xl font-bold">Week</h2>
 						<p class="text-text text-base">
 							Fill in your hours for this week
 						</p>
 					</a>
-					<a href="/earnit/overview" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+					<a href="/overview" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
 						<h2 class="text-text text-2xl font-bold">Overview</h2>
 						<p class="text-text text-base">
 							An overview of hours from previous weeks
 						</p>
 					</a>
-					<a href="/earnit/contracts" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+					<a href="/contracts" class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
 						<h2 class="text-text text-2xl font-bold">Contracts</h2>
 						<p class="text-text text-base">
 							An overview of all your contracts
@@ -62,7 +67,7 @@
 				<section class="w-full gap-2 flex flex-col">
 					<h2 class="text-text text-2xl font-bold">Notifications</h2>
 					<div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
-						<a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
+						<a href="/" class="rounded-2xl bg-primary p-4 relative">
 							<div class="text-text font-bold uppercase">
 								week 11 approved
 							</div>
@@ -70,7 +75,7 @@
 							<div
 								class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"></div>
 						</a>
-						<a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
+						<a href="/" class="rounded-2xl bg-primary p-4 relative">
 							<div class="text-text font-bold uppercase">
 								week 10 approved
 							</div>
@@ -79,7 +84,7 @@
 								class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"
 							></div>
 						</a>
-						<a href="/earnit/" class="rounded-2xl bg-primary p-4 relative">
+						<a href="/" class="rounded-2xl bg-primary p-4 relative">
 							<div class="text-text font-bold uppercase">
 								week 9 approved
 							</div>

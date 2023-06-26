@@ -16,6 +16,9 @@ public class UserDTO {
     private String lastName;
     private String lastNamePrefix;
     private String type;
+    private String kvk;
+    private String btw;
+    private String address;
 
     private List<UserContractDTO> userContracts;
 
@@ -47,13 +50,16 @@ public class UserDTO {
      * @param type The type of user: STUDENT, COMPANY, ADMINISTRATOR.
      */
     public UserDTO(String id, String email, String firstName, String lastName, String lastNamePrefix,
-                        String type) {
+                        String type, String kvk, String btw, String address) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
         this.type = type;
+        this.address = address;
+        this.kvk = kvk;
+        this.btw = btw;
     }
 
     public String getId() {
@@ -102,6 +108,30 @@ public class UserDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getKvk() {
+        return kvk;
+    }
+
+    public void setKvk(String kvk) {
+        this.kvk = kvk;
+    }
+
+    public String getBtw() {
+        return btw;
+    }
+
+    public void setBtw(String btw) {
+        this.btw = btw;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<UserContractDTO> getUserContracts() {

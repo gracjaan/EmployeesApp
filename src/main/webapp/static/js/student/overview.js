@@ -45,7 +45,7 @@ window.addEventListener("helpersLoaded", async () => {
 })
 
 function obtainContractsForUser(uid) {
-    return fetch("/earnit/api/users/" + uid + "/contracts", {
+    return fetch("/api/users/" + uid + "/contracts", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -55,7 +55,7 @@ function obtainContractsForUser(uid) {
 }
 
 function obtainInvoices(contract) {
-    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
+    return fetch("/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -65,7 +65,7 @@ function obtainInvoices(contract) {
 }
 
 function fetchSheet(userid, contract) {
-    return fetch(`/earnit/api/users/${userid}/contracts/${contract.id}/worked/${getSelectedYear()}/${getSelectedWeek()}?${getQueryParams()}`, {
+    return fetch(`/api/users/${userid}/contracts/${contract.id}/worked/${getSelectedYear()}/${getSelectedWeek()}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -322,7 +322,7 @@ async function getData() {
 }
 
 function generateAllInvoices () {
-    fetch(`/earnit/api/users/${getUserId()}/invoices/download/${getSelectedYear()}/${getSelectedWeek()}`, {
+    fetch(`/api/users/${getUserId()}/invoices/download/${getSelectedYear()}/${getSelectedWeek()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,
         }

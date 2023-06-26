@@ -14,7 +14,7 @@ window.addEventListener("helpersLoaded", async () => {
 
     const user = await getUser();
     if (user === null) {
-        location.href = "/earnit/error/404"
+        location.href = "/error/404"
         return;
     }
 
@@ -44,7 +44,7 @@ function createUserContractItem(userContract) {
     const userContractContainer = document.createElement("div");
     userContractContainer.classList.add("text-text", "whitespace-nowrap", "bg-primary", "py-6", "px-6", "rounded-xl", "cursor-pointer", "flex", "w-fit", "flex-col", "items-center", "justify-center")
     userContractContainer.addEventListener("click", () => {
-        location.href = "/earnit/contracts#" + userContract.contract.id;
+        location.href = "/contracts#" + userContract.contract.id;
     })
 
     const userContractRole = document.createElement("div");
@@ -62,7 +62,7 @@ function createUserContractItem(userContract) {
 function createInvoiceItem(workedWeek) {
     const entryContainer = document.createElement("a");
     entryContainer.classList.add("rounded-xl", "bg-primary", (workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED") ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
-    entryContainer.href = "/earnit/request?worked_week=" + workedWeek.id;
+    entryContainer.href = "/request?worked_week=" + workedWeek.id;
 
     const entryInfo = document.createElement("div");
     entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr]", "grid", "items-center");
@@ -94,7 +94,7 @@ function createInvoiceItem(workedWeek) {
 
         const img = document.createElement("img");
         img.alt = "checkmark";
-        img.src = `/earnit/static/icons/${workedWeek.status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
+        img.src = `/static/icons/${workedWeek.status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
         img.classList.add("w-4", "h-4")
         status.append(img);
     }
@@ -118,7 +118,7 @@ function getQueryParamsForUser() {
 }
 
 function getUser() {
-    return fetch(`/earnit/api/companies/${getUserCompany()}/students/${getUserId()}?${getQueryParamsForUser()}`, {
+    return fetch(`/api/companies/${getUserCompany()}/students/${getUserId()}?${getQueryParamsForUser()}`, {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -159,7 +159,7 @@ function getQueryParamsForInvoices() {
 }
 
 function getInvoices() {
-    return fetch(`/earnit/api/companies/${getUserCompany()}/invoices/${getUserId()}?${getQueryParamsForInvoices()}`, {
+    return fetch(`/api/companies/${getUserCompany()}/invoices/${getUserId()}?${getQueryParamsForInvoices()}`, {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,

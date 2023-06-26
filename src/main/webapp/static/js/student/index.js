@@ -5,7 +5,7 @@ window.addEventListener("helpersLoaded", async () => {
     const week = document.getElementById("week");
     week.innerText = "Week " + getCurrentWeek();
 
-    fetch("/earnit/api/users/" + getUserId(), {
+    fetch("/api/users/" + getUserId(), {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -40,7 +40,7 @@ function getWeek(ofDate) {
 }
 
 function obtainInvoices(contract) {
-    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
+    return fetch("/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -50,7 +50,7 @@ function obtainInvoices(contract) {
 }
 
 function obtainContractsForUser() {
-    return fetch("/earnit/api/users/" + getUserId() + "/contracts", {
+    return fetch("/api/users/" + getUserId() + "/contracts", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }

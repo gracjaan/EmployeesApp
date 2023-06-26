@@ -4,16 +4,16 @@
 		<meta charset="UTF-8" />
 		<title>Earnit - Login</title>
 		<script src="https://cdn.tailwindcss.com"></script>
-		<script src="/earnit/static/js/signup.js"></script>
-		<link rel="stylesheet" href="/earnit/static/style.css" />
+		<script src="/static/js/signup.js"></script>
+		<link rel="stylesheet" href="/static/style.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<!-- Prefetch so almost no delay when clicking on next or back button -->
-		<link rel="prefetch" href="/earnit/signup/choose.html" />
-		<link rel="prefetch" href="/earnit/signup/student-info.html" />
-		<link rel="prefetch" href="/earnit/signup/student-account.html" />
-		<link rel="prefetch" href="/earnit/signup/company-info.html" />
-		<link rel="prefetch" href="/earnit/signup/company-account.html" />
+		<link rel="prefetch" href="/signup/choose.html" />
+		<link rel="prefetch" href="/signup/student-info.html" />
+		<link rel="prefetch" href="/signup/student-account.html" />
+		<link rel="prefetch" href="/signup/company-info.html" />
+		<link rel="prefetch" href="/signup/company-account.html" />
 	</head>
 	<body
 		class="bg-black flex justify-center items-center h-full font-montserrat"
@@ -23,11 +23,11 @@
 				<h1 class="text-text text-2xl font-bold w-fit">Sign up</h1>
 				<div class="bg-accent-fail w-full h-1"></div>
 			</div>
-			<div id="error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
+			<div id="error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden max-w-[314px]"></div>
 			<div id="signup-content"></div>
 			<div class="flex w-full justify-end">
 				<button id="submit" class="px-4 py-2 bg-text rounded-lg text-background">
-					<img src="/earnit/static/icons/arrow-right.svg"  alt="right arrow"/>
+					<img src="/static/icons/arrow-right.svg"  alt="right arrow"/>
 				</button>
 			</div>
 		</div>

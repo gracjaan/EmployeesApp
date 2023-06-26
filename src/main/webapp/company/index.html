@@ -3,12 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <title>Earnit</title>
-  <script src="/earnit/static/js/helpers.js" defer></script>
+  <script src="/static/js/helpers.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="/earnit/static/js/company/index.js" defer></script>
-  <link rel="stylesheet" href="/earnit/static/style.css" />
+  <script src="/static/js/company/index.js" defer></script>
+  <link rel="stylesheet" href="/static/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- To prevent caching when logging in, should only be on home pages -->
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
 </head>
 <body
         class="bg-black flex justify-center overflow-x-hidden font-montserrat"
@@ -23,11 +28,11 @@
 
       </h1>
       <div class="flex justify-center">
-        <a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/earnit/settings">
-          <img src="/earnit/static/icons/settings.svg" class="flex w-7 mx-auto">
+        <a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/settings">
+          <img src="/static/icons/settings.svg" class="flex w-7 mx-auto">
         </a>
-        <a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/earnit/logout">
-          <img src="/earnit/static/icons/logout.svg" class="flex w-7 mx-auto">
+        <a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/logout">
+          <img src="/static/icons/logout.svg" class="flex w-7 mx-auto">
         </a>
       </div>
     </div>
@@ -35,7 +40,7 @@
             class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
     >
       <a
-              href="/earnit/requests"
+              href="/requests"
               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
       >
         <h2 class="text-text text-2xl font-bold">Requests</h2>
@@ -44,7 +49,7 @@
         </p>
       </a>
       <a
-              href="/earnit/invoices"
+              href="/invoices"
               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
       >
         <h2 class="text-text text-2xl font-bold">Overview</h2>
@@ -53,7 +58,7 @@
         </p>
       </a>
       <a
-              href="/earnit/contracts"
+              href="/contracts"
               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
       >
         <h2 class="text-text text-2xl font-bold">Contracts</h2>
@@ -78,10 +83,10 @@
               class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
       >
         <a
-                href="/earnit/"
+                href="/"
                 class="rounded-2xl bg-primary p-4 relative"
         >
-          <div href="/earnit/request" class="text-text font-bold uppercase">
+          <div href="/request" class="text-text font-bold uppercase">
             week 11 approved
           </div>
           <div class="text-text uppercase">23.04.2023</div>
@@ -90,7 +95,7 @@
           ></div>
         </a>
         <a
-                href="/earnit/"
+                href="/"
                 class="rounded-2xl bg-primary p-4 relative"
         >
           <div class="text-text font-bold uppercase">
@@ -102,7 +107,7 @@
           ></div>
         </a>
         <a
-                href="/earnit/"
+                href="/"
                 class="rounded-2xl bg-primary p-4 relative"
         >
           <div class="text-text font-bold uppercase">

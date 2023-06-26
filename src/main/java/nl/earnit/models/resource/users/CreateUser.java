@@ -12,6 +12,9 @@ public class CreateUser {
     private String lastName;
     private String lastNamePrefix;
     private String password;
+    private String kvk;
+    private String btw;
+    private String address;
 
     /**
      * Creates a user model for the user POST request.
@@ -27,12 +30,15 @@ public class CreateUser {
      * @param password The password of the user.
      */
     public CreateUser(String email, String firstName, String lastName, String lastNamePrefix,
-                      String password) {
+                      String password, String kvk, String btw, String address) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
         this.password = password;
+        this.kvk = kvk;
+        this.btw = btw;
+        this.address = address;
     }
 
     public String getEmail() {
@@ -73,5 +79,29 @@ public class CreateUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKvk() {
+        return kvk;
+    }
+
+    public void setKvk(String kvk) {
+        this.kvk = kvk;
+    }
+
+    public String getBtw() {
+        return btw;
+    }
+
+    public void setBtw(String btw) {
+        this.btw = btw;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

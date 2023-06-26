@@ -17,7 +17,7 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 function getRequestsForCompany(uid, token) {
-    return fetch(`/earnit/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
+    return fetch(`/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'
@@ -30,7 +30,7 @@ function getRequestsForCompany(uid, token) {
 function createRequestCard(workedWeek) {
     const container = document.createElement("a");
     container.classList.add("bg-primary", "block", "rounded-xl", "py-4", "pl-4", "pr-8", "w-full", "break-inside-avoid-column");
-    container.href = "/earnit/request?worked_week=" + workedWeek.id;
+    container.href = "/request?worked_week=" + workedWeek.id;
 
     const name = document.createElement("h3");
     name.classList.add("text-text", "text-2xl", "font-bold");

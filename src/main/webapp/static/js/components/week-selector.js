@@ -18,7 +18,7 @@ window.addEventListener("helpersLoaded", ()=> {
         dropdownButton.append(imgDiv);
 
         const dropdownButtonChevron = document.createElement("img");
-        dropdownButtonChevron.src = "/earnit/static/icons/arrow-down.svg";
+        dropdownButtonChevron.src = "/static/icons/arrow-down.svg";
         dropdownButtonChevron.alt = "arrow down";
         imgDiv.append(dropdownButtonChevron);
 

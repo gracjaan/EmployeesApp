@@ -1,5 +1,5 @@
 window.addEventListener("helpersLoaded", async () => {
-    fetch(`/earnit/api/companies/${getUserCompany()}/contracts?userContracts=true&userContractsUser=true`, {
+    fetch(`/api/companies/${getUserCompany()}/contracts?userContracts=true&userContractsUser=true`, {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -48,7 +48,7 @@ function createContractItem(contract) {
         userContractElement.classList.add("text-text", "whitespace-nowrap", "bg-primary", "w-full", "sm:w-fit", "md:w-full", "gap-2", "py-2", "px-4", "flex", "justify-between", "rounded-xl", "cursor-pointer");
         contractUsersContainer.append(userContractElement);
 
-        userContractElement.addEventListener("click", () => location.href = "/earnit/user?id=" + userContract.user.id)
+        userContractElement.addEventListener("click", () => location.href = "/user?id=" + userContract.user.id)
 
         const userContractElementName = document.createElement("div");
         userContractElementName.classList.add("font-bold")

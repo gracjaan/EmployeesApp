@@ -41,7 +41,7 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok(user).build();
+        return Response.ok(new UserResponse(user)).build();
     }
 
     @PUT
@@ -87,7 +87,7 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok(dbUser).build();
+        return Response.ok(new UserResponse(dbUser)).build();
     }
 
     @DELETE
