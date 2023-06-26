@@ -7,11 +7,11 @@ const validateName = (name) => name.length > 2;
 const validateAddress1 = (address1) => address1.length > 6;
 const validateAddress2 = (address2) => address2.length > 0;
 const validateKVK = (kvkNumber) => {
-    let kvkNumberRegex = /^\d{8}$/;
+    let kvkNumberRegex = /^[0-9]{8}$/;
     return kvkNumberRegex.test(kvkNumber);
 };
 const validateBTW = (btwNumber) => {
-    let btwNumberRegex = /^(NL)?\d{9}B\d{2}$/;
+    let btwNumberRegex = /^[A-Za-z]{2}[0-9]{9}[A-Za-z][0-9]{2}$/;
     return btwNumberRegex.test(btwNumber);
 }
 
