@@ -6,7 +6,7 @@ window.addEventListener("helpersLoaded", () => {
         header.classList.add("flex", "bg-primary", "w-fit", "p-2", "rounded-br-lg", "cursor-pointer");
         header.addEventListener("click", () => {
             if (backElement.hasAttribute("data-home")) {
-                location.href = "/earnit"
+                location.href = "/"
             } else {
                 history.back();
             }
