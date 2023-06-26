@@ -109,6 +109,53 @@ function getWeek(ofDate) {
 }
 
 
+function updatePage(request) {
+    const entries = document.getElementById("entries");
+    entries.innerHTML = "";
+
+    // if (request === null || request.length < 1) {
+    //     const noInvoices = document.createElement("div");
+    //     noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+    //     noInvoices.innerText = "No invoices";
+    //     entries.append(noInvoices);
+    //     return;
+    // }
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    entries.appendChild(createEntry())
+    // for (const workedWeek of request) {
+    //     entries.appendChild(createEntry());
+    // }
+}
+
+function createEntry() {
+    const entryContainer = document.createElement("div");
+    entryContainer.classList.add("rounded-xl", "bg-primary", "px-4", "py-2", "relative");
+
+    const entryInfo = document.createElement("div");
+    entryInfo.classList.add("w-full", "items-center");
+    entryContainer.appendChild(entryInfo);
+
+    const noteInfo = document.createElement("div");
+    noteInfo.classList.add("text-text", "font-bold", "uppercase");
+    noteInfo.innerText = "Hello World a;lkdjf;lasflks;df;lk";
+    // noteInfo.innerText = getName(notification.user.firstName, notification.user.lastName, notification.user.lastNamePrefix) + notification.notification;
+    entryInfo.appendChild(noteInfo);
+
+    const noteDate = document.createElement("div");
+    noteDate.classList.add("text-text");
+    // noteDate.innerText = notification.date;
+    noteDate.innerText = "22-34"
+    entryInfo.appendChild(noteDate);
+
+    return entryContainer;
+}
 
 
 
