@@ -8,15 +8,15 @@ public class Notification {
     private String company_id;
     private Date date;
     private boolean seen;
-    private String message;
+    private String type;
 
-    public Notification(String id, String user_id, String company_id, Date date, boolean seen, String message) {
+    public Notification(String id, String user_id, String company_id, Date date, boolean seen, String type) {
         this.id = id;
         this.user_id = user_id;
         this.company_id = company_id;
         this.date = date;
         this.seen = seen;
-        this.message = message;
+        this.type = type;
     }
 
     public String getId() {
@@ -59,11 +59,11 @@ public class Notification {
         this.seen = seen;
     }
 
-    public String getMessage() {
-        return message;
+    public String getType() {
+        return type;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setType(String message) {
+        this.type = message;
     }
 }

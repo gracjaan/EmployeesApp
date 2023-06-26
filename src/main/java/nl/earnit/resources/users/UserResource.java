@@ -7,6 +7,7 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
@@ -185,7 +186,7 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getNotifications() {
         UserDAO userDAO;
-        List<Notification> notifications;
+        List<NotificationDTO> notifications;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             notifications = userDAO.getNotificationsForUser(userId);

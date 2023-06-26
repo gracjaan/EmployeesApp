@@ -1,6 +1,7 @@
 package nl.earnit.dao;
 
 import jakarta.annotation.Nullable;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.Notification;
@@ -225,18 +226,41 @@ public class UserDAO extends GenericDAO<User> {
         return res.getBoolean("active");
     }
 
-    public List<Notification> getNotificationsForUser(String user_id) throws SQLException {
+    public List<NotificationDTO> getNotificationsForUser(String user_id) throws SQLException {
         if (user_id==null) {
             return null;
         }
-        List<Notification> notifications = new ArrayList<>();
-        String query = "SELECT n.* FROM notification n WHERE n.user_id = ? ORDER BY n.date";
+        List<NotificationDTO> notifications = new ArrayList<>();
+        String query = "SELECT n.*, u.first_name, u.last_name, c.name AS company_name " +
+                "FROM \"notification\" n, \"user\" u, \"company\" c " +
+                "WHERE n.user_id = u.id AND n.company_id = c.id " +
+                "AND u.id = '1e92c3ab-9a95-4c6d-8f7f-75541e8106f1' ORDER BY n.date";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, user_id);
         ResultSet res = statement.executeQuery();
-
         while (res.next()) {
-            Notification notification = new Notification(res.getString("id"), res.getString("user_id"), res.getString("company_id"), res.getDate("date"), res.getBoolean("seen"), res.getString("message"));
+            String message = "";
+            switch(res.getString("type")) {
+                case "HOURS":
+                    message =  "You haven't confirmed hours for " + res.getString("company_name") + " yet";
+                    break;
+                case "APPROVED":
+                    message = res.getString("company_name") + " approved your suggested hours";
+                    break;
+                case "SUGGESTION":
+                    message = res.getString("company_name") + " has suggested new hours";
+                    break;
+                case "REJECTED":
+                    message = res.getString("company_name") + " rejected your suggested hours";
+                    break;
+                case "CONFLICT":
+                    message = res.getString("company_name") + " and " + res.getString("first_name") + " " + res.getString("last_name") + "have a conflict";
+                case "LINK":
+                    message = "You have been linked to " + res.getString("company_name");
+                default:
+                    System.out.println("No valid notification type");
+            }
+            NotificationDTO notification = new NotificationDTO(res.getDate("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
         }
         return notifications;
