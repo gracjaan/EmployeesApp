@@ -4,6 +4,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.*;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.helpers.RequestHelper;
@@ -499,7 +500,7 @@ public class CompanyResource {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getNotificationsForCompany() {
         CompanyDAO companyDAO;
-        List<Notification> notifications;
+        List<NotificationDTO> notifications;
         try {
             companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             notifications = companyDAO.getNotificationsForCompany(companyId);
