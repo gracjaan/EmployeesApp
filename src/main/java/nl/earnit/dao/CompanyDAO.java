@@ -48,7 +48,7 @@ public class CompanyDAO extends GenericDAO<User> {
     public Company getCompanyById(String id) throws SQLException {
         // Create query
         String query =
-            "SELECT id, name FROM \"" + tableName + "\" WHERE \"id\" = ?";
+            "SELECT id, name, kvk, address FROM \"" + tableName + "\" WHERE \"id\" = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
 
@@ -59,16 +59,18 @@ public class CompanyDAO extends GenericDAO<User> {
         if(!res.next()) return null;
 
         // Return Company
-        return new Company(res.getString("id"), res.getString("name"));
+        return new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
     }
 
-    public Company createCompany(String name)
+    public Company createCompany(String name, String kvk, String address)
         throws SQLException {
         // Create query
-        String query = "INSERT INTO " + tableName + " (name) VALUES (?) RETURNING id";
+        String query = "INSERT INTO " + tableName + " (name, kvk, address) VALUES (?,?,?) RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, name);
+        statement.setString(2, kvk);
+        statement.setString(3, address);
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -82,12 +84,14 @@ public class CompanyDAO extends GenericDAO<User> {
 
     public Company updateCompany(Company company) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET name = ?, active = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET name = ?, kvk = ?, address = ?, active = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, company.getName());
-        statement.setBoolean(2, company.getActive());
-        PostgresJDBCHelper.setUuid(statement, 3, company.getId());
+        statement.setString(2, company.getKvk());
+        statement.setString(3, company.getAddress());
+        statement.setBoolean(4, company.getActive());
+        PostgresJDBCHelper.setUuid(statement, 5, company.getId());
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -106,7 +110,7 @@ public class CompanyDAO extends GenericDAO<User> {
         }});
 
         ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name, active FROM " + tableName + " ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
+        String query = "SELECT id, name, kvk, address, active FROM " + tableName + " ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
         PreparedStatement statement = this.con.prepareStatement(query);
 
         ResultSet res = statement.executeQuery();
@@ -116,6 +120,8 @@ public class CompanyDAO extends GenericDAO<User> {
             company.setId(res.getString("id"));
             company.setName(res.getString("name"));
             company.setActive(res.getBoolean("active"));
+            company.setKvk(res.getString("kvk"));
+            company.setAddress(res.getString("address"));
             companyList.add(company);
         }
 
@@ -124,7 +130,7 @@ public class CompanyDAO extends GenericDAO<User> {
 
     public List<Company> getAllCompaniesUsers(String order) throws SQLException {
         ArrayList<Company> companyList = new ArrayList<>();
-        String query = "SELECT id, name FROM " + tableName + "WHERE active = true ORDER BY ? " ;
+        String query = "SELECT * FROM " + tableName + "WHERE active = true ORDER BY ? " ;
         PreparedStatement statement = this.con.prepareStatement(query);
 
 
@@ -143,6 +149,8 @@ public class CompanyDAO extends GenericDAO<User> {
             Company company = new Company();
             company.setId(res.getString("id"));
             company.setName(res.getString("name"));
+            company.setKvk(res.getString("kvk"));
+            company.setAddress(res.getString("address"));
             companyList.add(company);
         }
 
@@ -170,13 +178,13 @@ public class CompanyDAO extends GenericDAO<User> {
 
     public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
         String query = """
-        SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
+            SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.btw, u.kvk, u.address FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         ResultSet resultSet = statement.executeQuery();
         List<UserResponse> users = new ArrayList<>();
         while (resultSet.next()) {
-            UserResponse user = new UserResponse(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"));
+            UserResponse user = new UserResponse(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("btw"), resultSet.getString("kvk"), resultSet.getString("address"));
             users.add(user);
         }
         return users;
@@ -196,7 +204,7 @@ public class CompanyDAO extends GenericDAO<User> {
         }});
 
         String query = """
-            SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, uc.user_contracts FROM "user" u
+            SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.kvk, u.btw, u.address, uc.user_contracts FROM "user" u
             JOIN (select c.company_id, uc.user_id, array_agg((uc.*, c.*)%s) as user_contracts from user_contract uc
                     join contract c on c.id = uc.contract_id
                     group by c.id, uc.user_id
@@ -216,7 +224,7 @@ public class CompanyDAO extends GenericDAO<User> {
         UserDTO user =
             new UserDTO(res.getString("id"), res.getString("email"),
                 res.getString("first_name"), res.getString("last_name"),
-                res.getString("last_name_prefix"), res.getString("type"));
+                res.getString("last_name_prefix"), res.getString("type"), res.getString("kvk"),res.getString("btw"), res.getString("address"));
 
         if (withUserContracts) {
             List<UserContractDTO> userContracts = new ArrayList<>();

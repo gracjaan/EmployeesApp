@@ -14,6 +14,9 @@ public class User {
     private String lastNamePrefix;
     private String type;
     private String password;
+    private String kvk;
+    private String address;
+    private String btw;
 
     /**
      * Creates a user model without values.
@@ -31,7 +34,7 @@ public class User {
      * @param password The hashed password of the user.
      */
     public User(String id, String email, String firstName, String lastName, String lastNamePrefix,
-                String type, String password) {
+                String type, String password, String address, String btw, String kvk) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -39,6 +42,9 @@ public class User {
         this.lastNamePrefix = lastNamePrefix;
         this.type = type;
         this.password = password;
+        this.address = address;
+        this.btw = btw;
+        this.kvk = kvk;
     }
 
     public String getId() {
@@ -95,6 +101,30 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKvk() {
+        return kvk;
+    }
+
+    public void setKvk(String kvk) {
+        this.kvk = kvk;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBtw() {
+        return btw;
+    }
+
+    public void setBtw(String btw) {
+        this.btw = btw;
     }
 
     public enum Type {

@@ -59,7 +59,7 @@ public class UserDAO extends GenericDAO<User> {
     private User getUser(String colum, String value, String type) throws SQLException {
         // Create query
         String query =
-            "SELECT id, email, first_name, last_name, last_name_prefix, password, type FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
+            "SELECT id, email, first_name, last_name, last_name_prefix, password, type, kvk, address, btw FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PGobject toInsert = new PGobject();
         toInsert.setType(type);
@@ -74,7 +74,7 @@ public class UserDAO extends GenericDAO<User> {
 
         // Return User
         return new User(res.getString("id"), res.getString("email"), res.getString("first_name"),
-            res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"));
+            res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"), res.getString("address"), res.getString("btw"), res.getString("kvk"));
     }
 
     public List<UserResponse> getAllUsers(String order) throws SQLException {
@@ -114,10 +114,10 @@ public class UserDAO extends GenericDAO<User> {
     }
 
 
-    public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type)
+    public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type, String kvk, String btw, String address)
         throws SQLException {
         // Create query
-        String query = "INSERT INTO \"" + tableName + "\" (email, first_name, last_name_prefix, last_name, password, type) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+        String query = "INSERT INTO \"" + tableName + "\" (email, first_name, last_name_prefix, last_name, password, type, kvk, btw, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, email);
@@ -126,6 +126,9 @@ public class UserDAO extends GenericDAO<User> {
         statement.setString(4, lastName);
         statement.setString(5, password);
         statement.setString(6, type);
+        statement.setString(7, kvk);
+        statement.setString(8, btw);
+        statement.setString(9, address);
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -139,7 +142,7 @@ public class UserDAO extends GenericDAO<User> {
 
     public User updateUser(UserResponse user) throws SQLException {
         // Create query
-        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ? WHERE \"id\" = ? RETURNING id";
+        String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ?, kvk = ?, btw = ?, address = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, user.getEmail());
@@ -147,7 +150,10 @@ public class UserDAO extends GenericDAO<User> {
         statement.setString(3, user.getLastName());
         statement.setString(4, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());
         statement.setBoolean(5, user.getActive());
-        PostgresJDBCHelper.setUuid(statement, 6, user.getId());
+        statement.setString(6, user.getKvk());
+        statement.setString(7, user.getBtw());
+        statement.setString(8, user.getAddress());
+        PostgresJDBCHelper.setUuid(statement, 9, user.getId());
 
         // Execute query
         ResultSet res = statement.executeQuery();
@@ -182,7 +188,7 @@ public class UserDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
 
         while (res.next()) {
-            Company c = new Company(res.getString("id"), res.getString("name"));
+            Company c = new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
             companies.add(c);
         }
         return companies;

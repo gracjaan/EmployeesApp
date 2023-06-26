@@ -1,3 +1,25 @@
+// Validation
+const validateFirstName = (firstName) => validateName(firstName);
+const validateLastName = (lastName) => validateName(lastName);
+const validateName = (name) => name.length > 2;
+
+//Validating company details
+const validateAddress1 = (address1) => address1.length > 6;
+const validateKVK = (kvkNumber) => {
+    let kvkNumberRegex = /^\d{8}$/;
+    return kvkNumberRegex.test(kvkNumber);
+};
+const validateBTW = (btwNumber) => {
+    let btwNumberRegex = /^(NL)?\d{9}B\d{2}$/;
+    return btwNumberRegex.test(btwNumber);
+}
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
 window.addEventListener("helpersLoaded", async () => {
     function getCompany() {
         if (getUserCompany() === null) return undefined;
@@ -16,11 +38,17 @@ window.addEventListener("helpersLoaded", async () => {
             const firstName = document.getElementById("firstname");
             const lastName = document.getElementById("lastname");
             const lastNamePrefix = document.getElementById("lastnameprefix");
+            const address = document.getElementById("address");
+            const kvk = document.getElementById("kvk");
+            const btw = document.getElementById("btw");
 
             email.value = user.email;
             firstName.value = user.firstName;
             lastName.value = user.lastName;
             lastNamePrefix.value = user.lastNamePrefix;
+            address.value = user.address;
+            kvk.value = user.kvk;
+            btw.value = user.btw;
         }
 
         if (company !== null && company !== undefined) {
@@ -28,7 +56,13 @@ window.addEventListener("helpersLoaded", async () => {
             companyElement.classList.remove("hidden")
 
             const name = document.getElementById("name");
+            const ca = document.getElementById("company-address");
+            const ck = document.getElementById("company-kvk");
+
             name.value = company.name;
+            ca.value = company.address;
+            ck.value = company.kvk;
+
         } else if (company === undefined) {
             const companyElement = document.getElementById("company");
             companyElement.classList.add("hidden")
@@ -38,6 +72,48 @@ window.addEventListener("helpersLoaded", async () => {
     updatePage(await getUser(), await getCompany());
 
     function updateUser(user) {
+        const email = document.getElementById("email").value.trim();
+        if (!validateEmail(email)) {
+            document.getElementById("user-error").innerText = "Invalid email format";
+            document.getElementById("user-error").classList.remove("hidden");
+            return;
+        }
+
+        const firstname = document.getElementById("firstname").value.trim();
+        if (!validateFirstName(firstname)) {
+            document.getElementById("user-error").innerText = "First name needs to be at least 3 characters";
+            document.getElementById("user-error").classList.remove("hidden");
+            return;
+        }
+
+        const lastname = document.getElementById("lastname").value.trim();
+        if (!validateLastName(lastname)) {
+            document.getElementById("user-error").innerText = "Last name needs to be at least 3 characters";
+            document.getElementById("user-error").classList.remove("hidden");
+            return;
+        }
+
+        const address = document.getElementById("address").value.trim();
+        if (!validateAddress1(address)) {
+            document.getElementById("user-error").innerText = "Address needs to be at least 6 characters";
+            document.getElementById("user-error").classList.remove("hidden");
+            return;
+        }
+
+        const kvk = document.getElementById("kvk").value.trim();
+        if (!validateKVK(kvk)) {
+            document.getElementById("user-error").innerText = "Invalid KVK format";
+            document.getElementById("user-error").classList.remove("hidden");
+            return;
+        }
+
+        const btw = document.getElementById("btw").value.trim();
+        if (!validateBTW(btw)) {
+            document.getElementById("user-error").innerText = "Invalid BTW format";
+            document.getElementById("user-error").classList.remove("hidden");
+            return;
+        }
+
         return fetch("/earnit/api/users/" + getUserId(), {
             method: 'put',
             headers: {
@@ -54,6 +130,27 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     function updateCompany(company) {
+        const name = document.getElementById("name").value.trim();
+        if (!validateName(name)) {
+            document.getElementById("company-error").innerText = "Name needs to be at least 3 characters";
+            document.getElementById("company-error").classList.remove("hidden");
+            return;
+        }
+
+        const address = document.getElementById("company-address").value.trim();
+        if (!validateAddress1(address)) {
+            document.getElementById("company-error").innerText = "Address needs to be at least 6 characters";
+            document.getElementById("company-error").classList.remove("hidden");
+            return;
+        }
+
+        const kvk = document.getElementById("company-kvk").value.trim();
+        if (!validateKVK(kvk)) {
+            document.getElementById("company-error").innerText = "Invalid KVK format";
+            document.getElementById("company-error").classList.remove("hidden");
+            return;
+        }
+
         return fetch("/earnit/api/companies/" + getUserCompany(), {
             method: 'put',
             headers: {
@@ -79,12 +176,18 @@ window.addEventListener("helpersLoaded", async () => {
         const firstName = document.getElementById("firstname");
         const lastName = document.getElementById("lastname");
         const lastNamePrefix = document.getElementById("lastnameprefix");
+        const address = document.getElementById("address");
+        const kvk = document.getElementById("kvk");
+        const btw = document.getElementById("btw");
 
         const updatedUser = await updateUser({
             email: email.value,
             firstName: firstName.value,
             lastName: lastName.value,
             lastNamePrefix: lastNamePrefix.value,
+            address: address.value,
+            kvk: kvk.value,
+            btw: btw.value
         })
 
         if (updatedUser.status === 200) {
@@ -117,9 +220,13 @@ window.addEventListener("helpersLoaded", async () => {
         success.classList.add("hidden");
 
         const name = document.getElementById("name");
+        const ca = document.getElementById("company-address");
+        const ck = document.getElementById("company-kvk");
 
         const updatedCompany = await updateCompany({
-            name: name.value
+            name: name.value,
+            address: ca.value,
+            kvk: ck.value
         })
 
         if (updatedCompany.status === 200) {
@@ -144,3 +251,5 @@ window.addEventListener("helpersLoaded", async () => {
         error.innerText = "There was an error while trying to update";
     })
 })
+
+// todo: validation of input fields
