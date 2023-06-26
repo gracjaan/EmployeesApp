@@ -104,7 +104,7 @@ function editUserInfo(user){
 
     userDiv.append(encapsulatingDiv)
 }
-async function editCompanyInfo(company){
+async function editCompanyInfo(company) {
     const companyDiv = document.getElementById("company-name-display");
     companyDiv.innerText = "";
 
@@ -130,9 +130,27 @@ async function editCompanyInfo(company){
     const contractsList = document.getElementById("contract-list");
     contractsList.innerText = "";
     let contracts = await getContracts(company.id)
-    for (const contract of contracts) {
-        contractsList.append(createContract(contract));
+
+    if (Object.keys(contracts).length > 0) {
+        for (const contract of contracts) {
+            contractsList.append(createContract(contract));
+        }
+    } else {
+
+        contractsList.append(noResults())
     }
+}
+
+function noResults(){
+    const listElement = document.createElement("li");
+    listElement.classList.add("p-6", "flex", "justify-center")
+    const noResult = document.createElement("p")
+    noResult.classList.add("text-text");
+    noResult.innerText = "There are no contracts to display. You can create a contract on the homepage"
+
+    listElement.append(noResult);
+    return listElement
+
 }
 
 function createContract(contract) {
@@ -375,11 +393,11 @@ function alertPopUp(message, positive) {
 
     if (positive){
         accent.classList.add("bg-accent-success")
-        image.src = "/earnit/static/icons/checkmark.svg"
+        image.src = "/static/icons/checkmark.svg"
     }
     else{
         accent.classList.add("bg-accent-fail")
-        image.src = "/earnit/static/icons/white-cross.svg"
+        image.src = "/static/icons/white-cross.svg"
     }
     confirmation.classList.remove("hidden");
     setTimeout(function (){
