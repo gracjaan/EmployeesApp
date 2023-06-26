@@ -234,7 +234,7 @@ public class UserDAO extends GenericDAO<User> {
         String query = "SELECT n.*, u.first_name, u.last_name, c.name AS company_name " +
                 "FROM \"notification\" n, \"user\" u, \"company\" c " +
                 "WHERE n.user_id = u.id AND n.company_id = c.id " +
-                "AND u.id = '1e92c3ab-9a95-4c6d-8f7f-75541e8106f1' ORDER BY n.date";
+                "AND u.id = ? ORDER BY n.date";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, user_id);
         ResultSet res = statement.executeQuery();
