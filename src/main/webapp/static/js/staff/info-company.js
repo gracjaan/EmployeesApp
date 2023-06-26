@@ -165,7 +165,15 @@ function createEmployeeElement(user) {
 
     const role = document.createElement("div");
     role.classList.add("text-text");
-    role.innerText = "Student";
+    if (user.type === "STUDENT"){
+        role.innerText = "Student";
+    }
+    else if (user.type === "ADMINISTRATOR"){
+        role.innerText = "Administrator";
+    }
+    else if (user.type === "COMPANY"){
+        role.innerText = "Company";
+    }
     entryInfo.appendChild(role);
 
     return entryContainer;
