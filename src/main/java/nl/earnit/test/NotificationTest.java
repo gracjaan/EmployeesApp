@@ -28,7 +28,7 @@ public class NotificationTest {
             // db-specific
             assertEquals(4, notifications.size());
         } catch (Exception e) {
-            System.out.println("Test unsuccessfull");
+            System.out.println("Test unsuccessful");
         }
     }
 
