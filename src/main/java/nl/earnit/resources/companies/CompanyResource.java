@@ -8,12 +8,14 @@ import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
+import nl.earnit.models.db.Notification;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateNote;
 import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 
+import java.lang.annotation.Repeatable;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -490,5 +492,21 @@ public class CompanyResource {
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GET
+    @Path("/notifications")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getNotificationsForCompany() {
+        CompanyDAO companyDAO;
+        List<Notification> notifications;
+        try {
+            companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            notifications = companyDAO.getNotificationsForCompany(companyId);
+        }
+        catch (Exception e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(notifications).build();
     }
 }
