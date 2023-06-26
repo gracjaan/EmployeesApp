@@ -40,7 +40,7 @@ function getUserCompany() {
 }
 
 function getUser() {
-    return fetch("/earnit/api/users/" + getUserId(), {
+    return fetch("/api/users/" + getUserId(), {
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             "accept-type": "application/json"

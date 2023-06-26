@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Invoices</title>
-    <script src="/earnit/static/js/helpers.js"></script>
-    <script src="/earnit/static/js/company/invoices.js" defer></script>
+    <script src="/static/js/helpers.js"></script>
+    <script src="/static/js/company/invoices.js" defer></script>
 
-    <script src="/earnit/static/js/components/week-selector.js"></script>
-    <script src="/earnit/static/js/components/order-selector.js"></script>
-    <script src="/earnit/static/js/components/back.js"></script>
+    <script src="/static/js/components/week-selector.js"></script>
+    <script src="/static/js/components/order-selector.js"></script>
+    <script src="/static/js/components/back.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link rel="stylesheet" href="/earnit/static/style.css"/>
+    <link rel="stylesheet" href="/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body
@@ -33,9 +33,9 @@
                         <order-selector id="contract" group="1" title="Contract"></order-selector>
                         <order-selector id="hours" group="1" title="Hours"></order-selector>
                         <order-selector id="user" group="1" title="User"></order-selector>
-                        <img src="/earnit/static/icons/download.svg" class="w-10 h-10 flex sm:hidden cursor-pointer" onclick="downloadAllInvoice()">
+                        <img src="/static/icons/download.svg" class="w-10 h-10 flex sm:hidden cursor-pointer" onclick="downloadAllInvoice()">
                     </div>
-                    <img src="/earnit/static/icons/download.svg" class="w-10 h-10 hidden sm:flex cursor-pointer" onclick="downloadAllInvoice()">
+                    <img src="/static/icons/download.svg" class="w-10 h-10 hidden sm:flex cursor-pointer" onclick="downloadAllInvoice()">
                 </div>
                 <div class="flex flex-col gap-2" id="entries"></div>
             </div>

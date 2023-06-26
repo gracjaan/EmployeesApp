@@ -1,7 +1,7 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const companies = await getStudentsPerCompany();
-    fetch("/earnit/api/users/" + getUserId(), {
+    fetch("/api/users/" + getUserId(), {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -21,7 +21,7 @@ window.addEventListener("helpersLoaded", async () => {
 
 
 async function getStudentsPerCompany() {
-    return await fetch("/earnit/api/staff/companies",
+    return await fetch("/api/staff/companies",
         {
             method: "GET",
             headers: {

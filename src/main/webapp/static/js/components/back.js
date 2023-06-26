@@ -17,7 +17,7 @@ window.addEventListener("helpersLoaded", () => {
         const imgLeft = document.createElement("img");
         imgLeft.classList.add("mr-3");
         imgLeft.alt = "arrow left";
-        imgLeft.src = "/earnit/static/icons/arrow-left.svg";
+        imgLeft.src = "/static/icons/arrow-left.svg";
         header.append(imgLeft);
 
         const div = document.createElement("div");

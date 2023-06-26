@@ -27,9 +27,9 @@ function createUser(user) {
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
     const nameDiv = document.createElement("a");
-    nameDiv.href = "/earnit/info-user?id=" + user.id
+    nameDiv.href = "/info-user?id=" + user.id
     // nameDiv.addEventListener("click", () => {
-    //     location.href = "/earnit/info-user?id=" + user.id
+    //     location.href = "/info-user?id=" + user.id
     // })
 
     const name = document.createElement("p");
@@ -44,7 +44,7 @@ function createUser(user) {
     disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
 
     const crossImage = document.createElement("img");
-    crossImage.src = "/earnit/static/icons/white-cross.svg";
+    crossImage.src = "/static/icons/white-cross.svg";
     crossImage.classList.add("h-4", "w-4")
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
@@ -62,7 +62,7 @@ function createUser(user) {
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("cursor-pointer", "rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
     const checkmarkImage = document.createElement("img");
-    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
+    checkmarkImage.src = "/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
@@ -104,7 +104,7 @@ function createUser(user) {
 
 function enableUser(user){
     user.active = true;
-    return fetch("/earnit/api/users/" + user.id, {
+    return fetch("/api/users/" + user.id, {
         method: 'put',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
@@ -121,7 +121,7 @@ function enableUser(user){
 
 function disableUser(user){
     user.active = false;
-    return fetch("/earnit/api/users/" + user.id, {
+    return fetch("/api/users/" + user.id, {
         method: 'delete',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
@@ -141,7 +141,7 @@ function createCompany(company) {
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
 
     const nameDiv = document.createElement("a");
-    nameDiv.href = "/earnit/info-company?id=" + company.id;
+    nameDiv.href = "/info-company?id=" + company.id;
 
     const name = document.createElement("p");
     name.classList.add("text-text", "font-montserrat");
@@ -154,7 +154,7 @@ function createCompany(company) {
     disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
 
     const crossImage = document.createElement("img");
-    crossImage.src = "/earnit/static/icons/white-cross.svg";
+    crossImage.src = "/static/icons/white-cross.svg";
     crossImage.classList.add("h-4", "w-4")
     crossImage.alt = "disable"
     disableDiv.append(crossImage);
@@ -172,7 +172,7 @@ function createCompany(company) {
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("cursor-pointer","rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
     const checkmarkImage = document.createElement("img");
-    checkmarkImage.src = "/earnit/static/icons/checkmark.svg";
+    checkmarkImage.src = "/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
@@ -277,7 +277,7 @@ function displayPopUpCompany(company, enabling, enableDiv, disableDiv) {
 
 function enableCompany(company){
     company.active = true;
-    return fetch("/earnit/api/companies/" + company.id, {
+    return fetch("/api/companies/" + company.id, {
         method: 'put',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
@@ -293,7 +293,7 @@ function enableCompany(company){
 }
 function disableCompany(company){
     company.active = false;
-    return fetch("/earnit/api/companies/" + company.id, {
+    return fetch("/api/companies/" + company.id, {
         method: 'delete',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
@@ -308,7 +308,7 @@ function disableCompany(company){
 }
 
 async function getStudents() {
-    return await fetch(`/earnit/api/users${getQueryParamsUsers()}`,
+    return await fetch(`/api/users${getQueryParamsUsers()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -318,7 +318,7 @@ async function getStudents() {
 }
 
 async function getCompanies() {
-    return await fetch(`/earnit/api/companies${getQueryParamsCompany()}`,
+    return await fetch(`/api/companies${getQueryParamsCompany()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",

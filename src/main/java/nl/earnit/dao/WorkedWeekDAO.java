@@ -185,8 +185,8 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 u.email as user_email,
                 u.type as user_type,
                 u.kvk as user_kvk,
-                u.btw as user_btw, 
-                u.address as user_address
+                u.btw as user_btw,
+                u.address as user_address,
                 
                 c.id as contract_id,
                 c.company_id as contract_company_id,
@@ -684,12 +684,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(res.getString("id"), withCompany, withContract, withUserContract, withUser, withHours, withTotalHours, order);
     }
 
-    private WorkedWeekDTO getWorkedWeekFromRow(ResultSet res) throws SQLException {
-        return getWorkedWeekFromRow(res, "", false, false, false, false, false, false);
-    }
-
     private WorkedWeekDTO getWorkedWeekFromRow(ResultSet res, String prefix, boolean withCompany, boolean withContract, boolean withUserContract, boolean withUser, boolean withHours, boolean withTotalHours) throws SQLException {
-
         List<Worked> hours = new ArrayList<>();
 
         if (withHours) {

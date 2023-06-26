@@ -11,7 +11,7 @@ window.addEventListener("helpersLoaded", async () => {
 })
 
 async function getCompanies() {
-    return await fetch("/earnit/api/companies",
+    return await fetch("/api/companies",
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -72,7 +72,7 @@ async function editCompanyInfo(company){
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
     companyImage.classList.add("h-14", "mr-8");
-    companyImage.src = "/earnit/static/icons/building.svg"
+    companyImage.src = "/static/icons/building.svg"
 
     const companyName = document.createElement("p");
     companyName.classList.add("text-text", "font-bold", "text-2xl");
@@ -95,7 +95,7 @@ function submitForm () {
         description: description
     };
 
-    fetch ("/earnit/api/companies/"+ cid + "/contracts/",
+    fetch ("/api/companies/"+ cid + "/contracts/",
         {
             method: "POST",
             body: JSON.stringify(formData),

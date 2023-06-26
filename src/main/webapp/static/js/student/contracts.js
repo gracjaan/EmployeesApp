@@ -6,7 +6,7 @@ window.addEventListener("helpersLoaded", async () => {
 })
 
 function obtainContractsForUser(uid) {
-    return fetch("/earnit/api/users/" + uid + "/contracts", {
+    return fetch("/api/users/" + uid + "/contracts", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -16,7 +16,7 @@ function obtainContractsForUser(uid) {
 }
 
 function obtainInvoice(contract) {
-    return fetch("/earnit/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
+    return fetch("/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -97,7 +97,7 @@ function createEntry(contract, invoice) {
     const img = document.createElement("img");
     img.alt = "download-all"
     img.classList.add("h-8", "w-8");
-    img.src = "/earnit/static/icons/download.svg"
+    img.src = "/static/icons/download.svg"
     rightrow.appendChild(img)
 
     rowcontainer.appendChild(leftrow);
@@ -132,7 +132,7 @@ function createEntry(contract, invoice) {
 
         const image1 = document.createElement("img");
         image1.classList.add("h-6", "w-6");
-        image1.src = "/earnit/static/icons/download-single.svg"
+        image1.src = "/static/icons/download-single.svg"
         ea.appendChild(image1);
 
         ei.appendChild(ea)
@@ -146,7 +146,7 @@ function createEntry(contract, invoice) {
 }
 
 function generateInvoice (contract, invoice) {
-    fetch(`/earnit/api/users/${getUserId()}/contracts/${contract.id}/invoices/download/${invoice.year}/${invoice.week}`, {
+    fetch(`/api/users/${getUserId()}/contracts/${contract.id}/invoices/download/${invoice.year}/${invoice.week}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,
         }
@@ -161,7 +161,7 @@ function generateInvoice (contract, invoice) {
 }
 
 function generateAllInvoices (contract) {
-    fetch(`/earnit/api/users/${getUserId()}/contracts/${contract.id}/invoices/download`, {
+    fetch(`/api/users/${getUserId()}/contracts/${contract.id}/invoices/download`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,
         }

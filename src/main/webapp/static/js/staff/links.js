@@ -90,7 +90,7 @@ function editUserInfo(user){
     const userIMage = document.createElement("img");
     userIMage.alt = "user logo"
     userIMage.classList.add("h-14", "mr-8");
-    userIMage.src = "/earnit/static/icons/user.svg"
+    userIMage.src = "/static/icons/user.svg"
 
     const userName = document.createElement("p");
     userName.classList.add("text-text", "font-bold", "text-2xl");
@@ -112,7 +112,7 @@ async function editCompanyInfo(company){
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
     companyImage.classList.add("h-14", "mr-8");
-    companyImage.src = "/earnit/static/icons/building.svg"
+    companyImage.src = "/static/icons/building.svg"
 
     const companyName = document.createElement("p");
     companyName.classList.add("text-text", "font-bold", "text-2xl");
@@ -173,7 +173,7 @@ function createContract(contract) {
 
 
 async function getStudents() {
-    return await fetch("/earnit/api/users",
+    return await fetch("/api/users",
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -183,7 +183,7 @@ async function getStudents() {
 }
 
 async function getCompanies() {
-    return await fetch("/earnit/api/companies",
+    return await fetch("/api/companies",
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -199,7 +199,7 @@ function updateHourlyWage(e) {
 
 async function getContracts(cid) {
 
-    return await fetch("/earnit/api/companies/" + cid + "/contracts",
+    return await fetch("/api/companies/" + cid + "/contracts",
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -219,7 +219,7 @@ function sendFormDataServer() {
         alert("Fill in all inputs");
         return;
     }
-    return fetch("/earnit/api/companies/" + companyId + "/contracts/" + contractId +"/employees",
+    return fetch("/api/companies/" + companyId + "/contracts/" + contractId +"/employees",
         {method: "POST",
             headers: {
                 "accept-type" : "application/json",

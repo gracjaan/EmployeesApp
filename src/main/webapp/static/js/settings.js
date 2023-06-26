@@ -23,7 +23,7 @@ const validateEmail = (email) => {
 window.addEventListener("helpersLoaded", async () => {
     function getCompany() {
         if (getUserCompany() === null) return undefined;
-        return fetch("/earnit/api/companies/" + getUserCompany(), {
+        return fetch("/api/companies/" + getUserCompany(), {
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
                 'Accept': 'application/json',
@@ -114,7 +114,7 @@ window.addEventListener("helpersLoaded", async () => {
             return;
         }
 
-        return fetch("/earnit/api/users/" + getUserId(), {
+        return fetch("/api/users/" + getUserId(), {
             method: 'put',
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -151,7 +151,7 @@ window.addEventListener("helpersLoaded", async () => {
             return;
         }
 
-        return fetch("/earnit/api/companies/" + getUserCompany(), {
+        return fetch("/api/companies/" + getUserCompany(), {
             method: 'put',
             headers: {
                 'authorization': `token ${getJWTCookie()}`,

@@ -1,7 +1,7 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
 
-    fetch("/earnit/api/users/" + getUserId(), {
+    fetch("/api/users/" + getUserId(), {
             method: "GET",
             headers: {
                 'authorization': `token ${getJWTCookie()}`,
@@ -20,7 +20,7 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 function getHours(companyId, token) {
-    return fetch(`/earnit/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
+    return fetch(`/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'

@@ -105,7 +105,7 @@ function createEntry(workedWeek) {
 
         const img = document.createElement("img");
         img.alt = "checkmark";
-        img.src = `/earnit/static/icons/${workedWeek.status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
+        img.src = `/static/icons/${workedWeek.status === "APPROVED" ? "checkmark" : "light-white"}.svg`;
         img.classList.add("w-4", "h-4")
         status.append(img);
     }
@@ -121,20 +121,20 @@ function createEntry(workedWeek) {
         if (downloadButton === e.target || downloadButton.contains(e.target)) {
             downloadInvoice(workedWeek);
         } else {
-            window.location.href = "/earnit/request?worked_week=" + workedWeek.id;
+            window.location.href = "/request?worked_week=" + workedWeek.id;
         }
     });
 
     const downloadImage = document.createElement("img");
     downloadImage.classList.add("h-6", "w-6");
-    downloadImage.src = "/earnit/static/icons/downloadSingle.svg"
+    downloadImage.src = "/static/icons/downloadSingle.svg"
     downloadButton.appendChild(downloadImage);
 
     return entryContainer;
 }
 
 function downloadInvoice(workedWeek) {
-    fetch(`/earnit/api/companies/${getUserCompany()}/invoices/download/week/${workedWeek.id}`, {
+    fetch(`/api/companies/${getUserCompany()}/invoices/download/week/${workedWeek.id}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,
         }
@@ -153,7 +153,7 @@ function downloadAllInvoice() {
     const year = parseInt(weekSelector.getAttribute("data-year"));
     const week = parseInt(weekSelector.getAttribute("data-week"));
 
-    fetch(`/earnit/api/companies/${getUserCompany()}/invoices/download/${year}/${week}`, {
+    fetch(`/api/companies/${getUserCompany()}/invoices/download/${year}/${week}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,
         }
@@ -173,7 +173,7 @@ function getQueryParams() {
 }
 
 function getRequestForCompany(companyId, year, week, token) {
-    return fetch(`/earnit/api/companies/${companyId}/invoices/${year}/${week}?${getQueryParams()}`, {
+    return fetch(`/api/companies/${companyId}/invoices/${year}/${week}?${getQueryParams()}`, {
         headers: {
             'authorization': `token ${token}`,
             'accept-type': 'application/json'

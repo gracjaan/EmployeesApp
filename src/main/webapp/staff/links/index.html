@@ -5,10 +5,10 @@
     <title>Earnit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/earnit/static/js/staff/links.js" defer></script>
-    <script src="/earnit/static/js/helpers.js" defer></script>
-    <script src="/earnit/static/js/components/back.js"></script>
-    <link rel="stylesheet" href="/earnit/static/style.css" />
+    <script src="/static/js/staff/links.js" defer></script>
+    <script src="/static/js/helpers.js" defer></script>
+    <script src="/static/js/components/back.js"></script>
+    <link rel="stylesheet" href="/static/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 </head>
@@ -25,12 +25,12 @@
                         <button id="dropdown-user-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleStudent()">
                             <div id="user" class="text-text">Choose user</div>
-                            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down"/>
+                            <img src="/static/icons/arrow-down.svg" alt="arrow down"/>
                         </button>
                         <div id="dropdown-user-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
                             <div id="searchbarUser"class="p-1 mt-2 w-full flex flex-row justify-between">
                                 <input id="searchUsers" onkeyup="searchUser()" type="text" class="border-b border-b-1 border-background w-full p-1 text-background placeholder-primary outline-0" placeholder="Search User...">
-                                <img src="/earnit/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
+                                <img src="/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                             </div>
                             <ol id="searchUser" class="mt-2 w-full">
                                 <!-- Dropdown options -->
@@ -47,7 +47,7 @@
             <!--        the switch button section-->
             <section class="flex">
                 <div class="justify-center">
-                    <img class="object-scale-down h-24" src="/earnit/static/icons/arrows-both-ways.svg" alt="both way arrow">
+                    <img class="object-scale-down h-24" src="/static/icons/arrows-both-ways.svg" alt="both way arrow">
                 </div>
             </section>
 
@@ -60,12 +60,12 @@
                         <button id="dropdown-company-button" class="rounded-xl bg-primary px-4 py-4 flex mr-5 items-center w-full justify-between"
                         onclick="toggleCompany()">
                             <div id="company" class="text-text">Choose company</div>
-                            <img src="/earnit/static/icons/arrow-down.svg" alt="arrow down" class=""/>
+                            <img src="/static/icons/arrow-down.svg" alt="arrow down" class=""/>
                         </button>
                         <div id="dropdown-company-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
                             <div id="searchbarCompany" class="p-1 mt-2 w-full flex flex-row justify-between">
                                 <input id="searchCompanies" onkeyup="searchCompany()" type="text" class="border-b border-b-1 border-background w-full p-1 text-background placeholder-primary outline-0" placeholder="Search Company...">
-                                <img src="/earnit/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
+                                <img src="/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                             </div>
                             <ol id="searchCompany" class="mt-2 w-full">
                                 <!-- Dropdown options -->
@@ -78,7 +78,7 @@
                             <p class="text-text font-bold text-2xl">Select A Company</p>
                         </div>
 <!--                        <div class="flex items-center">-->
-<!--                            <img class="h-14 mr-8" src="/earnit/static/icons/building.svg" alt="company logo">-->
+<!--                            <img class="h-14 mr-8" src="/static/icons/building.svg" alt="company logo">-->
 <!--                            <p class="text-text font-bold text-2xl">Amazon</p>-->
 <!--                        </div>-->
 <!--                        <div>-->
@@ -95,7 +95,7 @@
             <div class="flex flex-row gap-2">
                 <div id="searchBarRoles" class="w-3/8 hidden bg-text border border-none rounded-xl focus:border-text flex flex-row justify-between p-1">
                     <input id="searchRoles" onkeyup="searchRole()" type="text" class="w-full p-1 rounded-xl text-background placeholder-primary outline-0" placeholder="Search Role...">
-                    <img src="/earnit/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
+                    <img src="/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                 </div>
             </div>
 <!--            now comes all the different positions for the employees to have-->

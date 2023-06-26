@@ -24,6 +24,8 @@ public class RedirectFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
 
+        System.out.println(req.getServletPath());
+
         // Do not redirect static content, error or api
         if (req.getServletPath().startsWith("/static") || req.getServletPath().startsWith("/error") || req.getServletPath().startsWith("/api")) {
             filterChain.doFilter(servletRequest, servletResponse);
@@ -96,11 +98,11 @@ public class RedirectFilter implements Filter {
     }
 
     private void redirectLogin(ServletResponse servletResponse) throws IOException {
-        ((HttpServletResponse) servletResponse).sendRedirect(Constants.ABSOLUTE_URL + "/login");
+        ((HttpServletResponse) servletResponse).sendRedirect(Constants.ABSOLUTE_URL + "login");
     }
 
     private void redirectHome(ServletResponse servletResponse) throws IOException {
-        ((HttpServletResponse) servletResponse).sendRedirect(Constants.ABSOLUTE_URL + "/");
+        ((HttpServletResponse) servletResponse).sendRedirect(Constants.ABSOLUTE_URL);
     }
 
     @Override
