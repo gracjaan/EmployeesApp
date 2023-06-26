@@ -67,6 +67,7 @@ public class CompanyResource {
             company.setId(companyId);
             return Response.ok(companyDAO.updateCompany(company)).build();
         } catch (SQLException e) {
+
             return Response.serverError().build();
         }
     }

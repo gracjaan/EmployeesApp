@@ -70,7 +70,7 @@ public class CompanyUserDAO extends GenericDAO<User> {
         // Return count
         List<Company> companies = new ArrayList<>();
         while (res.next()) {
-            companies.add(new Company(res.getString("id"), res.getString("name")));
+            companies.add(new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address")));
         }
 
         return companies;

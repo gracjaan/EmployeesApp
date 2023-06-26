@@ -15,6 +15,9 @@ public class UserResponse {
     private String lastName;
     private String lastNamePrefix;
     private String type;
+    private String kvk;
+    private String btw;
+    private String address;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean active;
@@ -35,6 +38,9 @@ public class UserResponse {
         this.lastNamePrefix = user.getLastNamePrefix();
         this.lastName = user.getLastName();
         this.type = user.getType();
+        this.btw = user.getBtw();
+        this.kvk = user.getKvk();
+        this.address = user.getAddress();
     }
 
     /**
@@ -47,13 +53,16 @@ public class UserResponse {
      * @param type The type of user: STUDENT, COMPANY, ADMINISTRATOR.
      */
     public UserResponse(String id, String email, String firstName, String lastName, String lastNamePrefix,
-                        String type) {
+                        String type, String kvk, String btw, String address) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
         this.type = type;
+        this.kvk = kvk;
+        this.btw = btw;
+        this.address = address;
     }
 
     public String getId() {
@@ -110,5 +119,29 @@ public class UserResponse {
 
     public Boolean getActive(){
         return this.active;
+    }
+
+    public String getKvk() {
+        return kvk;
+    }
+
+    public void setKvk(String kvk) {
+        this.kvk = kvk;
+    }
+
+    public String getBtw() {
+        return btw;
+    }
+
+    public void setBtw(String btw) {
+        this.btw = btw;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

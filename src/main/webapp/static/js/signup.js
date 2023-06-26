@@ -3,6 +3,18 @@ const validateFirstName = (firstName) => validateName(firstName);
 const validateLastName = (lastName) => validateName(lastName);
 const validateName = (name) => name.length > 2;
 
+//Validating company details
+const validateAddress1 = (address1) => address1.length > 6;
+const validateAddress2 = (address2) => address2.length > 0;
+const validateKVK = (kvkNumber) => {
+    let kvkNumberRegex = /^\d{8}$/;
+    return kvkNumberRegex.test(kvkNumber);
+};
+const validateBTW = (btwNumber) => {
+    let btwNumberRegex = /^(NL)?\d{9}B\d{2}$/;
+    return btwNumberRegex.test(btwNumber);
+}
+
 // At least 8 characters, min 1: number, lowercase, uppercase and special character
 const validatePassword = (password) => /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/.test(password);
 
@@ -13,7 +25,8 @@ const validateEmail = (email) => {
     return String(email)
         .toLowerCase()
         .match(
-/([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"(\[]!#-[^-~ \t]|(\\[\t -~]))+")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+/        );
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
 };
 
 // State handler
@@ -21,8 +34,10 @@ const states = {
     'choose': choose,
     'student-info': studentInfo,
     'student-account': studentAccount,
+    'student-details': studentDetails,
     'company-info': companyInfo,
     'company-account': companyAccount,
+    'company-details': companyDetails,
 }
 
 let state = "choose";
@@ -156,7 +171,7 @@ function studentInfo() {
             return;
         }
 
-        updateContent("student-account");
+        updateContent("student-details");
     })
 }
 
@@ -165,7 +180,7 @@ function studentAccount() {
     const submit = document.getElementById("submit");
 
     back.addEventListener('click', () => {
-        updateContent("student-info");
+        updateContent("student-details");
     });
 
     submit.addEventListener("click", () => {
@@ -192,9 +207,12 @@ function studentAccount() {
             return;
         }
 
+        const kvk = document.getElementById("student-kvk").value.trim();
+        const btw = document.getElementById("student-btw").value.trim();
         const firstName = document.getElementById("student-first").value.trim();
         const lastName = document.getElementById("student-last").value.trim();
         const lastNamePrefix = document.getElementById("student-last-prefix").value.trim();
+        const address = document.getElementById("student-address-1").value.trim() + " " + document.getElementById("student-address-2").value.trim();
 
         document.getElementById("error").innerText = "";
         document.getElementById("error").classList.add("hidden");
@@ -210,7 +228,10 @@ function studentAccount() {
                 firstName,
                 lastName,
                 lastNamePrefix,
-                password
+                password,
+                kvk,
+                btw,
+                address
             })
         }).then(async res => {
             let error = null;
@@ -254,6 +275,49 @@ function studentAccount() {
     });
 }
 
+function studentDetails() {
+    const back = document.getElementById("student-details-back");
+    const submit = document.getElementById("submit");
+
+    back.addEventListener('click', () => {
+        updateContent("student-info");
+    });
+
+    submit.addEventListener("click", () => {
+        if (state !== 'student-details') return;
+
+        const address1 = document.getElementById("student-address-1").value.trim();
+        if (!validateAddress1(address1)) {
+            document.getElementById("error").innerText = "Address 1 needs to be at least 6 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const address2 = document.getElementById("student-address-2").value.trim();
+        if (!validateAddress2(address2)) {
+            document.getElementById("error").innerText = "Address 2 needs to be at least 1 character";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const kvk = document.getElementById("student-kvk").value.trim();
+        if (!validateKVK(kvk)) {
+            document.getElementById("error").innerText = "KVK number needs to be in valid format";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const btw = document.getElementById("student-btw").value.trim();
+        if (!validateBTW(btw)) {
+            document.getElementById("error").innerText = "BTW number needs to be in valid format";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        updateContent("student-account");
+    })
+}
+
 function companyInfo() {
     const back = document.getElementById("company-info-back");
     const submit = document.getElementById("submit");
@@ -264,13 +328,6 @@ function companyInfo() {
 
     submit.addEventListener("click", () => {
         if (state !== 'company-info') return;
-
-        const name = document.getElementById("company-name").value.trim();
-        if (!validateName(name)) {
-            document.getElementById("error").innerText = "Company name needs to be at least 3 characters";
-            document.getElementById("error").classList.remove("hidden");
-            return;
-        }
 
         const first = document.getElementById("company-first").value.trim();
         if (!validateFirstName(first)) {
@@ -286,7 +343,7 @@ function companyInfo() {
             return;
         }
 
-        updateContent("company-account");
+        updateContent("company-details");
     })
 }
 
@@ -331,6 +388,10 @@ function companyAccount() {
         const lastName = document.getElementById("company-last").value.trim();
         const lastNamePrefix = document.getElementById("company-last-prefix").value.trim();
 
+        let kvk = null;
+        const btw = null;
+        let address = null;
+
         if (userId === null) {
             const user = await fetch('/earnit/api/users', {
                 method: 'POST',
@@ -343,7 +404,10 @@ function companyAccount() {
                     firstName,
                     lastName,
                     lastNamePrefix,
-                    password
+                    password,
+                    kvk,
+                    btw,
+                    address
                 })
             }).then(async res => {
                 let error = null;
@@ -390,6 +454,8 @@ function companyAccount() {
         }
 
         const name = document.getElementById("company-name").value.trim();
+        address = document.getElementById("company-address-1").value.trim() + " " + document.getElementById("company-address-2").value.trim();
+        kvk = document.getElementById("company-kvk").value.trim();
 
         if (userId !== null) {
             fetch('/earnit/api/companies', {
@@ -400,7 +466,9 @@ function companyAccount() {
                 },
                 body: JSON.stringify({
                     name,
-                    userId: userId
+                    userId: userId,
+                    kvk,
+                    address
                 })
             }).then(async res => {
                 error = null;
@@ -444,4 +512,47 @@ function companyAccount() {
             });
         }
     });
+}
+
+function companyDetails() {
+    const back = document.getElementById("company-details-back");
+    const submit = document.getElementById("submit");
+
+    back.addEventListener('click', () => {
+        updateContent("company-info");
+    });
+
+    submit.addEventListener("click", () => {
+        if (state !== 'company-details') return;
+
+        const name = document.getElementById("company-name").value.trim();
+        if (!validateName(name)) {
+            document.getElementById("error").innerText = "Company name needs to be at least 3 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const address1 = document.getElementById("company-address-1").value.trim();
+        if (!validateAddress1(address1)) {
+            document.getElementById("error").innerText = "Address 1 needs to be at least 6 characters";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const address2 = document.getElementById("company-address-2").value.trim();
+        if (!validateAddress2(address2)) {
+            document.getElementById("error").innerText = "Address 2 needs to be at least 1 character";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        const kvk = document.getElementById("company-kvk").value.trim();
+        if (!validateKVK(kvk)) {
+            document.getElementById("error").innerText = "KVK number needs to be in valid format";
+            document.getElementById("error").classList.remove("hidden");
+            return;
+        }
+
+        updateContent("company-account");
+    })
 }
