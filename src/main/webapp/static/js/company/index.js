@@ -15,9 +15,60 @@ window.addEventListener("helpersLoaded", async () => {
             name.innerText = "Welcome back, " + json.firstName;
         })
 
+    const notifications = await obtainNotifications();
+    console.log("below we have notifications")
+    console.log(notifications)
+    createEntries(notifications);
+
     const workedWeeks = await getHours(getUserCompany(), getJWTCookie());
     updateChart(workedWeeks)
 });
+
+function createEntries (notifications) {
+    const container = document.getElementById("entries");
+
+    if (notifications.length === 0){
+        const placeholder = document.createElement("div");
+        placeholder.classList.add("text-text", "font-bold", "uppercase", "text-center");
+        placeholder.innerText = "No notifications"
+        container.appendChild(placeholder);
+    }
+
+    notifications.forEach(notification => {
+        const outer = document.createElement("div");
+        outer.classList.add("rounded-2xl", "bg-primary", "p-4", "relative");
+        // outer.addEventListener('click', () => {
+        //     const n = document.getElementById()
+        // })
+
+        const inner1 = document.createElement("div");
+        inner1.classList.add("text-text", "font-bold", "uppercase");
+        inner1.innerText = notification.message;
+        outer.appendChild(inner1)
+
+        const inner2 = document.createElement("div");
+        inner2.classList.add("text-text", "uppercase");
+        inner2.innerText = notification.date;
+        outer.appendChild(inner2)
+
+        if (!notification.seen){
+            const inner3 = document.createElement("div");
+            inner3.classList.add("bg-accent-fail", "rounded-full", "w-4", "h-4", "absolute", "-top-1", "-left-1");
+            outer.appendChild(inner3)
+        }
+        container.appendChild(outer)
+    })
+}
+
+function obtainNotifications() {
+    return fetch("/api/companies/" + getUserCompany() + "/notifications", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(() => null);
+}
 
 function getHours(companyId, token) {
     return fetch(`/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
