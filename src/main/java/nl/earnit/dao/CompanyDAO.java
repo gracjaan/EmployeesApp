@@ -284,6 +284,8 @@ public class CompanyDAO extends GenericDAO<User> {
                     message = res.getString("first_name") + " " + res.getString("last_name") + "accepted your suggestion";
                 case "SUGGESTION REJECTED":
                     message = res.getString("first_name") + " " + res.getString("last_name") + "rejected your suggestion";
+                case "LINK":
+                    message = "You have a new link with " + res.getString("first_name") + " " + res.getString("last_name");
                 default:
                     System.out.println("Not a valid type");
             }

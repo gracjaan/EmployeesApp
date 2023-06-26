@@ -239,31 +239,36 @@ public class UserDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 1, user_id);
         ResultSet res = statement.executeQuery();
         while (res.next()) {
-            String message = "";
-            switch(res.getString("type")) {
-                case "HOURS":
-                    message =  "You haven't confirmed hours for " + res.getString("company_name") + " yet";
-                    break;
-                case "APPROVED":
-                    message = res.getString("company_name") + " approved your suggested hours";
-                    break;
-                case "SUGGESTION":
-                    message = res.getString("company_name") + " has suggested new hours";
-                    break;
-                case "REJECTED":
-                    message = res.getString("company_name") + " rejected your suggested hours";
-                    break;
-                case "CONFLICT":
-                    message = res.getString("company_name") + " and " + res.getString("first_name") + " " + res.getString("last_name") + "have a conflict";
-                case "LINK":
-                    message = "You have been linked to " + res.getString("company_name");
-                default:
-                    System.out.println("No valid notification type");
-            }
+            String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"));
             NotificationDTO notification = new NotificationDTO(res.getDate("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
         }
         return notifications;
+    }
+
+    public String convertToMessage(String type, String company_name, String user_name) {
+        String message = null;
+        switch(type) {
+            case "HOURS":
+                message =  "You haven't confirmed hours for " + company_name + " yet";
+                break;
+            case "APPROVED":
+                message = company_name + " approved your suggested hours";
+                break;
+            case "SUGGESTION":
+                message = company_name + " has suggested new hours";
+                break;
+            case "REJECTED":
+                message = company_name+ " rejected your suggested hours";
+                break;
+            case "CONFLICT":
+                message = company_name + " and " + user_name + " have a conflict";
+            case "LINK":
+                message = "You have been linked to " + company_name;
+            default:
+                System.out.println("No valid notification type");
+        }
+        return message;
     }
 }
 
