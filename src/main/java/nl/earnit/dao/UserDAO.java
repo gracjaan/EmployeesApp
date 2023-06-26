@@ -3,6 +3,7 @@ package nl.earnit.dao;
 import jakarta.annotation.Nullable;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
+import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
@@ -222,6 +223,23 @@ public class UserDAO extends GenericDAO<User> {
         if (!res.next()) return false;
 
         return res.getBoolean("active");
+    }
+
+    public List<Notification> getNotificationsForUser(String user_id) throws SQLException {
+        if (user_id==null) {
+            return null;
+        }
+        List<Notification> notifications = new ArrayList<>();
+        String query = "SELECT n.* FROM notification n WHERE n.id = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, user_id);
+        ResultSet res = statement.executeQuery();
+
+        while (res.next()) {
+            Notification notification = new Notification(res.getString("id"), res.getString("user_id"), res.getString("company_id"), res.getDate("date"), res.getBoolean("seen"), res.getString("message"));
+            notifications.add(notification);
+        }
+        return notifications;
     }
 }
 

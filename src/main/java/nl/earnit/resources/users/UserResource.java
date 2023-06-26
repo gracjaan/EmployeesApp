@@ -10,6 +10,7 @@ import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
+import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.UserResponse;
@@ -135,7 +136,6 @@ public class UserResource {
         }
         return Response.ok(userContracts).build();
     }
-
     @Path("/contracts/{userContractId}")
     public UserContractResource getContract(@PathParam("userContractId") String userContractId) {
         return new UserContractResource(uriInfo, request, userId, userContractId);
@@ -178,5 +178,21 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
+    }
+
+    @GET
+    @Path("/notifications")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getNotifications() {
+        UserDAO userDAO;
+        List<Notification> notifications;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            notifications = userDAO.getNotificationsForUser(userId);
+        }
+        catch (Exception e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(notifications).build();
     }
 }
