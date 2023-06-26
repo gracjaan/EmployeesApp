@@ -230,7 +230,7 @@ public class UserDAO extends GenericDAO<User> {
             return null;
         }
         List<Notification> notifications = new ArrayList<>();
-        String query = "SELECT n.* FROM notification n WHERE n.id = ? ORDER BY n.date";
+        String query = "SELECT n.* FROM notification n WHERE n.user_id = ? ORDER BY n.date";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, user_id);
         ResultSet res = statement.executeQuery();
