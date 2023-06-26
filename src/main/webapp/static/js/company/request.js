@@ -63,6 +63,7 @@ function approve(companyId, workedWeekId, token) {
         .then(async (res) => await res.json())
         .then((request) => {
             updatePage(request);
+            alertPopUp("Accepted the week", true)
         })
         .catch(() => null);
 }
@@ -97,6 +98,7 @@ function rejectConfirm() {
                 .then(async (res) => await res.json())
                 .then((request) => {
                     updatePage(request);
+                    alertPopUp("rejected the week. Request will be considered soon", false)
                 })
                 .catch(() => null);
         })
@@ -105,7 +107,6 @@ function rejectConfirm() {
 
 function reject(companyId, workedWeekId, token) {
     noteConfirmation = {companyId, workedWeekId, token};
-
     toggleNote();
 }
 
@@ -124,6 +125,7 @@ function undo(companyId, workedWeekId, token) {
         .then(async (res) => await res.json())
         .then((request) => {
             updatePage(request);
+            alertPopUp("undid the previous action", true)
         })
         .catch(() => null);
 }
@@ -397,4 +399,30 @@ function getWorkedWeekId() {
     }
 
     return search.get("worked_week");
+}
+
+function alertPopUp(message, positive) {
+    let confirmation = document.getElementById("alertPopup");
+    let accent = document.getElementById("accent")
+    let image = document.getElementById("confirmationIcon")
+    let p = document.getElementById("popUpAlertParagraph")
+    p.innerText = message
+
+    if (positive) {
+        accent.classList.add("bg-accent-success")
+        image.src = "/static/icons/checkmark.svg"
+    } else {
+        accent.classList.add("bg-[#FD8E28]")
+        image.src = "/static/icons/light-white.svg"
+    }
+    confirmation.classList.remove("hidden");
+    setTimeout(function () {
+            confirmation.classList.add("hidden");
+            if (positive) {
+                accent.classList.remove("bg-accent-success")
+            } else {
+                accent.classList.remove("bg-[#FD8E28]")
+            }
+        }, 2000
+    );
 }
