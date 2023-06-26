@@ -2,7 +2,6 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.*;
 import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
@@ -462,7 +461,7 @@ public class CompanyResource {
             }
 
             workedDAO.setCompanyNote(workedWeekId, note);
-                return Response.ok().build();
+            return Response.ok().build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -489,7 +488,7 @@ public class CompanyResource {
             }
 
             workedDAO.setSuggestion(workedId, suggestion);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.ok().build();
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
