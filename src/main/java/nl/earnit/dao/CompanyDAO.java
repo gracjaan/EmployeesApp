@@ -169,7 +169,8 @@ public class CompanyDAO extends GenericDAO<User> {
     }
 
     public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
-        String query = "SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email FROM user u, company_user c WHERE u.id = c.user_id AND c.company_id = ?";
+        String query = """
+        SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         ResultSet resultSet = statement.executeQuery();

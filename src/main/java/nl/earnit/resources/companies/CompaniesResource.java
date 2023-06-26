@@ -98,7 +98,6 @@ public class CompaniesResource {
                 }
             }
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
 
