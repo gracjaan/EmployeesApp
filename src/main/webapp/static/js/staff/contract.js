@@ -118,11 +118,11 @@ function alertPopUp(message, positive) {
 
     if (positive){
         accent.classList.add("bg-accent-success")
-        image.src = "/earnit/static/icons/checkmark.svg"
+        image.src = "/static/icons/checkmark.svg"
     }
     else{
         accent.classList.add("bg-accent-fail")
-        image.src = "/earnit/static/icons/white-cross.svg"
+        image.src = "/static/icons/white-cross.svg"
     }
     confirmation.classList.remove("hidden");
     setTimeout(function (){
