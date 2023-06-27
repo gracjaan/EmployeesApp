@@ -21,6 +21,13 @@ window.addEventListener("helpersLoaded", async () => {
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     email.innerText = user.email;
 
+    if (user.userContracts.length === 0) {
+        const noContracts = document.createElement("div");
+        noContracts.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noContracts.innerText = "No contracts";
+        contracts.append(noContracts)
+    }
+
     for (const userContract of user.userContracts) {
         contracts.append(createUserContractItem(userContract));
     }
@@ -34,6 +41,13 @@ async function updateInvoices() {
 
     const invoices = document.getElementById("invoices");
     invoices.innerText = "";
+
+    if (workedWeeks.length === 0) {
+        const noInvoices = document.createElement("div");
+        noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noInvoices.innerText = "No invoices";
+        invoices.append(noInvoices)
+    }
 
     for (const workedWeek of workedWeeks) {
         invoices.append(createInvoiceItem(workedWeek));

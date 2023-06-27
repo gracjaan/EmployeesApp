@@ -10,7 +10,7 @@ window.addEventListener("helpersLoaded", async () => {
 
     if (requests === null || requests.length < 1) {
         const noRequests = document.createElement("div");
-        noRequests.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
+        noRequests.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
         noRequests.innerText = "No requests";
         requestsContainer.append(noRequests)
     }
