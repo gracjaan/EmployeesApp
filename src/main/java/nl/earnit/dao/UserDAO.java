@@ -278,5 +278,12 @@ public class UserDAO extends GenericDAO<User> {
         PostgresJDBCHelper.setUuid(statement, 1, notification_id);
         statement.executeQuery();
     }
+
+    // for unit tests
+    public ResultSet executeCustomQuery(String query) throws SQLException {
+        PreparedStatement statement = this.con.prepareStatement(query);
+        ResultSet res = statement.executeQuery();
+        return res;
+    }
 }
 
