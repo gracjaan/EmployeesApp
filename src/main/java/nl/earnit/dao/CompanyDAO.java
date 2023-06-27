@@ -289,6 +289,9 @@ public class CompanyDAO extends GenericDAO<User> {
                 case "LINK":
                     message = "You have a new link with " + res.getString("first_name") + " " + res.getString("last_name");
                     break;
+                case "CONFLICT":
+                    message = "You have a conflict with " + res.getString("first_name") + " " + res.getString("last_name");
+                    break;
                 default:
                     System.out.println("Not a valid type");
             }
