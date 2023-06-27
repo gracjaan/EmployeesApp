@@ -62,5 +62,7 @@ public class NotificationTest {
         assertEquals(message, "Blackrock and Gabriel Kudow have a conflict");
     }
 
+    // test the triggers
+
 
 }

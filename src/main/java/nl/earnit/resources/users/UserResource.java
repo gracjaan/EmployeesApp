@@ -182,7 +182,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/notification")
+    @Path("/notifications")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getNotifications() {
         UserDAO userDAO;
