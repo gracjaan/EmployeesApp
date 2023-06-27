@@ -52,10 +52,28 @@ function createEntries (notifications) {
         if (!notification.seen){
             const inner3 = document.createElement("div");
             inner3.classList.add("bg-accent-fail", "rounded-full", "w-4", "h-4", "absolute", "-top-1", "-left-1");
+            inner3.setAttribute("id", "dot")
+            inner3.addEventListener('click', () => toggleSeen(notification.id))
             outer.appendChild(inner3)
         }
         container.appendChild(outer)
     })
+}
+
+function toggleSeen (id) {
+    return fetch("/api/companies/" + getUserCompany() + "/notifications/" + id, {
+        method: 'POST',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        }
+    })
+        .then(() => {
+            const dot = document.getElementById("dot");
+            dot.classList.add("hidden")
+        })
+        .catch(() => null);
 }
 
 function obtainNotifications() {
