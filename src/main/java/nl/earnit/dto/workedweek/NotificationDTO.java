@@ -6,7 +6,6 @@ import java.util.Date;
 
 @XmlRootElement
 public class NotificationDTO {
-
     private String id;
     private Date date;
     private boolean seen;
@@ -18,6 +17,15 @@ public class NotificationDTO {
         this.seen = seen;
         this.message = message;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Date getDate() {
         return date;
     }
