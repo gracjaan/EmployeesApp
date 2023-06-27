@@ -240,7 +240,7 @@ public class UserDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
         while (res.next()) {
             String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"));
-            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getDate("date"), res.getBoolean("seen"), message);
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
         }
         return notifications;
