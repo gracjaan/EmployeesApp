@@ -71,7 +71,7 @@ function handleLeftClick() {
     }
 }
 
-function createEntry(contract, invoice) {
+function createEntry(contract, invoices) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "gap-2", "justify-between", "w-full", "h-full", "hidden");
     entryContainer.style.overflowY = "auto";
@@ -83,7 +83,7 @@ function createEntry(contract, invoice) {
 
     const entryInfo0 = document.createElement("div");
     entryInfo0.classList.add("text-text", "font-bold", "uppercase");
-    entryInfo0.innerText = invoice[0].company.name;
+    entryInfo0.innerText = contract.company.name;
     leftrow.appendChild(entryInfo0);
 
     const entryInfo1 = document.createElement("div");
@@ -112,7 +112,7 @@ function createEntry(contract, invoice) {
     const entryInfo3 = document.createElement("div");
     entryInfo3.classList.add("overflow-auto");
 
-    for (const i of invoice) {
+    for (const i of invoices) {
         const ei = document.createElement("div");
         ei.classList.add("bg-primary", "rounded-lg", "mt-2", "p-4", "flex", "flex-row", "justify-between");
 
