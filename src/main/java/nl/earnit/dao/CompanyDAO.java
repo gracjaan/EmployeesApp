@@ -273,7 +273,7 @@ public class CompanyDAO extends GenericDAO<User> {
             return null;
         }
         List<NotificationDTO> notifications = new ArrayList<>();
-        String query = "SELECT n.*, u.first_name, u.last_name FROM \"notification\" n, \"user\" u WHERE n.user_id = u.id AND u.id = ? ORDER BY n.date";
+        String query = "SELECT n.*, u.first_name, u.last_name FROM \"notification\" n, \"user\" u WHERE n.user_id = u.id AND u.id = ? ORDER BY n.date DESC, n.seen";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, company_id);
         ResultSet res = statement.executeQuery();
