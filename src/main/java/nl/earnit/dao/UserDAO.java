@@ -263,6 +263,7 @@ public class UserDAO extends GenericDAO<User> {
                 break;
             case "CONFLICT":
                 message = company_name + " and " + user_name + " have a conflict";
+                break;
             case "LINK":
                 message = "You have been linked to " + company_name;
             default:
