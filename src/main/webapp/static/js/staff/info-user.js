@@ -41,7 +41,7 @@ window.addEventListener("helpersLoaded", async () => {
 
 async function updateInvoices(companies, user) {
     const invoices = document.getElementById("invoices");
-    invoices.innerText = "";
+    //invoices.innerText = "";
 
     for (const userCompanies of companies) {
         const workedWeeks = await getInvoices(userCompanies.id, user.id)
