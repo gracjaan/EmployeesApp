@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-x-hidden">
 <head>
     <meta charset="UTF-8"/>
     <title>Earnit</title>
@@ -21,12 +21,12 @@
         <div
                 class="bg-secondary top-0 -left-full -right-full h-3/4 absolute -z-10">
         </div>
-        <div class="flex justify-between py-16 px-4 sm:px-0">
-            <h1 id="name" class="flex text-text text-2xl font-bold">
+        <div class="flex flex-wrap justify-between py-16 px-4 sm:px-0">
+            <h1 id="name" class="break-all flex text-text text-2xl font-bold">
 
             </h1>
-            <div class="flex justify-center gap-2">
-                <a class="flex h-10 w-fit flex px-2 items-center justify-center bg-primary rounded-lg text-text"
+            <div class="flex justify-center gap-2 mt-1">
+                <a class="flex h-10 w-fit flex px-2 items-center justify-center bg-primary rounded-lg text-text text-sm"
                    href="/contract">
                     Create contract
                 </a>
@@ -39,16 +39,19 @@
             </div>
         </div>
         <nav
-                class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0">
+                class="flex gap-2 sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0"
+        >
             <a href="/requests"
-               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
+            >
                 <h2 class="text-text text-2xl font-bold">Requests</h2>
                 <p class="text-text text-base">
                     Process rejected requests
                 </p>
             </a>
             <a href="/links"
-               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md">
+               class="rounded-2xl min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
+            >
                 <h2 class="text-text text-2xl font-bold">Create links</h2>
                 <p class="text-text text-base">
                     Create links between users and companies via contracts
@@ -70,7 +73,7 @@
         <!--        This is the section for the dashboard graph-->
         <section class="w-full gap-2 flex flex-col">
             <h2 class="text-text text-2xl font-bold">Dashboard</h2>
-            <div class="rounded-2xl bg-secondary">
+            <div class="rounded-2xl bg-secondary pt-2 p-4">
                 <canvas id="myChart"></canvas>
             </div>
         </section>
