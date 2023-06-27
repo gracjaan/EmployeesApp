@@ -17,6 +17,13 @@ window.addEventListener("helpersLoaded", async () => {
             for (const contract of contracts) {
                 contractsElement.append(createContractItem(contract));
             }
+
+            if (contracts.length === 0){
+                const noContracts = document.createElement("div");
+                noContracts.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+                noContracts.innerText = "No contracts";
+                contractsElement.append(noContracts)
+            }
         })
 });
 

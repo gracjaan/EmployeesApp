@@ -142,6 +142,14 @@ function updatePage(workedWeek) {
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
+
+    if (workedWeek.hours.length === 0) {
+        const noEntries = document.createElement("div");
+        noEntries.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noEntries.innerText = "No invoices";
+        entries.append(noEntries)
+    }
+
     for (const hour of workedWeek.hours) {
         entries.appendChild(createEntry(workedWeek.year, workedWeek.week, workedWeek.contract, hour, workedWeek.status !== "CONFIRMED", workedWeek.status === "APPROVED"));
     }
