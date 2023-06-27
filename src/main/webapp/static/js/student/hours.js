@@ -550,7 +550,7 @@ function rejectSuggestion(contractId, year, week, token) {
 async function submitForm() {
     const dayInput = document.getElementById("day-header");
     const hoursInput = document.getElementById('hours-input');
-    const positionInput = document.getElementById("position-header")
+    const positionInput = document.getElementById("position-header");
     const descriptionInput = document.getElementById('description-input');
 
     const formData = {
