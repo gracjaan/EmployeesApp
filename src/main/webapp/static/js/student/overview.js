@@ -321,7 +321,7 @@ async function getData() {
     return data;
 }
 
-function generateAllInvoices () {
+function downloadAllInvoices() {
     fetch(`/api/users/${getUserId()}/invoices/download/${getSelectedYear()}/${getSelectedWeek()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,

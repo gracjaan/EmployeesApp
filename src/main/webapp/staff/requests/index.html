@@ -27,16 +27,19 @@
     <main class="gap-8 md:gap-8 my-8 flex-col px-2 sm:px-0 gap-4 flex p-4">
         <section class="w-full h-full gap-2 flex flex-col px-6">
             <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
-                <div class="flex gap-2">
-                    <order-selector id="date" group="1" title="Date"></order-selector>
-                    <order-selector id="contract" group="1" title="Contract"></order-selector>
-                    <order-selector id="hours" group="1" title="Hours"></order-selector>
-                </div>
-                <!--        This will list the different students-->
-                <ol id="rejected-weeks" class="pr-2 flex flex-col gap-2 overflow-y-auto max-h-[15rem] scrollbar-custom scrollbar-rounded-xl scrollbar-thumb-primary">
-                </ol>
+                <div class="flex justify-between">
+                    <div class="overflow-x-auto flex gap-2 scrollbar-none">
+                        <order-selector id="date" group="1" title="Date"></order-selector>
+                        <order-selector id="contract" group="1" title="Contract"></order-selector>
+                        <order-selector id="hours" group="1" title="Hours"></order-selector>
+                    </div>
+                    <!--        This will list the different students-->
+                    <ol id="rejected-weeks" class="pr-2 flex flex-col gap-2 overflow-y-auto max-h-[15rem] scrollbar-custom scrollbar-rounded-xl scrollbar-thumb-primary">
+                    </ol>
 
+                </div>
             </div>
+
         </section>
     </main>
 </div>
