@@ -33,7 +33,7 @@ function createUser(user) {
     // })
 
     const name = document.createElement("p");
-    name.classList.add("text-text", "font-montserrat");
+    name.classList.add("break-all", "text-text", "font-montserrat");
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     nameDiv.append(name);
     const statusDiv = document.createElement("div");
@@ -41,7 +41,7 @@ function createUser(user) {
     buttonDiv.classList.add("flex", "flex-row", "gap-2");
 
     const disableDiv = document.createElement("div");
-    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "ml-2", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
 
     const crossImage = document.createElement("img");
     crossImage.src = "/static/icons/white-cross.svg";
@@ -144,14 +144,14 @@ function createCompany(company) {
     nameDiv.href = "/info-company?id=" + company.id;
 
     const name = document.createElement("p");
-    name.classList.add("text-text", "font-montserrat");
+    name.classList.add("break-all", "text-text", "font-montserrat");
     name.innerText = company.name;
 
     nameDiv.append(name);
     itemContainer.append(nameDiv)
 
     const disableDiv = document.createElement("div");
-    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "ml-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
 
     const crossImage = document.createElement("img");
     crossImage.src = "/static/icons/white-cross.svg";
