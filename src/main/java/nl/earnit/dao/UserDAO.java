@@ -275,7 +275,7 @@ public class UserDAO extends GenericDAO<User> {
         String query = "UPDATE \"notification\" SET seen = FALSE WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, notification_id);
-        ResultSet res = statement.executeQuery();
+        statement.executeQuery();
     }
 }
 
