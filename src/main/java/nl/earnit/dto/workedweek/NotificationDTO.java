@@ -1,7 +1,10 @@
 package nl.earnit.dto.workedweek;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.util.Date;
 
+@XmlRootElement
 public class NotificationDTO {
 
     private String id;
@@ -15,8 +18,6 @@ public class NotificationDTO {
         this.seen = seen;
         this.message = message;
     }
-
-
     public Date getDate() {
         return date;
     }
