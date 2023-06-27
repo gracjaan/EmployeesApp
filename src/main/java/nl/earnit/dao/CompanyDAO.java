@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The companyDAO is used to access the entries in the company tabel of the database
+ * This stores all the companies that use the application
+ */
 public class CompanyDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company";
 
@@ -25,6 +29,11 @@ public class CompanyDAO extends GenericDAO<User> {
         super(con, TABLE_NAME);
     }
 
+    /**
+     * Counts all the companies that are on the platform and are active
+     * @return the amount of active companies
+     * @throws SQLException
+     */
     @Override
     public int count() throws SQLException {
         // Create query
@@ -62,6 +71,14 @@ public class CompanyDAO extends GenericDAO<User> {
         return new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
     }
 
+    /**
+     * creates a company entry in the database
+     * @param name the name of the company
+     * @param kvk the kvk number
+     * @param address the address of
+     * @return the company object that was just created
+     * @throws SQLException
+     */
     public Company createCompany(String name, String kvk, String address)
         throws SQLException {
         // Create query
@@ -82,6 +99,12 @@ public class CompanyDAO extends GenericDAO<User> {
         return getCompanyById(res.getString("id"));
     }
 
+    /**
+     * Update a company object in the database
+     * @param company the company object with the id you want to update and the other parameters set to updated values
+     * @return the updated company object
+     * @throws SQLException
+     */
     public Company updateCompany(Company company) throws SQLException {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET name = ?, kvk = ?, address = ?, active = ? WHERE \"id\" = ? RETURNING id";
@@ -103,6 +126,12 @@ public class CompanyDAO extends GenericDAO<User> {
         return getCompanyById(res.getString("id"));
     }
 
+    /**
+     * Gets all the companies whether they are active or not
+     * @param order whether the way that the companies are returned are in a certain order: asc, desc
+     * @return A list with all the company objects
+     * @throws SQLException
+     */
     public List<Company> getAllCompanies(String order) throws SQLException {
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
             put("company.name", "name");
@@ -128,6 +157,12 @@ public class CompanyDAO extends GenericDAO<User> {
         return companyList;
     }
 
+    /**
+     * gets all the companies that are active
+     * @param order whether the way that the companies are returned are in a certain order: asc, desc
+     * @return The list of companies
+     * @throws SQLException
+     */
     public List<Company> getAllCompaniesUsers(String order) throws SQLException {
         ArrayList<Company> companyList = new ArrayList<>();
         String query = "SELECT * FROM " + tableName + "WHERE active = true ORDER BY ? " ;
@@ -157,6 +192,13 @@ public class CompanyDAO extends GenericDAO<User> {
         return companyList;
     }
 
+    /**
+     * Shows whether a company has access to a user. If the user works for the company, then the company has access to the user
+     * @param companyId The id of the company
+     * @param studentId The id of the Student
+     * @return whether the student has a contract with the company ? true : false
+     * @throws SQLException
+     */
     public boolean hasCompanyAccessToUser(String companyId, String studentId) throws SQLException {
         String query = """
             SELECT uc.id, COUNT(*) as contracts FROM user_contract uc
@@ -176,6 +218,12 @@ public class CompanyDAO extends GenericDAO<User> {
         return res.next();
     }
 
+    /**
+     * Gets all the students that work for a company
+     * @param companyId the id of the company where you want the employees of
+     * @return A list of Users formatted as a UserResponse object
+     * @throws SQLException
+     */
     public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
         String query = """
             SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.btw, u.kvk, u.address FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
@@ -189,8 +237,17 @@ public class CompanyDAO extends GenericDAO<User> {
         }
         return users;
     }
-
-
+//TODO: finish this JAVADOC
+    /**
+     * Gets a particular user that works for a particular company
+     * @param companyId The company id
+     * @param studentId The student id
+     * @param withUserContracts Whether we want the contract with the result ? true : false
+     * @param withUserContractsContract
+     * @param order
+     * @return
+     * @throws SQLException
+     */
     public UserDTO getStudentForCompany(String companyId, String studentId, boolean withUserContracts, boolean withUserContractsContract, String order) throws SQLException {
         OrderBy orderByContracts = new OrderBy(new HashMap<>() {{
             put("contract.id", "c.id");
@@ -259,6 +316,11 @@ public class CompanyDAO extends GenericDAO<User> {
         return user;
     }
 
+    /**
+     * gets a company by its id only if it's disabled
+     * @param id the id of the company
+     * @throws SQLException
+     */
     public void disableCompanyById(String id) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET active = false WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
