@@ -4,6 +4,13 @@ window.addEventListener("helpersLoaded", async () => {
     const companiesElement = document.getElementById("dropdown-company-content");
     companiesElement.innerText = ""
 
+    if (companies.length === 0) {
+        const noCompanies = document.createElement("div");
+        noCompanies.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noCompanies.innerText = "No companies";
+        companiesElement.append(noCompanies)
+    }
+
     for (const company of companies) {
         companiesElement.append(createCompany(company));
     }

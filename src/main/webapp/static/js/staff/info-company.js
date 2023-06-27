@@ -27,6 +27,14 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     if (roles !== null) {
+
+        if (roles.length === 0) {
+            const noRoles = document.createElement("div");
+            noRoles.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+            noRoles.innerText = "No roles";
+            roleList.append(noRoles)
+        }
+
         for (const role of roles) {
             roleList.append(createRoleElement(role));
         }
@@ -35,6 +43,14 @@ window.addEventListener("helpersLoaded", async () => {
         // do something to show that no roles are available
     }
     if (employees !== null) {
+
+        if (employees.length === 0) {
+            const noEmployees = document.createElement("div");
+            noEmployees.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+            noEmployees.innerText = "No employees";
+            employeeList.append(noEmployees)
+        }
+
         for (const employee of employees){
             employeeList.append(createEmployeeElement(employee))
         }
