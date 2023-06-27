@@ -22,6 +22,11 @@ public class UserDAO extends GenericDAO<User> {
         super(con, TABLE_NAME);
     }
 
+    /**
+     * Counts all the rows with active users
+     * @return amonut of active users
+     * @throws SQLException
+     */
     @Override
     public int count() throws SQLException {
         // Create query
@@ -180,6 +185,12 @@ public class UserDAO extends GenericDAO<User> {
 
     }
 
+    /**
+     * gets all the companies that a user works for (a admin can work for multiple companies)
+     * @param userId the id of the user
+     * @return List of companies the user works for
+     * @throws SQLException
+     */
     public List<Company> getCompanies(String userId) throws SQLException {
         List<Company> companies = new ArrayList<>();
         String query = "SELECT c.* FROM company c, company_user u WHERE c.id=u.company_id AND u.user_id=?;";
@@ -194,6 +205,12 @@ public class UserDAO extends GenericDAO<User> {
         return companies;
     }
 
+    /**
+     * Updates the user type to either a: "STUDENT", "ADMINISTRATOR", or "COMPANY"
+     * @param userResponse The user object that you want to change the user to.
+     * @return whether the user was updated ? true : false
+     * @throws SQLException
+     */
     public boolean updateUserType(UserResponse userResponse) throws SQLException {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET type = ? WHERE \"id\" = ? RETURNING id";

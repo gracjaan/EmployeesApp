@@ -18,6 +18,11 @@ public class CompanyUserDAO extends GenericDAO<User> {
         super(con, TABLE_NAME);
     }
 
+    /**
+     * returns all the users that are registered as company users (ADMINISTRATORS)
+     * @return the amount of company users
+     * @throws SQLException
+     */
     @Override
     public int count() throws SQLException {
         // Create query
@@ -76,6 +81,13 @@ public class CompanyUserDAO extends GenericDAO<User> {
         return companies;
     }
 
+    /**
+     * Creates a company user (ADMINISTRATOR)
+     * @param companyId the id of the company you want to create a admin for
+     * @param userId The userID that will be used fior the making of the administrator
+     * @return returns whether the user was created succesfully
+     * @throws SQLException
+     */
     public boolean createCompanyUser(String companyId, String userId) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, user_id) "+
             "VALUES (?, ?) RETURNING company_id";

@@ -34,6 +34,14 @@ public class WorkedDAO extends GenericDAO<User> {
         return res.getInt("count");
     }
 
+    //TODO: Multiple employees can have the same contract. So if we retrieve the hours of a contract, those hours belong to multiple employees right
+    //TODO: Don't we need to make it so that we only get the hours worked under a contract of one employee
+    /**
+     * gets a list of all the worked weeks with hours that were worked under a specific contract
+     * @param userContractId
+     * @return A list of all the worked weeks
+     * @throws SQLException
+     */
     public List<Worked> getWorkedHours(String userContractId) throws SQLException {
         // Create query
         String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=?";
@@ -69,6 +77,12 @@ public class WorkedDAO extends GenericDAO<User> {
         return list;
     }
 
+    /**
+     * Gets all the contracts that a user has
+     * @param userId the id of the user
+     * @return the list of contracts the user has
+     * @throws SQLException
+     */
     public List<UserContract> getUserContracts(String userId) throws SQLException {
         String query = "SELECT * AS count FROM  \"" + tableName + "\" WHERE \"user_id\" = ?";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -85,6 +99,16 @@ public class WorkedDAO extends GenericDAO<User> {
         return contractList;
     }
 
+    /**
+     * Adds a particular task that was done in a worked week, only when the worked week was not yet confirmed
+     *
+     * @param worked the worked task that was executed
+     * @param userContractId the contract it was executed under
+     * @param year the year of execution
+     * @param week the week of execution
+     * @return whether the work was added to the week ? true : false
+     * @throws SQLException
+     */
     public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
             WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             List<WorkedWeekDTO> workedWeeks = wwDao.getWorkedWeeksForUser(null, userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, false, "hours.day:asc");
@@ -117,7 +141,12 @@ public class WorkedDAO extends GenericDAO<User> {
             return true;
     }
 
-
+    /**
+     * Updates the worked week in case it was flagged and changed
+     * @param worked the new amount of worked hours of a task
+     * @return whether the worked object was updated in the tabel ? true : false
+     * @throws SQLException
+     */
     public boolean updateWorkedWeekTask(Worked worked) throws SQLException {
         if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
             return false;
@@ -145,6 +174,12 @@ public class WorkedDAO extends GenericDAO<User> {
         return true;
     }
 
+    /**
+     * Checkes whether a worked week is already confirmed
+     * @param workedId the id of the worked week
+     * @return the week is confirmed ? true : false
+     * @throws SQLException
+     */
     public boolean isWorkedWeekConfirmedOfWorked(String workedId) throws SQLException {
         String query = "SELECT ww.status FROM worked_week ww JOIN worked w ON w.worked_week_id = ww.id WHERE w.id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -154,6 +189,13 @@ public class WorkedDAO extends GenericDAO<User> {
         return !resultSet.getString("status").equals("NOT_CONFIRMED");
     }
 
+    /**
+     * checks whether the company is allowed to see the worked week
+     * @param companyId the id of the company
+     * @param workedId the id of the worked week
+     * @return
+     * @throws SQLException
+     */
     public boolean hasCompanyAccessToWorked(String companyId, String workedId) throws SQLException {
         String query = """
             SELECT COUNT(DISTINCT ww.id) as count FROM "%s" w
@@ -179,6 +221,13 @@ public class WorkedDAO extends GenericDAO<User> {
         return res.getInt("count") > 0;
     }
 
+    /**
+     * Sets a suggestion for the worked hours so that it can be considered by staff
+     *
+     * @param workedId the id of the worked object that the suggestion is added to
+     * @param suggestion the suggestion of new hours
+     * @throws SQLException
+     */
     public void setSuggestion(String workedId, CreateSuggestion suggestion) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET suggestion = ? WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -191,6 +240,12 @@ public class WorkedDAO extends GenericDAO<User> {
         statement.executeUpdate();
     }
 
+    /**
+     * accept the suggestion of hours that was made by the company
+     * @param workedWeekId the id of the week where the suggestion was made for
+     * @return whether the suggestion was accepted and hours were updated ? true : false
+     * @throws SQLException
+     */
     public boolean acceptCompanySuggestion(String workedWeekId) throws SQLException {
         // Create query
         String query = """
@@ -205,6 +260,13 @@ public class WorkedDAO extends GenericDAO<User> {
         return res.next();
     }
 
+    /**
+     * accepts the hours that were filled in by the student and ignores the suggestion that was made by the company
+     *
+     * @param workedWeekId the week were of the suggestion is accepted
+     * @return whether the suggestion was accepted and hours were updated ? true : false
+     * @throws SQLException
+     */
     public boolean acceptStudentSuggestion(String workedWeekId) throws SQLException {
         // Create query
         String query = """

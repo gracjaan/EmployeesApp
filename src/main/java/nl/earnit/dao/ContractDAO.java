@@ -59,7 +59,17 @@ public class ContractDAO extends GenericDAO<User> {
         res.next();
         return res.getInt("count");
     }
-
+//TODO: finish this javaDOC
+    /**
+     * gets all the contracts that a company has
+     * @param companyId the id of the company
+     * @param withCompany
+     * @param withUserContracts
+     * @param withUserContractsUser
+     * @param order
+     * @return
+     * @throws SQLException
+     */
     public List<ContractDTO> getAllContractsByCompanyId(String companyId, boolean withCompany, boolean withUserContracts, boolean withUserContractsUser, String order) throws SQLException {
         List<ContractDTO> result = new ArrayList<>();
 
@@ -150,6 +160,12 @@ public class ContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    /**
+     * Creates a contract for a company that users can then be linked to
+     * @param contract the contract object you want to insert in the database
+     * @param company_id the id of the company where the contract is for
+     * @throws SQLException
+     */
     public void createContract(Contract contract, String company_id) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, role, description) "+
                 "VALUES (?, ?, ?) RETURNING id";
@@ -175,6 +191,11 @@ public class ContractDAO extends GenericDAO<User> {
         return new Contract(contractId, res.getString("description"), res.getString("role"));
     }
 
+    /**
+     * disables the contract for a company and automatically all the links with users that associate to the contract
+     * @param contractId the id of the contract
+     * @throws SQLException
+     */
     public void disableContract(String contractId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
 
@@ -193,6 +214,11 @@ public class ContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    /**
+     * disables all the contracts for a company
+     * @param companyId the company id you want to disable the contracts for
+     * @throws SQLException
+     */
     public void disableContractsByCompanyId(String companyId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE company_id = ?";
 

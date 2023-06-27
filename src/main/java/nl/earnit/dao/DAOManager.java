@@ -49,6 +49,12 @@ public class DAOManager {
         COMPANY, USER_CONTRACT, USER, COMPANY_USER, WORKED, WORKED_WEEK, CONTRACT
     }
 
+    /**
+     * gets the right DAO for the
+     * @param dao
+     * @return
+     * @throws SQLException
+     */
     public GenericDAO<?> getDAO(DAO dao) throws SQLException {
         this.open();
 

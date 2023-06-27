@@ -56,6 +56,12 @@ public class UserContractDAO extends GenericDAO<User> {
         return res.getInt("count");
     }
 
+    /**
+     * get all the contracts that belong to a user
+     * @param userId the user you want the id's for
+     * @return the list of contracts
+     * @throws SQLException
+     */
     public List<UserContractDTO> getUserContractsByUserId(String userId) throws SQLException {
         String query = "SELECT u.*, c.* FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -122,6 +128,7 @@ public class UserContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    //TODO: Doesn't this just get one contract that is not specified, a user may have multiple ones right?
     public UserContract getUserContractById(String id) throws SQLException {
         String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -166,6 +173,11 @@ public class UserContractDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
     }
 
+    /**
+     * The amount of employees for every company
+     * @return a list of companycounts objects that contain the company and the amount of employees
+     * @throws SQLException
+     */
     public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
 
         List<CompanyCounts> result = new ArrayList<>();
