@@ -4,11 +4,13 @@ import java.util.Date;
 
 public class NotificationDTO {
 
+    private String id;
     private Date date;
     private boolean seen;
     private String message;
 
-    public NotificationDTO(Date date, boolean seen, String message) {
+    public NotificationDTO(String id, Date date, boolean seen, String message) {
+        this.id  = id;
         this.date = date;
         this.seen = seen;
         this.message = message;

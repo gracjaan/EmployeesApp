@@ -289,7 +289,7 @@ public class CompanyDAO extends GenericDAO<User> {
                 default:
                     System.out.println("Not a valid type");
             }
-            NotificationDTO notification = new NotificationDTO(res.getDate("date"), res.getBoolean("seen"), message);
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getDate("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
         }
         return notifications;

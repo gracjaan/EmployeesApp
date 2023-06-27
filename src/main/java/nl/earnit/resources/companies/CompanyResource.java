@@ -510,4 +510,18 @@ public class CompanyResource {
         }
         return Response.ok(notifications).build();
     }
+
+    @POST
+    @Path("/notifications/{notificationId}")
+    public Response changeToNotificationSeen(@PathParam("notificationId") String notificationId) {
+        UserDAO userDAO;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            userDAO.changeNotificationToSeen(notificationId);
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
+
+    }
 }

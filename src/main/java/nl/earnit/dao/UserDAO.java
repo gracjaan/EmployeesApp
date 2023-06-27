@@ -240,7 +240,7 @@ public class UserDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
         while (res.next()) {
             String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"));
-            NotificationDTO notification = new NotificationDTO(res.getDate("date"), res.getBoolean("seen"), message);
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getDate("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
         }
         return notifications;
@@ -269,6 +269,15 @@ public class UserDAO extends GenericDAO<User> {
                 System.out.println("No valid notification type");
         }
         return message;
+    }
+
+    public void changeNotificationToSeen(String notification_id) throws SQLException {
+        String query = "UPDATE \"notification\"" +
+                "SET \"seen\" = FALSE" +
+                "WHERE \"id\" = ?";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, notification_id);
+        ResultSet res = statement.executeQuery();
     }
 }
 
