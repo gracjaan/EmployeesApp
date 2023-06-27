@@ -79,6 +79,15 @@ async function updateContracts() {
     const positionContent = document.getElementById('position-content');
     positionContent.innerText = "";
 
+    if (contracts.length === 0){
+        const option = document.createElement('div');
+        option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer', 'text-center', 'font-bold');
+        option.textContent = "No contracts"
+        positionContent.appendChild(option);
+
+        return contracts;
+    }
+
     contracts.forEach(c => {
         const option = document.createElement('div');
         option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
@@ -315,7 +324,7 @@ async function updatePage(contracts) {
     if (workEntries === null || workEntries.length < 1){
         const noInvoices = document.createElement("div");
         noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "justify-center", "my-2");
-        noInvoices.innerText = "No invoices";
+        noInvoices.innerText = "No entries";
         entries.append(noInvoices)
     }
 }
