@@ -52,7 +52,7 @@ function createEntries (notifications) {
         if (!notification.seen){
             const inner3 = document.createElement("div");
             inner3.classList.add("bg-accent-fail", "rounded-full", "w-4", "h-4", "absolute", "-top-1", "-left-1");
-            inner3.setAttribute("id", "dot")
+            inner3.setAttribute("id", notification.id)
             inner3.addEventListener('click', () => toggleSeen(notification.id))
             outer.appendChild(inner3)
         }
@@ -70,7 +70,7 @@ function toggleSeen (id) {
         }
     })
         .then(() => {
-            const dot = document.getElementById("dot");
+            const dot = document.getElementById(id);
             dot.classList.add("hidden")
         })
         .catch(() => null);
