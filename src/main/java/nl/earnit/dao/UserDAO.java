@@ -272,8 +272,7 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     public void changeNotificationToSeen(String notification_id) throws SQLException {
-        String query = "UPDATE \"notification\"" +
-                "SET \"seen\" = FALSE WHERE id = ?";
+        String query = "UPDATE \"notification\" SET seen = FALSE WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, notification_id);
         ResultSet res = statement.executeQuery();
