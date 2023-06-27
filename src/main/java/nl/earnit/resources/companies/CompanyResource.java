@@ -14,7 +14,6 @@ import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class CompanyResource {
@@ -117,6 +116,7 @@ public class CompanyResource {
 
             return Response.ok(contractDAO.getAllContractsByCompanyId(companyId,company, userContracts, userContractsUser, order)).build();
         } catch (Exception e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
     }
@@ -230,6 +230,10 @@ public class CompanyResource {
 
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year),  Integer.parseInt(week), true, true, true, true, false, true, "");
 
+            if (workedWeeks.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             return Response
                 .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
                     InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
@@ -252,6 +256,10 @@ public class CompanyResource {
             }
 
             WorkedWeekDTO workedWeek = workedWeekDAO.getWorkedWeekById(workedWeekId, true, true, true, true, false, true, "");
+
+            if (!workedWeek.getStatus().equals("APPROVED")) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             return Response
                 .ok(InvoicePDFHandler.createSingleInvoice(InvoicePDFHandler.InvoiceInformation.fromWorkedWeek(workedWeek)), MediaType.APPLICATION_OCTET_STREAM)

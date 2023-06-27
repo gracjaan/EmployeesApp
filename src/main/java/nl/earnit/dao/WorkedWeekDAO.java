@@ -288,7 +288,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                                 
-                WHERE ww.year = ? AND ww.week = ? AND cy.id = ?
+                WHERE ww.status = 'APPROVED' AND ww.year = ? AND ww.week = ? AND cy.id = ?
                 %3$s
             """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), orderBy.getSQLOrderBy(order, true));
 
@@ -367,7 +367,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 
                 LEFT JOIN (select w.worked_week_id, array_agg(w.*%2$s) as hours, sum(w.minutes) as minutes FROM worked w GROUP BY w.worked_week_id) w ON w.worked_week_id = ww.id
                                 
-                WHERE cy.id = ? AND u.id = ?
+                WHERE cy.id = ? AND ww.status = 'APPROVED' AND u.id = ?
                 %3$s
             """.formatted(tableName, orderByHours.getSQLOrderBy(order, true), orderBy.getSQLOrderBy(order, true));
 

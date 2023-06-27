@@ -154,6 +154,8 @@ public class UserResource {
         try {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, null, null, null, company, contract,userContract, user,hours,totalHours, order);
+            workedWeeks = workedWeeks.stream().filter(x -> x.getStatus().equals("APPROVED")).toList();
+
             return Response.ok(workedWeeks).build();
         } catch (Exception e) {
             return Response.serverError().build();
@@ -168,6 +170,11 @@ public class UserResource {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
 
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, null, Integer.parseInt(year), Integer.parseInt(week), true, true, true, true, false, true, "");
+            workedWeeks = workedWeeks.stream().filter(x -> x.getStatus().equals("APPROVED")).toList();
+
+            if (workedWeeks.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             return Response
                 .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
