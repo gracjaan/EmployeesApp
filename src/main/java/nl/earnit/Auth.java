@@ -77,7 +77,7 @@ public class Auth {
             UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
 
             return userDAO.getUserById(userId.asString());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }

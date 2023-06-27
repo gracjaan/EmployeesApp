@@ -8,7 +8,6 @@ import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.models.db.Worked;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserContractWorkedResource {
@@ -100,7 +99,6 @@ public class UserContractWorkedResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -154,7 +152,6 @@ public class UserContractWorkedResource {
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
         } catch (Exception e) {
-            System.out.println(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -184,7 +181,7 @@ public class UserContractWorkedResource {
 
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTION_DENIED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

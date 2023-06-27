@@ -48,7 +48,7 @@ public class CompanyContractResource {
             result.setDescription(contractDAO.getContract(contractId).getDescription());
             result.setRole(contractDAO.getContract(contractId).getRole());
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
         return result;

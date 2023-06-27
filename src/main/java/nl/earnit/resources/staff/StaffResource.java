@@ -12,7 +12,6 @@ import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.companies.CompanyCounts;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("/staff")
@@ -87,8 +86,7 @@ public class StaffResource {
             return Response.ok(
                 workedWeekDAO.getWorkedWeekById(workedWeekId, company, contract, userContract, user,
                     hours, totalHours, order)).build();
-        } catch (SQLException e) {
-            System.out.println(e);
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -118,7 +116,6 @@ public class StaffResource {
 
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user, hours, totalHours, order)).build();
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }
@@ -208,7 +205,6 @@ public class StaffResource {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             count = userContractDAO.getNumberOfEmployeesByCompany();
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok(count).build();

@@ -80,7 +80,6 @@ public class UserContractResource {
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(userId, userContractId, null, null, company, contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }

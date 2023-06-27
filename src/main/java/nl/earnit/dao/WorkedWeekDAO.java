@@ -105,7 +105,6 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             statement.setInt(4, Integer.parseInt(week));
             statement.executeUpdate();
         } catch(NumberFormatException e) {
-            System.out.println(e);
             return false;
         }
         return true;
@@ -783,8 +782,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             w = Integer.parseInt(week);
             y = Integer.parseInt(year);
         } catch (NumberFormatException e) {
-            System.out.println(e);
+            return true;
         }
+
         int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
         int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
         return currentYear > y || (currentYear == y && currentWeek > w);
