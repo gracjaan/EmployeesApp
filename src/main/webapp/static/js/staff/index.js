@@ -1,6 +1,16 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const companies = await getStudentsPerCompany();
+    const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie())
+    const requestsDiv = document.getElementById("newRequests");
+
+    if(Object.keys(requests).length > 0){
+        requestsDiv.classList.remove("hidden");
+    }
+    else{
+        requestsDiv.classList.add("hidden");
+    }
+
     fetch("/api/users/" + getUserId(), {
             method: "GET",
             headers: {
