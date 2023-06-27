@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -96,17 +97,16 @@ public class InvoicePDFHandler {
 
     public static class InvoiceInformation {
         public static InvoiceInformation fromWorkedWeek(WorkedWeekDTO workedWeek) {
-            /** @TODO: missing information */
             return new InvoiceInformation(workedWeek.getCompany().getName(),
-                "An address",
-                "12345678",
-                "1234", // This is currently just fixed.
+                workedWeek.getCompany().getAddress(),
+                workedWeek.getCompany().getKvk(),
+                String.format("%04d", new Random().nextInt(10000)), // This is currently just a random number.
                 ISOWeek.getNextMonday(workedWeek.getYear(), workedWeek.getWeek()).format(
                     DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                 getNameFromWorkedWeek(workedWeek),
-                "An address too",
-                "12345678",
-                "NL123456789B01",
+                workedWeek.getUser().getAddress(),
+                workedWeek.getUser().getKvk(),
+                workedWeek.getUser().getBtw(),
                 workedWeek.getContract().getRole(),
                 workedWeek.getContract().getDescription(),
                 workedWeek.getWeek(),
