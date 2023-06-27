@@ -92,6 +92,14 @@ function updatePage(request) {
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
+
+    if (request.hours.length === 0) {
+        const noEntries = document.createElement("div");
+        noEntries.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noEntries.innerText = "No entries";
+        entries.append(noEntries)
+    }
+
     for (const hour of request.hours) {
         entries.appendChild(createEntry(request.year, request.week, request.contract, hour, request.status === "APPROVED"));
     }

@@ -13,6 +13,20 @@ window.addEventListener("helpersLoaded", async () => {
     const companiesElement = document.getElementById("companies");
     companiesElement.innerText = "";
 
+    if (users.length === 0) {
+        const noUsers = document.createElement("div");
+        noUsers.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noUsers.innerText = "No users";
+        usersElement.append(noUsers)
+    }
+
+    if (companies.length === 0) {
+        const noCompanies = document.createElement("div");
+        noCompanies.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noCompanies.innerText = "No companies";
+        companiesElement.append(noCompanies)
+    }
+
     for (const user of users) {
         usersElement.append(createUser(user));
     }
