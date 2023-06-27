@@ -18,7 +18,7 @@ public class WorkedTest {
    public void setUp() {
         try {
             workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

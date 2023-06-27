@@ -9,21 +9,12 @@
     <script src="/static/js/student/overview.js"></script>
     <script src="/static/js/components/week-selector.js"></script>
     <script src="/static/js/components/order-selector.js"></script>
+    <script src="/static/js/components/back.js"></script>
     <link rel="stylesheet" href="/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body class="bg-black flex flex-col w-full font-montserrat">
-<header
-        class="flex bg-primary w-fit p-2 rounded-br-lg cursor-pointer"
-        onclick="history.back()"
->
-    <img
-            src="/static/icons/arrow-left.svg"
-            alt="arrow down"
-            class="mr-3"
-    />
-    <div class="text-text">Back</div>
-</header>
+<back data-home></back>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
     <section class="w-full gap-2 flex flex-col">
         <h2 class="text-text text-2xl font-bold">Overview</h2>
@@ -35,7 +26,7 @@
         <h2 class="text-text text-2xl font-bold mb-2">Sheet</h2>
         <section class="w-full h-full gap-2 flex flex-col">
             <div
-                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2"
+                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2 drop-shadow-md"
             >
                 <div class="flex justify-between">
                     <div class="flex gap-2">

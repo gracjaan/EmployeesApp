@@ -14,7 +14,6 @@ import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class CompanyResource {
@@ -37,7 +36,7 @@ public class CompanyResource {
                 (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
 
             return Response.ok(companyDAO.getCompanyById(companyId)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -66,7 +65,7 @@ public class CompanyResource {
 
             company.setId(companyId);
             return Response.ok(companyDAO.updateCompany(company)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
 
             return Response.serverError().build();
         }
@@ -116,7 +115,8 @@ public class CompanyResource {
                 (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
 
             return Response.ok(contractDAO.getAllContractsByCompanyId(companyId,company, userContracts, userContractsUser, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
     }
@@ -129,7 +129,7 @@ public class CompanyResource {
         try {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             users = companyDAO.getStudentsForCompany(companyId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
         return Response.ok(users).build();
@@ -149,7 +149,7 @@ public class CompanyResource {
             }
 
             return Response.ok(companyDAO.getStudentForCompany(companyId, studentId, userContracts, userContractsContract, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -163,7 +163,7 @@ public class CompanyResource {
         try {
             contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
             contractDAO.createContract(contract, companyId);
-        } catch (SQLException e){
+        } catch (Exception e){
             return Response.serverError().build();
         }
         return Response.ok().build();
@@ -192,7 +192,7 @@ public class CompanyResource {
             WorkedWeekDAO workedWeekDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year), Integer.parseInt(week), company,contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -230,6 +230,10 @@ public class CompanyResource {
 
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(companyId, Integer.parseInt(year),  Integer.parseInt(week), true, true, true, true, false, true, "");
 
+            if (workedWeeks.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             return Response
                 .ok(InvoicePDFHandler.createInvoices(workedWeeks.stream().map(
                     InvoicePDFHandler.InvoiceInformation::fromWorkedWeek).toList()), MediaType.APPLICATION_OCTET_STREAM)
@@ -252,6 +256,10 @@ public class CompanyResource {
             }
 
             WorkedWeekDTO workedWeek = workedWeekDAO.getWorkedWeekById(workedWeekId, true, true, true, true, false, true, "");
+
+            if (!workedWeek.getStatus().equals("APPROVED")) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             return Response
                 .ok(InvoicePDFHandler.createSingleInvoice(InvoicePDFHandler.InvoiceInformation.fromWorkedWeek(workedWeek)), MediaType.APPLICATION_OCTET_STREAM)
@@ -284,7 +292,7 @@ public class CompanyResource {
 
             List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompanyForUser(companyId, studentId, company,contract,userContract, user,hours,totalHours, order);
             return Response.ok(workedWeeks).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.serverError().build();
         }
     }
@@ -307,7 +315,7 @@ public class CompanyResource {
             return Response.ok(
                 workedWeekDAO.getWorkedWeeksToApproveForCompany(companyId, company, contract,
                     userContract, user, hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -336,7 +344,7 @@ public class CompanyResource {
             return Response.ok(
                 workedWeekDAO.getWorkedWeekById(workedWeekId, company, contract, userContract, user,
                     hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -375,7 +383,7 @@ public class CompanyResource {
 
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, status, company, contract, userContract, user,
                 hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -404,7 +412,7 @@ public class CompanyResource {
 
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -433,7 +441,7 @@ public class CompanyResource {
 
             return Response.ok(workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTED", company, contract, userContract, user,
                 hours, totalHours, order)).build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -460,7 +468,7 @@ public class CompanyResource {
 
             workedDAO.setCompanyNote(workedWeekId, note);
             return Response.ok().build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -487,7 +495,7 @@ public class CompanyResource {
 
             workedDAO.setSuggestion(workedId, suggestion);
             return Response.ok().build();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
