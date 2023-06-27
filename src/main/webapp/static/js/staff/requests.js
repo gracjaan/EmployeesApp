@@ -28,6 +28,13 @@ async function updatePage() {
     const rejectedWeeksElement = document.getElementById("rejected-weeks");
     rejectedWeeksElement.innerText = ""
 
+    if (rejectedWeeks.length === 0){
+        const noRejectedWeeks = document.createElement("div");
+        noRejectedWeeks.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
+        noRejectedWeeks.innerText = "No requests";
+        rejectedWeeksElement.append(noRejectedWeeks)
+    }
+
     for (const rejectedWeek of rejectedWeeks) {
         rejectedWeeksElement.append(createRejectedWeek(rejectedWeek));
     }
