@@ -3,7 +3,7 @@ window.addEventListener("helpersLoaded", async () => {
     const users = await getStudents();
 
     if (companies === null || users === null) {
-        alert("Could not load users or companies");
+        alertPopUp("Could not load users or companies", false);
         return;
     }
 
@@ -403,4 +403,33 @@ function searchCompany(){
             li[i].style.display = "none";
         }
     }
+}
+
+function alertPopUp(message, positive) {
+    let confirmation = document.getElementById("alertPopup");
+    let accent = document.getElementById("accent")
+    let image = document.getElementById("confirmationIcon")
+    let p = document.getElementById("popUpAlertParagraph")
+    p.innerText = message
+
+    if (positive){
+        accent.classList.add("bg-accent-success")
+        image.src = "/static/icons/checkmark.svg"
+    }
+    else{
+        accent.classList.add("bg-accent-fail")
+        image.src = "/static/icons/white-cross.svg"
+    }
+    confirmation.classList.remove("hidden");
+    setTimeout(function (){
+            confirmation.classList.add("hidden");
+            if (positive){
+                accent.classList.remove("bg-accent-success")
+            }
+            else{
+                accent.classList.remove("bg-accent-fail")
+            }
+        }, 2000
+    );
+
 }

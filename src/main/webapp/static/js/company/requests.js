@@ -11,7 +11,7 @@ window.addEventListener("helpersLoaded", async () => {
     if (requests === null || requests.length < 1) {
         const noRequests = document.createElement("div");
         noRequests.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
-        noRequests.innerText = "No requests";
+        noRequests.innerText = "No requests to approve";
         requestsContainer.append(noRequests)
     }
 });

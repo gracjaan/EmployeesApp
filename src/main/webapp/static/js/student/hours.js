@@ -104,6 +104,9 @@ async function updateContracts() {
 function toggleNote() {
     if (document.getElementById("confirm-button").getAttribute("data-checked") === "0") {
         const companyDialog = document.getElementById("company-dialog");
+        const noteText = document.getElementById("note");
+        noteText.innerText = ""
+
         companyDialog.classList.toggle("hidden");
     } else {
         unconfirmWorkedWeek()

@@ -48,7 +48,7 @@ window.addEventListener("helpersLoaded", async () => {
 
 async function updateInvoices(companies, user) {
     const invoices = document.getElementById("invoices");
-    invoices.innerText = "";
+    //invoices.innerText = "";
 
     if (companies.length === 0) {
         const noCompanies = document.createElement("div");

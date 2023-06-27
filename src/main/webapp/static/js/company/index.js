@@ -1,5 +1,14 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
+    const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie())
+    const requestsDiv = document.getElementById("newRequests");
+
+    if(Object.keys(requests).length > 0){
+        requestsDiv.classList.remove("hidden");
+    }
+    else{
+        requestsDiv.classList.add("hidden");
+    }
 
     fetch("/api/users/" + getUserId(), {
             method: "GET",
@@ -18,6 +27,17 @@ window.addEventListener("helpersLoaded", async () => {
     const workedWeeks = await getHours(getUserCompany(), getJWTCookie());
     updateChart(workedWeeks)
 });
+
+function getRequestsForCompany(uid, token) {
+    return fetch(`/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
+        headers: {
+            'authorization': `token ${token}`,
+            'accept-type': 'application/json'
+        }
+    })
+        .then(async (res) => await res.json())
+        .catch(() => []);
+}
 
 function getHours(companyId, token) {
     return fetch(`/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
