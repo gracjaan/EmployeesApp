@@ -1,8 +1,10 @@
 package nl.earnit.dao;
 
 import jakarta.annotation.Nullable;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
+import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
@@ -239,6 +241,66 @@ public class UserDAO extends GenericDAO<User> {
         if (!res.next()) return false;
 
         return res.getBoolean("active");
+    }
+
+    public List<NotificationDTO> getNotificationsForUser(String user_id) throws SQLException {
+        if (user_id==null) {
+            return null;
+        }
+        List<NotificationDTO> notifications = new ArrayList<>();
+        String query = "SELECT n.*, u.first_name, u.last_name, c.name AS company_name " +
+                "FROM \"notification\" n, \"user\" u, \"company\" c " +
+                "WHERE n.user_id = u.id AND n.company_id = c.id " +
+                "AND u.id = ? ORDER BY n.date DESC, n.seen";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, user_id);
+        ResultSet res = statement.executeQuery();
+        while (res.next()) {
+            String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"));
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
+            notifications.add(notification);
+        }
+        return notifications;
+    }
+
+    public String convertToMessage(String type, String company_name, String user_name) {
+        String message = null;
+        switch(type) {
+            case "HOURS":
+                message =  "You haven't confirmed hours for " + company_name + " yet";
+                break;
+            case "APPROVED":
+                message = company_name + " approved your suggested hours";
+                break;
+            case "SUGGESTION":
+                message = company_name + " has suggested new hours";
+                break;
+            case "REJECTED":
+                message = company_name+ " rejected your suggested hours";
+                break;
+            case "CONFLICT":
+                message = company_name + " and " + user_name + " have a conflict";
+                break;
+            case "LINK":
+                message = "You have been linked to " + company_name;
+            default:
+                System.out.println("No valid notification type");
+        }
+        return message;
+    }
+
+    public void changeNotificationToSeen(String notification_id) throws SQLException {
+        String query = "UPDATE \"notification\" SET seen = true WHERE id = ? returning id";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, notification_id);
+        statement.executeQuery();
+    }
+
+    // for unit tests
+    public ResultSet executeCustomQuery(String query) throws SQLException {
+        PreparedStatement statement = this.con.prepareStatement(query);
+        ResultSet res = statement.executeQuery();
+        return res;
     }
 }
 

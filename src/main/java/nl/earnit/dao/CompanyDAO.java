@@ -1,10 +1,12 @@
 package nl.earnit.dao;
 
 import nl.earnit.dto.workedweek.ContractDTO;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
+import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
@@ -325,6 +327,39 @@ public class CompanyDAO extends GenericDAO<User> {
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
         statement.executeQuery();
+    }
+
+    public List<NotificationDTO> getNotificationsForCompany(String company_id) throws SQLException {
+        if (company_id==null) {
+            return null;
+        }
+        List<NotificationDTO> notifications = new ArrayList<>();
+        String query = "SELECT n.*, u.first_name, u.last_name FROM \"notification\" n, \"user\" u WHERE n.user_id = u.id AND u.id = ? ORDER BY n.date DESC, n.seen";
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, company_id);
+        ResultSet res = statement.executeQuery();
+        while (res.next()) {
+            String message = "";
+            switch (res.getString("type")) {
+                case "SUGGESTION ACCEPTED":
+                    message = res.getString("first_name") + " " + res.getString("last_name") + "accepted your suggestion";
+                    break;
+                case "SUGGESTION REJECTED":
+                    message = res.getString("first_name") + " " + res.getString("last_name") + "rejected your suggestion";
+                    break;
+                case "LINK":
+                    message = "You have a new link with " + res.getString("first_name") + " " + res.getString("last_name");
+                    break;
+                case "CONFLICT":
+                    message = "You have a conflict with " + res.getString("first_name") + " " + res.getString("last_name");
+                    break;
+                default:
+                    System.out.println("Not a valid type");
+            }
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
+            notifications.add(notification);
+        }
+        return notifications;
     }
 }
 

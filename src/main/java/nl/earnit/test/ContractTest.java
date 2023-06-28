@@ -38,55 +38,55 @@ public class ContractTest {
         // Assert additional conditions on the returned contracts if necessary
     }
 
-//    @Test
-//    void testUpdateContractDescription() throws SQLException {
-//        // Prepare test data
-//        String contractId = "ae3edddb-992e-4c0c-adac-380ef360a781";
-//        String description = "New contract description";
-//
-//        contractDAO.updateContractDescription(contractId, description);
-//
-//        // Retrieve the contract from the DAO
-//        Contract updatedContract = contractDAO.getContract(contractId);
-//
-//        // Perform assertions
-//        assertNotNull(updatedContract);
-//        assertEquals(description, updatedContract.getDescription());
-//    }
+    @Test
+    void testUpdateContractDescription() throws SQLException {
+        // Prepare test data
+        String contractId = "ae3edddb-992e-4c0c-adac-380ef360a781";
+        String description = "New contract description";
 
-//    @Test
-//    void testUpdateContractRole() throws SQLException {
-//        // Prepare test data
-//        String contractId = "ae3edddb-992e-4c0c-adac-380ef360a781";
-//        String role = "New contract role";
-//
-//        // Call the method under test
-//        contractDAO.updateContractRole(contractId, role);
-//
-//        // Retrieve the contract from the DAO
-//        Contract updatedContract = contractDAO.getContract(contractId);
-//
-//        // Perform assertions
-//        assertNotNull(updatedContract);
-//        assertEquals(role, updatedContract.getRole());
-//    }
+        contractDAO.updateContractDescription(contractId, description);
 
-//    @Test
-//    void testCreateContract() throws SQLException {
-//        // Prepare test data
-//        String companyId = "9bfda60f-f88c-46b7-a4b7-8c49fc8e10be";
-//        Contract contract = new Contract("ae3edddb-992e-4c0c-adac-380ef360a781","Contract role", "Contract description");
-//
-//        // Call the method under test
-//        contractDAO.createContract(contract, companyId);
-//
-//        // Retrieve the contract from the DAO
-//        Contract createdContract = contractDAO.getContract(contract.getId());
-//
-//        // Perform assertions
-//        assertNotNull(createdContract);
-//        // Assert additional conditions on the created contract if necessary
-//    }
+        // Retrieve the contract from the DAO
+        Contract updatedContract = contractDAO.getContract(contractId);
+
+        // Perform assertions
+        assertNotNull(updatedContract);
+        assertEquals(description, updatedContract.getDescription());
+    }
+
+    @Test
+    void testUpdateContractRole() throws SQLException {
+        // Prepare test data
+        String contractId = "ae3edddb-992e-4c0c-adac-380ef360a781";
+        String role = "New contract role";
+
+        // Call the method under test
+        contractDAO.updateContractRole(contractId, role);
+
+        // Retrieve the contract from the DAO
+        Contract updatedContract = contractDAO.getContract(contractId);
+
+        // Perform assertions
+        assertNotNull(updatedContract);
+        assertEquals(role, updatedContract.getRole());
+    }
+
+    @Test
+    void testCreateContract() throws SQLException {
+        // Prepare test data
+        String companyId = "9bfda60f-f88c-46b7-a4b7-8c49fc8e10be";
+        Contract contract = new Contract("ae3edddb-992e-4c0c-adac-380ef360a781","Contract role", "Contract description");
+
+        // Call the method under test
+        contractDAO.createContract(contract, companyId);
+
+        // Retrieve the contract from the DAO
+        Contract createdContract = contractDAO.getContract(contract.getId());
+
+        // Perform assertions
+        assertNotNull(createdContract);
+        // Assert additional conditions on the created contract if necessary
+    }
 
 
 

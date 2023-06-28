@@ -7,9 +7,11 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.dao.WorkedWeekDAO;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
+import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.UserResponse;
@@ -134,7 +136,6 @@ public class UserResource {
         }
         return Response.ok(userContracts).build();
     }
-
     @Path("/contracts/{userContractId}")
     public UserContractResource getContract(@PathParam("userContractId") String userContractId) {
         return new UserContractResource(uriInfo, request, userId, userContractId);
@@ -184,5 +185,34 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
+    }
+
+    @GET
+    @Path("/notifications")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getNotifications() {
+        UserDAO userDAO;
+        List<NotificationDTO> notifications;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            notifications = userDAO.getNotificationsForUser(userId);
+        }
+        catch (Exception e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(notifications).build();
+    }
+
+    @POST
+    @Path("/notifications/{notificationId}")
+    public Response changeToNotificationSeen(@PathParam("notificationId") String notificationId) {
+        UserDAO userDAO;
+        try {
+            userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            userDAO.changeNotificationToSeen(notificationId);
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 }
