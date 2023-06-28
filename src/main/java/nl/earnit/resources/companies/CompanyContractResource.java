@@ -8,10 +8,10 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.models.db.UserContract;
 import nl.earnit.models.resource.companies.AddUserToContract;
-import nl.earnit.models.resource.contracts.Contract;
+
 import nl.earnit.models.resource.contracts.DescriptionRole;
 
-import java.sql.SQLException;
+
 import java.util.List;
 
 /* TODO: 5/31/2023 Change delete methods to disable when the database schema is updated

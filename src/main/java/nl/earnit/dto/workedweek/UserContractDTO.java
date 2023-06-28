@@ -3,8 +3,7 @@ package nl.earnit.dto.workedweek;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import nl.earnit.models.resource.users.UserResponse;
-import nl.earnit.dao.UserContractDAO;
-import nl.earnit.models.resource.contracts.Contract;
+
 
 @XmlRootElement
 public class UserContractDTO {

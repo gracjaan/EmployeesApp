@@ -144,7 +144,7 @@ public class WorkedDAO extends GenericDAO<User> {
     /**
      * Updates the worked week in case it was flagged and changed
      * @param worked the new amount of worked hours of a task
-     * @return whether the worked object was updated in the tabel ? true : false
+     * @return whether the worked object was updated in the table ? true : false
      * @throws SQLException
      */
     public boolean updateWorkedWeekTask(Worked worked) throws SQLException {
@@ -175,7 +175,7 @@ public class WorkedDAO extends GenericDAO<User> {
     }
 
     /**
-     * Checkes whether a worked week is already confirmed
+     * Checks whether a worked week is already confirmed
      * @param workedId the id of the worked week
      * @return the week is confirmed ? true : false
      * @throws SQLException
@@ -242,7 +242,7 @@ public class WorkedDAO extends GenericDAO<User> {
 
     /**
      * accept the suggestion of hours that was made by the company
-     * @param workedWeekId the id of the week where the suggestion was made for
+     * @param workedWeekId the id of the week when the suggestion was made for
      * @return whether the suggestion was accepted and hours were updated ? true : false
      * @throws SQLException
      */

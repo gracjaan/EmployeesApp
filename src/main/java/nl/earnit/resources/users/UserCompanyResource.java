@@ -5,9 +5,6 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.*;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.UserContract;
-import nl.earnit.models.resource.contracts.Contract;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserCompanyResource {

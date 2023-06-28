@@ -6,7 +6,6 @@ import nl.earnit.dto.workedweek.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
-import nl.earnit.models.db.Worked;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
@@ -19,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * The companyDAO is used to access the entries in the company tabel of the database
+ * The companyDAO is used to access the entries in the company table of the database
  * This stores all the companies that use the application
  */
 public class CompanyDAO extends GenericDAO<User> {

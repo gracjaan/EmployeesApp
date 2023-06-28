@@ -10,7 +10,6 @@ import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateCompany;
 import nl.earnit.models.resource.users.UserResponse;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("/companies")

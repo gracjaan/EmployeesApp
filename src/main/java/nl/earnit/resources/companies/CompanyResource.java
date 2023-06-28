@@ -116,7 +116,6 @@ public class CompanyResource {
 
             return Response.ok(contractDAO.getAllContractsByCompanyId(companyId,company, userContracts, userContractsUser, order)).build();
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
     }

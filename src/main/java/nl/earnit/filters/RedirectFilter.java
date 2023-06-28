@@ -79,7 +79,7 @@ public class RedirectFilter implements Filter {
     }
 
     private User validateJWT(HttpServletRequest req) {
-        // If no session token redirect to login
+        // If no session token redirect to log in
         if (req.getCookies() == null) {
             return null;
         }

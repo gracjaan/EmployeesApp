@@ -24,7 +24,7 @@ public class UserDAO extends GenericDAO<User> {
 
     /**
      * Counts all the rows with active users
-     * @return amonut of active users
+     * @return amount of active users
      * @throws SQLException
      */
     @Override
@@ -186,7 +186,7 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     /**
-     * gets all the companies that a user works for (a admin can work for multiple companies)
+     * gets all the companies that a user works for (an admin can work for multiple companies)
      * @param userId the id of the user
      * @return List of companies the user works for
      * @throws SQLException

@@ -83,9 +83,9 @@ public class CompanyUserDAO extends GenericDAO<User> {
 
     /**
      * Creates a company user (ADMINISTRATOR)
-     * @param companyId the id of the company you want to create a admin for
-     * @param userId The userID that will be used fior the making of the administrator
-     * @return returns whether the user was created succesfully
+     * @param companyId the id of the company you want to create an admin for
+     * @param userId The userID that will be used for the making of the administrator
+     * @return returns whether the user was created successfully
      * @throws SQLException
      */
     public boolean createCompanyUser(String companyId, String userId) throws SQLException {

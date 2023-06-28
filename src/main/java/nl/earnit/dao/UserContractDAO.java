@@ -175,7 +175,7 @@ public class UserContractDAO extends GenericDAO<User> {
 
     /**
      * The amount of employees for every company
-     * @return a list of companycounts objects that contain the company and the amount of employees
+     * @return a list of companyCounts objects that contain the company and the amount of employees
      * @throws SQLException
      */
     public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
