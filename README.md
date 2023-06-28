@@ -1,92 +1,214 @@
 # EarnIt4
+The Earn It application is the application that will take care of 
+the hour administration of the employees who work for 
+the companies. The companies will have a good insight in the hours of their students.
 
+* [Introduction](#introduction)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [Student](#student)
+         * [Dashboard](#dashboard)
+            * [Week XX](#week-xx)
+            * [Overview](#overview)
+            * [Contracts](#contracts)
+            * [Notifications](#notifications)
+      * [Company](#company)
+         * [Dashboard](#dashboard-1)
+            * [Requests](#requests)
+            * [Invoices](#invoices)
+            * [Contracts](#contracts-1)
+            * [Notifications](#notifications-1)
+      * [Staff](#staff)
+         * [Dashboard](#dashboard-2)
+            * [Requests](#requests-1)
+            * [Create Links](#create-links)
+            * [Overview](#overview-1)
+            * [Notifications](#notifications-2)
+   * [Extra Features](#extra-features)
+   * [Documentation](#documentation)
+   * [Dependencies](#dependencies)
+   * [Testing](#testing)
+   * [Contact Information](#contact-information)
 
+---
 
-## Getting started
+## Introduction <a name="introduction"></a>
+This application was made for the **Earn it start up company**. This company handles hiring of students for short term periods
+Taking care of their visa if they're from abroad. The students can then be hired in periods that they might have vacation or spare time.
+Our application will take care of the hour administration of the students that are hired by the companies. The companies are able to see all
+the hours their students have worked and can consider to agree on the hours or to flag them and sent them to the staff side of the application
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The Staff Is able to manage the whole system and see all it's users. All conflicts can be resolved by the staff in this way.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
+## Installation <a name="installation"></a> 
+For the installation of the application we do the following:
 
-## Add your files
+---
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Usage <a name="usage"></a>
+The application has three different dashboards for different roles within the system. The Three roles being: Student, Company, Staff
+### Student
+In order to be on the application as a student, we first have to make an account for a student. This can be done by:
+1. Go to the /signup page
+2. On this page you are prompted with whether you want a student or company account. You need to click on the Student and continue.
+3. You will then be prompted with the necessary input fields to fill in. If these are not filled in, an error will show up.
+   * KVK number: an 8-digit number.
+   * BTW number: for example NL123456789B01
 
-```
-cd existing_repo
-git remote add origin https://gitlab.utwente.nl/s2957868/earnit4.git
-git branch -M main
-git push -uf origin main
-```
+>If all the inputs have been filled in, you are allowed to log in to the system. **The dashboard** page will appear when logged in. This page contains
+the following actions to proceed with:
+#### Dashboard <a name="dashboard"></a>
+###### Week XX <a name="week-xx"></a>
+Students can fill in their hours in the week tab. When landing on the page, the displayed week is always the current week. Clicking on the week will 
+enable a dropdown menu for the user, displaying other weeks to fill in hours for. The user can then start to fill in their hours. This is done by choosing 
+the day on which the hours were worked, how many hours were worked, the position the student was in during execution of the task (A student can work in multiple positions, at multiple companies), and a description of what the task entailed
+The hours are submitted by pressing on the submit button. The hours will then be displayed on the page and can be sorted on hours and date.
 
-## Integrate with your tools
+When the week is over, the student can send the hours for confirmation by clicking on the checkmark next to the week (after that a red cross will appear). The student is allowed to roll back the confirmation by clicking on the red cross.
+If the current week is not over yet. When the week is over, the student is not allowed to change their hours.
 
-- [ ] [Set up project integrations](https://gitlab.utwente.nl/s2957868/earnit4/-/settings/integrations)
+###### Overview <a name="overview"></a>
+The overview shows the statistics of the students executed work. This is displayed in a graph which has the amount of hours on the y-axis
+and the week on the x-axis. A student may have different contracts with different companies. This is displayed by the different colors in the graph
 
-## Collaborate with your team
+Below the graph we have an overview of all invoices for the student. This can be sorted on the week, date and hours. 
+A student can then download an invoice to see the details of that particular week. There also is the option for the student to
+download all the invoices at once. This will create a zip-file containing all the invoices in PDF format.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+###### Contracts <a name="contracts"></a>
+The contract page shows a carousel which contains all the contracts that the user is currently engaged in.
 
-## Test and Deploy
+###### Notifications <a name="notifications"></a>
+The notifications that are displayed on the dashboard will appear when one of the following scenarios occur:
+* Forgot to confirm hours
+* A week is approved
+* A rejected week has come in with a new suggestion of hours by the company
+* A link has been created between the company and a student
+---
 
-Use the built-in continuous integration in GitLab.
+### Company <a name="company"></a>
+In order to be on the application as a Company, we first have to make an account for a Company. This can be done by:
+1. Go to the /signup page
+2. On this page you are prompted with whether you want a student or company account. You need to click on the Company and continue.
+3. You will then be prompted with the necessary input fields to fill in. If these are not filled in, an error will show up.
+   * KVK number: an 8-digit number.
+   * BTW number: for example NL123456789B01
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+>If all the inputs have been filled in, you are allowed to log in to the system. A dropdown menu will appear when the company user is logged in. A company can be chosen here, since a company user might work for different companies. When a company is chosen, **the dashboard** page will show. This page contains
+the following actions to proceed with:
+#### Dashboard <a name="dashboard-1"></a>
+###### Requests <a name="requests"></a>
+The Requests page contains all the requests that the Student posted. These requests contain their worked week with the according hours.
+The Requests can then be clicked on. This will show the week of the Student who submitted it. The name of the Student from whom the request is, will appear on the top. Clicking on this name will lead you to the info page of the Student. 
 
-***
+The company can decide to either accept 
+the hours of the students(click on the checkmark), or to reject the hours filled in by the student. Confirming or rejecting can also be undone by clicking on the newly appearing button when rejecting or accepting.
+If the hours are rejected, the company needs to make a new suggestion by clicking on the pencil sign next to the hours, and filling in the new hours.
+The rejected hours are sent back to the student again (If the Student decides to reject the suggestion of hours by the company, it goes to the staff)
 
-# Editing this README
+###### Invoices <a name="invoices"></a>
+The Invoices tab shows all the invoices for all the employees of the company. This can be sorted by week, contract, hours, and user.
+The company can decide to download all invoices by clicking on the download icon on the top, or to download only particular invoices.
+Downloading particular invoice can be done by clicking on the download icon in an invoice row
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+###### Contracts <a name="contracts-1"></a>
+The contract page shows all the contracts that the company has. Within the contract, the students who are linked to the contract are displayed.
+Students which are displayed within the contract, can be clicked on. This will lead you to a page that shows information about the Student.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+###### Notifications <a name="notifications-1"></a>
+The notifications that are displayed onn the dashboard will appear when one of the following scenarios occur:
+* Student accepted the suggestion new of hours
+* Student rejects the suggestion of new hours
+* A link has been created between the company and a student
+ ---
+### Staff <a name="staff"></a>
+In order to be on the application as a Staff, we first have to make an account for an Administrator. An administrator cannot be created through the
+application due to safety reasons. This is why we insert the Administrator into the database by hand
 
-## Name
-Choose a self-explaining name for your project.
+>If the administrator is inserted, the credentials can just be filled in, in the login. A pre-inserted administrator is:
+email: user3@example.com   , password: test
+#### Dashboard <a name="dashboard-2"></a>
+###### Requests <a name="requests-1"></a>
+The requests page contains all the flagged requests. If a company and a student couldn't agree on the hours that were filled in
+The request will be handled by the staff. When on the requests page, you can click on a single request. This displays the week
+with all the hours that the student suggested and the hours that the company suggested. The Student and the company both have added
+comments to their suggestion so that the company gets context on why the request was flagged. 
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+The Staff then gets to decide to accept the hours of the Company or the Student.
+###### Create Links <a name="create-links"></a>
+The links page is used to creat links between the Students and the Companies. First the Student can be chosen by clicking on the dropdown menu: "choose user". 
+Then the company is chosen by clicking on the dropdown menu: "choose company". Contracts that belong to the selected company will appear.
+Select the contract that you want to associate to the user. The last thing that needs to be done is to fill in the associated pay with the contract. The link can then be created by clicking on: "create link"
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+###### Overview <a name="overview-1"></a>
+The overview page will show all the Students and Companies who are on the platform. Students and Companies can be disabled by clicking on the red cross or the green checkmark.
+When the there is a green checkmark, it means that the entry is disabled, and when there is a cross, the user is enabled. Clicking on the Student or Company
+prompts you with another page which shows you all the information about the user.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+###### Notifications <a name="notifications-2"></a>
+The notifications that are displayed onn the dashboard will appear when one of the following scenarios occur:
+* There is a conflict between a Student and a Company
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Extra Features <a name="extra-features"></a>
+**Extra features are added to the application in order to make the user experience more efficient**:
+1. **Search bars**, for the pages that display a list of either users, contracts or weeks, searchbars are added so that the right entry can be found fast
+2. **filters**, The same accounts for filters. The filters can either go in descending or ascending order, and they can be disabled
+3. **Graphs**, The user is able to see their progress in the graph which allows them to improve on their performance
+4. **Notifications**, whenever there is something important that has changed in the system, you get a notification that states wat is changed and where to go review the change
+5. **popups**, Whenever an action is taken that has a big impact on the system, a pop-up will be shown that asks you to confirm your action.
+Alerts are also replaced with nice formatted pop-ups
+6. **Settings**, the user can change their personal information by clicking on the gear icon in the top right corner. This allows the user to edit their name, email, kvk-number and btw-number
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+---
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## Documentation <a name="documentation"></a>
+**The documentation for the code is the following:**
+* Java: all the documentation for the Java is in the JavaDoc
+* JavaScript: all the documentation is done by comments in the JavaScript
+* SQL: The SQL schema is explained by the database schema provided with the folder
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+---
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Dependencies <a name="dependencies"></a>
+**For the dependencies we use Maven to update and install all the dependencies immediately.
+The dependencies that we use are:**
+* jakarta.servlet-api, version: 6.0.0, [https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api/6.0.0]()
+* jakarta.ws.rs-api, version: 3.1.0, [https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api/3.1.0]()
+* jakarta.xml.bind-api, version: 4.0.0, [https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api/4.0.0]()
+* jackson-jakarta-rs-json-provider, version: 2.15.0, [https://mvnrepository.com/artifact/com.fasterxml.jackson.jakarta.rs/jackson-jakarta-rs-json-provider/2.15.0]()
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+* junit-jupiter-api, version: 5.9.2, [https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api/5.9.2]()
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+* jersey-container-servlet, version 3.1.1, [https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet/3.1.1]()
+* jersey-container-servlet-core, version 3.1.1 [https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core/3.1.1]()
+* jersey-media-jaxb, version: 3.1.1, [https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-jaxb]()
+* jersey-client, version: 3.1.1, [https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-client/3.1.1]()
+* jersey-hk2, version3.1.1
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+* jaxb-runtime, version: 4.0.2, [https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime/4.0.2]()
 
-## License
-For open source projects, say how it is licensed.
+* postgresql, version: 42.6.0, [https://mvnrepository.com/artifact/org.postgresql/postgresql/42.6.0]()
+* java-jwt, version: 4.4.0, [https://mvnrepository.com/artifact/com.auth0/java-jwt/4.4.0]()
+* bcrypt, version: 0.10.2, [https://mvnrepository.com/artifact/at.favre.lib/bcrypt/0.10.2]()
+* openhtmltopdf-core, version: variable, [https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-core]()
+* openhtmltopdf-pdfbox, version: variable, [https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-pdfbox]()
+* openhtmltopdf-svg-support, version: variable, [https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-svg-support]()
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+* jsoup, version: 1.16.1, h[ttps://mvnrepository.com/artifact/org.jsoup/jsoup/1.16.1]()
+
+---
+
+## Testing <a name="testing"></a>
+
+---
+
+## Contact Information <a name="contact-information"></a>
+**This project was produced by:**
+Thomas Brants, s2997894, t.hansult@student.utwente.nl
+Razvan Stefan, s2957868, r.stefan@student.utwente.nl
+Gracjan Chmielnicki, s3077489, g.s.chmielnicki@student.utwente.nl
+Tom Hansult, s2993074, t.hansult@student.utwente.nl
+Pepijn Meijer, s2957566, p.j.meijer@student.utwente.nl
+
