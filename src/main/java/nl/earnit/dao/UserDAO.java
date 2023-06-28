@@ -235,7 +235,6 @@ public class UserDAO extends GenericDAO<User> {
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
         statement.executeQuery();
-
     }
 
     /**
@@ -306,43 +305,43 @@ public class UserDAO extends GenericDAO<User> {
             return null;
         }
         List<NotificationDTO> notifications = new ArrayList<>();
-        String query = "SELECT n.*, u.first_name, u.last_name, c.name AS company_name " +
-                "FROM \"notification\" n, \"user\" u, \"company\" c " +
-                "WHERE n.user_id = u.id AND n.company_id = c.id " +
+        String query = "SELECT n.*, u.first_name, u.last_name, c.name AS company_name, ww.week " +
+                "FROM \"notification\" n, \"user\" u, \"company\" c, \"worked_week\" ww " +
+                "WHERE n.user_id = u.id AND n.company_id = c.id AND n.worked_week_id=ww.id " +
                 "AND u.id = ? ORDER BY n.date DESC, n.seen";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, user_id);
         ResultSet res = statement.executeQuery();
         while (res.next()) {
-            String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"));
+            String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"), res.getString("week"));
             NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
         }
         return notifications;
     }
 
-    public String convertToMessage(String type, String company_name, String user_name) {
+    public String convertToMessage(String type, String company_name, String user_name, String week) {
         String message = null;
         switch(type) {
             case "HOURS":
                 message =  "You haven't confirmed hours for " + company_name + " yet";
                 break;
             case "APPROVED":
-                message = company_name + " approved your suggested hours";
+                message = company_name + " approved your suggested hours for week " + week;
                 break;
             case "SUGGESTION":
-                message = company_name + " has suggested new hours";
+                message = company_name + " has suggested new hours for week " + week;
                 break;
             case "REJECTED":
-                message = company_name+ " rejected your suggested hours";
+                message = company_name+ " rejected your suggested hours for week " + week;
                 break;
             case "CONFLICT":
-                message = company_name + " and " + user_name + " have a conflict";
+                message = company_name + " and " + user_name + " have a conflict in week " + week;
                 break;
             case "LINK":
                 message = "You have been linked to " + company_name;
             default:
-                System.out.println("No valid notification type");
+                System.out.println("No relevant notification type");
         }
         return message;
     }

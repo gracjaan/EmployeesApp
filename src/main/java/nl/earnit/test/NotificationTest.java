@@ -69,11 +69,11 @@ public class NotificationTest {
         } catch (Exception e) {
             System.out.println("Test unsuccessfull");
         }
-        String message = userDAO.convertToMessage("HOURS", "Amazon", "Kaya kuchta");
-        assertEquals(message,  "You haven't confirmed hours for Amazon yet");
-        message = userDAO.convertToMessage("APPROVED", "Twitter", "Kaya kuchta");
-        assertEquals(message, "Twitter approved your suggested hours");
-        message = userDAO.convertToMessage("CONFLICT", "Blackrock", "Gabriel Kudow");
+        String message = userDAO.convertToMessage("HOURS", "Amazon", "Kaya kuchta", "25");
+        assertEquals(message,  "You haven't confirmed hours for Amazon in week 25 yet");
+        message = userDAO.convertToMessage("APPROVED", "Twitter", "Kaya kuchta", "25");
+        assertEquals(message, "Twitter approved your suggested hours for week 25");
+        message = userDAO.convertToMessage("CONFLICT", "Blackrock", "Gabriel Kudow", "25");
         assertEquals(message, "Blackrock and Gabriel Kudow have a conflict");
     }
 

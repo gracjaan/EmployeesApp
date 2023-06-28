@@ -251,7 +251,7 @@ public class CompanyDAO extends GenericDAO<User> {
      * @param withUserContracts Whether we want the contract with the result ? true : false
      * @param withUserContractsContract
      * @param order
-     * @return
+     * @return 
      * @throws SQLException
      */
     public UserDTO getStudentForCompany(String companyId, String studentId, boolean withUserContracts, boolean withUserContractsContract, String order) throws SQLException {
@@ -339,7 +339,7 @@ public class CompanyDAO extends GenericDAO<User> {
             return null;
         }
         List<NotificationDTO> notifications = new ArrayList<>();
-        String query = "SELECT n.*, u.first_name, u.last_name FROM \"notification\" n, \"user\" u WHERE n.user_id = u.id AND u.id = ? ORDER BY n.date DESC, n.seen";
+        String query = "SELECT n.*, u.first_name, u.last_name, ww.week FROM \"notification\" n, \"user\" u, \"worked_week\" ww WHERE n.user_id = u.id AND n.worked_week_id = ww.id AND u.id = ? ORDER BY n.date DESC, n.seen";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, company_id);
         ResultSet res = statement.executeQuery();
@@ -347,19 +347,19 @@ public class CompanyDAO extends GenericDAO<User> {
             String message = "";
             switch (res.getString("type")) {
                 case "SUGGESTION ACCEPTED":
-                    message = res.getString("first_name") + " " + res.getString("last_name") + "accepted your suggestion";
+                    message = res.getString("first_name") + " " + res.getString("last_name") + "accepted your suggestion for week " + res.getString("week");
                     break;
                 case "SUGGESTION REJECTED":
-                    message = res.getString("first_name") + " " + res.getString("last_name") + "rejected your suggestion";
+                    message = res.getString("first_name") + " " + res.getString("last_name") + "rejected your suggestion for week " + res.getString("week");
                     break;
                 case "LINK":
                     message = "You have a new link with " + res.getString("first_name") + " " + res.getString("last_name");
                     break;
                 case "CONFLICT":
-                    message = "You have a conflict with " + res.getString("first_name") + " " + res.getString("last_name");
+                    message = "You have a conflict in week " + res.getString("week") + " with " + res.getString("first_name") + " " + res.getString("last_name");
                     break;
                 default:
-                    System.out.println("Not a valid type");
+                    System.out.println("Not a relevant type");
             }
             NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
             notifications.add(notification);
