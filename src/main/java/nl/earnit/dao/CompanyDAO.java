@@ -340,13 +340,14 @@ public class CompanyDAO extends GenericDAO<User> {
         }
         List<NotificationDTO> notifications = new ArrayList<>();
         String query = """
-            SELECT n.*, u.first_name, u.last_name_prefix, u.last_name, ww.week, c.role 
+            SELECT n.*, u.first_name, u.last_name_prefix, u.last_name, ww.week, c.role, u.id as user_id, cy.id as company_id, ww.id as worked_week_id, uc.id as user_contract_id, c.id as contract_id 
             FROM "notification" n
             JOIN "user" u ON u.id = n.user_id
+            JOIN company cy ON cy.id = n.company_id
             LEFT JOIN worked_week ww ON ww.id = n.worked_week_id
             LEFT JOIN user_contract uc ON uc.id = ww.contract_id 
             LEFT JOIN contract c ON c.id = uc.contract_id 
-            WHERE n.company_id = ? 
+            WHERE n.company_id = ? AND n.type != 'CONFLICT'
             ORDER BY n.date DESC, n.seen
             """;
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -359,7 +360,8 @@ public class CompanyDAO extends GenericDAO<User> {
 
             String title = "";
             String description = "";
-            switch (res.getString("type")) {
+            String type = res.getString("type");
+            switch (type) {
                 case "SUGGESTION ACCEPTED":
                     title = "Suggestion accepted";
                     description = user_name + " accepted your suggestion for week " + week + " for the position of " + role;
@@ -380,7 +382,7 @@ public class CompanyDAO extends GenericDAO<User> {
                     continue;
             }
 
-            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), title, description);
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), type, title, description, res.getString("user_id"), res.getString("company_id"), res.getString("user_contract_id"), res.getString("contract_id"), res.getString("worked_week_id"), res.getInt("week"));
             notifications.add(notification);
         }
         return notifications;

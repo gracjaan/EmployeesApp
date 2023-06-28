@@ -48,17 +48,22 @@ window.addEventListener("helpersLoaded", async () => {
     const range = document.getElementById("dropdown-range")
     range.innerText = getWeekDateRange(getSelectedWeek(), getSelectedYear());
 
-    const contracts = await updateContracts();
-    await updatePage(contracts);
-
     const week = document.getElementById("week");
     week.addEventListener("change", async (e) => {
         const contracts = await updateContracts();
         await updatePage(contracts);
 
+        if (history.pushState) {
+            const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?week=' + e.detail.week;
+            window.history.pushState({path:newurl},'',newurl);
+        }
+
         const range = document.getElementById("dropdown-range")
         range.innerText = getWeekDateRange(e.detail.week, e.detail.year);
     })
+
+    const contracts = await updateContracts();
+    await updatePage(contracts);
 });
 
 function createDayItem(day, dayName) {

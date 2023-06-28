@@ -270,7 +270,12 @@ public class UserResource {
         List<NotificationDTO> notifications;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            notifications = userDAO.getNotificationsForUser(userId);
+            User user = userDAO.getUserById(userId);
+            if (user.getType().equals("ADMINISTRATOR")) {
+                notifications = userDAO.getNotificationsForStaffUser();
+            } else {
+                notifications = userDAO.getNotificationsForUser(userId);
+            }
         }
         catch (Exception e) {
             return Response.serverError().build();

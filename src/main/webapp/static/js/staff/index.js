@@ -58,10 +58,15 @@ function createEntries (notifications) {
 
     notifications.forEach(notification => {
         const outer = document.createElement("div");
-        outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2");
-        // outer.addEventListener('click', () => {
-        //     const n = document.getElementById()
-        // })
+        outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2", "cursor-pointer");
+        outer.addEventListener('click', () => {
+            toggleSeen(notification.id)
+            switch (notification.type) {
+                case "CONFLICT":
+                    window.location.href = `/request?worked_week=${notification.workedWeekId}`
+                    break;
+            }
+        })
 
         const inner1 = document.createElement("div");
         inner1.classList.add("text-text", "font-bold", "uppercase");
