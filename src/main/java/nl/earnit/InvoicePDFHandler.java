@@ -20,6 +20,8 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static nl.earnit.Constants.getName;
+
 /**
  * The type Invoice pdf handler.
  */
@@ -153,8 +155,7 @@ public class InvoicePDFHandler {
          * @return the name from worked week
          */
         public static String getNameFromWorkedWeek(WorkedWeekDTO workedWeek) {
-            String spacing = (workedWeek.getUser().getLastNamePrefix() == null || workedWeek.getUser().getLastNamePrefix().trim().length() < 1) ? "" : workedWeek.getUser().getLastNamePrefix() + " ";
-            return workedWeek.getUser().getFirstName() + " " + (spacing) + workedWeek.getUser().getLastName();
+            return getName(workedWeek.getUser().getFirstName(), workedWeek.getUser().getLastNamePrefix(), workedWeek.getUser().getLastName());
         }
 
         /**

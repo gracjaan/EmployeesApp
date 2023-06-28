@@ -56,40 +56,19 @@
 					</a>
 				</nav>
 			</header>
-			<main
-				class="flex gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
+			<main class="grid gap-4 md:gap-8 my-8 grid-cols-1 sm:grid-cols-2 px-2 sm:px-0">
 				<section class="w-full gap-2 flex flex-col">
 					<h2 class="text-text text-2xl font-bold">Dashboard</h2>
-					<div class="rounded-2xl bg-secondary">
+					<div class="rounded-2xl bg-secondary aspect-video p-2 h-full">
 						<canvas id="myChart"></canvas>
 					</div>
 				</section>
 				<section class="w-full gap-2 flex flex-col">
 					<h2 class="text-text text-2xl font-bold">Notifications</h2>
-					<div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
-						<a href="/" class="rounded-2xl bg-primary p-4 relative">
-							<div class="text-text font-bold uppercase">
-								week 11 approved
-							</div>
-							<div class="text-text uppercase">23.04.2023</div>
-							<div
-								class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"></div>
-						</a>
-						<a href="/" class="rounded-2xl bg-primary p-4 relative">
-							<div class="text-text font-bold uppercase">
-								week 10 approved
-							</div>
-							<div class="text-text uppercase">23.04.2023</div>
-							<div
-								class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1"
-							></div>
-						</a>
-						<a href="/" class="rounded-2xl bg-primary p-4 relative">
-							<div class="text-text font-bold uppercase">
-								week 9 approved
-							</div>
-							<div class="text-text uppercase">23.04.2023</div>
-						</a>
+					<div class="rounded-2xl sm:aspect-video bg-secondary p-2">
+						<div id="entries" class="flex flex-col gap-0 sm:aspect-video sm:w-full scrollbar-custom scrollbar-thumb-text scrollbar-track-secondary sm:overflow-y-auto">
+							<!--- entries --->
+						</div>
 					</div>
 				</section>
 			</main>

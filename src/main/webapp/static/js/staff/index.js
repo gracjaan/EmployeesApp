@@ -1,10 +1,10 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const companies = await getStudentsPerCompany();
-    const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie())
+    const requests = await getRejectedWeeks()
     const requestsDiv = document.getElementById("newRequests");
 
-    if(Object.keys(requests).length > 0){
+    if(requests !== null && requests.length > 0){
         requestsDiv.classList.remove("hidden");
     }
     else{
@@ -25,10 +25,100 @@ window.addEventListener("helpersLoaded", async () => {
             name.innerText = "Welcome back, " + json.firstName;
         })
 
+    const notifications = await obtainNotifications();
+    createEntries(notifications);
+
     updateChart(companies)
 });
 
+async function getRejectedWeeks() {
+    return await fetch(`/api/staff/rejects`,
+        {method: "GET",
+            headers: {
+                "accept-type" : "application/json",
+                'authorization': `token ${getJWTCookie()}`
+            }}
+    ).then((res) => res.json()).catch(() => null);
+}
 
+function createEntries (notifications) {
+    const container = document.getElementById("entries");
+
+    if (notifications.length === 0){
+        const cont = document.createElement("div");
+        cont.classList.add("h-full", "flex", "justify-center", "items-center")
+
+        const placeholder = document.createElement("div");
+        placeholder.classList.add("text-text", "font-bold", "uppercase", "text-center");
+        placeholder.innerText = "No notifications"
+        cont.appendChild(placeholder);
+
+        container.appendChild(cont)
+    }
+
+    notifications.forEach(notification => {
+        const outer = document.createElement("div");
+        outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2", "cursor-pointer");
+        outer.addEventListener('click', () => {
+            toggleSeen(notification.id)
+            switch (notification.type) {
+                case "CONFLICT":
+                    window.location.href = `/request?worked_week=${notification.workedWeekId}`
+                    break;
+            }
+        })
+
+        const inner1 = document.createElement("div");
+        inner1.classList.add("text-text", "font-bold", "uppercase");
+        inner1.innerText = notification.title;
+        outer.appendChild(inner1)
+
+        const description = document.createElement("div");
+        description.classList.add("text-text");
+        description.innerText = notification.description;
+        outer.appendChild(description)
+
+        const inner2 = document.createElement("div");
+        inner2.classList.add("text-text", "uppercase");
+        inner2.innerText = notification.date;
+        outer.appendChild(inner2)
+
+        if (!notification.seen){
+            const inner3 = document.createElement("div");
+            inner3.classList.add("bg-accent-fail", "rounded-full", "w-4", "h-4", "absolute", "-top-1", "-left-1");
+            inner3.setAttribute("id", notification.id)
+            inner3.addEventListener('click', () => toggleSeen(notification.id))
+            outer.appendChild(inner3)
+        }
+        container.appendChild(outer)
+    })
+}
+
+function toggleSeen (id) {
+    return fetch("/api/users/" + getUserId() + "/notifications/" + id, {
+        method: 'POST',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        }
+    })
+        .then(() => {
+            const dot = document.getElementById(id);
+            dot.classList.add("hidden")
+        })
+        .catch(() => null);
+}
+
+function obtainNotifications() {
+    return fetch("/api/users/" + getUserId() + "/notifications", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(() => null);
+}
 
 async function getStudentsPerCompany() {
     return await fetch("/api/staff/companies",
@@ -81,6 +171,8 @@ function updateChart(companies) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     labels: {

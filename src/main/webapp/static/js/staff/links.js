@@ -2,6 +2,18 @@ window.addEventListener("helpersLoaded", async () => {
     const companies = await getCompanies();
     const users = await getStudents();
 
+    const confirmButton = document.getElementById("confirmButton")
+    const cancelButton = document.getElementById("cancelButton")
+    const popUpElement = document.getElementById("popUp");
+
+    confirmButton.addEventListener("click", async () => {
+        popUpElement.classList.add("hidden")
+        await sendFormDataServer()
+    })
+
+    cancelButton.addEventListener("click", async () => {
+        popUpElement.classList.add("hidden")
+    })
 
     if (companies === null || users === null) {
         alertPopUp("Could not load users or companies", false);
@@ -243,6 +255,7 @@ function sendFormDataServer() {
         alertPopUp("Fill in all inputs", false);
         return;
     }
+
     return fetch("/api/companies/" + companyId + "/contracts/" + contractId +"/employees",
         {method: "POST",
             headers: {
@@ -370,21 +383,10 @@ function searchRole(){
 
 function displayPopUp(){
     const popUpElement = document.getElementById("popUp");
-    const confirmButton = document.getElementById("confirmButton")
-    const cancelButton = document.getElementById("cancelButton")
     popUpElement.classList.remove("hidden");
 
     const paragraph = document.getElementById("popUpParagraph");
     paragraph.innerText = "are you sure you want to create the link"
-
-    confirmButton.addEventListener("click", async () => {
-        popUpElement.classList.add("hidden")
-        await sendFormDataServer()
-    })
-
-    cancelButton.addEventListener("click", async () => {
-        popUpElement.classList.add("hidden")
-    })
 }
 
 function alertPopUp(message, positive) {

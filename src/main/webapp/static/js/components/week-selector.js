@@ -61,7 +61,33 @@ window.addEventListener("helpersLoaded", ()=> {
 
         dropdownContent.innerText = "";
         addWeeks(weekSelector, 5, getCurrentYear(), getCurrentWeek() + 1);
-        dropdownContent.children.item(0).click();
+
+        if (getWeekOfURL() !== null) {
+            let found = false;
+            while (!found) {
+                for (const child of dropdownContent.children) {
+                    if (child.getAttribute("data-week") === getWeekOfURL()) {
+                        child.click();
+                        found = true;
+                    }
+                }
+
+                let last = dropdownContent.lastElementChild;
+                while (!last.hasAttribute("data-week")) {
+                    const index = Array.from(dropdownContent.children).indexOf(last);
+                    if (index === 0) return;
+
+                    last = dropdownContent.children.item(index - 1);
+                }
+
+                const year = parseInt(last.getAttribute("data-year"))
+                const week = parseInt(last.getAttribute("data-week"))
+
+                addWeeks(weekSelector, 5, year, week);
+            }
+        } else {
+            dropdownContent.children.item(0).click();
+        }
     }
 
     function addWeeks(weekSelector, amount, lastYear, lastWeek) {
@@ -148,6 +174,15 @@ window.addEventListener("helpersLoaded", ()=> {
 
     function getCurrentWeek() {
         return getWeek(new Date());
+    }
+
+    function getWeekOfURL() {
+        const search = new URLSearchParams(location.search);
+        if (!search.has("week")) {
+            return null;
+        }
+
+        return search.get("week");
     }
 
     document.addEventListener("click", function (event) {

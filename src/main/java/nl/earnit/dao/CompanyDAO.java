@@ -1,12 +1,12 @@
 package nl.earnit.dao;
 
 import nl.earnit.dto.workedweek.ContractDTO;
+import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.User;
-import nl.earnit.models.db.Worked;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
@@ -17,6 +17,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static nl.earnit.Constants.getName;
 
 /**
  * The companyDAO is used to access the entries in the company table of the database
@@ -249,7 +251,7 @@ public class CompanyDAO extends GenericDAO<User> {
      * @param withUserContracts Whether we want the contract with the result ? true : false
      * @param withUserContractsContract
      * @param order
-     * @return
+     * @return 
      * @throws SQLException
      */
     public UserDTO getStudentForCompany(String companyId, String studentId, boolean withUserContracts, boolean withUserContractsContract, String order) throws SQLException {
@@ -330,6 +332,60 @@ public class CompanyDAO extends GenericDAO<User> {
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
         statement.executeQuery();
+    }
+
+    public List<NotificationDTO> getNotificationsForCompany(String company_id) throws SQLException {
+        if (company_id==null) {
+            return null;
+        }
+        List<NotificationDTO> notifications = new ArrayList<>();
+        String query = """
+            SELECT n.*, u.first_name, u.last_name_prefix, u.last_name, ww.week, c.role, u.id as user_id, cy.id as company_id, ww.id as worked_week_id, uc.id as user_contract_id, c.id as contract_id 
+            FROM "notification" n
+            JOIN "user" u ON u.id = n.user_id
+            JOIN company cy ON cy.id = n.company_id
+            LEFT JOIN worked_week ww ON ww.id = n.worked_week_id
+            LEFT JOIN user_contract uc ON uc.id = ww.contract_id 
+            LEFT JOIN contract c ON c.id = uc.contract_id 
+            WHERE n.company_id = ? AND n.type != 'CONFLICT'
+            ORDER BY n.date DESC, n.seen
+            """;
+        PreparedStatement statement = this.con.prepareStatement(query);
+        PostgresJDBCHelper.setUuid(statement, 1, company_id);
+        ResultSet res = statement.executeQuery();
+        while (res.next()) {
+            String user_name = getName(res.getString("first_name"), res.getString("last_name_prefix"),  res.getString("last_name"));
+            String week = res.getString("week");
+            String role = res.getString("role");
+
+            String title = "";
+            String description = "";
+            String type = res.getString("type");
+            switch (type) {
+                case "SUGGESTION ACCEPTED":
+                    title = "Suggestion accepted";
+                    description = user_name + " accepted your suggestion for week " + week + " for the position of " + role;
+                    break;
+                case "SUGGESTION REJECTED":
+                    title = "Suggestion rejected";
+                    description = user_name + " rejected your suggested hours for week " + week + " for the position of " + role;
+                    break;
+                case "LINK":
+                    title = "New employee";
+                    description = "New employee " + user_name;
+                    break;
+                case "CONFLICT":
+                    title = "Conflict";
+                    description = "You have a conflict in week " + week + " with " + user_name;
+                    break;
+                default:
+                    continue;
+            }
+
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), type, title, description, res.getString("user_id"), res.getString("company_id"), res.getString("user_contract_id"), res.getString("contract_id"), res.getString("worked_week_id"), res.getInt("week"));
+            notifications.add(notification);
+        }
+        return notifications;
     }
 }
 

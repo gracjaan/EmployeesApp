@@ -20,8 +20,90 @@ window.addEventListener("helpersLoaded", async () => {
         })
         .catch(e => null)
 
+    const notifications = await obtainNotifications();
+    createEntries(notifications);
+
+
     initializeChart()
 });
+
+function toggleSeen (id) {
+    return fetch("/api/users/" + getUserId() + "/notifications/" + id, {
+        method: 'POST',
+        headers: {
+            'authorization': `token ${getJWTCookie()}`,
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        }
+    })
+        .then(() => {
+            const dot = document.getElementById(id);
+            dot.classList.add("hidden")
+        })
+        .catch(() => null);
+}
+
+function createEntries (notifications) {
+    const container = document.getElementById("entries");
+
+    if (notifications.length === 0){
+        const cont = document.createElement("div");
+        cont.classList.add("h-full", "flex", "justify-center", "items-center")
+
+        const placeholder = document.createElement("div");
+        placeholder.classList.add("text-text", "font-bold", "uppercase", "text-center");
+        placeholder.innerText = "No notifications"
+        cont.appendChild(placeholder);
+
+        container.appendChild(cont)
+    }
+
+    notifications.forEach(notification => {
+        const outer = document.createElement("div");
+        outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2", "cursor-pointer");
+        outer.addEventListener('click', () => {
+            toggleSeen(notification.id)
+            switch (notification.type) {
+                case "HOURS":
+                    window.location.href = `/hours?week=${notification.week}`
+                    break;
+                case "APPROVED":
+                    window.location.href = `/hours?week=${notification.week}`
+                    break;
+                case "SUGGESTION":
+                    window.location.href = `/hours?week=${notification.week}&suggestion=${notification.userContractId}!${new Date().getFullYear()}!${notification.week}`
+                    break;
+                case "LINK":
+                    window.location.href = `/contracts`
+                    break;
+            }
+        })
+
+        const inner1 = document.createElement("div");
+        inner1.classList.add("text-text", "font-bold", "uppercase");
+        inner1.innerText = notification.title;
+        outer.appendChild(inner1)
+
+        const description = document.createElement("div");
+        description.classList.add("text-text");
+        description.innerText = notification.description;
+        outer.appendChild(description)
+
+        const inner2 = document.createElement("div");
+        inner2.classList.add("text-text", "uppercase");
+        inner2.innerText = notification.date;
+        outer.appendChild(inner2)
+
+        if (!notification.seen){
+            const inner3 = document.createElement("div");
+            inner3.classList.add("bg-accent-fail", "rounded-full", "w-4", "h-4", "absolute", "-top-1", "-left-1");
+            inner3.setAttribute("id", notification.id)
+            inner3.addEventListener('click', () => toggleSeen(notification.id))
+            outer.appendChild(inner3)
+        }
+        container.appendChild(outer)
+    })
+}
 
 function getCurrentWeek() {
     return getWeek(new Date());
@@ -51,6 +133,16 @@ function obtainInvoices(contract) {
 
 function obtainContractsForUser() {
     return fetch("/api/users/" + getUserId() + "/contracts", {
+        headers: {
+            'authorization': `token ${getJWTCookie()}`
+        }
+    })
+        .then(response => response.json())
+        .catch(() => null);
+}
+
+function obtainNotifications() {
+    return fetch("/api/users/" + getUserId() + "/notifications", {
         headers: {
             'authorization': `token ${getJWTCookie()}`
         }
@@ -119,6 +211,8 @@ async function initializeChart() {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 y: {
                     beginAtZero: true
