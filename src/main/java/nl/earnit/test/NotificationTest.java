@@ -74,7 +74,7 @@ public class NotificationTest {
         message = userDAO.convertToMessage("APPROVED", "Twitter", "Kaya kuchta", "25");
         assertEquals(message, "Twitter approved your suggested hours for week 25");
         message = userDAO.convertToMessage("CONFLICT", "Blackrock", "Gabriel Kudow", "25");
-        assertEquals(message, "Blackrock and Gabriel Kudow have a conflict");
+        assertEquals(message, "Blackrock and Gabriel Kudow have a conflict in week 25");
     }
 
     @Test
