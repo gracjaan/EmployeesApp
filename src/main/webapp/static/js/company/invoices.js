@@ -80,7 +80,7 @@ function createEntry(workedWeek) {
     entryContainer.appendChild(entryInfo);
 
     const name = document.createElement("div");
-    name.classList.add("sm:col-span-1", "col-span-4", "break-all", "text-text", "font-bold", "uppercase");
+    name.classList.add("sm:col-span-1", "col-span-4", "break-words", "text-text", "font-bold", "uppercase");
     name.innerText = getName(workedWeek.user.firstName, workedWeek.user.lastName, workedWeek.user.lastNamePrefix);
     entryInfo.appendChild(name);
 

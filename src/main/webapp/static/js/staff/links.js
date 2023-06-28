@@ -84,7 +84,7 @@ function editUserInfo(user){
     userDiv.innerText = "";
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "flex-col", "sm:flex-row", "items-center");
+    encapsulatingDiv.classList.add("flex", "flex-col", "md:flex-row", "items-center");
     encapsulatingDiv.setAttribute("id", "user-name-display");
 
     const userIMage = document.createElement("img");
@@ -106,7 +106,7 @@ async function editCompanyInfo(company){
     companyDiv.innerText = "";
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "flex-col", "sm:flex-row", "items-center");
+    encapsulatingDiv.classList.add("flex", "flex-col", "md:flex-row", "items-center");
     encapsulatingDiv.setAttribute("id", "company-name-display");
 
     const companyImage = document.createElement("img");
