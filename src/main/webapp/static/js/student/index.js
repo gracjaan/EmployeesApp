@@ -47,10 +47,15 @@ function createEntries (notifications) {
     const container = document.getElementById("entries");
 
     if (notifications.length === 0){
+        const cont = document.createElement("div");
+        cont.classList.add("h-full", "flex", "justify-center", "items-center")
+
         const placeholder = document.createElement("div");
         placeholder.classList.add("text-text", "font-bold", "uppercase", "text-center");
         placeholder.innerText = "No notifications"
-        container.appendChild(placeholder);
+        cont.appendChild(placeholder);
+
+        container.appendChild(cont)
     }
 
     notifications.forEach(notification => {
