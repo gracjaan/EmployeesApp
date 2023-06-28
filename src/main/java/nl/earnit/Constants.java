@@ -4,6 +4,11 @@ package nl.earnit;
  * The type Constants.
  */
 public class Constants {
+    public static String getName(String firstName, String lastNamePrefix, String lastName) {
+        String spacing = (lastNamePrefix == null || lastNamePrefix.trim().length() < 1) ? "" : lastNamePrefix + " ";
+        return firstName + " " + spacing + lastName;
+    }
+
     /**
      * The constant ABSOLUTE_URL.
      */

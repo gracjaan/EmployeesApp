@@ -62,8 +62,13 @@ function createEntries (notifications) {
 
         const inner1 = document.createElement("div");
         inner1.classList.add("text-text", "font-bold", "uppercase");
-        inner1.innerText = notification.message;
+        inner1.innerText = notification.title;
         outer.appendChild(inner1)
+
+        const description = document.createElement("div");
+        description.classList.add("text-text");
+        description.innerText = notification.description;
+        outer.appendChild(description)
 
         const inner2 = document.createElement("div");
         inner2.classList.add("text-text", "uppercase");

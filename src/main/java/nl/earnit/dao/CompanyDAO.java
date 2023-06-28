@@ -6,9 +6,7 @@ import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
-import nl.earnit.models.db.Worked;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
@@ -19,6 +17,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static nl.earnit.Constants.getName;
 
 /**
  * The companyDAO is used to access the entries in the company table of the database
@@ -339,29 +339,48 @@ public class CompanyDAO extends GenericDAO<User> {
             return null;
         }
         List<NotificationDTO> notifications = new ArrayList<>();
-        String query = "SELECT n.*, u.first_name, u.last_name, ww.week FROM \"notification\" n, \"user\" u, \"worked_week\" ww WHERE n.user_id = u.id AND n.worked_week_id = ww.id AND u.id = ? ORDER BY n.date DESC, n.seen";
+        String query = """
+            SELECT n.*, u.first_name, u.last_name_prefix, u.last_name, ww.week, c.role 
+            FROM "notification" n
+            JOIN "user" u ON u.id = n.user_id
+            LEFT JOIN worked_week ww ON ww.id = n.worked_week_id
+            LEFT JOIN user_contract uc ON uc.id = ww.contract_id 
+            LEFT JOIN contract c ON c.id = uc.contract_id 
+            WHERE n.company_id = ? 
+            ORDER BY n.date DESC, n.seen
+            """;
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, company_id);
         ResultSet res = statement.executeQuery();
         while (res.next()) {
-            String message = "";
+            String user_name = getName(res.getString("first_name"), res.getString("last_name_prefix"),  res.getString("last_name"));
+            String week = res.getString("week");
+            String role = res.getString("role");
+
+            String title = "";
+            String description = "";
             switch (res.getString("type")) {
                 case "SUGGESTION ACCEPTED":
-                    message = res.getString("first_name") + " " + res.getString("last_name") + "accepted your suggestion for week " + res.getString("week");
+                    title = "Suggestion accepted";
+                    description = user_name + " accepted your suggestion for week " + week + " for the position of " + role;
                     break;
                 case "SUGGESTION REJECTED":
-                    message = res.getString("first_name") + " " + res.getString("last_name") + "rejected your suggestion for week " + res.getString("week");
+                    title = "Suggestion rejected";
+                    description = user_name + " rejected your suggested hours for week " + week + " for the position of " + role;
                     break;
                 case "LINK":
-                    message = "You have a new link with " + res.getString("first_name") + " " + res.getString("last_name");
+                    title = "New employee";
+                    description = "New employee " + user_name;
                     break;
                 case "CONFLICT":
-                    message = "You have a conflict in week " + res.getString("week") + " with " + res.getString("first_name") + " " + res.getString("last_name");
+                    title = "Conflict";
+                    description = "You have a conflict in week " + week + " with " + user_name;
                     break;
                 default:
-                    System.out.println("Not a relevant type");
+                    continue;
             }
-            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
+
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), title, description);
             notifications.add(notification);
         }
         return notifications;

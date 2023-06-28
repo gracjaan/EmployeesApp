@@ -11,7 +11,6 @@ import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.dto.workedweek.UserContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.users.UserResponse;

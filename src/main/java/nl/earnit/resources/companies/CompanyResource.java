@@ -9,15 +9,12 @@ import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.helpers.RequestHelper;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.db.Notification;
 import nl.earnit.models.resource.InvalidEntry;
 import nl.earnit.models.resource.companies.CreateNote;
 import nl.earnit.models.resource.companies.CreateSuggestion;
 import nl.earnit.models.resource.contracts.Contract;
 import nl.earnit.models.resource.users.UserResponse;
 
-import java.lang.annotation.Repeatable;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -724,6 +721,7 @@ public class CompanyResource {
             notifications = companyDAO.getNotificationsForCompany(companyId);
         }
         catch (Exception e) {
+            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok(notifications).build();

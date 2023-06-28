@@ -1,10 +1,10 @@
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const companies = await getStudentsPerCompany();
-    const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie())
+    const requests = await getRejectedWeeks()
     const requestsDiv = document.getElementById("newRequests");
 
-    if(Object.keys(requests).length > 0){
+    if(requests !== null && requests.length > 0){
         requestsDiv.classList.remove("hidden");
     }
     else{
@@ -31,6 +31,16 @@ window.addEventListener("helpersLoaded", async () => {
     updateChart(companies)
 });
 
+async function getRejectedWeeks() {
+    return await fetch(`/api/staff/rejects`,
+        {method: "GET",
+            headers: {
+                "accept-type" : "application/json",
+                'authorization': `token ${getJWTCookie()}`
+            }}
+    ).then((res) => res.json()).catch(() => null);
+}
+
 function createEntries (notifications) {
     const container = document.getElementById("entries");
 
@@ -50,8 +60,13 @@ function createEntries (notifications) {
 
         const inner1 = document.createElement("div");
         inner1.classList.add("text-text", "font-bold", "uppercase");
-        inner1.innerText = notification.message;
+        inner1.innerText = notification.title;
         outer.appendChild(inner1)
+
+        const description = document.createElement("div");
+        description.classList.add("text-text");
+        description.innerText = notification.description;
+        outer.appendChild(description)
 
         const inner2 = document.createElement("div");
         inner2.classList.add("text-text", "uppercase");

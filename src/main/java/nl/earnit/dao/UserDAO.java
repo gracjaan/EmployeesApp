@@ -4,7 +4,6 @@ import jakarta.annotation.Nullable;
 import nl.earnit.dto.workedweek.NotificationDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
-import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
@@ -16,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static nl.earnit.Constants.getName;
 
 /**
  * The type User dao.
@@ -305,45 +306,74 @@ public class UserDAO extends GenericDAO<User> {
             return null;
         }
         List<NotificationDTO> notifications = new ArrayList<>();
-        String query = "SELECT n.*, u.first_name, u.last_name, c.name AS company_name, ww.week " +
-                "FROM \"notification\" n, \"user\" u, \"company\" c, \"worked_week\" ww " +
-                "WHERE n.user_id = u.id AND n.company_id = c.id AND n.worked_week_id=ww.id " +
-                "AND u.id = ? ORDER BY n.date DESC, n.seen";
+        String query = """
+            SELECT n.*, u.first_name, u.last_name_prefix, u.last_name, c.role, cy.name AS company_name, ww.week 
+            FROM "notification" n
+            JOIN "user" u ON u.id = n.user_id
+            JOIN company cy ON cy.id = n.company_id
+            LEFT JOIN worked_week ww ON ww.id = n.worked_week_id
+            LEFT JOIN user_contract uc ON uc.id = ww.contract_id 
+            LEFT JOIN contract c ON c.id = uc.contract_id 
+            WHERE u.id = ?
+            ORDER BY n.date DESC, n.seen
+            """;
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, user_id);
         ResultSet res = statement.executeQuery();
         while (res.next()) {
-            String message = convertToMessage(res.getString("type"), res.getString("company_name"), res.getString("first_name") + " " + res.getString("last_name"), res.getString("week"));
-            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), message);
+            String name = getName(res.getString("first_name"), res.getString("last_name_prefix"),  res.getString("last_name"));
+            String title = convertToTitle(res.getString("type"));
+            String description = convertToDescription(res.getString("type"), res.getString("company_name"), res.getString("role"), name, res.getString("week"));
+            NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), title, description);
             notifications.add(notification);
         }
         return notifications;
     }
 
-    public String convertToMessage(String type, String company_name, String user_name, String week) {
-        String message = null;
+    public String convertToTitle(String type) {
+        String title = null;
         switch(type) {
             case "HOURS":
-                message =  "You haven't confirmed hours for " + company_name + " yet";
+                title = "Week not confirmed";
                 break;
             case "APPROVED":
-                message = company_name + " approved your suggested hours for week " + week;
+                title = "Week approved";
                 break;
             case "SUGGESTION":
-                message = company_name + " has suggested new hours for week " + week;
-                break;
-            case "REJECTED":
-                message = company_name+ " rejected your suggested hours for week " + week;
+                title = "Week denied";
                 break;
             case "CONFLICT":
-                message = company_name + " and " + user_name + " have a conflict in week " + week;
+                title = "Conflict";
                 break;
             case "LINK":
-                message = "You have been linked to " + company_name;
+                title = "New contract";
             default:
                 System.out.println("No relevant notification type");
         }
-        return message;
+        return title;
+    }
+
+    public String convertToDescription(String type, String company_name, String role, String user_name, String week) {
+        String description = null;
+        switch(type) {
+            case "HOURS":
+                description = "You haven't confirmed hours for " + role + " at " + company_name + " for week " + week;
+                break;
+            case "APPROVED":
+                description = company_name + " approved your suggested hours for week " + week;
+                break;
+            case "SUGGESTION":
+                description = company_name + " has suggested new hours for week " + week;
+                break;
+            case "CONFLICT":
+                description = company_name + " and " + user_name + " have a conflict for week " + week;
+                break;
+            case "LINK":
+                description = "You have been linked to " + company_name;
+            default:
+                System.out.println("No relevant notification type");
+        }
+        return description;
     }
 
     public void changeNotificationToSeen(String notification_id) throws SQLException {
