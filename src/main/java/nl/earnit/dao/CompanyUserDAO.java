@@ -11,9 +11,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Company user dao.
+ */
 public class CompanyUserDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company_user";
 
+    /**
+     * Instantiates a new Company user dao.
+     *
+     * @param con the con
+     */
     public CompanyUserDAO(Connection con) {
         super(con, TABLE_NAME);
     }
@@ -39,8 +47,10 @@ public class CompanyUserDAO extends GenericDAO<User> {
 
     /**
      * Checks if a user works for a company.
+     *
      * @param companyId The id of a company.
-     * @param userId The id of a user.
+     * @param userId    The id of a user.
+     * @return the boolean
      * @throws SQLException If a database error occurs.
      */
     public boolean isUserWorkingForCompany(String companyId, String userId) throws SQLException {
@@ -60,7 +70,9 @@ public class CompanyUserDAO extends GenericDAO<User> {
 
     /**
      * Get all the companies a user is working for.
+     *
      * @param userId The id of a user.
+     * @return the companies user is working for
      * @throws SQLException If a database error occurs.
      */
     public List<Company> getCompaniesUserIsWorkingFor(String userId) throws SQLException {
