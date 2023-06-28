@@ -18,8 +18,17 @@ import nl.earnit.models.resource.login.Token;
 
 import java.util.List;
 
+/**
+ * The type Login resource.
+ */
 @Path("/login")
 public class LoginResource {
+    /**
+     * Login response.
+     *
+     * @param login the login
+     * @return the response
+     */
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })

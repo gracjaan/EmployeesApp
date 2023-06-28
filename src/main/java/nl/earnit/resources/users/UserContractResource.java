@@ -10,14 +10,31 @@ import nl.earnit.models.db.Worked;
 
 import java.util.List;
 
+/**
+ * The type User contract resource.
+ */
 public class UserContractResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
     private final String userId;
     private final String userContractId;
 
+    /**
+     * Instantiates a new User contract resource.
+     *
+     * @param uriInfo        the uri info
+     * @param request        the request
+     * @param userId         the user id
+     * @param userContractId the user contract id
+     */
     public UserContractResource(UriInfo uriInfo, Request request, String userId, String userContractId) {
         this.uriInfo = uriInfo;
         this.request = request;
@@ -25,6 +42,11 @@ public class UserContractResource {
         this.userContractId = userContractId;
     }
 
+    /**
+     * Gets contract.
+     *
+     * @return the contract
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getContract() {
@@ -39,6 +61,11 @@ public class UserContractResource {
         return Response.ok(uc).build();
     }
 
+    /**
+     * Gets worked.
+     *
+     * @return the worked
+     */
     @GET
     @Path("/worked")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -54,16 +81,41 @@ public class UserContractResource {
         return Response.ok(workedList).build();
     }
 
+    /**
+     * Gets worked week.
+     *
+     * @param year the year
+     * @param week the week
+     * @return the worked week
+     */
     @Path("/worked/{year}/{week}")
     public UserContractWorkedResource getWorkedWeek(@PathParam("year") String year, @PathParam("week") String week) {
         return new UserContractWorkedResource(uriInfo, request, userId, userContractId, year, week);
     }
 
+    /**
+     * Gets worked week.
+     *
+     * @param weekId the week id
+     * @return the worked week
+     */
     @Path("/worked/{weekId}")
     public UserContractWorkedResource getWorkedWeek(@PathParam("weekId") String weekId) {
         return new UserContractWorkedResource(uriInfo, request, userId, userContractId, weekId);
     }
 
+    /**
+     * Gets invoices.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the invoices
+     */
     @GET
     @Path("/invoices")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -86,6 +138,11 @@ public class UserContractResource {
         }
     }
 
+    /**
+     * Gets invoices per student.
+     *
+     * @return the invoices per student
+     */
     @GET
     @Path("/invoices/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -110,6 +167,13 @@ public class UserContractResource {
         }
     }
 
+    /**
+     * Gets invoices per student.
+     *
+     * @param year the year
+     * @param week the week
+     * @return the invoices per student
+     */
     @GET
     @Path("/invoices/download/{year}/{week}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

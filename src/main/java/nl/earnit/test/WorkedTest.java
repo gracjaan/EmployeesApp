@@ -10,10 +10,19 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Worked test.
+ */
 // To run: edit the run configurations and pass it all the environment variables for the DB
 public class WorkedTest {
+    /**
+     * The Worked dao.
+     */
     WorkedDAO workedDAO;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
    public void setUp() {
         try {
@@ -23,6 +32,11 @@ public class WorkedTest {
         }
     }
 
+    /**
+     * Count should return correct row count.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void count_ShouldReturnCorrectRowCount() throws SQLException {
         int preCount = workedDAO.count();
@@ -37,6 +51,11 @@ public class WorkedTest {
     }
 
 
+    /**
+     * Add worked week task should add new worked week task.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void addWorkedWeekTask_ShouldAddNewWorkedWeekTask() throws SQLException {
         // Prepare test data
@@ -53,6 +72,11 @@ public class WorkedTest {
         // Additional assertions if needed
     }
 
+    /**
+     * Update worked week task should update existing worked week task.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void updateWorkedWeekTask_ShouldUpdateExistingWorkedWeekTask() throws SQLException {
         // Prepare test data
@@ -68,6 +92,11 @@ public class WorkedTest {
         // Additional assertions if needed
     }
 
+    /**
+     * Delete worked week task should delete existing worked week task.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void deleteWorkedWeekTask_ShouldDeleteExistingWorkedWeekTask() throws SQLException {
         // Prepare test data
@@ -82,6 +111,11 @@ public class WorkedTest {
         // Additional assertions if needed
     }
 
+    /**
+     * Is worked week confirmed should return correct confirmation status.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void isWorkedWeekConfirmed_ShouldReturnCorrectConfirmationStatus() throws SQLException {
         // Prepare test data

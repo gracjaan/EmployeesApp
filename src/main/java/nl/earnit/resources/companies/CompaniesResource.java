@@ -12,13 +12,29 @@ import nl.earnit.models.resource.users.UserResponse;
 
 import java.util.List;
 
+/**
+ * The type Companies resource.
+ */
 @Path("/companies")
 public class CompaniesResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
 
+    /**
+     * Gets companies.
+     *
+     * @param httpHeaders the http headers
+     * @param order       the order
+     * @return the companies
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getCompanies(@Context HttpHeaders httpHeaders,
@@ -36,6 +52,12 @@ public class CompaniesResource {
         }
     }
 
+    /**
+     * Create company response.
+     *
+     * @param createCompany the create company
+     * @return the response
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createCompany(CreateCompany createCompany) {
@@ -108,6 +130,13 @@ public class CompaniesResource {
         return Response.ok().entity(company).build();
     }
 
+    /**
+     * Gets company.
+     *
+     * @param httpHeaders the http headers
+     * @param companyId   the company id
+     * @return the company
+     */
     @Path("/{companyId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public CompanyResource getCompany(@Context HttpHeaders httpHeaders, @PathParam("companyId") String companyId) {

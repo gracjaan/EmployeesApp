@@ -14,13 +14,28 @@ import nl.earnit.models.resource.companies.CompanyCounts;
 
 import java.util.List;
 
+/**
+ * The type Staff resource.
+ */
 @Path("/staff")
 public class StaffResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
 
+    /**
+     * Gets staff.
+     *
+     * @param httpHeaders the http headers
+     * @return the staff
+     */
     @GET
     public Response getStaff(@Context HttpHeaders httpHeaders) {
         User user = RequestHelper.validateUser(httpHeaders);
@@ -29,11 +44,22 @@ public class StaffResource {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
+    /**
+     * Add staff response.
+     *
+     * @return the response
+     */
     @POST
     public Response addStaff() {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
+    /**
+     * Delete staff response.
+     *
+     * @param userId the user id
+     * @return the response
+     */
     @DELETE
     @Path("/{userId}")
     public Response deleteStaff(@PathParam("userId") String userId) {
@@ -42,6 +68,18 @@ public class StaffResource {
 
     // TODO: everything related to rejecting and approving of hours needs to change to the new specification
 
+    /**
+     * Gets rejects.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the rejects
+     */
     @GET
     @Path("/rejects")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -66,6 +104,19 @@ public class StaffResource {
         }
     }
 
+    /**
+     * Gets reject details.
+     *
+     * @param workedWeekId the worked week id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the reject details
+     */
     @GET
     @Path("/rejects/{workedWeekId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -91,6 +142,19 @@ public class StaffResource {
         }
     }
 
+    /**
+     * Resolved accept response.
+     *
+     * @param workedWeekId the worked week id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the response
+     */
     @POST
     @Path("/rejects/{workedWeekId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -120,6 +184,19 @@ public class StaffResource {
         }
     }
 
+    /**
+     * Resolved reject response.
+     *
+     * @param workedWeekId the worked week id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the response
+     */
     @DELETE
     @Path("/rejects/{workedWeekId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -149,6 +226,20 @@ public class StaffResource {
         }
     }
 
+    /**
+     * Undo resolved reject response.
+     *
+     * @param workedWeekId            the worked week id
+     * @param company                 the company
+     * @param contract                the contract
+     * @param userContract            the user contract
+     * @param user                    the user
+     * @param hours                   the hours
+     * @param totalHours              the total hours
+     * @param order                   the order
+     * @param workedWeekUndoSolvedDTO the worked week undo solved dto
+     * @return the response
+     */
     @PUT
     @Path("/rejects/{workedWeekId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -195,6 +286,11 @@ public class StaffResource {
     }
 
 
+    /**
+     * Gets employee count per company.
+     *
+     * @return the employee count per company
+     */
     @GET
     @Path("/companies")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

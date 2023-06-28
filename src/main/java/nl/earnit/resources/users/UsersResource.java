@@ -14,13 +14,29 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
+/**
+ * The type Users resource.
+ */
 @Path("/users")
 public class UsersResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
 
+    /**
+     * Gets users.
+     *
+     * @param httpHeaders the http headers
+     * @param order       the order
+     * @return the users
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getUsers(@Context HttpHeaders httpHeaders,
@@ -37,6 +53,12 @@ public class UsersResource {
         }
     }
 
+    /**
+     * Create user response.
+     *
+     * @param createUser the create user
+     * @return the response
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -97,6 +119,13 @@ public class UsersResource {
         return Response.ok(new UserResponse(user)).build();
     }
 
+    /**
+     * Gets user.
+     *
+     * @param httpHeaders the http headers
+     * @param userId      the user id
+     * @return the user
+     */
     @Path("/{userId}")
     public UserResource getUser(@Context HttpHeaders httpHeaders, @PathParam("userId") String userId) {
         RequestHelper.validateUUID(userId);

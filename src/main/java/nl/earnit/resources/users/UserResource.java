@@ -17,19 +17,40 @@ import nl.earnit.models.resource.users.UserResponse;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * The type User resource.
+ */
 public class UserResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
     private final String userId;
 
+    /**
+     * Instantiates a new User resource.
+     *
+     * @param uriInfo the uri info
+     * @param request the request
+     * @param userId  the user id
+     */
     public UserResource(UriInfo uriInfo, Request request, String userId) {
         this.uriInfo = uriInfo;
         this.request = request;
         this.userId = userId;
     }
 
+    /**
+     * Gets user.
+     *
+     * @return the user
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getUser() {
@@ -44,6 +65,13 @@ public class UserResource {
         return Response.ok(new UserResponse(user)).build();
     }
 
+    /**
+     * Update user response.
+     *
+     * @param httpHeaders the http headers
+     * @param user        the user
+     * @return the response
+     */
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -90,6 +118,12 @@ public class UserResource {
         return Response.ok(new UserResponse(dbUser)).build();
     }
 
+    /**
+     * Disable user response.
+     *
+     * @param httpHeaders the http headers
+     * @return the response
+     */
     @DELETE
     public Response disableUser(@Context HttpHeaders httpHeaders) {
         UserDAO userDAO;
@@ -103,6 +137,11 @@ public class UserResource {
         return Response.ok().build();
     }
 
+    /**
+     * Gets companies.
+     *
+     * @return the companies
+     */
     @GET
     @Path("/companies")
     public Response getCompanies() {
@@ -115,11 +154,22 @@ public class UserResource {
         }
     }
 
+    /**
+     * Gets company.
+     *
+     * @param companyId the company id
+     * @return the company
+     */
     @Path("/companies/{companyId}")
     public UserCompanyResource getCompany(@PathParam("companyId") String companyId) {
         return new UserCompanyResource(uriInfo, request, userId, companyId);
     }
 
+    /**
+     * Gets contracts.
+     *
+     * @return the contracts
+     */
     @GET
     @Path("/contracts")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -135,11 +185,29 @@ public class UserResource {
         return Response.ok(userContracts).build();
     }
 
+    /**
+     * Gets contract.
+     *
+     * @param userContractId the user contract id
+     * @return the contract
+     */
     @Path("/contracts/{userContractId}")
     public UserContractResource getContract(@PathParam("userContractId") String userContractId) {
         return new UserContractResource(uriInfo, request, userId, userContractId);
     }
 
+    /**
+     * Gets invoices.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the invoices
+     */
     @GET
     @Path("/invoices")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -162,6 +230,13 @@ public class UserResource {
         }
     }
 
+    /**
+     * Gets invoices per student.
+     *
+     * @param year the year
+     * @param week the week
+     * @return the invoices per student
+     */
     @GET
     @Path("/invoices/download/{year}/{week}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

@@ -18,13 +18,31 @@ import java.util.List;
                    Add @Produces to relevant methods after merge
  */
 
+/**
+ * The type Company contract resource.
+ */
 public class CompanyContractResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
     private final String companyId;
     private final String contractId;
+
+    /**
+     * Instantiates a new Company contract resource.
+     *
+     * @param uriInfo    the uri info
+     * @param request    the request
+     * @param companyId  the company id
+     * @param contractId the contract id
+     */
     public CompanyContractResource(UriInfo uriInfo, Request request, String companyId,
                                    String contractId) {
         this.uriInfo = uriInfo;
@@ -33,6 +51,12 @@ public class CompanyContractResource {
         this.contractId = contractId;
     }
 
+    /**
+     * Gets contract.
+     *
+     * @param contractId the contract id
+     * @return the contract
+     */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public DescriptionRole getContract(@PathParam("contractId") String contractId) {
@@ -54,6 +78,13 @@ public class CompanyContractResource {
         return result;
     }
 
+    /**
+     * Update contract response.
+     *
+     * @param contractId      the contract id
+     * @param descriptionRole the description role
+     * @return the response
+     */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateContract(@PathParam("contractId") String contractId, JAXBElement<DescriptionRole> descriptionRole ) {
@@ -81,6 +112,12 @@ public class CompanyContractResource {
         return Response.ok().build();
     }
 
+    /**
+     * Disable contract response.
+     *
+     * @param contractId the contract id
+     * @return the response
+     */
     @DELETE
     public Response disableContract(@PathParam("contractId") String contractId) {
         if (contractId == null) {
@@ -98,6 +135,12 @@ public class CompanyContractResource {
         return Response.ok().build();
     }
 
+    /**
+     * Gets user contracts.
+     *
+     * @param contractId the contract id
+     * @return the user contracts
+     */
     @GET
     @Path("/employees")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -115,6 +158,12 @@ public class CompanyContractResource {
         }
     }
 
+    /**
+     * Add employee response.
+     *
+     * @param addUserToContract the add user to contract
+     * @return the response
+     */
     @POST
     @Path("/employees")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -134,6 +183,12 @@ public class CompanyContractResource {
         }
     }
 
+    /**
+     * Gets user contract.
+     *
+     * @param userContractId the user contract id
+     * @return the user contract
+     */
     @GET
     @Path("/contracts/{userContractId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -155,6 +210,13 @@ public class CompanyContractResource {
 
     }
 
+    /**
+     * Update user contract response.
+     *
+     * @param userContractId          the user contract id
+     * @param userContractJAXBElement the user contract jaxb element
+     * @return the response
+     */
     @PUT
     @Path("/employees/{userContractId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -177,6 +239,12 @@ public class CompanyContractResource {
         return Response.ok().build();
     }
 
+    /**
+     * Disable user contract response.
+     *
+     * @param userContractId the user contract id
+     * @return the response
+     */
     @DELETE
     @Path("/employees/{userContractId}")
     public Response disableUserContract(@PathParam("userContractId") String userContractId) {

@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Redirect filter.
+ */
 public class RedirectFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
