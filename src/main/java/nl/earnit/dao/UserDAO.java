@@ -17,9 +17,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The type User dao.
+ */
 public class UserDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user";
 
+    /**
+     * Instantiates a new User dao.
+     *
+     * @param con the con
+     */
     public UserDAO(Connection con) {
         super(con, TABLE_NAME);
     }
@@ -45,6 +53,7 @@ public class UserDAO extends GenericDAO<User> {
 
     /**
      * Get user with given id.
+     *
      * @param id The id of the user.
      * @return The user or null if not found.
      * @throws SQLException If a database error occurs.
@@ -55,6 +64,7 @@ public class UserDAO extends GenericDAO<User> {
 
     /**
      * Get user with given email.
+     *
      * @param email The email of the user.
      * @return The user or null if not found.
      * @throws SQLException If a database error occurs.
@@ -84,6 +94,13 @@ public class UserDAO extends GenericDAO<User> {
             res.getString("last_name"), res.getString("last_name_prefix"), res.getString("type"), res.getString("password"), res.getString("address"), res.getString("btw"), res.getString("kvk"));
     }
 
+    /**
+     * Gets all users.
+     *
+     * @param order the order
+     * @return the all users
+     * @throws SQLException the sql exception
+     */
     public List<UserResponse> getAllUsers(String order) throws SQLException {
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
             put("user.first_name", "first_name");
@@ -121,6 +138,21 @@ public class UserDAO extends GenericDAO<User> {
     }
 
 
+    /**
+     * Create user user.
+     *
+     * @param email          the email
+     * @param firstName      the first name
+     * @param lastNamePrefix the last name prefix
+     * @param lastName       the last name
+     * @param password       the password
+     * @param type           the type
+     * @param kvk            the kvk
+     * @param btw            the btw
+     * @param address        the address
+     * @return the user
+     * @throws SQLException the sql exception
+     */
     public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type, String kvk, String btw, String address)
         throws SQLException {
         // Create query
@@ -147,6 +179,13 @@ public class UserDAO extends GenericDAO<User> {
         return getUserById(res.getString("id"));
     }
 
+    /**
+     * Update user user.
+     *
+     * @param user the user
+     * @return the user
+     * @throws SQLException the sql exception
+     */
     public User updateUser(UserResponse user) throws SQLException {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ?, kvk = ?, btw = ?, address = ? WHERE \"id\" = ? RETURNING id";
@@ -172,6 +211,12 @@ public class UserDAO extends GenericDAO<User> {
         return getUserById(res.getString("id"));
     }
 
+    /**
+     * Disable user by id.
+     *
+     * @param id the id
+     * @throws SQLException the sql exception
+     */
     public void disableUserById(String id) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET active = false WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -179,6 +224,12 @@ public class UserDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    /**
+     * Renable user by id.
+     *
+     * @param id the id
+     * @throws SQLException the sql exception
+     */
     public void renableUserById(String id) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET active = true WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -228,6 +279,13 @@ public class UserDAO extends GenericDAO<User> {
         return res.next();
     }
 
+    /**
+     * Is active boolean.
+     *
+     * @param userId the user id
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public boolean isActive(String userId) throws SQLException {
         String query = "SELECT active FROM \"" + tableName + "\" u WHERE u.id = ?";
 

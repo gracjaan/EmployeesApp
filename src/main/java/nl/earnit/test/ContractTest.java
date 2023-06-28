@@ -2,6 +2,7 @@ package nl.earnit.test;
 
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.WorkedDAO;
 import nl.earnit.dto.workedweek.ContractDTO;
 import nl.earnit.models.resource.contracts.Contract;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +14,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * The type Contract test.
+ */
 public class ContractTest {
+    /**
+     * The Contract dao.
+     */
     ContractDAO contractDAO;
+
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         try {
@@ -24,6 +35,11 @@ public class ContractTest {
         }
     }
 
+    /**
+     * Test get all contracts by company id.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void testGetAllContractsByCompanyId() throws SQLException {
         // Prepare test data

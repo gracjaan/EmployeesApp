@@ -5,12 +5,20 @@ import nl.earnit.exceptions.InvalidOrderByException;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * The type Order by.
+ */
 public class OrderBy {
     private static final String regex = "([a-zA-Z_.]+:(desc|asc))";
     private static final Pattern pattern = Pattern.compile(regex);
 
     private final Map<String, String> allowedColumns;
 
+    /**
+     * Instantiates a new Order by.
+     *
+     * @param allowedColumns the allowed columns
+     */
     public OrderBy(Map<String, String> allowedColumns) {
         this.allowedColumns = allowedColumns;
     }
@@ -28,6 +36,12 @@ public class OrderBy {
         return true;
     }
 
+    /**
+     * Is valid boolean.
+     *
+     * @param query the query
+     * @return the boolean
+     */
     public boolean isValid(String query) {
         if (query.length() < 1) return true;
 
@@ -51,7 +65,9 @@ public class OrderBy {
 
     /**
      * Returns the order by e.g.: week.year:desc -> w.year desc
-     * @param query to convert
+     *
+     * @param query               to convert
+     * @param convertToOrderBySql the convert to order by sql
      * @return Order by
      * @throws InvalidOrderByException If query is invalid
      */
@@ -86,6 +102,12 @@ public class OrderBy {
         return sqlOrderBy;
     }
 
+    /**
+     * Convert to order by sql string.
+     *
+     * @param sqlOrderBy the sql order by
+     * @return the string
+     */
     public static String convertToOrderBySQL(String sqlOrderBy) {
         return sqlOrderBy == null ? "" : " ORDER BY " + sqlOrderBy;
     }

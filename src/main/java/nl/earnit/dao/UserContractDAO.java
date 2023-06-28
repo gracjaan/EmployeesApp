@@ -16,9 +16,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The type User contract dao.
+ */
 public class UserContractDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "user_contract";
 
+    /**
+     * Instantiates a new User contract dao.
+     *
+     * @param con the con
+     */
     public UserContractDAO(Connection con) {
         super(con, TABLE_NAME);
     }
@@ -82,6 +90,14 @@ public class UserContractDAO extends GenericDAO<User> {
         return userContracts;
     }
 
+    /**
+     * Gets user contract.
+     *
+     * @param userId         the user id
+     * @param userContractId the user contract id
+     * @return the user contract
+     * @throws SQLException the sql exception
+     */
     public UserContract getUserContract(String userId, String userContractId) throws SQLException {
         String query = "SELECT contract_id, hourly_wage FROM user_contract WHERE id=?;";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -93,6 +109,15 @@ public class UserContractDAO extends GenericDAO<User> {
         return new UserContract(userContractId, res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
     }
 
+    /**
+     * Add new user contract user contract.
+     *
+     * @param user_id     the user id
+     * @param contract_id the contract id
+     * @param hourly_wage the hourly wage
+     * @return the user contract
+     * @throws SQLException the sql exception
+     */
     public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {
         String query = "INSERT INTO " + tableName + " (contract_id, user_id, hourly_wage) " +
                 "VALUES (?, ?, ?) RETURNING id";
@@ -109,6 +134,12 @@ public class UserContractDAO extends GenericDAO<User> {
         return getUserContractById(res.getString("id"));
     }
 
+    /**
+     * Disable user contract.
+     *
+     * @param id the id
+     * @throws SQLException the sql exception
+     */
     public void disableUserContract(String id) throws SQLException {
 
         String query = "UPDATE " + tableName + " SET active = False WHERE id = ?";
@@ -119,6 +150,13 @@ public class UserContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    /**
+     * Change hourly wage.
+     *
+     * @param id         the id
+     * @param hourlyWage the hourly wage
+     * @throws SQLException the sql exception
+     */
     public void changeHourlyWage(String id, int hourlyWage) throws SQLException {
         String query = "UPDATE " + tableName + " SET hourly_wage = ? WHERE id = ?";
 
@@ -128,7 +166,13 @@ public class UserContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
-    //TODO: Doesn't this just get one contract that is not specified, a user may have multiple ones right?
+    /**
+     * Gets user contract by id.
+     *
+     * @param id the id
+     * @return the user contract by id
+     * @throws SQLException the sql exception
+     */
     public UserContract getUserContractById(String id) throws SQLException {
         String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -141,6 +185,13 @@ public class UserContractDAO extends GenericDAO<User> {
         return new UserContract(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active") );
     }
 
+    /**
+     * Gets user contracts by contract id.
+     *
+     * @param contractId the contract id
+     * @return the user contracts by contract id
+     * @throws SQLException the sql exception
+     */
     public List<UserContract> getUserContractsByContractId(String contractId) throws SQLException {
         List<UserContract> result = new ArrayList<>();
         String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE contract_id = ? and active = true ";
@@ -164,6 +215,12 @@ public class UserContractDAO extends GenericDAO<User> {
 
     }
 
+    /**
+     * Disable user contracts by user id.
+     *
+     * @param userId the user id
+     * @throws SQLException the sql exception
+     */
     public void disableUserContractsByUserId(String userId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE user_id = ?";
 
@@ -174,9 +231,10 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     /**
-     * The amount of employees for every company
-     * @return a list of companyCounts objects that contain the company and the amount of employees
-     * @throws SQLException
+     * Gets number of employees by company.
+     *
+     * @return the number of employees by company
+     * @throws SQLException the sql exception
      */
     public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
 

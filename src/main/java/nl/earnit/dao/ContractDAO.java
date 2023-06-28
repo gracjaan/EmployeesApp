@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The type Contract dao.
+ */
 public class ContractDAO extends GenericDAO<User> {
     private final OrderBy orderBy = new OrderBy(new HashMap<>() {{
         put("contract.id", "c.id");
@@ -37,6 +40,11 @@ public class ContractDAO extends GenericDAO<User> {
 
     private final static String TABLE_NAME = "contract";
 
+    /**
+     * Instantiates a new Contract dao.
+     *
+     * @param con the con
+     */
     public ContractDAO(Connection con) {
         super(con, TABLE_NAME);
     }
@@ -59,7 +67,6 @@ public class ContractDAO extends GenericDAO<User> {
         res.next();
         return res.getInt("count");
     }
-//TODO: finish this javaDOC
     /**
      * gets all the contracts that a company has
      * @param companyId the id of the company
@@ -140,6 +147,13 @@ public class ContractDAO extends GenericDAO<User> {
         return result;
     }
 
+    /**
+     * Update contract description.
+     *
+     * @param contractId  the contract id
+     * @param description the description
+     * @throws SQLException the sql exception
+     */
     public void updateContractDescription(String contractId, String description) throws SQLException {
         String query = "UPDATE " + tableName + " SET description = ? WHERE id = ?";
 
@@ -150,6 +164,13 @@ public class ContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    /**
+     * Update contract role.
+     *
+     * @param contractId the contract id
+     * @param role       the role
+     * @throws SQLException the sql exception
+     */
     public void updateContractRole(String contractId, String role) throws SQLException {
         String query = "UPDATE " + tableName + " SET role = ? WHERE id = ?";
 
@@ -176,6 +197,13 @@ public class ContractDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
     }
 
+    /**
+     * Gets contract.
+     *
+     * @param contractId the contract id
+     * @return the contract
+     * @throws SQLException the sql exception
+     */
     public Contract getContract(String contractId) throws SQLException {
         String query = "GET description, role FROM " + tableName + " WHERE id = ?";
 
@@ -205,6 +233,12 @@ public class ContractDAO extends GenericDAO<User> {
         statement.executeQuery();
     }
 
+    /**
+     * Renable contract.
+     *
+     * @param contractId the contract id
+     * @throws SQLException the sql exception
+     */
     public void renableContract(String contractId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
 

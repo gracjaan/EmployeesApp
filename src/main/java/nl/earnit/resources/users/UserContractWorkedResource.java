@@ -10,9 +10,18 @@ import nl.earnit.models.db.Worked;
 
 import java.util.List;
 
+/**
+ * The type User contract worked resource.
+ */
 public class UserContractWorkedResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
     private final String userId;
@@ -23,6 +32,16 @@ public class UserContractWorkedResource {
     // If weekId is null use year, week and user contract id
     private final String weekId;
 
+    /**
+     * Instantiates a new User contract worked resource.
+     *
+     * @param uriInfo        the uri info
+     * @param request        the request
+     * @param userId         the user id
+     * @param userContractId the user contract id
+     * @param year           the year
+     * @param week           the week
+     */
     public UserContractWorkedResource(UriInfo uriInfo, Request request, String userId, String userContractId, String year, String week) {
         this.uriInfo = uriInfo;
         this.request = request;
@@ -33,6 +52,15 @@ public class UserContractWorkedResource {
         this.weekId = null;
     }
 
+    /**
+     * Instantiates a new User contract worked resource.
+     *
+     * @param uriInfo        the uri info
+     * @param request        the request
+     * @param userId         the user id
+     * @param userContractId the user contract id
+     * @param weekId         the week id
+     */
     public UserContractWorkedResource(UriInfo uriInfo, Request request, String userId, String userContractId, String weekId) {
         this.uriInfo = uriInfo;
         this.request = request;
@@ -43,6 +71,18 @@ public class UserContractWorkedResource {
         this.weekId = weekId;
     }
 
+    /**
+     * Gets worked week.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the worked week
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getWorkedWeek(@QueryParam("company") @DefaultValue("false") boolean company,
@@ -72,6 +112,12 @@ public class UserContractWorkedResource {
         return Response.ok(workedWeek).build();
     }
 
+    /**
+     * Update worked week task response.
+     *
+     * @param entry the entry
+     * @return the response
+     */
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateWorkedWeekTask(Worked entry) {
@@ -88,6 +134,12 @@ public class UserContractWorkedResource {
         return Response.ok().build();
     }
 
+    /**
+     * Add worked week task response.
+     *
+     * @param entry the entry
+     * @return the response
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response addWorkedWeekTask(Worked entry) {
@@ -104,6 +156,12 @@ public class UserContractWorkedResource {
         return Response.ok().build();
     }
 
+    /**
+     * Delete worked week task response.
+     *
+     * @param workedId the worked id
+     * @return the response
+     */
     @DELETE
     @Consumes({MediaType.TEXT_PLAIN})
     public Response deleteWorkedWeekTask(String workedId) {
@@ -120,6 +178,18 @@ public class UserContractWorkedResource {
         return Response.ok().build();
     }
 
+    /**
+     * Accept worked week response.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the response
+     */
     @POST
     @Path("/suggestions")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -156,6 +226,18 @@ public class UserContractWorkedResource {
         }
     }
 
+    /**
+     * Reject worked week response.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the response
+     */
     @DELETE
     @Path("/suggestions")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -186,6 +268,11 @@ public class UserContractWorkedResource {
         }
     }
 
+    /**
+     * Confirm worked week response.
+     *
+     * @return the response
+     */
     @POST
     @Path("/confirm")
     public Response confirmWorkedWeek() {
@@ -200,7 +287,11 @@ public class UserContractWorkedResource {
     }
 
 
-
+    /**
+     * Remove confirm worked week response.
+     *
+     * @return the response
+     */
     @DELETE
     @Path("/confirm")
     public Response removeConfirmWorkedWeek() {
@@ -218,6 +309,12 @@ public class UserContractWorkedResource {
         }
     }
 
+    /**
+     * Add worked week note response.
+     *
+     * @param note the note
+     * @return the response
+     */
     @PUT
     @Path("/note")
     @Consumes({MediaType.TEXT_PLAIN})
@@ -238,6 +335,7 @@ public class UserContractWorkedResource {
 
     /**
      * Gets the worked week number from either id or year/week and checks if the user has access to it.
+     *
      * @return Worked week id
      */
     public String getWeekId() {

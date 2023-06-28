@@ -11,10 +11,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Worked dao.
+ */
 public class WorkedDAO extends GenericDAO<User> {
 
     private final static String TABLE_NAME = "worked";
 
+    /**
+     * Instantiates a new Worked dao.
+     *
+     * @param con the con
+     */
     public WorkedDAO(Connection con) {
         super(con, TABLE_NAME);
     }
@@ -34,8 +42,6 @@ public class WorkedDAO extends GenericDAO<User> {
         return res.getInt("count");
     }
 
-    //TODO: Multiple employees can have the same contract. So if we retrieve the hours of a contract, those hours belong to multiple employees right
-    //TODO: Don't we need to make it so that we only get the hours worked under a contract of one employee
     /**
      * gets a list of all the worked weeks with hours that were worked under a specific contract
      * @param userContractId
@@ -59,6 +65,15 @@ public class WorkedDAO extends GenericDAO<User> {
         return list;
     }
 
+    /**
+     * Gets worked week.
+     *
+     * @param userContractId the user contract id
+     * @param year           the year
+     * @param week           the week
+     * @return the worked week
+     * @throws SQLException the sql exception
+     */
     public List<Worked> getWorkedWeek(String userContractId, String year, String week) throws SQLException {
         String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.year=? AND ww.week=?";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -163,6 +178,13 @@ public class WorkedDAO extends GenericDAO<User> {
         return true;
     }
 
+    /**
+     * Delete worked week task boolean.
+     *
+     * @param workedId the worked id
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public boolean deleteWorkedWeekTask(String workedId) throws SQLException {
         if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(workedId)) {
             return false;

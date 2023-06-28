@@ -5,16 +5,36 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.dao.*;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.UserContract;
+import nl.earnit.models.resource.contracts.Contract;
+
+import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * The type User company resource.
+ */
 public class UserCompanyResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
     private final String userId;
     private final String companyId;
 
+    /**
+     * Instantiates a new User company resource.
+     *
+     * @param uriInfo   the uri info
+     * @param request   the request
+     * @param userId    the user id
+     * @param companyId the company id
+     */
     public UserCompanyResource(UriInfo uriInfo, Request request, String userId, String companyId) {
         this.uriInfo = uriInfo;
         this.request = request;
@@ -22,6 +42,11 @@ public class UserCompanyResource {
         this.companyId = companyId;
     }
 
+    /**
+     * Gets company.
+     *
+     * @return the company
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getCompany() {
@@ -36,6 +61,11 @@ public class UserCompanyResource {
         return Response.ok(company).build();
     }
 
+    /**
+     * Gets contracts.
+     *
+     * @return the contracts
+     */
     @GET
     @Path("/contracts")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -52,7 +82,12 @@ public class UserCompanyResource {
     }
 
 
-
+    /**
+     * Gets contract.
+     *
+     * @param userContractId the user contract id
+     * @return the contract
+     */
     @GET
     @Path("/contracts/{userContractId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

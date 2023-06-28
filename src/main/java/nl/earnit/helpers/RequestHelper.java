@@ -11,9 +11,13 @@ import nl.earnit.models.db.User;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+/**
+ * The type Request helper.
+ */
 public class RequestHelper {
     /**
      * Validates uuid, if invalid throws BadRequestException
+     *
      * @param uuid Uuid to validate.
      * @throws BadRequestException If uuid is invalid.
      */
@@ -31,6 +35,7 @@ public class RequestHelper {
 
     /**
      * Validates user from authorization header.
+     *
      * @param httpHeaders Request headers.
      * @return user for token.
      * @throws UnauthorizedException Authorization header invalid or no user found.
@@ -42,6 +47,12 @@ public class RequestHelper {
         return user;
     }
 
+    /**
+     * Handle access to company.
+     *
+     * @param companyId the company id
+     * @param user      the user
+     */
     public static void handleAccessToCompany(String companyId, User user) {
         try {
             if (!Auth.hasAccessToCompany(companyId, user)) throw new nl.earnit.exceptions.ForbiddenException();
@@ -52,6 +63,11 @@ public class RequestHelper {
         }
     }
 
+    /**
+     * Handle access to staff.
+     *
+     * @param user the user
+     */
     public static void handleAccessToStaff(User user) {
         try {
             if (!Auth.hasAccessToStaff(user)) throw new nl.earnit.exceptions.ForbiddenException();
@@ -62,6 +78,12 @@ public class RequestHelper {
         }
     }
 
+    /**
+     * Handle access to user.
+     *
+     * @param userId the user id
+     * @param user   the user
+     */
     public static void handleAccessToUser(String userId, User user) {
         try {
             if (!Auth.hasAccessToUser(userId, user)) throw new nl.earnit.exceptions.ForbiddenException();

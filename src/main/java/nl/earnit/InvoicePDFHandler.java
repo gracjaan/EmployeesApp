@@ -20,7 +20,16 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * The type Invoice pdf handler.
+ */
 public class InvoicePDFHandler {
+    /**
+     * Create single invoice streaming output.
+     *
+     * @param invoiceInformation the invoice information
+     * @return the streaming output
+     */
     public static StreamingOutput createSingleInvoice(InvoiceInformation invoiceInformation) {
         return output -> {
             try {
@@ -31,6 +40,12 @@ public class InvoicePDFHandler {
         };
     }
 
+    /**
+     * Create invoices streaming output.
+     *
+     * @param invoiceInformationList the invoice information list
+     * @return the streaming output
+     */
     public static StreamingOutput createInvoices(List<InvoiceInformation> invoiceInformationList) {
         return outputStream -> {
             ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(outputStream));
@@ -52,6 +67,13 @@ public class InvoicePDFHandler {
         };
     }
 
+    /**
+     * Create invoice stream.
+     *
+     * @param outputStream       the output stream
+     * @param invoiceInformation the invoice information
+     * @throws IOException the io exception
+     */
     public static void createInvoiceStream(OutputStream outputStream, InvoiceInformation invoiceInformation) throws IOException {
         String html = Constants.INVOICE_TEMPLATE;
 
@@ -95,7 +117,16 @@ public class InvoicePDFHandler {
         return (double) Math.round(value * scale) / scale;
     }
 
+    /**
+     * The type Invoice information.
+     */
     public static class InvoiceInformation {
+        /**
+         * From worked week invoice information.
+         *
+         * @param workedWeek the worked week
+         * @return the invoice information
+         */
         public static InvoiceInformation fromWorkedWeek(WorkedWeekDTO workedWeek) {
             return new InvoiceInformation(workedWeek.getCompany().getName(),
                 workedWeek.getCompany().getAddress(),
@@ -115,15 +146,33 @@ public class InvoicePDFHandler {
                 workedWeek.getUserContract().getHourlyWage());
         }
 
+        /**
+         * Gets name from worked week.
+         *
+         * @param workedWeek the worked week
+         * @return the name from worked week
+         */
         public static String getNameFromWorkedWeek(WorkedWeekDTO workedWeek) {
             String spacing = (workedWeek.getUser().getLastNamePrefix() == null || workedWeek.getUser().getLastNamePrefix().trim().length() < 1) ? "" : workedWeek.getUser().getLastNamePrefix() + " ";
             return workedWeek.getUser().getFirstName() + " " + (spacing) + workedWeek.getUser().getLastName();
         }
 
+        /**
+         * Gets invoice name from worked week.
+         *
+         * @param workedWeek the worked week
+         * @return the invoice name from worked week
+         */
         public static String getInvoiceNameFromWorkedWeek(WorkedWeekDTO workedWeek) {
             return "invoice-%s-%s-%s-%s.pdf".formatted(workedWeek.getYear(), workedWeek.getWeek(), getNameFromWorkedWeek(workedWeek).replaceAll(" ", "-"), workedWeek.getContract().getRole());
         }
 
+        /**
+         * Gets invoice name from invoice information.
+         *
+         * @param invoiceInformation the invoice information
+         * @return the invoice name from invoice information
+         */
         public static String getInvoiceNameFromInvoiceInformation(InvoiceInformation invoiceInformation) {
             return "invoice-%s-%s-%s-%s.pdf".formatted(invoiceInformation.getYear(), invoiceInformation.getWeek(), invoiceInformation.getStudentName().replaceAll(" ", "-"), invoiceInformation.getRole());
         }
@@ -146,6 +195,25 @@ public class InvoicePDFHandler {
         private final int hourlyWageInCents;
 
 
+        /**
+         * Instantiates a new Invoice information.
+         *
+         * @param companyName       the company name
+         * @param companyAddress    the company address
+         * @param companyKVK        the company kvk
+         * @param invoiceNumber     the invoice number
+         * @param invoiceDate       the invoice date
+         * @param studentName       the student name
+         * @param studentAddress    the student address
+         * @param studentKVK        the student kvk
+         * @param studentBTW        the student btw
+         * @param role              the role
+         * @param description       the description
+         * @param week              the week
+         * @param year              the year
+         * @param minutesWorked     the minutes worked
+         * @param hourlyWageInCents the hourly wage in cents
+         */
         public InvoiceInformation(String companyName, String companyAddress, String companyKVK,
                                   String invoiceNumber, String invoiceDate, String studentName,
                                   String studentAddress, String studentKVK, String studentBTW,
@@ -168,62 +236,137 @@ public class InvoicePDFHandler {
             this.hourlyWageInCents = hourlyWageInCents;
         }
 
+        /**
+         * Gets company name.
+         *
+         * @return the company name
+         */
         public String getCompanyName() {
             return companyName;
         }
 
+        /**
+         * Gets company address.
+         *
+         * @return the company address
+         */
         public String getCompanyAddress() {
             return companyAddress;
         }
 
+        /**
+         * Gets company kvk.
+         *
+         * @return the company kvk
+         */
         public String getCompanyKVK() {
             return companyKVK;
         }
 
+        /**
+         * Gets invoice number.
+         *
+         * @return the invoice number
+         */
         public String getInvoiceNumber() {
             return invoiceNumber;
         }
 
+        /**
+         * Gets invoice date.
+         *
+         * @return the invoice date
+         */
         public String getInvoiceDate() {
             return invoiceDate;
         }
 
+        /**
+         * Gets student name.
+         *
+         * @return the student name
+         */
         public String getStudentName() {
             return studentName;
         }
 
+        /**
+         * Gets student address.
+         *
+         * @return the student address
+         */
         public String getStudentAddress() {
             return studentAddress;
         }
 
+        /**
+         * Gets student kvk.
+         *
+         * @return the student kvk
+         */
         public String getStudentKVK() {
             return studentKVK;
         }
 
+        /**
+         * Gets student btw.
+         *
+         * @return the student btw
+         */
         public String getStudentBTW() {
             return studentBTW;
         }
 
+        /**
+         * Gets role.
+         *
+         * @return the role
+         */
         public String getRole() {
             return role;
         }
 
+        /**
+         * Gets description.
+         *
+         * @return the description
+         */
         public String getDescription() {
             return description;
         }
 
+        /**
+         * Gets week.
+         *
+         * @return the week
+         */
         public int getWeek() {
             return week;
         }
 
+        /**
+         * Gets minutes worked.
+         *
+         * @return the minutes worked
+         */
         public int getMinutesWorked() {
             return minutesWorked;
         }
 
+        /**
+         * Gets hourly wage in cents.
+         *
+         * @return the hourly wage in cents
+         */
         public int getHourlyWageInCents() {
             return hourlyWageInCents;
         }
 
+        /**
+         * Gets year.
+         *
+         * @return the year
+         */
         public int getYear() {
             return year;
         }

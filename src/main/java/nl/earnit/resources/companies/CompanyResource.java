@@ -20,19 +20,40 @@ import java.lang.annotation.Repeatable;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * The type Company resource.
+ */
 public class CompanyResource {
+    /**
+     * The Uri info.
+     */
     @Context
     UriInfo uriInfo;
+    /**
+     * The Request.
+     */
     @Context
     Request request;
     private final String companyId;
 
+    /**
+     * Instantiates a new Company resource.
+     *
+     * @param uriInfo   the uri info
+     * @param request   the request
+     * @param companyId the company id
+     */
     public CompanyResource(UriInfo uriInfo, Request request, String companyId) {
         this.uriInfo = uriInfo;
         this.request = request;
         this.companyId = companyId;
     }
 
+    /**
+     * Gets company.
+     *
+     * @return the company
+     */
     @GET
     public Response getCompany() {
         try {
@@ -45,6 +66,13 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Update company response.
+     *
+     * @param httpHeaders the http headers
+     * @param company     the company
+     * @return the response
+     */
     @PUT
     public Response updateCompany(@Context HttpHeaders httpHeaders, Company company) {
         // Validate create company
@@ -75,6 +103,12 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Disable company response.
+     *
+     * @param httpHeaders the http headers
+     * @return the response
+     */
     @DELETE
     public Response disableCompany(@Context HttpHeaders httpHeaders) {
         CompanyDAO companyDAO;
@@ -88,24 +122,49 @@ public class CompanyResource {
         return Response.ok().build();
     }
 
+    /**
+     * Gets administrators.
+     *
+     * @return the administrators
+     */
     @GET
     @Path("/administrators")
     public Response getAdministrators() {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
+    /**
+     * Add administrator response.
+     *
+     * @return the response
+     */
     @POST
     @Path("/administrators")
     public Response addAdministrator() {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
+    /**
+     * Delete administrator response.
+     *
+     * @param userId the user id
+     * @return the response
+     */
     @DELETE
     @Path("/administrators/{userId}")
     public Response deleteAdministrator(@PathParam("userId") String userId) {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
+    /**
+     * Gets contracts.
+     *
+     * @param company           the company
+     * @param userContracts     the user contracts
+     * @param userContractsUser the user contracts user
+     * @param order             the order
+     * @return the contracts
+     */
     @GET
     @Path("/contracts")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -124,6 +183,11 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets students.
+     *
+     * @return the students
+     */
     @GET
     @Path("/students")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -138,6 +202,15 @@ public class CompanyResource {
         return Response.ok(users).build();
     }
 
+    /**
+     * Gets student.
+     *
+     * @param studentId             the student id
+     * @param userContracts         the user contracts
+     * @param userContractsContract the user contracts contract
+     * @param order                 the order
+     * @return the student
+     */
     @GET
     @Path("/students/{studentId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -157,6 +230,12 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets contracts.
+     *
+     * @param contract the contract
+     * @return the contracts
+     */
     @POST
     @Path("/contracts")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -172,12 +251,32 @@ public class CompanyResource {
         return Response.ok().build();
     }
 
+    /**
+     * Gets company.
+     *
+     * @param contractId the contract id
+     * @return the company
+     */
     @Path("/contracts/{contractId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public CompanyContractResource getCompany(@PathParam("contractId") String contractId) {
         return new CompanyContractResource(uriInfo, request, companyId, contractId);
     }
 
+    /**
+     * Gets invoices.
+     *
+     * @param year         the year
+     * @param week         the week
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the invoices
+     */
     @GET
     @Path("/invoices/{year}/{week}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -200,6 +299,12 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets invoices per student.
+     *
+     * @param studentId the student id
+     * @return the invoices per student
+     */
     @GET
     @Path("/invoices/download/{studentId}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -223,6 +328,13 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets invoices.
+     *
+     * @param year the year
+     * @param week the week
+     * @return the invoices
+     */
     @GET
     @Path("/invoices/download/{year}/{week}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -247,6 +359,12 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets invoices.
+     *
+     * @param workedWeekId the worked week id
+     * @return the invoices
+     */
     @GET
     @Path("/invoices/download/week/{workedWeekId}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -274,6 +392,19 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets invoices.
+     *
+     * @param studentId    the student id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the invoices
+     */
     @GET
     @Path("/invoices/{studentId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -300,6 +431,18 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets to approve.
+     *
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the to approve
+     */
     @GET
     @Path("/approves")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -323,6 +466,19 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Gets approve details.
+     *
+     * @param workedWeekId the worked week id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the approve details
+     */
     @GET
     @Path("/approves/{workedWeekId}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -352,6 +508,20 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Undo approval worked week response.
+     *
+     * @param workedWeekId              the worked week id
+     * @param company                   the company
+     * @param contract                  the contract
+     * @param userContract              the user contract
+     * @param user                      the user
+     * @param hours                     the hours
+     * @param totalHours                the total hours
+     * @param order                     the order
+     * @param workedWeekUndoApprovalDTO the worked week undo approval dto
+     * @return the response
+     */
     @PUT
     @Path("/approves/{workedWeekId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -391,6 +561,19 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Accept worked week response.
+     *
+     * @param workedWeekId the worked week id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the response
+     */
     @POST
     @Path("/approves/{workedWeekId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -420,6 +603,19 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Reject worked week response.
+     *
+     * @param workedWeekId the worked week id
+     * @param company      the company
+     * @param contract     the contract
+     * @param userContract the user contract
+     * @param user         the user
+     * @param hours        the hours
+     * @param totalHours   the total hours
+     * @param order        the order
+     * @return the response
+     */
     @DELETE
     @Path("/approves/{workedWeekId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -449,6 +645,13 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Sets worked week note.
+     *
+     * @param workedWeekId the worked week id
+     * @param note         the note
+     * @return the worked week note
+     */
     @POST
     @Path("/approves/{workedWeekId}/note")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -476,6 +679,13 @@ public class CompanyResource {
         }
     }
 
+    /**
+     * Suggest worked response.
+     *
+     * @param workedId   the worked id
+     * @param suggestion the suggestion
+     * @return the response
+     */
     @POST
     @Path("/approves/suggest/{workedId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

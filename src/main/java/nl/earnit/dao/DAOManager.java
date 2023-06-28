@@ -6,6 +6,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * The type Dao manager.
+ */
 public class DAOManager {
 
     /**
@@ -45,6 +48,9 @@ public class DAOManager {
         this.con.close();
     }
 
+    /**
+     * The enum Dao.
+     */
     public enum DAO {
         COMPANY, USER_CONTRACT, USER, COMPANY_USER, WORKED, WORKED_WEEK, CONTRACT
     }
@@ -103,6 +109,9 @@ public class DAOManager {
      */
     private static class DAOManagerSingleton {
 
+        /**
+         * The constant INSTANCE.
+         */
         public static final ThreadLocal<DAOManager> INSTANCE;
 
         static {

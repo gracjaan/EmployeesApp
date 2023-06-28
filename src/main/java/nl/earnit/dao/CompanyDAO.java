@@ -8,6 +8,7 @@ import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.db.Company;
 import nl.earnit.models.db.Notification;
 import nl.earnit.models.db.User;
+import nl.earnit.models.db.Worked;
 import nl.earnit.models.resource.users.UserResponse;
 import org.postgresql.util.PGobject;
 
@@ -26,6 +27,11 @@ import java.util.List;
 public class CompanyDAO extends GenericDAO<User> {
     private final static String TABLE_NAME = "company";
 
+    /**
+     * Instantiates a new Company dao.
+     *
+     * @param con the con
+     */
     public CompanyDAO(Connection con) {
         super(con, TABLE_NAME);
     }
@@ -238,7 +244,6 @@ public class CompanyDAO extends GenericDAO<User> {
         }
         return users;
     }
-//TODO: finish this JAVADOC
     /**
      * Gets a particular user that works for a particular company
      * @param companyId The company id
