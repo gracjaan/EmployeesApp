@@ -2,7 +2,6 @@ package nl.earnit.test;
 
 import nl.earnit.dao.CompanyDAO;
 import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.GenericDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.dto.workedweek.NotificationDTO;
 import org.junit.jupiter.api.BeforeEach;

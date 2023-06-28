@@ -54,7 +54,7 @@ function createEntries (notifications) {
 
     notifications.forEach(notification => {
         const outer = document.createElement("div");
-        outer.classList.add("rounded-2xl", "bg-primary", "p-4", "relative");
+        outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2");
         // outer.addEventListener('click', () => {
         //     const n = document.getElementById()
         // })
@@ -150,6 +150,8 @@ function updateChart(studentsPerCompany) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     labels: {
