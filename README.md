@@ -211,6 +211,12 @@ The dependencies that we use are:**
 ---
 
 ## Testing <a name="testing"></a>
+In order to make an admin account type the following SQL command:  
+
+insert into "user"(id, email, first_name, last_name, type, password, active)  
+values(gen_random_uuid(), 'staff@example.com', 'Staff', 'Member', 'ADMINISTRATOR', '$2a$12$gurI9FM61ELngKHe2/OnxuZOnWsLnXCLIUO3Fd4hkUhCA36UXeKWe', true)  
+
+When logging out of one account type, and logging in with a different one, make sure to refresh cache in order to properly load the page
 
 ---
 
@@ -219,7 +225,7 @@ The dependencies that we use are:**
 In the current system, when a user has forgotten their password, they are not able to retrieve their account without the help of staff.
 A new version should contain the functionality for the user to be able to request a new password via email so that they can log in again.
 
-### start and end date to a user contract
+### Start and end date to a user contract
 User contracts are now terminated by staff. In the future this should be handled by the company.
 The company can then create link between a user and a contract, with a start and end date associated to it.
 
