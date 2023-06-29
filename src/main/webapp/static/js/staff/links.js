@@ -113,16 +113,16 @@ function editUserInfo(user){
     userDiv.innerText = "";
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "items-center");
+    encapsulatingDiv.classList.add("flex", "flex-col", "md:flex-row", "items-center");
     encapsulatingDiv.setAttribute("id", "user-name-display");
 
     const userIMage = document.createElement("img");
     userIMage.alt = "user logo"
-    userIMage.classList.add("h-14", "mr-8");
+    userIMage.classList.add("h-14", "mx-8");
     userIMage.src = "/static/icons/user.svg"
 
     const userName = document.createElement("p");
-    userName.classList.add("text-text", "font-bold", "text-2xl");
+    userName.classList.add("break-all", "text-text", "font-bold", "text-2xl");
     userName.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
 
     encapsulatingDiv.append(userIMage);
@@ -135,16 +135,16 @@ async function editCompanyInfo(company) {
     companyDiv.innerText = "";
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "items-center");
+    encapsulatingDiv.classList.add("flex", "flex-col", "md:flex-row", "items-center");
     encapsulatingDiv.setAttribute("id", "company-name-display");
 
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
-    companyImage.classList.add("h-14", "mr-8");
+    companyImage.classList.add("h-14", "mx-8");
     companyImage.src = "/static/icons/building.svg"
 
     const companyName = document.createElement("p");
-    companyName.classList.add("text-text", "font-bold", "text-2xl");
+    companyName.classList.add("break-all", "text-text", "font-bold", "text-2xl");
     companyName.innerText = company.name;
     encapsulatingDiv.append(companyImage);
     encapsulatingDiv.append(companyName);

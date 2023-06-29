@@ -137,22 +137,22 @@ function createEntry(entry, contract, week, year) {
     const calculatedDate = addDays(getDateOfISOWeek(week, year), entry.day);
 
     const date = document.createElement("div");
-    date.classList.add("text-text", "font-bold", "uppercase");
+    date.classList.add("px-1", "text-text", "font-bold", "uppercase");
     date.innerText = `${formatNumber(calculatedDate.getDate())}.${formatNumber(calculatedDate.getMonth() + 1)}`;
     entryInfo.appendChild(date);
 
     const hours = document.createElement("div");
-    hours.classList.add("text-text");
+    hours.classList.add("px-1", "text-text");
     hours.innerText = `${entry.minutes / 60}H`;
     entryInfo.appendChild(hours);
 
     const role = document.createElement("div");
-    role.classList.add("text-text");
+    role.classList.add("px-1", "text-text");
     role.innerText = contract.role;
     entryInfo.appendChild(role);
 
     const description = document.createElement("div");
-    description.classList.add("text-text");
+    description.classList.add("px-1", "text-text");
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
@@ -321,7 +321,7 @@ async function getData() {
     return data;
 }
 
-function generateAllInvoices () {
+function downloadAllInvoices() {
     fetch(`/api/users/${getUserId()}/invoices/download/${getSelectedYear()}/${getSelectedWeek()}`, {
         headers: {
             'authorization': `token ${getJWTCookie()}`,

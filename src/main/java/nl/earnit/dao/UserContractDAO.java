@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -71,7 +70,7 @@ public class UserContractDAO extends GenericDAO<User> {
      * @throws SQLException
      */
     public List<UserContractDTO> getUserContractsByUserId(String userId) throws SQLException {
-        String query = "SELECT u.*, c.* FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id WHERE u.user_id = ? and u.active = true";
+        String query = "SELECT u.*, c.id as contract_id, c.role as contract_role, c.description as contract_description, cy.name as company_name, cy.id as company_id, cy.address as company_address, cy.kvk as company_kvk FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id JOIN company cy on cy.id = c.company_id WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
 
@@ -81,11 +80,13 @@ public class UserContractDAO extends GenericDAO<User> {
         // Return count
         List<UserContractDTO> userContracts = new ArrayList<>();
         while (res.next()) {
-            ContractDTO c = new ContractDTO(res.getString("id"), res.getString("role"), res.getString("description"));
-            
-            UserContractDTO uc = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
-            uc.setContract(c);
-            userContracts.add(uc);
+            Company company = new Company(res.getString("company_id"), res.getString("company_name"), res.getString("company_kvk"), res.getString("company_address"));
+            ContractDTO contract = new ContractDTO(res.getString("contract_id"), res.getString("contract_role"), res.getString("contract_description"));
+            contract.setCompany(company);
+
+            UserContractDTO userContract = new UserContractDTO(res.getString("id"), res.getString("contract_id"), res.getString("user_id"), res.getInt("hourly_wage"), res.getBoolean("active"));
+            userContract.setContract(contract);
+            userContracts.add(userContract);
         }
         return userContracts;
     }
