@@ -97,7 +97,7 @@ async function updateContracts() {
         option.classList.add('py-2', 'px-4', 'hover:bg-gray-100', 'rounded-lg', 'cursor-pointer');
         option.textContent = c.contract.role;
         option.setAttribute('data-role', c.contract.role);
-        option.setAttribute('data-id', c.contract.id);
+        option.setAttribute('data-id', c.id);
         option.addEventListener('click', () => selectPosition(option));
         positionContent.appendChild(option);
     });
@@ -339,7 +339,7 @@ async function updatePage(contracts) {
 function createEntry(entry, contract, confirmed, approved, status, week, year, forSuggestion = false) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "px-4", status === "NOT_CONFIRMED" || status === "CONFIRMED" ? "py-3" : "py-2", "relative", "flex", "justify-between");
-    entryContainer.setAttribute("contract-id", contract.id)
+    entryContainer.setAttribute("contract-id", entry.userContractId)
     entryContainer.setAttribute("data-id", entry.id)
     entryContainer.setAttribute("data-week", week)
     entryContainer.setAttribute("data-year", year)
@@ -663,7 +663,7 @@ function validateForm(formData, position) {
 }
 
 function validateEdittedForm(formData) {
-    if (formData.minutes === '' || formData.work === '') {
+    if (formData.minutes === '' || formData.work === '' || parseFloat(formData.minutes) < 0) {
         const error = document.getElementById("edit-error");
         error.classList.remove("hidden");
         error.innerText = "Please fill in all inputs"
@@ -718,6 +718,7 @@ async function toggleEdit(button) {
         } else {
             const error = document.getElementById("edit-error");
             error.classList.add("hidden");
+            textElements[1].innerText = parseFloat(textElements[1].textContent) + "H";
         }
     } else {
         const error = document.getElementById("edit-error");

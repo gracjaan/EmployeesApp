@@ -34,7 +34,7 @@ public class UserResponse {
      */
     public UserResponse(User user) {
         this.id = user.getId();
-        this.email = user.getEmail();
+        this.email = user.getEmail().toLowerCase();
         this.firstName = user.getFirstName();
         this.lastNamePrefix = user.getLastNamePrefix();
         this.lastName = user.getLastName();

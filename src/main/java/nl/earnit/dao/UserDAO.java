@@ -192,7 +192,7 @@ public class UserDAO extends GenericDAO<User> {
         String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ?, kvk = ?, btw = ?, address = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, user.getEmail());
+        statement.setString(1, user.getEmail().toLowerCase());
         statement.setString(2, user.getFirstName());
         statement.setString(3, user.getLastName());
         statement.setString(4, user.getLastNamePrefix() == null || user.getLastNamePrefix().length() < 1 ? null : user.getLastNamePrefix());

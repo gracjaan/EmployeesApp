@@ -38,7 +38,7 @@ public class LoginResource {
 
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            user = userDAO.getUserByEmail(login.getEmail());
+            user = userDAO.getUserByEmail(login.getEmail().toLowerCase());
 
             // User does not exist
             if (user == null) {
