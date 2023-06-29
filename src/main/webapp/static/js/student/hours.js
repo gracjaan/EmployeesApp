@@ -57,6 +57,9 @@ window.addEventListener("helpersLoaded", async () => {
             window.history.pushState({path:newurl},'',newurl);
         }
 
+        document.getElementById("edit-error").classList.toggle("hidden", true);
+        document.getElementById("confirm-error").classList.toggle("hidden", true);
+
         const range = document.getElementById("dropdown-range")
         range.innerText = getWeekDateRange(e.detail.week, e.detail.year);
     })
@@ -146,7 +149,7 @@ async function confirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
+        fetch("/api/users/" + getUserId() + "/contracts/" + c.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
             {
                 method: "PUT",
                 body: document.getElementById("note").value.toString(),
@@ -160,7 +163,7 @@ async function confirmWorkedWeek() {
                     throw new Error();
                 }
 
-                fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+                fetch("/api/users/" + getUserId() + "/contracts/" + c.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
                     {
                         method: "POST",
                         headers: {
@@ -202,7 +205,7 @@ async function unconfirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+        fetch("/api/users/" + getUserId() + "/contracts/" + c.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
             {
                 method: "DELETE",
                 headers: {
