@@ -74,6 +74,10 @@ The hours are submitted by pressing on the submit button. The hours will then be
 When the week is over, the student can send the hours for confirmation by clicking on the checkmark next to the week (after that a red cross will appear). The student is allowed to roll back the confirmation by clicking on the red cross.
 If the current week is not over yet. When the week is over, the student is not allowed to change their hours.
 
+>The hours of a student might be flagged by the company. The student will get a notification of this, and it will show next to the hours of the flagged week
+The Student then also is allowed to accept the newly suggested hours by the company or can decide not to agree.
+The student accepts the suggested hours of the company by pressing on the checkmark, and rejects them by clicking on the lamp.
+
 ###### Overview <a name="overview"></a>
 The overview shows the statistics of the students executed work. This is displayed in a graph which has the amount of hours on the y-axis
 and the week on the x-axis. A student may have different contracts with different companies. This is displayed by the different colors in the graph
