@@ -663,7 +663,7 @@ function validateForm(formData, position) {
 }
 
 function validateEdittedForm(formData) {
-    if (formData.minutes === '' || formData.work === '' || parseFloat(formData.minutes) < 0) {
+    if (formData.minutes === '' || formData.work === '' || Number.isNaN(parseFloat(formData.minutes)) || parseFloat(formData.minutes) < 0) {
         const error = document.getElementById("edit-error");
         error.classList.remove("hidden");
         error.innerText = "Please fill in all inputs"
@@ -718,7 +718,8 @@ async function toggleEdit(button) {
         } else {
             const error = document.getElementById("edit-error");
             error.classList.add("hidden");
-            textElements[1].innerText = parseFloat(textElements[1].textContent) + "H";
+            const hours = parseFloat(textElements[1].textContent);
+            textElements[1].innerText = (Number.isNaN(hours) ? 0 : hours) + "H";
         }
     } else {
         const error = document.getElementById("edit-error");

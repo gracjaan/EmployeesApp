@@ -282,6 +282,16 @@ async function toggleEdit(button, entry) {
     const isEditing = toggleEditIcon(entryElement, editButton, hourElement);
 
     if (!isEditing) {
+        if (Number.isNaN(parseFloat(hourElement.textContent)) || parseFloat(hourElement.textContent) < 0) {
+            const error = document.getElementById("edit-error");
+            error.classList.remove("hidden");
+            error.innerText = "Please fill in valid hours";
+
+            toggleEditIcon(entryElement, editButton, hourElement);
+
+            return
+        }
+
         const suggestedMinutes = parseFloat(hourElement.textContent) * 60;
 
         // Submission logic here
