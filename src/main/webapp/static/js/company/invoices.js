@@ -1,5 +1,5 @@
 window.addEventListener("helpersLoaded", async () => {
-    /* @TODO download invoices */
+
     const week = document.getElementById("week");
 
     await updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))

@@ -1,3 +1,4 @@
+// When page is loaded it calls a method to obtain notifications and appends them on the page
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie())
@@ -42,6 +43,7 @@ function getRequestsForCompany(uid, token) {
         .catch(() => []);
 }
 
+//Formats one notification element
 function createEntries (notifications) {
     const container = document.getElementById("entries");
 
@@ -105,6 +107,7 @@ function createEntries (notifications) {
     })
 }
 
+//When a notification is clicked, sends a post request to change the seen attribute to true
 function toggleSeen (id) {
     return fetch("/api/companies/" + getUserCompany() + "/notifications/" + id, {
         method: 'POST',
@@ -121,6 +124,7 @@ function toggleSeen (id) {
         .catch(() => null);
 }
 
+// Get request to obtain notifications
 function obtainNotifications() {
     return fetch("/api/companies/" + getUserCompany() + "/notifications", {
         headers: {
@@ -131,6 +135,7 @@ function obtainNotifications() {
         .catch(() => null);
 }
 
+// Get request to obtain hours of employees for the graph
 function getHours(companyId, token) {
     return fetch(`/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
         headers: {
@@ -140,6 +145,7 @@ function getHours(companyId, token) {
     }).then(res => res.json()).catch(() => null)
 }
 
+// Inputs all the relevant data into the graph
 function updateChart(studentsPerCompany) {
     const labels = [];
     const ids = [];

@@ -19,7 +19,6 @@ window.addEventListener("helpersLoaded", async () => {
     await updateHours();
 });
 
-// @TODO: change to either accept company or student
 
 async function updateHours() {
     const request = await getRequestForStaff(getWorkedWeekId(), getJWTCookie());
@@ -31,7 +30,7 @@ async function updateHours() {
     // Update page to data
     updatePage(request);
 }
-
+//Orders the list based on the staff preference
 function getOrder() {
     const date = document.getElementById("date");
     const dateSelected = date.getAttribute("data-selected");
@@ -49,6 +48,7 @@ function getOrder() {
     return order;
 }
 
+//Handles request in favor of the student
 function approve(workedWeekId, token) {
     fetch(`/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'POST',
@@ -64,6 +64,7 @@ function approve(workedWeekId, token) {
         .catch(() => null);
 }
 
+//Handles request in favor of the company
 function reject(workedWeekId, token) {
     fetch(`/api/staff/rejects/${workedWeekId}?${getQueryParams()}`, {
         method: 'DELETE',
@@ -140,6 +141,7 @@ function updatePage(request) {
     }
 }
 
+//Creates request element
 function createEntry(year, week, contract, entry, approved) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");

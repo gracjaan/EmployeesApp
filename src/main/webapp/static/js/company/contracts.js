@@ -1,3 +1,4 @@
+// When page is loaded it calls a method to obtain user contracts and appends them on the page
 window.addEventListener("helpersLoaded", async () => {
     fetch(`/api/companies/${getUserCompany()}/contracts?userContracts=true&userContractsUser=true`, {
             method: "GET",
@@ -27,6 +28,7 @@ window.addEventListener("helpersLoaded", async () => {
         })
 });
 
+//Formats one contract element
 function createContractItem(contract) {
     const contractContainer = document.createElement("div");
     contractContainer.classList.add("w-full", "grid", "grid-cols-[1fr]", "sm:grid-cols-[3fr_1fr]", "sm:flex-row", "gap-4", "bg-secondary", "rounded-2xl", "p-4");

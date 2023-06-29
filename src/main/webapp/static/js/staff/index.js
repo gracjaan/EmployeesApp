@@ -41,6 +41,7 @@ async function getRejectedWeeks() {
     ).then((res) => res.json()).catch(() => null);
 }
 
+// Formats notifications
 function createEntries (notifications) {
     const container = document.getElementById("entries");
 
@@ -93,7 +94,7 @@ function createEntries (notifications) {
         container.appendChild(outer)
     })
 }
-
+//When a notification is clicked, sends a post request to change the seen attribute to true
 function toggleSeen (id) {
     return fetch("/api/users/" + getUserId() + "/notifications/" + id, {
         method: 'POST',
@@ -109,7 +110,7 @@ function toggleSeen (id) {
         })
         .catch(() => null);
 }
-
+// Get request to obtain notifications
 function obtainNotifications() {
     return fetch("/api/users/" + getUserId() + "/notifications", {
         headers: {
@@ -119,7 +120,7 @@ function obtainNotifications() {
         .then(response => response.json())
         .catch(() => null);
 }
-
+// Returns number of employees for each company for the graph
 async function getStudentsPerCompany() {
     return await fetch("/api/staff/companies",
         {
@@ -134,7 +135,7 @@ async function getStudentsPerCompany() {
 
 }
 
-
+// Inputs all the relevant data into the graph
 function updateChart(companies) {
     const labels = [];
     const ids = [];
