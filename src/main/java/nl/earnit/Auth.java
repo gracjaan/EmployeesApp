@@ -56,7 +56,7 @@ public class Auth {
         Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
         return JWT.create()
             .withIssuer("earnit")
-            .withSubject(user.getEmail())
+            .withSubject(user.getEmail().toLowerCase())
             .withIssuedAt(Instant.ofEpochMilli(System.currentTimeMillis()))
             .withExpiresAt(Instant.ofEpochMilli(expiresAt))
             .withClaim("user_id", user.getId())

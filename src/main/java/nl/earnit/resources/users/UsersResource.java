@@ -94,7 +94,7 @@ public class UsersResource {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
 
             // Make sure no other user with this email
-            User currentUser = userDAO.getUserByEmail(createUser.getEmail());
+            User currentUser = userDAO.getUserByEmail(createUser.getEmail().toLowerCase());
             if (currentUser != null) {
                 return Response.status(409).build();
             }
@@ -103,7 +103,7 @@ public class UsersResource {
             String passwordHash = Auth.hashPassword(createUser.getPassword());
 
             // Create user
-            user = userDAO.createUser(createUser.getEmail(), createUser.getFirstName(),
+            user = userDAO.createUser(createUser.getEmail().toLowerCase(), createUser.getFirstName(),
                 createUser.getLastNamePrefix(), createUser.getLastName(), passwordHash,
                 "STUDENT", createUser.getKvk(), createUser.getBtw(), createUser.getAddress()); // Make user student by default
         } catch (Exception e) {
