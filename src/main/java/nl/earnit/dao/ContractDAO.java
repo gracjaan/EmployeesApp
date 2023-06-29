@@ -152,7 +152,7 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId  the contract id
      * @param description the description
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void updateContractDescription(String contractId, String description) throws SQLException {
         String query = "UPDATE " + tableName + " SET description = ? WHERE id = ?";
@@ -169,7 +169,7 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @param role       the role
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void updateContractRole(String contractId, String role) throws SQLException {
         String query = "UPDATE " + tableName + " SET role = ? WHERE id = ?";
@@ -202,7 +202,7 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @return the contract
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public Contract getContract(String contractId) throws SQLException {
         String query = "GET description, role FROM " + tableName + " WHERE id = ?";
@@ -237,7 +237,7 @@ public class ContractDAO extends GenericDAO<User> {
      * Renable contract.
      *
      * @param contractId the contract id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void renableContract(String contractId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";

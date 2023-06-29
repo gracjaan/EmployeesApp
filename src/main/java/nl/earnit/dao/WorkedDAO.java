@@ -72,7 +72,7 @@ public class WorkedDAO extends GenericDAO<User> {
      * @param year           the year
      * @param week           the week
      * @return the worked week
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public List<Worked> getWorkedWeek(String userContractId, String year, String week) throws SQLException {
         String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.year=? AND ww.week=?";
@@ -124,7 +124,7 @@ public class WorkedDAO extends GenericDAO<User> {
      * @return whether the work was added to the week ? true : false
      * @throws SQLException
      */
-    public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws SQLException {
+    public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws Exception {
             WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
             List<WorkedWeekDTO> workedWeeks = wwDao.getWorkedWeeksForUser(null, userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, false, "hours.day:asc");
 
@@ -162,7 +162,7 @@ public class WorkedDAO extends GenericDAO<User> {
      * @return whether the worked object was updated in the table ? true : false
      * @throws SQLException
      */
-    public boolean updateWorkedWeekTask(Worked worked) throws SQLException {
+    public boolean updateWorkedWeekTask(Worked worked) throws Exception {
         if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(worked.getWorkedWeekId())) {
             return false;
         }
@@ -183,7 +183,7 @@ public class WorkedDAO extends GenericDAO<User> {
      *
      * @param workedId the worked id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public boolean deleteWorkedWeekTask(String workedId) throws SQLException {
         if (new WorkedWeekDAO(this.con).isWorkedWeekConfirmed(workedId)) {

@@ -100,7 +100,7 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param order the order
      * @return the all users
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public List<UserResponse> getAllUsers(String order) throws SQLException {
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
@@ -152,7 +152,7 @@ public class UserDAO extends GenericDAO<User> {
      * @param btw            the btw
      * @param address        the address
      * @return the user
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type, String kvk, String btw, String address)
         throws SQLException {
@@ -185,7 +185,7 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param user the user
      * @return the user
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public User updateUser(UserResponse user) throws SQLException {
         // Create query
@@ -216,7 +216,7 @@ public class UserDAO extends GenericDAO<User> {
      * Disable user by id.
      *
      * @param id the id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void disableUserById(String id) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET active = false WHERE id = ? returning id";
@@ -229,7 +229,7 @@ public class UserDAO extends GenericDAO<User> {
      * Renable user by id.
      *
      * @param id the id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void renableUserById(String id) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET active = true WHERE id = ? returning id";
@@ -284,7 +284,7 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param userId the user id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public boolean isActive(String userId) throws SQLException {
         String query = "SELECT active FROM \"" + tableName + "\" u WHERE u.id = ?";
