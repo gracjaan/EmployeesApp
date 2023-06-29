@@ -592,6 +592,12 @@ function sendFormDataToServer(uid, ucid, formData) {
             const contracts = await updateContracts();
             await updatePage(contracts);
 
+            const descriptionInput = document.getElementById('description-input');
+            const hoursInput = document.getElementById('hours-input');
+
+            descriptionInput.value = "";
+            hoursInput.value = "";
+
             if (!response.ok) throw new Error();
         })
         .catch(() => {
