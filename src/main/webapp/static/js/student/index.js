@@ -167,9 +167,7 @@ async function getData() {
     let week5 = 0;
 
     arrayOfInvoices.forEach(invoice => {
-        console.log(invoice)
         invoice.forEach(i => {
-            console.log(i)
             if (i.week === getCurrentWeek() - 5) {
                 week0 += i.totalMinutes;
             } else if (i.week === getCurrentWeek() - 4) {
@@ -185,7 +183,6 @@ async function getData() {
             }
         })
     })
-    console.log([week0 / 60, week1 / 60, week2 / 60, week3 / 60, week4 / 60, week5 / 60])
     return [week0 / 60, week1 / 60, week2 / 60, week3 / 60, week4 / 60, week5 / 60]
 }
 
