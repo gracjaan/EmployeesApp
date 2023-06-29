@@ -163,7 +163,7 @@ function updateChart(companies) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Students per company',
+                label: 'Contracts per company',
                 data: dataset,
                 backgroundColor: ['rgb(237,76,76)'],
                 color: "white",

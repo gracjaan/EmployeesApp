@@ -79,11 +79,11 @@ function createEntry(workedWeek) {
     entryContainer.classList.add("rounded-xl", "bg-primary", "cursor-pointer", workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED" ? "py-3" : "py-2", "px-4", "relative", "flex", "justify-between");
 
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr_1fr]", "grid", "items-center");
+    entryInfo.classList.add("w-full", "sm:grid-cols-[3fr_2fr_2fr_1fr_1fr]", "grid-cols-[1fr_1fr_1fr_1fr]", "grid", "items-center");
     entryContainer.appendChild(entryInfo);
 
     const name = document.createElement("div");
-    name.classList.add("text-text", "font-bold", "uppercase");
+    name.classList.add("sm:col-span-1", "col-span-4", "break-words", "text-text", "font-bold", "uppercase");
     name.innerText = getName(workedWeek.user.firstName, workedWeek.user.lastName, workedWeek.user.lastNamePrefix);
     entryInfo.appendChild(name);
 

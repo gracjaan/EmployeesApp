@@ -132,7 +132,7 @@ function undo(companyId, workedWeekId, token) {
 
 function updatePage(workedWeek) {
     const name = document.getElementById("name");
-    name.innerHTML = getName(escapeHtml(workedWeek.user.firstName), escapeHtml(workedWeek.user.lastName), escapeHtml(workedWeek.user.lastNamePrefix), "<br />");
+    name.innerHTML = getName(escapeHtml(workedWeek.user.firstName), escapeHtml(workedWeek.user.lastName), escapeHtml(workedWeek.user.lastNamePrefix), " ");
     name.setAttribute("data-user-id", workedWeek.user.id);
 
     const noteText = document.getElementById("noteText");

@@ -49,7 +49,6 @@ async function updatePage(contracts) {
     lastIndex = arrayOfDivs.length - 1;
 }
 
-//
 function handleRightClick() {
     if (currentPage < lastIndex) {
         currentPage += 1;
@@ -75,8 +74,9 @@ function handleLeftClick() {
         arrayOfDivs[currentPage].classList.toggle("hidden");
     }
 }
+
 //creates the contract entry with the invoice
-function createEntry(contract, invoice) {
+function createEntry(userContract, invoices) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "gap-2", "justify-between", "w-full", "h-full", "hidden");
     entryContainer.style.overflowY = "auto";
@@ -88,16 +88,16 @@ function createEntry(contract, invoice) {
 
     const entryInfo0 = document.createElement("div");
     entryInfo0.classList.add("text-text", "font-bold", "uppercase");
-    entryInfo0.innerText = invoice[0].company.name;
+    entryInfo0.innerText = userContract.contract.company.name;
     leftrow.appendChild(entryInfo0);
 
     const entryInfo1 = document.createElement("div");
     entryInfo1.classList.add("text-text", "font-bold", "uppercase");
-    entryInfo1.innerText = contract.contract.role;
+    entryInfo1.innerText = userContract.contract.role;
     leftrow.appendChild(entryInfo1);
 
     const rightrow = document.createElement("button");
-    rightrow.addEventListener("click", () => generateAllInvoices(contract));
+    rightrow.addEventListener("click", () => generateAllInvoices(userContract));
 
     const img = document.createElement("img");
     img.alt = "download-all"
@@ -111,13 +111,13 @@ function createEntry(contract, invoice) {
 
     const entryInfo2 = document.createElement("div");
     entryInfo2.classList.add("text-text", "mt-4", "mb-4", "text-justify");
-    entryInfo2.innerText = contract.contract.description;
+    entryInfo2.innerText = userContract.contract.description;
     entryContainer.appendChild(entryInfo2);
 
     const entryInfo3 = document.createElement("div");
     entryInfo3.classList.add("overflow-auto");
 
-    for (const i of invoice) {
+    for (const i of invoices) {
         const ei = document.createElement("div");
         ei.classList.add("bg-primary", "rounded-lg", "mt-2", "p-4", "flex", "flex-row", "justify-between");
 
@@ -132,7 +132,7 @@ function createEntry(contract, invoice) {
         ei.appendChild(ep)
 
         const ea = document.createElement("button");
-        ea.addEventListener("click", () => generateInvoice(contract, i));
+        ea.addEventListener("click", () => generateInvoice(userContract, i));
         //onclick and others
 
         const image1 = document.createElement("img");

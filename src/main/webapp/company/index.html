@@ -15,23 +15,21 @@
   <meta http-equiv='expires' content='0'>
   <meta http-equiv='pragma' content='no-cache'>
 </head>
-<body
-        class="bg-black flex justify-center overflow-x-hidden font-montserrat"
->
+<body class="bg-black flex justify-center overflow-x-hidden font-montserrat">
 <div class="lg:max-w-5xl md:max-w-3xl w-full">
   <header class="w-full relative">
     <div
             class="bg-secondary top-0 -left-full -right-full h-3/4 absolute -z-10"
     ></div>
-    <div class="flex justify-between py-16 px-4 sm:px-0">
-      <h1 id="name" class="flex text-text text-2xl font-bold">
+    <div class="flex flex-wrap items-center justify-between py-16 px-4 md:px-0 gap-1">
+      <h1 id="name" class="flex break-words text-text text-2xl font-bold">
 
       </h1>
-      <div class="flex justify-center">
-        <a class="flex h-10 w-10 mx-1 bg-text rounded-lg" href="/settings">
+      <div class="flex justify-center gap-1">
+        <a class="flex h-10 w-10 bg-text rounded-lg" href="/settings">
           <img src="/static/icons/settings.svg" class="flex w-7 mx-auto">
         </a>
-        <a class="flex h-10 w-10 ml-1 bg-text rounded-lg" href="/logout">
+        <a class="flex h-10 w-10 bg-text rounded-lg" href="/logout">
           <img src="/static/icons/logout.svg" class="flex w-7 mx-auto">
         </a>
       </div>
@@ -43,7 +41,7 @@
               href="/requests"
               class="rounded-2xl m-2 min-w-[20rem] sm:min-w-0 bg-primary p-8 pb-16 w-full drop-shadow-md"
       >
-        <div id="newRequests"class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1 hidden"></div>
+        <div id="newRequests" class="bg-accent-fail rounded-full w-4 h-4 absolute -top-1 -left-1 hidden"></div>
         <h2 class="text-text text-2xl font-bold">Requests</h2>
         <p class="text-text text-base">
           Process requests from your employees
@@ -69,7 +67,7 @@
       </a>
     </nav>
   </header>
-  <main class="grid gap-4 md:gap-8 my-8 grid-cols-1 sm:grid-cols-2 px-2 sm:px-0">
+  <main class="grid gap-4 md:gap-8 my-8 grid-cols-1 sm:grid-cols-2 px-2 md:px-0">
     <section class="w-full gap-2 flex flex-col">
       <h2 class="text-text text-2xl font-bold">Dashboard</h2>
       <div class="rounded-2xl bg-secondary aspect-video p-2 h-full">

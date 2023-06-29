@@ -17,26 +17,23 @@
 <back data-home></back>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4">
     <section class="w-full gap-2 flex flex-col">
-        <h2 class="text-text text-2xl font-bold">Overview</h2>
-        <div class="rounded-2xl bg-secondary">
+        <h2 class="text-text ml-2 text-2xl font-bold">Overview</h2>
+        <div class="rounded-2xl mx-2 bg-secondary">
             <canvas id="myChart"></canvas>
         </div>
     </section>
     <main class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
-        <h2 class="text-text text-2xl font-bold mb-2">Sheet</h2>
-        <section class="w-full h-full gap-2 flex flex-col">
-            <div
-                    class="rounded-2xl bg-secondary p-4 flex flex-col gap-2 drop-shadow-md"
-            >
+        <h2 class="text-text text-2xl font-bold mb-2 px-2">Sheet</h2>
+        <section class="w-full h-full gap-2 flex flex-col px-2">
+            <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2 drop-shadow-md">
                 <div class="flex justify-between">
-                    <div class="flex gap-2">
+                    <div class="overflow-x-auto flex gap-2 scrollbar-none">
                         <week-selector id="week"></week-selector>
                         <order-selector id="date" group="1" title="Date"></order-selector>
                         <order-selector id="hours" group="1" title="Hours"></order-selector>
+                        <img src="/static/icons/download.svg" class="w-10 h-10 flex sm:hidden cursor-pointer" onclick="downloadAllInvoices()">
                     </div>
-                    <button onclick="generateAllInvoices()">
-                        <img src="/static/icons/download.svg" class="flex w-7 mx-auto">
-                    </button>
+                    <img src="/static/icons/download.svg" class="w-10 h-10 hidden sm:flex cursor-pointer" onclick="downloadAllInvoices()">
                 </div>
                 <div class="flex flex-col gap-2" id="entries">
                     <!-- entries -->

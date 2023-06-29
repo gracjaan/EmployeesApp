@@ -51,13 +51,13 @@ function createContractItem(contract) {
     contractInformation.append(contractInformationDescription);
 
     const contractUsersContainer = document.createElement("div");
-    contractUsersContainer.classList.add("flex", "flex-col", "gap-2", "overflow-y-auto", "max-h-40", "h-full", "w-full", "scrollbar-custom", "scrollbar-rounded-xl", "scrollbar-track-secondary", "scrollbar-thumb-text");
+    contractUsersContainer.classList.add("flex", "flex-col", "gap-2", "sm:items-end", "overflow-y-auto", "max-h-40", "h-full", "w-full", "scrollbar-custom", "scrollbar-rounded-xl", "scrollbar-track-secondary", "scrollbar-thumb-text");
     contractContainer.append(contractUsersContainer);
 
     //checks how many students belong to this particular contract and adds the names of the students within the contract element
     for (const userContract of contract.userContracts) {
         const userContractElement = document.createElement("div");
-        userContractElement.classList.add("text-text", "whitespace-nowrap", "bg-primary", "w-full", "sm:w-fit", "md:w-full", "gap-2", "py-2", "px-4", "flex", "justify-between", "rounded-xl", "cursor-pointer");
+        userContractElement.classList.add("text-text", "whitespace-nowrap", "bg-primary", "w-fit", "gap-2", "py-2", "px-4", "flex", "justify-between", "rounded-xl", "cursor-pointer");
         contractUsersContainer.append(userContractElement);
         //If you click on the user within the contract, it leads you to the info page of the user
         userContractElement.addEventListener("click", () => location.href = "/user?id=" + userContract.user.id)
