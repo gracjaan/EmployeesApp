@@ -1,3 +1,4 @@
+// When page is loaded it waits for a list of users and companies
 window.addEventListener("helpersLoaded", async () => {
     const companies = await getCompanies();
     const users = await getStudents();
@@ -62,6 +63,7 @@ let hourlyWage = null;
 let contractId = null;
 let companyId = null;
 
+//Formats user element
 function createUser(user) {
     const li = document.createElement("li");
     li.addEventListener("click", ()=>{
@@ -85,6 +87,7 @@ function createUser(user) {
     return li;
 }
 
+//Formats company element
 function createCompany(company) {
     const li = document.createElement("li");
     li.addEventListener("click", ()=>{
@@ -107,7 +110,7 @@ function createCompany(company) {
 
     return li;
 }
-
+//When a user is selected from the list, their name will appear on the page
 function editUserInfo(user){
     const userDiv = document.getElementById("user-name-display");
     userDiv.innerText = "";
@@ -130,6 +133,8 @@ function editUserInfo(user){
 
     userDiv.append(encapsulatingDiv)
 }
+
+//When a company is selected from the list, their name will appear on the page
 async function editCompanyInfo(company) {
     const companyDiv = document.getElementById("company-name-display");
     companyDiv.innerText = "";
@@ -168,6 +173,7 @@ async function editCompanyInfo(company) {
     }
 }
 
+//Formats contract element
 function createContract(contract) {
     const listElement = document.createElement("li");
 
@@ -207,7 +213,7 @@ function createContract(contract) {
     return listElement;
 }
 
-
+//Fetches students
 async function getStudents() {
     return await fetch("/api/users",
         {method: "GET",
@@ -218,6 +224,7 @@ async function getStudents() {
     ).then((res) => res.json()).catch(() => null);
 }
 
+//Fetches students
 async function getCompanies() {
     return await fetch("/api/companies",
         {method: "GET",
@@ -229,10 +236,12 @@ async function getCompanies() {
         .catch(() => null);
 }
 
+//When a value is input into the hourly wage box, it is stored in this variable
 function updateHourlyWage(e) {
     hourlyWage = e.value;
 }
 
+//Fetches contracts on a specific company. It is called when a company is selected
 async function getContracts(cid) {
 
     return await fetch("/api/companies/" + cid + "/contracts",
@@ -245,6 +254,8 @@ async function getContracts(cid) {
         .then(response => response.json())
         .catch(e => null);
 }
+
+//Sends the post request to the server to create the link between user and company
 function sendFormDataServer() {
     if (hourlyWage < 0) {
         alertPopUp("Negative hourly wage is not allowed", false);
@@ -322,6 +333,7 @@ function toggleSearchBar() {
 
 // ------------------------------------------------------------------------------------
 
+//Handles search bar to find user
 function searchUser() {
     let input = document.getElementById('searchUsers');
     let filter = input.value.toUpperCase();
@@ -341,6 +353,7 @@ function searchUser() {
     }
 }
 
+//Handles search bar to find company
 function searchCompany(){
     let input = document.getElementById('searchCompanies');
     let filter = input.value.toUpperCase();
@@ -361,6 +374,7 @@ function searchCompany(){
     }
 }
 
+//Handles search bar to find role
 function searchRole(){
     let input = document.getElementById('searchRoles');
     let filter = input.value.toUpperCase();

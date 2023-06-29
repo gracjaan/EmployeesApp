@@ -1,3 +1,4 @@
+// When page is loaded it waits for a list of users and companies
 window.addEventListener("helpersLoaded", async () => {
     const companies = await getCompanies();
     const users = await getStudents();
@@ -35,7 +36,7 @@ window.addEventListener("helpersLoaded", async () => {
     }
 });
 
-
+//Formats user element
 function createUser(user) {
     const li = document.createElement("li");
     const itemContainer = document.createElement("div");
@@ -116,6 +117,7 @@ function createUser(user) {
     return li;
 }
 
+//Post request to enable user called when staff click on the green tick
 function enableUser(user){
     user.active = true;
     return fetch("/api/users/" + user.id, {
@@ -133,6 +135,7 @@ function enableUser(user){
         .catch(() => null)
 }
 
+//Post request to disable user when staff click on the red cross
 function disableUser(user){
     user.active = false;
     return fetch("/api/users/" + user.id, {
@@ -148,6 +151,8 @@ function disableUser(user){
     })
         .catch(() => null))
 }
+
+//Formats company element
 function createCompany(company) {
     const li = document.createElement("li");
 
@@ -289,6 +294,7 @@ function displayPopUpCompany(company, enabling, enableDiv, disableDiv) {
     })
 }
 
+//Post request to enable company called when staff click on the green tick
 function enableCompany(company){
     company.active = true;
     return fetch("/api/companies/" + company.id, {
@@ -305,6 +311,8 @@ function enableCompany(company){
     }))
         .catch(() => null)
 }
+
+//Post request to disable company called when staff click on the red cross
 function disableCompany(company){
     company.active = false;
     return fetch("/api/companies/" + company.id, {
@@ -321,6 +329,7 @@ function disableCompany(company){
         .catch(() => null)
 }
 
+//Fetches students
 async function getStudents() {
     return await fetch(`/api/users${getQueryParamsUsers()}`,
         {method: "GET",
@@ -331,6 +340,7 @@ async function getStudents() {
     ).then((res) => res.json()).catch(() => null);
 }
 
+//Fetches companies
 async function getCompanies() {
     return await fetch(`/api/companies${getQueryParamsCompany()}`,
         {method: "GET",
@@ -342,7 +352,7 @@ async function getCompanies() {
     .catch(() => null);
 }
 
-
+//Orders the company list based on the staff preference
 function getOrderCompany() {
     const nameCompany = document.getElementById("name-company");
     const companySelected = nameCompany.getAttribute("data-selected");
@@ -353,6 +363,7 @@ function getOrderCompany() {
     }
     return order;
 }
+//Orders the user list based on the staff preference
 function getOrderUsers() {
     const nameUser = document.getElementById("name-user");
     const nameSelected = nameUser.getAttribute("data-selected");
@@ -371,6 +382,7 @@ function getQueryParamsUsers() {
     return `${order.length > 0 ? `order=${order}`: ""}`
 }
 
+//Handles search abr for students
 function searchUser() {
     let input = document.getElementById('searchUsers');
     let filter = input.value.toUpperCase();
@@ -387,7 +399,7 @@ function searchUser() {
         }
     }
 }
-
+//Handles search abr for companies
 function searchCompany(){
     let input = document.getElementById('searchCompany');
     let filter = input.value.toUpperCase();

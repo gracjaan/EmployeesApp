@@ -74,6 +74,10 @@ The hours are submitted by pressing on the submit button. The hours will then be
 When the week is over, the student can send the hours for confirmation by clicking on the checkmark next to the week (after that a red cross will appear). The student is allowed to roll back the confirmation by clicking on the red cross.
 If the current week is not over yet. When the week is over, the student is not allowed to change their hours.
 
+>The hours of a student might be flagged by the company. The student will get a notification of this, and it will show next to the hours of the flagged week
+The Student then also is allowed to accept the newly suggested hours by the company or can decide not to agree.
+The student accepts the suggested hours of the company by pressing on the checkmark, and rejects them by clicking on the lamp.
+
 ###### Overview <a name="overview"></a>
 The overview shows the statistics of the students executed work. This is displayed in a graph which has the amount of hours on the y-axis
 and the week on the x-axis. A student may have different contracts with different companies. This is displayed by the different colors in the graph
@@ -211,6 +215,19 @@ The dependencies that we use are:**
 ---
 
 ## Further improvements <a name=""></a>  
+### Forgot password (restore question)
+In the current system, when a user has forgotten their password, they are not able to retrieve their account without the help of staff.
+A new version should contain the functionality for the user to be able to request a new password via email so that they can log in again.
+
+### start and end date to a user contract
+User contracts are now terminated by staff. In the future this should be handled by the company.
+The company can then create link between a user and a contract, with a start and end date associated to it.
+
+### Emails
+In the current system, emails can't be sent to users. This improvement also needs to be done for 'forgot password' to work.
+This feature needs to be implemented by linking the application to a mail server.
+Emails would allow us to not only display the notifications in the application,
+but also email them to the user.
 
 ---
 

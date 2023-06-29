@@ -40,6 +40,7 @@ async function updatePage() {
     }
 }
 
+//Fetches rejected weeks
 async function getRejectedWeeks() {
     return await fetch(`/api/staff/rejects?${getQueryParams()}`,
         {method: "GET",
@@ -54,7 +55,7 @@ function getQueryParams() {
     const order = getOrder();
     return `user=true&company=true&contract=true&totalHours=true${order.length > 0 ? `&order=${order}`: ""}`
 }
-
+//Orders the list based on the staff preference
 function getOrder() {
     const date = document.getElementById("date");
     const dateSelected = date.getAttribute("data-selected");
@@ -76,7 +77,7 @@ function getOrder() {
 
     return order;
 }
-
+//Formats rejected week element
 function createRejectedWeek(rejectedWeek) {
     const listElement = document.createElement("li");
 
