@@ -211,6 +211,7 @@ The dependencies that we use are:**
 ---
 
 ## Testing <a name="testing"></a>
+When logging out of one account type, and logging in with a different one, make sure to refresh cache in order to properly load the page
 
 ---
 
