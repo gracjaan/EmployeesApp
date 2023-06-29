@@ -3,15 +3,19 @@ window.addEventListener("helpersLoaded", async () => {
     const email = document.getElementById("email");
     const contracts = document.getElementById("contracts");
 
+    //filter that sort the users invoices on the amount of hours
     const hours = document.getElementById("hours");
     hours.addEventListener("change", () => updateInvoices())
 
+    //filter that sort the users invoices on the contracts
     const contract = document.getElementById("contract");
     contract.addEventListener("change", () => updateInvoices())
 
+    //filter that sort the users invoices on the weeks
     const week = document.getElementById("week");
     week.addEventListener("change", () => updateInvoices())
 
+    //if we don't have a user, we can't show any user info, so we error
     const user = await getUser();
     if (user === null) {
         location.href = "/error/404"
@@ -20,7 +24,7 @@ window.addEventListener("helpersLoaded", async () => {
 
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     email.innerText = user.email;
-
+     //if there are no contracts, we want to show that no contracts are available
     if (user.userContracts.length === 0) {
         const noContracts = document.createElement("div");
         noContracts.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
@@ -28,6 +32,7 @@ window.addEventListener("helpersLoaded", async () => {
         contracts.append(noContracts)
     }
 
+    //inserts a contract
     for (const userContract of user.userContracts) {
         contracts.append(createUserContractItem(userContract));
     }
@@ -35,25 +40,26 @@ window.addEventListener("helpersLoaded", async () => {
     await updateInvoices();
 })
 
+//shows all the invoices
 async function updateInvoices() {
     const workedWeeks = await getInvoices();
     if (workedWeeks === null) return;
 
     const invoices = document.getElementById("invoices");
     invoices.innerText = "";
-
+    //if there are no invoices, we want to show that there are no results
     if (workedWeeks.length === 0) {
         const noInvoices = document.createElement("div");
         noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
         noInvoices.innerText = "No invoices";
         invoices.append(noInvoices)
     }
-
+    //creates all the invoice items for the user
     for (const workedWeek of workedWeeks) {
         invoices.append(createInvoiceItem(workedWeek));
     }
 }
-
+//create the contract element
 function createUserContractItem(userContract) {
     const userContractContainer = document.createElement("div");
     userContractContainer.classList.add("text-text", "whitespace-nowrap", "bg-primary", "py-6", "px-6", "rounded-xl", "cursor-pointer", "flex", "w-fit", "flex-col", "items-center", "justify-center")
@@ -73,6 +79,7 @@ function createUserContractItem(userContract) {
     return userContractContainer;
 }
 
+//creates the invoice element
 function createInvoiceItem(workedWeek) {
     const entryContainer = document.createElement("a");
     entryContainer.classList.add("rounded-xl", "bg-primary", (workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED") ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
@@ -115,7 +122,7 @@ function createInvoiceItem(workedWeek) {
 
     return entryContainer;
 }
-
+//gets the id of the student from the URL
 function getUserId() {
     const search = new URLSearchParams(location.search);
     if (!search.has("id")) {
@@ -126,11 +133,13 @@ function getUserId() {
     return search.get("id");
 }
 
+//Here we state what parameters we want to get from the response in the body
 function getQueryParamsForUser() {
     const order = getOrder();
     return `userContracts=true&userContractsContract=true`
 }
 
+//gets the student user that we retrieved from the URL
 function getUser() {
     return fetch(`/api/companies/${getUserCompany()}/students/${getUserId()}?${getQueryParamsForUser()}`, {
             method: "GET",
@@ -145,6 +154,7 @@ function getUser() {
         .catch(() => null)
 }
 
+//Gets the order in which the invoices should be ordered
 function getOrder() {
     const contract = document.getElementById("contract");
     const contractSelected = contract.getAttribute("data-selected");
@@ -172,6 +182,7 @@ function getQueryParamsForInvoices() {
     return `contract=true&totalHours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
+//gets all the invoices for a user
 function getInvoices() {
     return fetch(`/api/companies/${getUserCompany()}/invoices/${getUserId()}?${getQueryParamsForInvoices()}`, {
             method: "GET",
