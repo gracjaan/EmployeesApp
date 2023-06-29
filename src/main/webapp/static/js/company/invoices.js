@@ -1,21 +1,22 @@
 window.addEventListener("helpersLoaded", async () => {
     const week = document.getElementById("week");
 
+    //Whenever something changes in the date, we change the year and week
     await updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
     week.addEventListener("change", (e) => {
         updateHours(e.detail.year, e.detail.week);
     })
-
+    //Whenever the hours change, we update them
     const hours = document.getElementById("hours");
     hours.addEventListener("change", (e) => {
        updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
     })
-
+    //if the contract changes, we update the contract
     const contract = document.getElementById("contract");
     contract.addEventListener("change", (e) => {
         updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
     })
-
+    //If there is a other user, we change the user
     const user = document.getElementById("user");
     user.addEventListener("change", (e) => {
         updateHours(parseInt(week.getAttribute("data-year")), parseInt(week.getAttribute("data-week")))
@@ -24,11 +25,11 @@ window.addEventListener("helpersLoaded", async () => {
 
 async function updateHours(year, week) {
     const request = await getRequestForCompany(getUserCompany(), year, week, getJWTCookie());
-
     // Update page to data
     updatePage(request);
 }
 
+//Get the order in which the invoices should be ordered
 function getOrder() {
     const contract = document.getElementById("contract");
     const contractSelected = contract.getAttribute("data-selected");
@@ -51,6 +52,7 @@ function getOrder() {
     return order;
 }
 
+//gets the requests for a week and year and will convert the requests in the invoices
 function updatePage(request) {
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
@@ -62,12 +64,14 @@ function updatePage(request) {
         entries.append(noInvoices);
         return;
     }
-
+    //creates an invoice entry for every single request
     for (const workedWeek of request) {
         entries.appendChild(createEntry(workedWeek));
     }
 }
 
+//creates a invoice entry which also allows the user to download the invoice
+//for the particular request for a worked week
 function createEntry(workedWeek) {
     // const testcontainter = document.createElement("a");
 
@@ -108,7 +112,7 @@ function createEntry(workedWeek) {
         img.classList.add("w-4", "h-4")
         status.append(img);
     }
-
+    //For downloading the invoice
     const downloadContainer = document.createElement("div");
     downloadContainer.classList.add("flex", "items-center", "justify-end", "w-full");
     entryInfo.appendChild(downloadContainer);
@@ -132,6 +136,7 @@ function createEntry(workedWeek) {
     return entryContainer;
 }
 
+//get the invoice for a particular week
 function downloadInvoice(workedWeek) {
     fetch(`/api/companies/${getUserCompany()}/invoices/download/week/${workedWeek.id}`, {
         headers: {
@@ -147,6 +152,7 @@ function downloadInvoice(workedWeek) {
         });
 }
 
+//downloads all the invoices for the company and combines them into a zip
 function downloadAllInvoice() {
     const weekSelector = document.getElementById("week");
     const year = parseInt(weekSelector.getAttribute("data-year"));
@@ -171,6 +177,7 @@ function getQueryParams() {
     return `user=true&contract=true&totalHours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
+//Gets a certain request
 function getRequestForCompany(companyId, year, week, token) {
     return fetch(`/api/companies/${companyId}/invoices/${year}/${week}?${getQueryParams()}`, {
         headers: {

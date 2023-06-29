@@ -2,12 +2,13 @@ window.addEventListener("helpersLoaded", async () => {
     const requestsContainer = document.getElementById("requests");
     if (typeof requestsContainer === "undefined") return;
 
+    //gets all the pending flagged requests for the company
     const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie());
     for (const request of requests) {
         const container = createRequestCard(request);
         requestsContainer.appendChild(container);
     }
-
+    //if there are no requests, we want to show that there are no requests
     if (requests === null || requests.length < 1) {
         const noRequests = document.createElement("div");
         noRequests.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
@@ -16,6 +17,7 @@ window.addEventListener("helpersLoaded", async () => {
     }
 });
 
+//gets all the requests that are pending for hour approval
 function getRequestsForCompany(uid, token) {
     return fetch(`/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
         headers: {
@@ -27,6 +29,7 @@ function getRequestsForCompany(uid, token) {
         .catch(() => []);
 }
 
+//creates the element for a pending request
 function createRequestCard(workedWeek) {
     const container = document.createElement("a");
     container.classList.add("bg-primary", "block", "rounded-xl", "py-4", "pl-4", "pr-8", "w-full", "break-inside-avoid-column");
