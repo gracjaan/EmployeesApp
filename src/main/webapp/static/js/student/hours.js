@@ -4,7 +4,6 @@ window.addEventListener("helpersLoaded", async () => {
         const contracts = await updateContracts();
         await updatePage(contracts);
     });
-
     const hours = document.getElementById("hours");
     hours.addEventListener("change", async () => {
         const contracts = await updateContracts();

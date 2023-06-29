@@ -3,13 +3,14 @@ window.addEventListener("helpersLoaded", async () => {
     const requests = await getRequestsForCompany(getUserCompany(), getJWTCookie())
     const requestsDiv = document.getElementById("newRequests");
 
+    //if there are no new requests from students we don't want to display notification on the request
     if(requests.length > 0){
         requestsDiv.classList.remove("hidden");
     }
     else{
         requestsDiv.classList.add("hidden");
     }
-
+    //Gets the company user and displays the name
     fetch("/api/users/" + getUserId(), {
             method: "GET",
             headers: {
@@ -24,6 +25,7 @@ window.addEventListener("helpersLoaded", async () => {
             name.innerText = "Welcome back, " + json.firstName;
         })
 
+    //checks if there are any notifications that need to be showed
     const notifications = await obtainNotifications();
     createEntries(notifications);
 
@@ -31,6 +33,7 @@ window.addEventListener("helpersLoaded", async () => {
     updateChart(workedWeeks)
 });
 
+//Gets all the requests that students have posted for their company to review
 function getRequestsForCompany(uid, token) {
     return fetch(`/api/companies/${uid}/approves?user=true&contract=true&order=worked_week.year:asc,worked_week.week:asc`, {
         headers: {
@@ -42,6 +45,7 @@ function getRequestsForCompany(uid, token) {
         .catch(() => []);
 }
 
+//creates the notification elements
 function createEntries (notifications) {
     const container = document.getElementById("entries");
 
@@ -56,7 +60,7 @@ function createEntries (notifications) {
 
         container.appendChild(cont)
     }
-
+    //for each notification, checks what the type of the notification is
     notifications.forEach(notification => {
         const outer = document.createElement("div");
         outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2", "cursor-pointer");
@@ -94,6 +98,7 @@ function createEntries (notifications) {
         inner2.innerText = notification.date;
         outer.appendChild(inner2)
 
+        //If the norification is seen, it will say that it is seen by removing the 'not-seen-incon'
         if (!notification.seen){
             const inner3 = document.createElement("div");
             inner3.classList.add("bg-accent-fail", "rounded-full", "w-4", "h-4", "absolute", "-top-1", "-left-1");
@@ -105,6 +110,7 @@ function createEntries (notifications) {
     })
 }
 
+//Send a request to the database to change the database to seen
 function toggleSeen (id) {
     return fetch("/api/companies/" + getUserCompany() + "/notifications/" + id, {
         method: 'POST',
@@ -121,6 +127,7 @@ function toggleSeen (id) {
         .catch(() => null);
 }
 
+//gets all the notifications for a company
 function obtainNotifications() {
     return fetch("/api/companies/" + getUserCompany() + "/notifications", {
         headers: {
@@ -131,6 +138,7 @@ function obtainNotifications() {
         .catch(() => null);
 }
 
+//gets the hours for a particular week, ,for a particular user
 function getHours(companyId, token) {
     return fetch(`/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
         headers: {
@@ -140,6 +148,7 @@ function getHours(companyId, token) {
     }).then(res => res.json()).catch(() => null)
 }
 
+//makes sure that the chart is updates to the work performance of the students that work at the company
 function updateChart(studentsPerCompany) {
     const labels = [];
     const ids = [];
@@ -200,16 +209,17 @@ function updateChart(studentsPerCompany) {
         }
     });
 }
-
+ //gets the current year
 function getCurrentYear() {
     const currentDate = new Date();
     return currentDate.getFullYear();
 }
-
+//gets the current week
 function getCurrentWeek() {
     return getWeek(new Date());
 }
 
+//gets the week that has the given date
 function getWeek(ofDate) {
     const date = new Date(ofDate);
     date.setHours(0, 0, 0, 0);

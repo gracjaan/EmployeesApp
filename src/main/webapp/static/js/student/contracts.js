@@ -2,9 +2,11 @@ let arrayOfDivs = [];
 let currentPage = 0;
 let lastIndex = 0;
 window.addEventListener("helpersLoaded", async () => {
+    //updates the page with the contracts of the user
     updatePage(await obtainContractsForUser(getUserId()))
 })
 
+//gets all the contracts for the user
 function obtainContractsForUser(uid) {
     return fetch("/api/users/" + uid + "/contracts", {
         headers: {
@@ -15,6 +17,7 @@ function obtainContractsForUser(uid) {
         .catch(e => null);
 }
 
+//gets an invoice for all the hours that are worked under the contract
 function obtainInvoice(contract) {
     return fetch("/api/users/" + getUserId() + "/contracts/" + contract.id + "/invoices?totalHours=true&company=true", {
         headers: {
@@ -25,6 +28,7 @@ function obtainInvoice(contract) {
         .catch(e => null);
 }
 
+//updates the page by inserting the given contract onto the right element
 async function updatePage(contracts) {
     const entries = document.getElementById("entries");
     entries.innerText = "";
@@ -45,6 +49,7 @@ async function updatePage(contracts) {
     lastIndex = arrayOfDivs.length - 1;
 }
 
+//
 function handleRightClick() {
     if (currentPage < lastIndex) {
         currentPage += 1;
@@ -60,7 +65,7 @@ function handleRightClick() {
 }
 
 function handleLeftClick() {
-    if (currentPage == 0) {
+    if (currentPage === 0) {
         arrayOfDivs[currentPage].classList.toggle("hidden");
         currentPage = lastIndex;
         arrayOfDivs[currentPage].classList.toggle("hidden");
@@ -70,7 +75,7 @@ function handleLeftClick() {
         arrayOfDivs[currentPage].classList.toggle("hidden");
     }
 }
-
+//creates the contract entry with the invoice
 function createEntry(contract, invoice) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-secondary", "p-4", "relative", "flex-col", "gap-2", "justify-between", "w-full", "h-full", "hidden");
@@ -145,6 +150,7 @@ function createEntry(contract, invoice) {
     return entryContainer;
 }
 
+//generates a invoice given the contract and the overall invoice for the contract
 function generateInvoice (contract, invoice) {
     fetch(`/api/users/${getUserId()}/contracts/${contract.id}/invoices/download/${invoice.year}/${invoice.week}`, {
         headers: {
@@ -160,6 +166,7 @@ function generateInvoice (contract, invoice) {
         });
 }
 
+//gets all the separate invoices for a contract
 function generateAllInvoices (contract) {
     fetch(`/api/users/${getUserId()}/contracts/${contract.id}/invoices/download`, {
         headers: {
@@ -175,6 +182,3 @@ function generateAllInvoices (contract) {
         });
 }
 
-
-// todo consider what information we want to include
-// todo consider mobile view
