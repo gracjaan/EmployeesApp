@@ -1,3 +1,4 @@
+// When page is loaded it waits for the user details, user contracts and companies the user works for
 window.addEventListener("helpersLoaded", async () => {
     const userId = getIdUser();
     const user = await getUser(userId);
@@ -78,7 +79,7 @@ async function updateInvoices(companies, user) {
 
 }
 
-
+//Fetches user details
 function getUser(userId) {
     return fetch(`/api/users/` + userId, {
             method: "GET",
@@ -93,6 +94,7 @@ function getUser(userId) {
         .catch(() => null)
 }
 
+//Fetches user contracts
 function getUserContracts(userId) {
     return fetch(`/api/users/` + userId + "/contracts", {
             method: "GET",
@@ -143,6 +145,7 @@ function getQueryParamsForInvoices() {
     return `contract=true&totalHours=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
+//Fetches user invoices
 function getInvoices(companyId, userId) {
     return fetch('/api/companies/' +companyId + '/invoices/' + userId + '?' + getQueryParamsForInvoices(), {
             method: "GET",
@@ -157,6 +160,7 @@ function getInvoices(companyId, userId) {
         .catch(() => null)
 }
 
+//Formats user contract element
 function createUserContractItem(userContract) {
     const userContractContainer = document.createElement("div");
     userContractContainer.classList.add("text-text", "whitespace-nowrap", "bg-primary", "py-6", "px-6", "rounded-xl", "cursor-pointer", "flex", "w-fit", "flex-col", "items-center", "justify-center")
@@ -174,6 +178,7 @@ function createUserContractItem(userContract) {
     return userContractContainer;
 }
 
+//Formats user invoices element
 function createInvoiceItem(workedWeek) {
     const entryContainer = document.createElement("a");
     entryContainer.classList.add("rounded-xl", "bg-primary", (workedWeek.status === "NOT_CONFIRMED" || workedWeek.status === "CONFIRMED") ? "py-3" : "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
@@ -216,6 +221,7 @@ function createInvoiceItem(workedWeek) {
     return entryContainer;
 }
 
+//Fetches companies the user works for
 function getCompanies(userId) {
     return fetch(`/api/users/` + userId + "/companies", {
             method: "GET",

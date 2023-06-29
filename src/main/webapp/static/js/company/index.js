@@ -46,6 +46,7 @@ function getRequestsForCompany(uid, token) {
 }
 
 //creates the notification elements
+//Formats one notification element
 function createEntries (notifications) {
     const container = document.getElementById("entries");
 
@@ -111,6 +112,7 @@ function createEntries (notifications) {
 }
 
 //Send a request to the database to change the database to seen
+//When a notification is clicked, sends a post request to change the seen attribute to true
 function toggleSeen (id) {
     return fetch("/api/companies/" + getUserCompany() + "/notifications/" + id, {
         method: 'POST',
@@ -128,6 +130,7 @@ function toggleSeen (id) {
 }
 
 //gets all the notifications for a company
+// Get request to obtain notifications
 function obtainNotifications() {
     return fetch("/api/companies/" + getUserCompany() + "/notifications", {
         headers: {
@@ -138,7 +141,7 @@ function obtainNotifications() {
         .catch(() => null);
 }
 
-//gets the hours for a particular week, ,for a particular user
+// Get request to obtain hours of employees for the graph
 function getHours(companyId, token) {
     return fetch(`/api/companies/${companyId}/invoices/${getCurrentYear()}/${getCurrentWeek()}?totalHours=true&user=true`, {
         headers: {
@@ -148,7 +151,7 @@ function getHours(companyId, token) {
     }).then(res => res.json()).catch(() => null)
 }
 
-//makes sure that the chart is updates to the work performance of the students that work at the company
+// Inputs all the relevant data into the graph
 function updateChart(studentsPerCompany) {
     const labels = [];
     const ids = [];

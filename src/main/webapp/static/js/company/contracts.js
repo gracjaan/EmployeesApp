@@ -30,6 +30,7 @@ window.addEventListener("helpersLoaded", async () => {
 });
 
 //creates a contract element given a contract
+//Formats one contract element
 function createContractItem(contract) {
     const contractContainer = document.createElement("div");
     contractContainer.classList.add("w-full", "grid", "grid-cols-[1fr]", "sm:grid-cols-[3fr_1fr]", "sm:flex-row", "gap-4", "bg-secondary", "rounded-2xl", "p-4");

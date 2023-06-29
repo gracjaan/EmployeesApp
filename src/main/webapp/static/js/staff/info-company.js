@@ -1,3 +1,4 @@
+// When page is loaded it waits for the company details, company roles and employees
 window.addEventListener("helpersLoaded", async () => {
     const companyId = getIdCompany();
     const company = await getCompany(companyId);
@@ -71,6 +72,7 @@ function getIdCompany() {
 
 }
 
+//Fetches company details
 function getCompany(companyId) {
     return fetch(`/api/companies/` + companyId, {
             method: "GET",
@@ -85,6 +87,7 @@ function getCompany(companyId) {
         .catch(() => null)
 }
 
+//Fetches company roles
 function getCompanyRoles(companyId) {
     return fetch(`/api/companies/` + companyId + "/contracts", {
             method: "GET",
@@ -99,20 +102,7 @@ function getCompanyRoles(companyId) {
         .catch(() => null)
 }
 
-// function getEmployees(companyId, contractId){
-//     return fetch(`/api/companies/` + companyId + '/contracts/' + contractId + '/employees', {
-//             method: "GET",
-//             headers: {
-//                 'authorization': `token ${getJWTCookie()}`,
-//                 'Content-Type': 'application/json',
-//                 'Accept': 'application/json',
-//             }
-//         }
-//     )
-//         .then(res => res.json())
-//         .catch(() => null)
-// }
-
+//Fetches company employees
 function getEmployees(companyId){
     return fetch("/api/companies/"+ companyId + "/students", {
             method: "GET",
@@ -138,6 +128,7 @@ async function getUser(userId){
         .catch(() => null);
 }
 
+//Formats a role element
 function createRoleElement(role) {
     const userRoleContainer = document.createElement("div");
     userRoleContainer.classList.add("text-text", "whitespace-nowrap", "bg-primary", "py-6", "px-6", "rounded-xl", "cursor-pointer", "flex", "w-fit", "flex-col", "items-center", "justify-center")
@@ -155,6 +146,7 @@ function createRoleElement(role) {
     return userRoleContainer;
 }
 
+//Formats an employee element
 function createEmployeeElement(user) {
 
     const entryContainer = document.createElement("a");
