@@ -116,12 +116,12 @@ function editUserInfo(user){
     userDiv.innerText = "";
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "flex-col", "md:flex-row", "items-center");
+    encapsulatingDiv.classList.add("flex", "flex-row", "items-center");
     encapsulatingDiv.setAttribute("id", "user-name-display");
 
     const userIMage = document.createElement("img");
     userIMage.alt = "user logo"
-    userIMage.classList.add("h-14", "mx-8");
+    userIMage.classList.add("h-14", "mr-4");
     userIMage.src = "/static/icons/user.svg"
 
     const userName = document.createElement("p");
@@ -140,12 +140,12 @@ async function editCompanyInfo(company) {
     companyDiv.innerText = "";
 
     const encapsulatingDiv = document.createElement("div");
-    encapsulatingDiv.classList.add("flex", "flex-col", "md:flex-row", "items-center");
+    encapsulatingDiv.classList.add("flex", "flex-row", "items-center");
     encapsulatingDiv.setAttribute("id", "company-name-display");
 
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
-    companyImage.classList.add("h-14", "mx-8");
+    companyImage.classList.add("h-14", "mr-4");
     companyImage.src = "/static/icons/building.svg"
 
     const companyName = document.createElement("p");
@@ -400,7 +400,7 @@ function displayPopUp(){
     popUpElement.classList.remove("hidden");
 
     const paragraph = document.getElementById("popUpParagraph");
-    paragraph.innerText = "are you sure you want to create the link"
+    paragraph.innerText = "Are you sure you want to create the link"
 }
 
 function alertPopUp(message, positive) {
