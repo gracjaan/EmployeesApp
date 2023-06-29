@@ -46,6 +46,12 @@ For the installation of the application we do the following:
 
 ---
 
+## Packaging <a name=""></a>
+For the installation of the application we do the following:
+
+---
+
+
 ## Usage <a name="usage"></a>
 The application has three different dashboards for different roles within the system. The Three roles being: Student, Company, Staff
 ### Student
@@ -203,6 +209,11 @@ The dependencies that we use are:**
 ## Testing <a name="testing"></a>
 
 ---
+
+## Further improvements <a name=""></a>  
+
+---
+
 
 ## Contact Information <a name="contact-information"></a>
 **This project was produced by:**  
