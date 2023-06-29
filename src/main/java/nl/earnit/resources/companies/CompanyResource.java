@@ -257,7 +257,16 @@ public class CompanyResource {
     @Path("/contracts/{contractId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public CompanyContractResource getCompany(@PathParam("contractId") String contractId) {
-        return new CompanyContractResource(uriInfo, request, companyId, contractId);
+        try {
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+            if (!companyDAO.hasCompanyAccessToContract(companyId, contractId)) {
+                throw new ForbiddenException();
+            }
+
+            return new CompanyContractResource(uriInfo, request, companyId, contractId);
+        } catch (Exception e) {
+            throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -721,7 +730,6 @@ public class CompanyResource {
             notifications = companyDAO.getNotificationsForCompany(companyId);
         }
         catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok(notifications).build();
@@ -733,6 +741,12 @@ public class CompanyResource {
         UserDAO userDAO;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+
+            if (!companyDAO.hasCompanyAccessToNotification(companyId, notificationId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             userDAO.changeNotificationToSeen(notificationId);
         } catch (Exception e) {
             return Response.serverError().build();

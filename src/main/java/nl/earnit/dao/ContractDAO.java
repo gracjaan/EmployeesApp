@@ -261,4 +261,28 @@ public class ContractDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
     }
 
+    /**
+     * Shows whether a contract has access to a user contract.
+     * @param contractId The id of the contract
+     * @param userContractId The id of the user contract
+     * @return whether the user contract is for the contract ? true : false
+     * @throws SQLException
+     */
+    public boolean hasContractAccessToUserContract(String contractId, String userContractId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as contracts FROM user_contract uc
+            WHERE uc.id = ? and uc.contract_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        PostgresJDBCHelper.setUuid(statement, 2, contractId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
 }

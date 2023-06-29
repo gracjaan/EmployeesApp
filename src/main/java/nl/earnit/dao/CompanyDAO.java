@@ -223,7 +223,8 @@ public class CompanyDAO extends GenericDAO<User> {
 
         ResultSet res = statement.executeQuery();
 
-        return res.next();
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
     }
 
     /**
@@ -387,6 +388,56 @@ public class CompanyDAO extends GenericDAO<User> {
             notifications.add(notification);
         }
         return notifications;
+    }
+
+    /**
+     * Shows whether a company has access to a contract. If the contract is for the company, then the company has access to the contract
+     * @param companyId The id of the company
+     * @param contractId The id of the user contract
+     * @return whether the contract is from the company ? true : false
+     * @throws SQLException
+     */
+    public boolean hasCompanyAccessToContract(String companyId, String contractId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as contracts FROM contract c
+            WHERE c.id = ? and c.company_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
+
+    /**
+     * Shows whether a company has access to a notification. If the notification is for the company, then the company has access to the notification
+     * @param companyId The id of the company
+     * @param notificationId The id of the notification
+     * @return whether the notification is for the company ? true : false
+     * @throws SQLException
+     */
+    public boolean hasCompanyAccessToNotification(String companyId, String notificationId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as notifications FROM notification n
+            WHERE n.id = ? and n.company_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, notificationId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("notifications") > 0;
     }
 }
 

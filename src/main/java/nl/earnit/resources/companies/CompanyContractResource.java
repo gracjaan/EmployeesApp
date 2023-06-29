@@ -199,7 +199,12 @@ public class CompanyContractResource {
 
         UserContract result;
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                throw new ForbiddenException();
+            }
 
             result = userContractDAO.getUserContractById(userContractId);
 
@@ -228,6 +233,12 @@ public class CompanyContractResource {
         int hourlyWage = userContractJAXBElement.getValue().getHourlyWage();
 
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
 
             userContractDAO.changeHourlyWage(userContractId, hourlyWage);
@@ -253,10 +264,14 @@ public class CompanyContractResource {
         }
 
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
-
             userContractDAO.disableUserContract(userContractId);
-
         } catch (Exception e) {
             return Response.serverError().build();
         }
