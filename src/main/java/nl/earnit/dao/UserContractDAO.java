@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class UserContractDAO extends GenericDAO<User> {
      * @param userId The id of a user.
      * @throws SQLException If a database error occurs.
      */
-    public int countContractsForUser(String userId) throws Exception {
+    public int countContractsForUser(String userId) throws SQLException {
         // Create query
         String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\" u WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -69,7 +70,7 @@ public class UserContractDAO extends GenericDAO<User> {
      * @return the list of contracts
      * @throws SQLException
      */
-    public List<UserContractDTO> getUserContractsByUserId(String userId) throws Exception {
+    public List<UserContractDTO> getUserContractsByUserId(String userId) throws SQLException {
         String query = "SELECT u.*, c.id as contract_id, c.role as contract_role, c.description as contract_description, cy.name as company_name, cy.id as company_id, cy.address as company_address, cy.kvk as company_kvk FROM  \"" + tableName + "\" u JOIN contract c ON u.contract_id = c.id JOIN company cy on cy.id = c.company_id WHERE u.user_id = ? and u.active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userId);
@@ -97,9 +98,9 @@ public class UserContractDAO extends GenericDAO<User> {
      * @param userId         the user id
      * @param userContractId the user contract id
      * @return the user contract
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public UserContract getUserContract(String userId, String userContractId) throws Exception {
+    public UserContract getUserContract(String userId, String userContractId) throws SQLException {
         String query = "SELECT contract_id, hourly_wage FROM user_contract WHERE id=?;";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
@@ -111,15 +112,15 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     /**
-     * Add new user contract user contract.
+     * Add new user contract.
      *
      * @param user_id     the user id
      * @param contract_id the contract id
      * @param hourly_wage the hourly wage
      * @return the user contract
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws Exception {
+    public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {
         String query = "INSERT INTO " + tableName + " (contract_id, user_id, hourly_wage) " +
                 "VALUES (?, ?, ?) RETURNING id";
 
@@ -139,9 +140,9 @@ public class UserContractDAO extends GenericDAO<User> {
      * Disable user contract.
      *
      * @param id the id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public void disableUserContract(String id) throws Exception {
+    public void disableUserContract(String id) throws SQLException {
 
         String query = "UPDATE " + tableName + " SET active = False WHERE id = ?";
 
@@ -156,9 +157,9 @@ public class UserContractDAO extends GenericDAO<User> {
      *
      * @param id         the id
      * @param hourlyWage the hourly wage
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public void changeHourlyWage(String id, int hourlyWage) throws Exception {
+    public void changeHourlyWage(String id, int hourlyWage) throws SQLException {
         String query = "UPDATE " + tableName + " SET hourly_wage = ? WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -172,9 +173,9 @@ public class UserContractDAO extends GenericDAO<User> {
      *
      * @param id the id
      * @return the user contract by id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public UserContract getUserContractById(String id) throws Exception {
+    public UserContract getUserContractById(String id) throws SQLException {
         String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
@@ -191,9 +192,9 @@ public class UserContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @return the user contracts by contract id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public List<UserContract> getUserContractsByContractId(String contractId) throws Exception {
+    public List<UserContract> getUserContractsByContractId(String contractId) throws SQLException {
         List<UserContract> result = new ArrayList<>();
         String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE contract_id = ? and active = true ";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -220,9 +221,9 @@ public class UserContractDAO extends GenericDAO<User> {
      * Disable user contracts by user id.
      *
      * @param userId the user id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public void disableUserContractsByUserId(String userId) throws Exception {
+    public void disableUserContractsByUserId(String userId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE user_id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -235,9 +236,9 @@ public class UserContractDAO extends GenericDAO<User> {
      * Gets number of employees by company.
      *
      * @return the number of employees by company
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public List<CompanyCounts> getNumberOfEmployeesByCompany() throws Exception {
+    public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
 
         List<CompanyCounts> result = new ArrayList<>();
         String query = "SELECT COUNT(uc.id) as count, c.company_id, cy.name   FROM user_contract uc JOIN contract c ON c.id = uc.contract_id JOIN company cy ON cy.id = c.company_id  WHERE  uc.active = true GROUP BY c.company_id, cy.name";

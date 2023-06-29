@@ -53,10 +53,10 @@ public class ContractDAO extends GenericDAO<User> {
      * Get row count in table.
      *
      * @return Row count
-     * @throws Exception If a database error occurs.
+     * @throws SQLException If a database error occurs.
      */
     @Override
-    public int count() throws Exception {
+    public int count() throws SQLException {
         String query = "SELECT COUNT(*) AS count FROM  \"" + tableName + "\"";
         PreparedStatement counter = this.con.prepareStatement(query);
 
@@ -75,9 +75,9 @@ public class ContractDAO extends GenericDAO<User> {
      * @param withUserContractsUser
      * @param order
      * @return
-     * @throws Exception
+     * @throws SQLException
      */
-    public List<ContractDTO> getAllContractsByCompanyId(String companyId, boolean withCompany, boolean withUserContracts, boolean withUserContractsUser, String order) throws Exception {
+    public List<ContractDTO> getAllContractsByCompanyId(String companyId, boolean withCompany, boolean withUserContracts, boolean withUserContractsUser, String order) throws SQLException {
         List<ContractDTO> result = new ArrayList<>();
 
         String query = """
@@ -152,9 +152,9 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId  the contract id
      * @param description the description
-     * @throws Exception the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public void updateContractDescription(String contractId, String description) throws Exception {
+    public void updateContractDescription(String contractId, String description) throws SQLException {
         String query = "UPDATE " + tableName + " SET description = ? WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -169,9 +169,9 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @param role       the role
-     * @throws Exception the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public void updateContractRole(String contractId, String role) throws Exception {
+    public void updateContractRole(String contractId, String role) throws SQLException {
         String query = "UPDATE " + tableName + " SET role = ? WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -185,9 +185,9 @@ public class ContractDAO extends GenericDAO<User> {
      * Creates a contract for a company that users can then be linked to
      * @param contract the contract object you want to insert in the database
      * @param company_id the id of the company where the contract is for
-     * @throws Exception
+     * @throws SQLException
      */
-    public void createContract(Contract contract, String company_id) throws Exception {
+    public void createContract(Contract contract, String company_id) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, role, description) "+
                 "VALUES (?, ?, ?) RETURNING id";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -202,9 +202,9 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @return the contract
-     * @throws Exception the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public Contract getContract(String contractId) throws Exception {
+    public Contract getContract(String contractId) throws SQLException {
         String query = "GET description, role FROM " + tableName + " WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -222,9 +222,9 @@ public class ContractDAO extends GenericDAO<User> {
     /**
      * disables the contract for a company and automatically all the links with users that associate to the contract
      * @param contractId the id of the contract
-     * @throws Exception
+     * @throws SQLException
      */
-    public void disableContract(String contractId) throws Exception {
+    public void disableContract(String contractId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -237,9 +237,9 @@ public class ContractDAO extends GenericDAO<User> {
      * Renable contract.
      *
      * @param contractId the contract id
-     * @throws Exception the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public void renableContract(String contractId) throws Exception {
+    public void renableContract(String contractId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -251,9 +251,9 @@ public class ContractDAO extends GenericDAO<User> {
     /**
      * disables all the contracts for a company
      * @param companyId the company id you want to disable the contracts for
-     * @throws Exception
+     * @throws SQLException
      */
-    public void disableContractsByCompanyId(String companyId) throws Exception {
+    public void disableContractsByCompanyId(String companyId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE company_id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);

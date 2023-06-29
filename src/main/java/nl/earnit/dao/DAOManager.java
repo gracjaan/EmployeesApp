@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
 /**
  * The type Dao manager.
  */
@@ -23,9 +24,9 @@ public class DAOManager {
     /**
      * Opens connection to database.
      *
-     * @throws Exception If a database error occurs.
+     * @throws SQLException If a database error occurs.
      */
-    public void open() throws Exception {
+    public void open() throws SQLException {
         // Only open if not connected
         if (this.con != null && !this.con.isClosed()) {
             return;
@@ -37,9 +38,9 @@ public class DAOManager {
     /**
      * Closes connection to database.
      *
-     * @throws Exception If a database error occurs.
+     * @throws SQLException If a database error occurs.
      */
-    public void close() throws Exception {
+    public void close() throws SQLException {
         // Only close if connected at all
         if (this.con == null || this.con.isClosed()) {
             return;
@@ -61,7 +62,7 @@ public class DAOManager {
      * @return
      * @throws SQLException
      */
-    public GenericDAO<?> getDAO(DAO dao) throws Exception {
+    public GenericDAO<?> getDAO(DAO dao) throws SQLException {
         this.open();
 
         if (dao.equals(DAO.USER)) {
@@ -80,7 +81,7 @@ public class DAOManager {
             return new ContractDAO(this.con);
         }
 
-        throw new Exception("Trying to link to an nonexistent dao.");
+        throw new SQLException("Trying to link to an nonexistent dao.");
 
     }
 

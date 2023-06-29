@@ -3,6 +3,7 @@ package nl.earnit.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
 /**
  * The type Generic dao.
  *
@@ -13,9 +14,9 @@ public abstract class GenericDAO<T> {
      * Get row count in table.
      *
      * @return Row count
-     * @throws Exception If a database error occurs.
+     * @throws SQLException If a database error occurs.
      */
-    public abstract int count() throws Exception;
+    public abstract int count() throws SQLException;
 
     /**
      * The Table name.
