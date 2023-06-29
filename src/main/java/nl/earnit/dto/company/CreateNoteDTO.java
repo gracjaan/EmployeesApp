@@ -1,4 +1,4 @@
-package nl.earnit.models.resource.companies;
+package nl.earnit.dto.company;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,13 +6,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Create note.
  */
 @XmlRootElement
-public class CreateNote {
+public class CreateNoteDTO {
     private String note;
 
     /**
      * Instantiates a new Create note.
      */
-    public CreateNote() {
+    public CreateNoteDTO() {
 
     }
 
@@ -21,7 +21,7 @@ public class CreateNote {
      *
      * @param note the note
      */
-    public CreateNote(String note) {
+    public CreateNoteDTO(String note) {
         this.note = note;
     }
 

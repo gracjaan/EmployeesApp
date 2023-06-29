@@ -1,4 +1,4 @@
-package nl.earnit.models.resource;
+package nl.earnit.dto;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,20 +6,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Invalid entry.
  */
 @XmlRootElement
-public class InvalidEntry {
+public class InvalidEntryDTO {
     private String field;
 
     /**
      * Instantiates a new Invalid entry.
      */
-    public InvalidEntry() {}
+    public InvalidEntryDTO() {}
 
     /**
      * Instantiates a new Invalid entry.
      *
      * @param field the field
      */
-    public InvalidEntry(String field) {
+    public InvalidEntryDTO(String field) {
         this.field = field;
     }
 

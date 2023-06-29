@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nl.earnit.Auth;
 import nl.earnit.Constants;
-import nl.earnit.models.db.User;
+import nl.earnit.models.User;
 
 import java.io.IOException;
 import java.util.ArrayList;

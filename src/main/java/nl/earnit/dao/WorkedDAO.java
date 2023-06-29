@@ -2,10 +2,10 @@ package nl.earnit.dao;
 
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.User;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.db.Worked;
-import nl.earnit.models.resource.companies.CreateSuggestion;
+import nl.earnit.models.User;
+import nl.earnit.models.UserContract;
+import nl.earnit.models.Worked;
+import nl.earnit.dto.company.CreateSuggestionDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -250,7 +250,7 @@ public class WorkedDAO extends GenericDAO<User> {
      * @param suggestion the suggestion of new hours
      * @throws SQLException
      */
-    public void setSuggestion(String workedId, CreateSuggestion suggestion) throws SQLException {
+    public void setSuggestion(String workedId, CreateSuggestionDTO suggestion) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET suggestion = ? WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         if (suggestion.getSuggestion() == null) {

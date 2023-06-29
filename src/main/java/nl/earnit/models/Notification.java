@@ -1,4 +1,4 @@
-package nl.earnit.models.db;
+package nl.earnit.models;
 
 import java.util.Date;
 

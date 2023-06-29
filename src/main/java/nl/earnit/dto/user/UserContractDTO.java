@@ -1,25 +1,31 @@
-package nl.earnit.models.db;
+package nl.earnit.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import nl.earnit.dto.contracts.ContractDTO;
+
 
 /**
- * The type User contract.
+ * The type User contract dto.
  */
 @XmlRootElement
-public class UserContract {
+public class UserContractDTO {
     private String id;
     private String contractId;
     private String userId;
     private int hourlyWage;
     private boolean active;
+    private ContractDTO contract;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private UserResponseDTO user;
 
     /**
-     * Instantiates a new User contract.
+     * Instantiates a new User contract dto.
      */
-    public UserContract() {}
+    public UserContractDTO() {}
 
     /**
-     * Instantiates a new User contract.
+     * Instantiates a new User contract dto.
      *
      * @param id         the id
      * @param contractId the contract id
@@ -27,7 +33,7 @@ public class UserContract {
      * @param hourlyWage the hourly wage
      * @param active     the active
      */
-    public UserContract(String id, String contractId, String userId, int hourlyWage, boolean active) {
+    public UserContractDTO(String id, String contractId, String userId, int hourlyWage, boolean active) {
         this.id = id;
         this.contractId = contractId;
         this.userId = userId;
@@ -72,6 +78,24 @@ public class UserContract {
     }
 
     /**
+     * Gets user id.
+     *
+     * @return the user id
+     */
+    public String getUserId() {
+        return userId;
+    }
+
+    /**
+     * Sets user id.
+     *
+     * @param userId the user id
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    /**
      * Gets hourly wage.
      *
      * @return the hourly wage
@@ -108,20 +132,38 @@ public class UserContract {
     }
 
     /**
-     * Gets user id.
+     * Gets user.
      *
-     * @return the user id
+     * @return the user
      */
-    public String getUserId() {
-        return userId;
+    public UserResponseDTO getUser() {
+        return user;
     }
 
     /**
-     * Sets user id.
+     * Sets user.
      *
-     * @param userId the user id
+     * @param user the user
      */
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(UserResponseDTO user) {
+        this.user = user;
+    }
+
+    /**
+     * Gets contract.
+     *
+     * @return the contract
+     */
+    public ContractDTO getContract() {
+        return contract;
+    }
+
+    /**
+     * Sets contract.
+     *
+     * @param contract the contract
+     */
+    public void setContract(ContractDTO contract) {
+        this.contract = contract;
     }
 }

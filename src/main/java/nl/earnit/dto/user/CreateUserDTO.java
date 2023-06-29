@@ -1,88 +1,48 @@
-package nl.earnit.dto.workedweek;
+package nl.earnit.dto.user;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-import nl.earnit.models.db.User;
-
-import java.util.List;
 
 /**
- * User model without a password.
+ * User model for the user POST request.
  */
 @XmlRootElement
-public class UserDTO {
-    private String id;
+public class CreateUserDTO {
     private String email;
     private String firstName;
     private String lastName;
     private String lastNamePrefix;
-    private String type;
+    private String password;
     private String kvk;
     private String btw;
     private String address;
 
-    private List<UserContractDTO> userContracts;
-
     /**
-     * Creates a user model without password, without values.
+     * Creates a user model for the user POST request.
      */
-    public UserDTO() {}
+    public CreateUserDTO() {}
 
     /**
-     * Creates a user model without password from a user model.
+     * Creates a user model for the user POST request.
      *
-     * @param user The user model.
-     */
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail().toLowerCase();
-        this.firstName = user.getFirstName();
-        this.lastNamePrefix = user.getLastNamePrefix();
-        this.lastName = user.getLastName();
-        this.type = user.getType();
-    }
-
-    /**
-     * Creates a user model without password.
-     *
-     * @param id             The id of the user.
      * @param email          The email of the user.
      * @param firstName      The first name of the user.
      * @param lastName       The last name of the user.
      * @param lastNamePrefix The last name prefix of the user.
-     * @param type           The type of user: STUDENT, COMPANY, ADMINISTRATOR.
+     * @param password       The password of the user.
      * @param kvk            the kvk
      * @param btw            the btw
      * @param address        the address
      */
-    public UserDTO(String id, String email, String firstName, String lastName, String lastNamePrefix,
-                        String type, String kvk, String btw, String address) {
-        this.id = id;
+    public CreateUserDTO(String email, String firstName, String lastName, String lastNamePrefix,
+                         String password, String kvk, String btw, String address) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
-        this.type = type;
-        this.address = address;
+        this.password = password;
         this.kvk = kvk;
         this.btw = btw;
-    }
-
-    /**
-     * Gets id.
-     *
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     */
-    public void setId(String id) {
-        this.id = id;
+        this.address = address;
     }
 
     /**
@@ -158,21 +118,21 @@ public class UserDTO {
     }
 
     /**
-     * Gets type.
+     * Gets password.
      *
-     * @return the type
+     * @return the password
      */
-    public String getType() {
-        return type;
+    public String getPassword() {
+        return password;
     }
 
     /**
-     * Sets type.
+     * Sets password.
      *
-     * @param type the type
+     * @param password the password
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -227,23 +187,5 @@ public class UserDTO {
      */
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    /**
-     * Gets user contracts.
-     *
-     * @return the user contracts
-     */
-    public List<UserContractDTO> getUserContracts() {
-        return userContracts;
-    }
-
-    /**
-     * Sets user contracts.
-     *
-     * @param userContracts the user contracts
-     */
-    public void setUserContracts(List<UserContractDTO> userContracts) {
-        this.userContracts = userContracts;
     }
 }

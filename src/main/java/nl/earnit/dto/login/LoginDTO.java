@@ -1,4 +1,4 @@
-package nl.earnit.models.resource.login;
+package nl.earnit.dto.login;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Login.
  */
 @XmlRootElement
-public class Login {
+public class LoginDTO {
     private String email;
     private String password;
     private String companyId;
@@ -14,7 +14,7 @@ public class Login {
     /**
      * Instantiates a new Login.
      */
-    public Login() {
+    public LoginDTO() {
 
     }
 
@@ -25,7 +25,7 @@ public class Login {
      * @param password  the password
      * @param companyId the company id
      */
-    public Login(String email, String password, String companyId) {
+    public LoginDTO(String email, String password, String companyId) {
         this.email = email;
         this.password = password;
         this.companyId = companyId;

@@ -1,13 +1,14 @@
 package nl.earnit.resources.users;
 
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.*;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.resource.contracts.Contract;
+import nl.earnit.models.Company;
+import nl.earnit.models.UserContract;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**

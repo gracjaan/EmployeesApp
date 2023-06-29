@@ -1,9 +1,9 @@
-package nl.earnit.models.resource.companies;
+package nl.earnit.dto.company;
 
 /**
  * The type Company counts.
  */
-public class CompanyCounts {
+public class CompanyCountsDTO {
     private String id;
     private String name;
     private int count;
@@ -16,7 +16,7 @@ public class CompanyCounts {
      * @param name  the name
      * @param count the count
      */
-    public CompanyCounts(String id, String name, int count) {
+    public CompanyCountsDTO(String id, String name, int count) {
         this.id = id;
         this.name = name;
         this.count = count;
@@ -25,7 +25,7 @@ public class CompanyCounts {
     /**
      * Instantiates a new Company counts.
      */
-    public CompanyCounts() {
+    public CompanyCountsDTO() {
 
     }
 

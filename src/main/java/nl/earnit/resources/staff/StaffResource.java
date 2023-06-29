@@ -9,8 +9,8 @@ import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoSolvedDTO;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.companies.CompanyCounts;
+import nl.earnit.models.User;
+import nl.earnit.dto.company.CompanyCountsDTO;
 
 import java.util.List;
 
@@ -296,7 +296,7 @@ public class StaffResource {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getEmployeeCountPerCompany() {
         UserContractDAO userContractDAO;
-        List<CompanyCounts> count;
+        List<CompanyCountsDTO> count;
         try {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             count = userContractDAO.getNumberOfEmployeesByCompany();

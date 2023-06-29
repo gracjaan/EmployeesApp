@@ -2,9 +2,7 @@ package nl.earnit.test;
 
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
-import nl.earnit.dao.WorkedDAO;
-import nl.earnit.dto.workedweek.ContractDTO;
-import nl.earnit.models.resource.contracts.Contract;
+import nl.earnit.dto.contracts.ContractDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -67,7 +65,7 @@ public class ContractTest {
         contractDAO.updateContractDescription(contractId, description);
 
         // Retrieve the contract from the DAO
-        Contract updatedContract = contractDAO.getContract(contractId);
+        ContractDTO updatedContract = contractDAO.getContract(contractId);
 
         // Perform assertions
         assertNotNull(updatedContract);
@@ -84,7 +82,7 @@ public class ContractTest {
         contractDAO.updateContractRole(contractId, role);
 
         // Retrieve the contract from the DAO
-        Contract updatedContract = contractDAO.getContract(contractId);
+        ContractDTO updatedContract = contractDAO.getContract(contractId);
 
         // Perform assertions
         assertNotNull(updatedContract);
@@ -95,13 +93,13 @@ public class ContractTest {
     void testCreateContract() throws SQLException {
         // Prepare test data
         String companyId = "9bfda60f-f88c-46b7-a4b7-8c49fc8e10be";
-        Contract contract = new Contract("ae3edddb-992e-4c0c-adac-380ef360a781","Contract role", "Contract description");
+        ContractDTO contract = new ContractDTO("ae3edddb-992e-4c0c-adac-380ef360a781","Contract role", "Contract description");
 
         // Call the method under test
         contractDAO.createContract(contract, companyId);
 
         // Retrieve the contract from the DAO
-        Contract createdContract = contractDAO.getContract(contract.getId());
+        ContractDTO createdContract = contractDAO.getContract(contract.getId());
 
         // Perform assertions
         assertNotNull(createdContract);

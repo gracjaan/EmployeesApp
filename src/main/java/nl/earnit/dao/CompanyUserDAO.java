@@ -1,8 +1,8 @@
 package nl.earnit.dao;
 
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

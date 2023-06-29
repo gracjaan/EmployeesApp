@@ -1,12 +1,12 @@
 package nl.earnit.dao;
 
-import nl.earnit.dto.workedweek.ContractDTO;
-import nl.earnit.dto.workedweek.UserContractDTO;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.dto.user.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.resource.companies.CompanyCounts;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.models.UserContract;
+import nl.earnit.dto.company.CompanyCountsDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -238,15 +238,15 @@ public class UserContractDAO extends GenericDAO<User> {
      * @return the number of employees by company
      * @throws SQLException the sql SQLException
      */
-    public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
+    public List<CompanyCountsDTO> getNumberOfEmployeesByCompany() throws SQLException {
 
-        List<CompanyCounts> result = new ArrayList<>();
+        List<CompanyCountsDTO> result = new ArrayList<>();
         String query = "SELECT COUNT(uc.id) as count, c.company_id, cy.name   FROM user_contract uc JOIN contract c ON c.id = uc.contract_id JOIN company cy ON cy.id = c.company_id  WHERE  uc.active = true GROUP BY c.company_id, cy.name";
         PreparedStatement statement = this.con.prepareStatement(query);
 
         ResultSet res = statement.executeQuery();
         while(res.next()) {
-            CompanyCounts count = new CompanyCounts();
+            CompanyCountsDTO count = new CompanyCountsDTO();
             count.setId(res.getString("company_id"));
             count.setName(res.getString("name"));
             count.setCount(res.getInt("count"));

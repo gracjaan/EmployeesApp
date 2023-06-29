@@ -6,7 +6,7 @@ import nl.earnit.Auth;
 import nl.earnit.exceptions.BadRequestException;
 import nl.earnit.exceptions.ForbiddenException;
 import nl.earnit.exceptions.UnauthorizedException;
-import nl.earnit.models.db.User;
+import nl.earnit.models.User;
 
 import java.util.UUID;
 import java.util.regex.Pattern;

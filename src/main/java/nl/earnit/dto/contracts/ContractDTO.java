@@ -1,8 +1,9 @@
-package nl.earnit.dto.workedweek;
+package nl.earnit.dto.contracts;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import nl.earnit.models.db.Company;
+import nl.earnit.dto.user.UserContractDTO;
+import nl.earnit.models.Company;
 
 import java.util.List;
 

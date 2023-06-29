@@ -1,13 +1,13 @@
 package nl.earnit.dao;
 
-import nl.earnit.dto.workedweek.ContractDTO;
-import nl.earnit.dto.workedweek.NotificationDTO;
-import nl.earnit.dto.workedweek.UserContractDTO;
-import nl.earnit.dto.workedweek.UserDTO;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.dto.NotificationDTO;
+import nl.earnit.dto.user.UserContractDTO;
+import nl.earnit.dto.user.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.dto.user.UserResponseDTO;
 import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
@@ -232,15 +232,15 @@ public class CompanyDAO extends GenericDAO<User> {
      * @return A list of Users formatted as a UserResponse object
      * @throws SQLException
      */
-    public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
+    public List<UserResponseDTO> getStudentsForCompany(String companyId) throws SQLException {
         String query = """
             SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.btw, u.kvk, u.address FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         ResultSet resultSet = statement.executeQuery();
-        List<UserResponse> users = new ArrayList<>();
+        List<UserResponseDTO> users = new ArrayList<>();
         while (resultSet.next()) {
-            UserResponse user = new UserResponse(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("btw"), resultSet.getString("kvk"), resultSet.getString("address"));
+            UserResponseDTO user = new UserResponseDTO(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("btw"), resultSet.getString("kvk"), resultSet.getString("address"));
             users.add(user);
         }
         return users;

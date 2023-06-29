@@ -1,4 +1,4 @@
-package nl.earnit.models.resource.companies;
+package nl.earnit.dto.company;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Create company.
  */
 @XmlRootElement
-public class CreateCompany {
+public class CreateCompanyDTO {
     private String name;
     private String userId;
     private String kvk;
@@ -16,7 +16,7 @@ public class CreateCompany {
     /**
      * Instantiates a new Create company.
      */
-    public CreateCompany() {
+    public CreateCompanyDTO() {
 
     }
 
@@ -28,7 +28,7 @@ public class CreateCompany {
      * @param kvk     the kvk
      * @param address the address
      */
-    public CreateCompany(String name, String userId, String kvk, String address) {
+    public CreateCompanyDTO(String name, String userId, String kvk, String address) {
         this.name = name;
         this.userId = userId;
         this.kvk = kvk;

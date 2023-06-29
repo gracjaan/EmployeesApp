@@ -4,11 +4,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.dao.*;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.companies.CreateCompany;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.dto.InvalidEntryDTO;
+import nl.earnit.dto.company.CreateCompanyDTO;
+import nl.earnit.dto.user.UserResponseDTO;
 
 import java.util.List;
 
@@ -55,20 +55,20 @@ public class CompaniesResource {
     /**
      * Create company response.
      *
-     * @param createCompany the create company
+     * @param createCompanyDTO the create company
      * @return the response
      */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response createCompany(CreateCompany createCompany) {
+    public Response createCompany(CreateCompanyDTO createCompanyDTO) {
         // Validate create company
-        if (createCompany == null || createCompany.getName() == null || createCompany.getUserId() == null) {
+        if (createCompanyDTO == null || createCompanyDTO.getName() == null || createCompanyDTO.getUserId() == null) {
             return Response.status(400).build();
         }
 
         // Validate company
-        if (createCompany.getName().length() <= 2) {
-            return Response.status(422).entity(new InvalidEntry("name")).build();
+        if (createCompanyDTO.getName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntryDTO("name")).build();
         }
 
         // Validate user
@@ -78,10 +78,10 @@ public class CompaniesResource {
 
             // Check user
             UserDAO userDAO = (UserDAO) daoManager.getDAO(DAOManager.DAO.USER);
-            User user = userDAO.getUserById(createCompany.getUserId());
+            User user = userDAO.getUserById(createCompanyDTO.getUserId());
 
             if (user == null) {
-                return Response.status(422).entity(new InvalidEntry("userId")).build();
+                return Response.status(422).entity(new InvalidEntryDTO("userId")).build();
             }
 
             // Convert user to a company user
@@ -101,7 +101,7 @@ public class CompaniesResource {
                     }
 
                     user.setType("COMPANY");
-                    if (!userDAO.updateUserType(new UserResponse(user))) {
+                    if (!userDAO.updateUserType(new UserResponseDTO(user))) {
                         return Response.status(Response.Status.NOT_MODIFIED).build();
                     }
                 }
@@ -109,12 +109,12 @@ public class CompaniesResource {
 
             // Create company
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
-            company = companyDAO.createCompany(createCompany.getName(), createCompany.getKvk(), createCompany.getAddress());
+            company = companyDAO.createCompany(createCompanyDTO.getName(), createCompanyDTO.getKvk(), createCompanyDTO.getAddress());
 
             // Link company user
             CompanyUserDAO companyUserDAO = (CompanyUserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY_USER);
-            if (!companyUserDAO.isUserWorkingForCompany(company.getId(), createCompany.getUserId())) {
-                if (!companyUserDAO.createCompanyUser(company.getId(), createCompany.getUserId())) {
+            if (!companyUserDAO.isUserWorkingForCompany(company.getId(), createCompanyDTO.getUserId())) {
+                if (!companyUserDAO.createCompanyUser(company.getId(), createCompanyDTO.getUserId())) {
                     company = null;
                 }
             }

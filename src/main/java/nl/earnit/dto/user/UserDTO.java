@@ -1,14 +1,15 @@
-package nl.earnit.models.resource.users;
+package nl.earnit.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import nl.earnit.models.db.User;
+import nl.earnit.models.User;
+
+import java.util.List;
 
 /**
  * User model without a password.
  */
 @XmlRootElement
-public class UserResponse {
+public class UserDTO {
     private String id;
     private String email;
     private String firstName;
@@ -19,29 +20,25 @@ public class UserResponse {
     private String btw;
     private String address;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean active;
+    private List<UserContractDTO> userContracts;
 
     /**
      * Creates a user model without password, without values.
      */
-    public UserResponse() {}
+    public UserDTO() {}
 
     /**
      * Creates a user model without password from a user model.
      *
      * @param user The user model.
      */
-    public UserResponse(User user) {
+    public UserDTO(User user) {
         this.id = user.getId();
         this.email = user.getEmail().toLowerCase();
         this.firstName = user.getFirstName();
         this.lastNamePrefix = user.getLastNamePrefix();
         this.lastName = user.getLastName();
         this.type = user.getType();
-        this.btw = user.getBtw();
-        this.kvk = user.getKvk();
-        this.address = user.getAddress();
     }
 
     /**
@@ -57,7 +54,7 @@ public class UserResponse {
      * @param btw            the btw
      * @param address        the address
      */
-    public UserResponse(String id, String email, String firstName, String lastName, String lastNamePrefix,
+    public UserDTO(String id, String email, String firstName, String lastName, String lastNamePrefix,
                         String type, String kvk, String btw, String address) {
         this.id = id;
         this.email = email;
@@ -65,9 +62,9 @@ public class UserResponse {
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
         this.type = type;
+        this.address = address;
         this.kvk = kvk;
         this.btw = btw;
-        this.address = address;
     }
 
     /**
@@ -179,24 +176,6 @@ public class UserResponse {
     }
 
     /**
-     * Set active.
-     *
-     * @param active the active
-     */
-    public void setActive(Boolean active){
-        this.active = active;
-    }
-
-    /**
-     * Get active boolean.
-     *
-     * @return the boolean
-     */
-    public Boolean getActive(){
-        return this.active;
-    }
-
-    /**
      * Gets kvk.
      *
      * @return the kvk
@@ -248,5 +227,23 @@ public class UserResponse {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    /**
+     * Gets user contracts.
+     *
+     * @return the user contracts
+     */
+    public List<UserContractDTO> getUserContracts() {
+        return userContracts;
+    }
+
+    /**
+     * Sets user contracts.
+     *
+     * @param userContracts the user contracts
+     */
+    public void setUserContracts(List<UserContractDTO> userContracts) {
+        this.userContracts = userContracts;
     }
 }

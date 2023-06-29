@@ -1,30 +1,31 @@
-package nl.earnit.models.resource.contracts;
+package nl.earnit.dto.contracts;
+
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * The type Description role.
+ * The type Create contract.
  */
-public class DescriptionRole {
-
+@XmlRootElement
+public class CreateContractDTO {
 
     private String role;
-
     private String description;
 
     /**
-     * Instantiates a new Description role.
-     */
-    public DescriptionRole() {
-    }
-
-    /**
-     * Instantiates a new Description role.
+     * Instantiates a new Create contract.
      *
      * @param role        the role
      * @param description the description
      */
-    public DescriptionRole(String role, String description) {
+    public CreateContractDTO(String role, String description) {
         this.role = role;
         this.description = description;
+    }
+
+    /**
+     * Instantiates a new Create contract.
+     */
+    public CreateContractDTO() {
     }
 
     /**

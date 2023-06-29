@@ -7,13 +7,13 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.dao.WorkedWeekDAO;
-import nl.earnit.dto.workedweek.NotificationDTO;
-import nl.earnit.dto.workedweek.UserContractDTO;
+import nl.earnit.dto.NotificationDTO;
+import nl.earnit.dto.user.UserContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.User;
+import nl.earnit.dto.InvalidEntryDTO;
+import nl.earnit.dto.user.UserResponseDTO;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -63,7 +63,7 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok(new UserResponse(user)).build();
+        return Response.ok(new UserResponseDTO(user)).build();
     }
 
     /**
@@ -76,7 +76,7 @@ public class UserResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateUser(@Context HttpHeaders httpHeaders, UserResponse user) {
+    public Response updateUser(@Context HttpHeaders httpHeaders, UserResponseDTO user) {
         // Validate create user
         if (user == null || user.getEmail() == null || user.getFirstName() == null || user.getLastName() == null) {
             return Response.status(400).build();
@@ -89,17 +89,17 @@ public class UserResource {
 
         // Validate user
         if (user.getFirstName().length() <= 2) {
-            return Response.status(422).entity(new InvalidEntry("firstName")).build();
+            return Response.status(422).entity(new InvalidEntryDTO("firstName")).build();
         }
 
         if (user.getLastName().length() <= 2) {
-            return Response.status(422).entity(new InvalidEntry("lastName")).build();
+            return Response.status(422).entity(new InvalidEntryDTO("lastName")).build();
         }
 
         String emailRegex = "([-!#-'*+/-9=?A-Z^-~]+(\\.[-!#-'*+/-9=?A-Z^-~]+)*|\"(\\[]!#-[^-~ \\t]|(\\\\[\\t -~]))+\")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+";
         Pattern emailPattern = Pattern.compile(emailRegex);
         if (!emailPattern.matcher(user.getEmail()).matches()) {
-            return Response.status(422).entity(new InvalidEntry("email")).build();
+            return Response.status(422).entity(new InvalidEntryDTO("email")).build();
         }
 
         UserDAO userDAO;
@@ -108,7 +108,7 @@ public class UserResource {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
             User userEmailCheck = userDAO.getUserByEmail(user.getEmail().toLowerCase());
             if (userEmailCheck != null && !userEmailCheck.getId().equals(userId)) {
-                return Response.status(Response.Status.CONFLICT).entity(new InvalidEntry("email")).build();
+                return Response.status(Response.Status.CONFLICT).entity(new InvalidEntryDTO("email")).build();
             }
 
             user.setId(userId);
@@ -116,7 +116,7 @@ public class UserResource {
         } catch (Exception e) {
             return Response.serverError().build();
         }
-        return Response.ok(new UserResponse(dbUser)).build();
+        return Response.ok(new UserResponseDTO(dbUser)).build();
     }
 
     /**

@@ -1,4 +1,4 @@
-package nl.earnit.models.db;
+package nl.earnit.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;

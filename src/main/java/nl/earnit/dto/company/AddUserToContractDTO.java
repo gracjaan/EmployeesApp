@@ -1,4 +1,4 @@
-package nl.earnit.models.resource.companies;
+package nl.earnit.dto.company;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Add user to contract.
  */
 @XmlRootElement
-public class AddUserToContract {
+public class AddUserToContractDTO {
     private String userId;
     private int hourlyWage; //keep it in cents
 
@@ -14,7 +14,7 @@ public class AddUserToContract {
     /**
      * Instantiates a new Add user to contract.
      */
-    public AddUserToContract() {
+    public AddUserToContractDTO() {
     }
 
     /**
@@ -23,7 +23,7 @@ public class AddUserToContract {
      * @param userId     the user id
      * @param hourlyWage the hourly wage
      */
-    public AddUserToContract(String userId, int hourlyWage) {
+    public AddUserToContractDTO(String userId, int hourlyWage) {
         this.userId = userId;
         this.hourlyWage = hourlyWage;
     }

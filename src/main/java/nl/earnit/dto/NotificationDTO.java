@@ -1,4 +1,4 @@
-package nl.earnit.dto.workedweek;
+package nl.earnit.dto;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 

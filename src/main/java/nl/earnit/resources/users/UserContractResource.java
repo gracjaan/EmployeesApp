@@ -5,8 +5,8 @@ import jakarta.ws.rs.core.*;
 import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.*;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.db.Worked;
+import nl.earnit.models.UserContract;
+import nl.earnit.models.Worked;
 
 import java.util.List;
 

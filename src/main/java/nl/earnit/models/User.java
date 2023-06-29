@@ -1,48 +1,72 @@
-package nl.earnit.models.resource.users;
+package nl.earnit.models;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * User model for the user POST request.
+ * User model.
  */
 @XmlRootElement
-public class CreateUser {
+public class User {
+    private String id;
     private String email;
     private String firstName;
     private String lastName;
     private String lastNamePrefix;
+    private String type;
     private String password;
     private String kvk;
-    private String btw;
     private String address;
+    private String btw;
 
     /**
-     * Creates a user model for the user POST request.
+     * Creates a user model without values.
      */
-    public CreateUser() {}
+    public User() {}
 
     /**
-     * Creates a user model for the user POST request.
+     * Creates a user model.
      *
+     * @param id             The id of the user.
      * @param email          The email of the user.
      * @param firstName      The first name of the user.
      * @param lastName       The last name of the user.
      * @param lastNamePrefix The last name prefix of the user.
-     * @param password       The password of the user.
-     * @param kvk            the kvk
-     * @param btw            the btw
+     * @param type           The type of user: STUDENT, COMPANY, ADMINISTRATOR.
+     * @param password       The hashed password of the user.
      * @param address        the address
+     * @param btw            the btw
+     * @param kvk            the kvk
      */
-    public CreateUser(String email, String firstName, String lastName, String lastNamePrefix,
-                      String password, String kvk, String btw, String address) {
+    public User(String id, String email, String firstName, String lastName, String lastNamePrefix,
+                String type, String password, String address, String btw, String kvk) {
+        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
+        this.type = type;
         this.password = password;
-        this.kvk = kvk;
-        this.btw = btw;
         this.address = address;
+        this.btw = btw;
+        this.kvk = kvk;
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -118,6 +142,24 @@ public class CreateUser {
     }
 
     /**
+     * Gets type.
+     *
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets type.
+     *
+     * @param type the type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
      * Gets password.
      *
      * @return the password
@@ -154,6 +196,24 @@ public class CreateUser {
     }
 
     /**
+     * Gets address.
+     *
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets address.
+     *
+     * @param address the address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
      * Gets btw.
      *
      * @return the btw
@@ -172,20 +232,20 @@ public class CreateUser {
     }
 
     /**
-     * Gets address.
-     *
-     * @return the address
+     * The enum Type.
      */
-    public String getAddress() {
-        return address;
-    }
-
-    /**
-     * Sets address.
-     *
-     * @param address the address
-     */
-    public void setAddress(String address) {
-        this.address = address;
+    public enum Type {
+        /**
+         * Administrator type.
+         */
+        ADMINISTRATOR,
+        /**
+         * Student type.
+         */
+        STUDENT,
+        /**
+         * Company type.
+         */
+        COMPANY
     }
 }

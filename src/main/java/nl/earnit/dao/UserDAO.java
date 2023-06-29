@@ -1,11 +1,11 @@
 package nl.earnit.dao;
 
 import jakarta.annotation.Nullable;
-import nl.earnit.dto.workedweek.NotificationDTO;
+import nl.earnit.dto.NotificationDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.dto.user.UserResponseDTO;
 import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
@@ -102,7 +102,7 @@ public class UserDAO extends GenericDAO<User> {
      * @return the all users
      * @throws SQLException the sql SQLException
      */
-    public List<UserResponse> getAllUsers(String order) throws SQLException {
+    public List<UserResponseDTO> getAllUsers(String order) throws SQLException {
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
             put("user.first_name", "first_name");
             put("user.last_name", "last_name");
@@ -111,7 +111,7 @@ public class UserDAO extends GenericDAO<User> {
             put("user.id", "id");
         }});
 
-        ArrayList<UserResponse> userList = new ArrayList<>();
+        ArrayList<UserResponseDTO> userList = new ArrayList<>();
 
 
         String query = "SELECT id, first_name, last_name, last_name_prefix, email, active FROM \"" + tableName + "\"WHERE type = 'STUDENT'  ORDER BY " + orderBy.getSQLOrderBy(order, false) ;
@@ -125,7 +125,7 @@ public class UserDAO extends GenericDAO<User> {
 
         // Return all users
         while(res.next()) {
-            UserResponse user = new UserResponse();
+            UserResponseDTO user = new UserResponseDTO();
             user.setId(res.getString("id"));
             user.setFirstName(res.getString("first_name"));
             user.setEmail(res.getString("email"));
@@ -187,7 +187,7 @@ public class UserDAO extends GenericDAO<User> {
      * @return the user
      * @throws SQLException the sql SQLException
      */
-    public User updateUser(UserResponse user) throws SQLException {
+    public User updateUser(UserResponseDTO user) throws SQLException {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ?, kvk = ?, btw = ?, address = ? WHERE \"id\" = ? RETURNING id";
 
@@ -260,17 +260,17 @@ public class UserDAO extends GenericDAO<User> {
 
     /**
      * Updates the user type to either a: "STUDENT", "ADMINISTRATOR", or "COMPANY"
-     * @param userResponse The user object that you want to change the user to.
+     * @param userResponseDTO The user object that you want to change the user to.
      * @return whether the user was updated ? true : false
      * @throws SQLException
      */
-    public boolean updateUserType(UserResponse userResponse) throws SQLException {
+    public boolean updateUserType(UserResponseDTO userResponseDTO) throws SQLException {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET type = ? WHERE \"id\" = ? RETURNING id";
 
         PreparedStatement statement = this.con.prepareStatement(query);
-        statement.setString(1, userResponse.getType());
-        PostgresJDBCHelper.setUuid(statement, 2, userResponse.getId());
+        statement.setString(1, userResponseDTO.getType());
+        PostgresJDBCHelper.setUuid(statement, 2, userResponseDTO.getId());
 
         // Execute query
         ResultSet res = statement.executeQuery();

@@ -135,7 +135,7 @@ The notifications that are displayed onn the dashboard will appear when one of t
 In order to be on the application as a Staff, we first have to make an account for an Administrator. An administrator cannot be created through the
 application to enhance security. This is why we insert the Administrator into the database by hand
 
->If the administrator is inserted, the credentials can just be filled in, in the login. A pre-inserted administrator is:
+>If the administrator is inserted, the credentials can just be filled in, in the loginDTO. A pre-inserted administrator is:
 email: user3@example.com   , password: test
 #### Dashboard <a name="dashboard-2"></a>
 ###### Requests <a name="requests-1"></a>

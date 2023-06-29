@@ -4,16 +4,16 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import nl.earnit.InvoicePDFHandler;
 import nl.earnit.dao.*;
-import nl.earnit.dto.workedweek.NotificationDTO;
+import nl.earnit.dto.NotificationDTO;
+import nl.earnit.dto.company.CreateNoteDTO;
+import nl.earnit.dto.company.CreateSuggestionDTO;
+import nl.earnit.dto.contracts.ContractDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.dto.workedweek.WorkedWeekUndoApprovalDTO;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.companies.CreateNote;
-import nl.earnit.models.resource.companies.CreateSuggestion;
-import nl.earnit.models.resource.contracts.Contract;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.Company;
+import nl.earnit.dto.InvalidEntryDTO;
+import nl.earnit.dto.user.UserResponseDTO;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class CompanyResource {
 
         // Validate company
         if (company.getName().length() <= 2) {
-            return Response.status(422).entity(new InvalidEntry("name")).build();
+            return Response.status(422).entity(new InvalidEntryDTO("name")).build();
         }
 
         try {
@@ -189,7 +189,7 @@ public class CompanyResource {
     @Path("/students")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getStudents() {
-        List<UserResponse> users;
+        List<UserResponseDTO> users;
         try {
             CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
             users = companyDAO.getStudentsForCompany(companyId);
@@ -236,7 +236,7 @@ public class CompanyResource {
     @POST
     @Path("/contracts")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getContracts(Contract contract) {
+    public Response getContracts(ContractDTO contract) {
         ContractDAO contractDAO;
 
         try {
@@ -652,7 +652,7 @@ public class CompanyResource {
     @POST
     @Path("/approves/{workedWeekId}/note")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response setWorkedWeekNote(@PathParam("workedWeekId") String workedWeekId, CreateNote note) {
+    public Response setWorkedWeekNote(@PathParam("workedWeekId") String workedWeekId, CreateNoteDTO note) {
         try {
             WorkedWeekDAO workedDAO = (WorkedWeekDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED_WEEK);
@@ -686,7 +686,7 @@ public class CompanyResource {
     @POST
     @Path("/approves/suggest/{workedId}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response suggestWorked(@PathParam("workedId") String workedId, CreateSuggestion suggestion) {
+    public Response suggestWorked(@PathParam("workedId") String workedId, CreateSuggestionDTO suggestion) {
         try {
             WorkedDAO workedDAO = (WorkedDAO) DAOManager.getInstance().getDAO(
                 DAOManager.DAO.WORKED);

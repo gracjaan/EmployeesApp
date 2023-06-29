@@ -2,7 +2,7 @@ package nl.earnit.test;
 
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
-import nl.earnit.models.db.Worked;
+import nl.earnit.models.Worked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,22 +1,23 @@
 package nl.earnit.dao;
 
+import nl.earnit.dto.company.CreateNoteDTO;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.dto.user.UserResponseDTO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.exceptions.InvalidOrderByException;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.*;
-import nl.earnit.models.resource.companies.CreateNote;
-import nl.earnit.models.resource.contracts.Contract;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.*;
 import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * The type Worked week dao.
@@ -866,7 +867,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
             PostgresJDBCHelper.getInteger(res, prefix + "week"),
             res.getString(prefix + "note"),
             res.getString(prefix + "status"),
-            withUser ? new UserResponse(res.getString("user_id"),
+            withUser ? new UserResponseDTO(res.getString("user_id"),
                 res.getString("user_email"),
                 res.getString("user_first_name"),
                 res.getString("user_last_name"),
@@ -879,7 +880,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 res.getString("user_contract_user_id"),
                 res.getInt("user_contract_hourly_wage"),
                 res.getBoolean("user_contract_active")) : null,
-            withContract ? new Contract(res.getString("contract_id"),
+            withContract ? new ContractDTO(res.getString("contract_id"),
                 res.getString("contract_role"),
                 res.getString("contract_description")) : null,
             withHours ? hours : null,
@@ -942,7 +943,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param note         the note
      * @throws SQLException the sql SQLException
      */
-    public void setCompanyNote(String workedWeekId, CreateNote note) throws SQLException {
+    public void setCompanyNote(String workedWeekId, CreateNoteDTO note) throws SQLException {
         String query = "UPDATE \"" + tableName + "\" SET company_note = ? WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, note.getNote());

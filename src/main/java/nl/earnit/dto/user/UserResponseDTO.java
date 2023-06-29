@@ -1,30 +1,51 @@
-package nl.earnit.models.db;
+package nl.earnit.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import nl.earnit.models.User;
 
 /**
- * User model.
+ * User model without a password.
  */
 @XmlRootElement
-public class User {
+public class UserResponseDTO {
     private String id;
     private String email;
     private String firstName;
     private String lastName;
     private String lastNamePrefix;
     private String type;
-    private String password;
     private String kvk;
-    private String address;
     private String btw;
+    private String address;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean active;
 
     /**
-     * Creates a user model without values.
+     * Creates a user model without password, without values.
      */
-    public User() {}
+    public UserResponseDTO() {}
 
     /**
-     * Creates a user model.
+     * Creates a user model without password from a user model.
+     *
+     * @param user The user model.
+     */
+    public UserResponseDTO(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail().toLowerCase();
+        this.firstName = user.getFirstName();
+        this.lastNamePrefix = user.getLastNamePrefix();
+        this.lastName = user.getLastName();
+        this.type = user.getType();
+        this.btw = user.getBtw();
+        this.kvk = user.getKvk();
+        this.address = user.getAddress();
+    }
+
+    /**
+     * Creates a user model without password.
      *
      * @param id             The id of the user.
      * @param email          The email of the user.
@@ -32,23 +53,21 @@ public class User {
      * @param lastName       The last name of the user.
      * @param lastNamePrefix The last name prefix of the user.
      * @param type           The type of user: STUDENT, COMPANY, ADMINISTRATOR.
-     * @param password       The hashed password of the user.
-     * @param address        the address
-     * @param btw            the btw
      * @param kvk            the kvk
+     * @param btw            the btw
+     * @param address        the address
      */
-    public User(String id, String email, String firstName, String lastName, String lastNamePrefix,
-                String type, String password, String address, String btw, String kvk) {
+    public UserResponseDTO(String id, String email, String firstName, String lastName, String lastNamePrefix,
+                           String type, String kvk, String btw, String address) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastNamePrefix = lastNamePrefix;
         this.type = type;
-        this.password = password;
-        this.address = address;
-        this.btw = btw;
         this.kvk = kvk;
+        this.btw = btw;
+        this.address = address;
     }
 
     /**
@@ -160,21 +179,21 @@ public class User {
     }
 
     /**
-     * Gets password.
+     * Set active.
      *
-     * @return the password
+     * @param active the active
      */
-    public String getPassword() {
-        return password;
+    public void setActive(Boolean active){
+        this.active = active;
     }
 
     /**
-     * Sets password.
+     * Get active boolean.
      *
-     * @param password the password
+     * @return the boolean
      */
-    public void setPassword(String password) {
-        this.password = password;
+    public Boolean getActive(){
+        return this.active;
     }
 
     /**
@@ -196,24 +215,6 @@ public class User {
     }
 
     /**
-     * Gets address.
-     *
-     * @return the address
-     */
-    public String getAddress() {
-        return address;
-    }
-
-    /**
-     * Sets address.
-     *
-     * @param address the address
-     */
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    /**
      * Gets btw.
      *
      * @return the btw
@@ -232,20 +233,20 @@ public class User {
     }
 
     /**
-     * The enum Type.
+     * Gets address.
+     *
+     * @return the address
      */
-    public enum Type {
-        /**
-         * Administrator type.
-         */
-        ADMINISTRATOR,
-        /**
-         * Student type.
-         */
-        STUDENT,
-        /**
-         * Company type.
-         */
-        COMPANY
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets address.
+     *
+     * @param address the address
+     */
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

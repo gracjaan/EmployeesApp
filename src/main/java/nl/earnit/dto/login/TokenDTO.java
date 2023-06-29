@@ -1,4 +1,4 @@
-package nl.earnit.models.resource.login;
+package nl.earnit.dto.login;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Token.
  */
 @XmlRootElement
-public class Token {
+public class TokenDTO {
     private String token;
 
     private Long expires;
@@ -14,7 +14,7 @@ public class Token {
     /**
      * Instantiates a new Token.
      */
-    public Token() {}
+    public TokenDTO() {}
 
     /**
      * Instantiates a new Token.
@@ -22,7 +22,7 @@ public class Token {
      * @param token   the token
      * @param expires the expires
      */
-    public Token(String token, Long expires) {
+    public TokenDTO(String token, Long expires) {
         this.token = token;
         this.expires = expires;
     }

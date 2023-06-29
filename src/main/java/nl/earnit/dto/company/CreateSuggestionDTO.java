@@ -1,4 +1,4 @@
-package nl.earnit.models.resource.companies;
+package nl.earnit.dto.company;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -6,13 +6,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * The type Create suggestion.
  */
 @XmlRootElement
-public class CreateSuggestion {
+public class CreateSuggestionDTO {
     private Integer suggestion;
 
     /**
      * Instantiates a new Create suggestion.
      */
-    public CreateSuggestion() {
+    public CreateSuggestionDTO() {
 
     }
 
@@ -21,7 +21,7 @@ public class CreateSuggestion {
      *
      * @param suggestion the suggestion
      */
-    public CreateSuggestion(Integer suggestion) {
+    public CreateSuggestionDTO(Integer suggestion) {
         this.suggestion = suggestion;
     }
 
