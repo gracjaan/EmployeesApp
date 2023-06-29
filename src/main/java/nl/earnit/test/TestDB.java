@@ -1,10 +1,8 @@
 package nl.earnit.test;
 
 
-import io.zonky.test.db.postgres.junit5.EmbeddedPostgresExtension;
 import io.zonky.test.db.postgres.junit5.SingleInstancePostgresExtension;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -16,8 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TestDB {
-    @RegisterExtension
-    public SingleInstancePostgresExtension pg = EmbeddedPostgresExtension.singleInstance();
+    private final SingleInstancePostgresExtension pg;
+
+    public TestDB(SingleInstancePostgresExtension pg) {
+        this.pg = pg;
+    }
 
     public Connection getConnection() throws SQLException {
         return pg.getEmbeddedPostgres().getPostgresDatabase().getConnection();
