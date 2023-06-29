@@ -17,7 +17,7 @@ public class WorkedWeekUndoApprovalDTO {
     /**
      * Instantiates a new Worked week undo approval dto.
      *
-     * @param approve the approve
+     * @param approve the approval
      */
     public WorkedWeekUndoApprovalDTO(Boolean approve) {
         this.approve = approve;
@@ -26,7 +26,7 @@ public class WorkedWeekUndoApprovalDTO {
     /**
      * Gets approve.
      *
-     * @return the approve
+     * @return the approval
      */
     public Boolean getApprove() {
         return approve;
@@ -35,7 +35,7 @@ public class WorkedWeekUndoApprovalDTO {
     /**
      * Sets approve.
      *
-     * @param approve the approve
+     * @param approve the approval
      */
     public void setApprove(Boolean approve) {
         this.approve = approve;
