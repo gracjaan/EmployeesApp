@@ -13,9 +13,9 @@ public abstract class GenericDAO<T> {
      * Get row count in table.
      *
      * @return Row count
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
-    public abstract int count() throws SQLException;
+    public abstract int count() throws Exception;
 
     /**
      * The Table name.

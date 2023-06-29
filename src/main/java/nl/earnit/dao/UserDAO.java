@@ -36,10 +36,10 @@ public class UserDAO extends GenericDAO<User> {
     /**
      * Counts all the rows with active users
      * @return amount of active users
-     * @throws SQLException
+     * @throws Exception
      */
     @Override
-    public int count() throws SQLException {
+    public int count() throws Exception {
         // Create query
         String query = "SELECT COUNT(*) AS count FROM  " + tableName + "WHERE active = true";
         PreparedStatement counter = this.con.prepareStatement(query);
@@ -57,9 +57,9 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param id The id of the user.
      * @return The user or null if not found.
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
-    public User getUserById(String id) throws SQLException {
+    public User getUserById(String id) throws Exception {
         return getUser("id", id, "uuid");
     }
 
@@ -68,13 +68,13 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param email The email of the user.
      * @return The user or null if not found.
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
-    public User getUserByEmail(String email) throws SQLException {
+    public User getUserByEmail(String email) throws Exception {
         return getUser("email", email, "text");
     }
 
-    private User getUser(String colum, String value, String type) throws SQLException {
+    private User getUser(String colum, String value, String type) throws Exception {
         // Create query
         String query =
             "SELECT id, email, first_name, last_name, last_name_prefix, password, type, kvk, address, btw FROM \"" + tableName + "\" WHERE \"" + colum + "\" = ?";
@@ -100,9 +100,9 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param order the order
      * @return the all users
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public List<UserResponse> getAllUsers(String order) throws SQLException {
+    public List<UserResponse> getAllUsers(String order) throws Exception {
         OrderBy orderBy = new OrderBy(new HashMap<>() {{
             put("user.first_name", "first_name");
             put("user.last_name", "last_name");
@@ -152,10 +152,10 @@ public class UserDAO extends GenericDAO<User> {
      * @param btw            the btw
      * @param address        the address
      * @return the user
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
     public User createUser(String email, String firstName, @Nullable String lastNamePrefix, String lastName, String password, String type, String kvk, String btw, String address)
-        throws SQLException {
+        throws Exception {
         // Create query
         String query = "INSERT INTO \"" + tableName + "\" (email, first_name, last_name_prefix, last_name, password, type, kvk, btw, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
@@ -185,9 +185,9 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param user the user
      * @return the user
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public User updateUser(UserResponse user) throws SQLException {
+    public User updateUser(UserResponse user) throws Exception {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET email = ?, first_name = ?, last_name = ?, last_name_prefix = ?, active = ?, kvk = ?, btw = ?, address = ? WHERE \"id\" = ? RETURNING id";
 
@@ -216,9 +216,9 @@ public class UserDAO extends GenericDAO<User> {
      * Disable user by id.
      *
      * @param id the id
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public void disableUserById(String id) throws SQLException {
+    public void disableUserById(String id) throws Exception {
         String query = "UPDATE \"" + tableName + "\" SET active = false WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
@@ -229,9 +229,9 @@ public class UserDAO extends GenericDAO<User> {
      * Renable user by id.
      *
      * @param id the id
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public void renableUserById(String id) throws SQLException {
+    public void renableUserById(String id) throws Exception {
         String query = "UPDATE \"" + tableName + "\" SET active = true WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
@@ -242,9 +242,9 @@ public class UserDAO extends GenericDAO<User> {
      * gets all the companies that a user works for (an admin can work for multiple companies)
      * @param userId the id of the user
      * @return List of companies the user works for
-     * @throws SQLException
+     * @throws Exception
      */
-    public List<Company> getCompanies(String userId) throws SQLException {
+    public List<Company> getCompanies(String userId) throws Exception {
         List<Company> companies = new ArrayList<>();
         String query = "SELECT c.* FROM company c, company_user u WHERE c.id=u.company_id AND u.user_id=?;";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -262,9 +262,9 @@ public class UserDAO extends GenericDAO<User> {
      * Updates the user type to either a: "STUDENT", "ADMINISTRATOR", or "COMPANY"
      * @param userResponse The user object that you want to change the user to.
      * @return whether the user was updated ? true : false
-     * @throws SQLException
+     * @throws Exception
      */
-    public boolean updateUserType(UserResponse userResponse) throws SQLException {
+    public boolean updateUserType(UserResponse userResponse) throws Exception {
         // Create query
         String query = "UPDATE \"" + tableName + "\" SET type = ? WHERE \"id\" = ? RETURNING id";
 
@@ -284,9 +284,9 @@ public class UserDAO extends GenericDAO<User> {
      *
      * @param userId the user id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public boolean isActive(String userId) throws SQLException {
+    public boolean isActive(String userId) throws Exception {
         String query = "SELECT active FROM \"" + tableName + "\" u WHERE u.id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -301,7 +301,7 @@ public class UserDAO extends GenericDAO<User> {
         return res.getBoolean("active");
     }
 
-    public List<NotificationDTO> getNotificationsForUser(String user_id) throws SQLException {
+    public List<NotificationDTO> getNotificationsForUser(String user_id) throws Exception {
         if (user_id==null) {
             return null;
         }
@@ -333,7 +333,7 @@ public class UserDAO extends GenericDAO<User> {
     }
 
 
-    public List<NotificationDTO> getNotificationsForStaffUser() throws SQLException {
+    public List<NotificationDTO> getNotificationsForStaffUser() throws Exception {
         List<NotificationDTO> notifications = new ArrayList<>();
         String query = """
             SELECT n.*, u.first_name, u.last_name_prefix, u.last_name, c.role, cy.name AS company_name, ww.week, u.id as user_id, cy.id as company_id, ww.id as worked_week_id, uc.id as user_contract_id, c.id as contract_id 
@@ -406,7 +406,7 @@ public class UserDAO extends GenericDAO<User> {
         return description;
     }
 
-    public void changeNotificationToSeen(String notification_id) throws SQLException {
+    public void changeNotificationToSeen(String notification_id) throws Exception {
         String query = "UPDATE \"notification\" SET seen = true WHERE id = ? returning id";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, notification_id);
@@ -414,7 +414,7 @@ public class UserDAO extends GenericDAO<User> {
     }
 
     // for unit tests
-    public ResultSet executeCustomQuery(String query) throws SQLException {
+    public ResultSet executeCustomQuery(String query) throws Exception {
         PreparedStatement statement = this.con.prepareStatement(query);
         ResultSet res = statement.executeQuery();
         return res;

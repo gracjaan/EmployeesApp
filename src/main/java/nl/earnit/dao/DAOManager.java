@@ -23,9 +23,9 @@ public class DAOManager {
     /**
      * Opens connection to database.
      *
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
-    public void open() throws SQLException {
+    public void open() throws Exception {
         // Only open if not connected
         if (this.con != null && !this.con.isClosed()) {
             return;
@@ -37,9 +37,9 @@ public class DAOManager {
     /**
      * Closes connection to database.
      *
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
-    public void close() throws SQLException {
+    public void close() throws Exception {
         // Only close if connected at all
         if (this.con == null || this.con.isClosed()) {
             return;
@@ -61,7 +61,7 @@ public class DAOManager {
      * @return
      * @throws SQLException
      */
-    public GenericDAO<?> getDAO(DAO dao) throws SQLException {
+    public GenericDAO<?> getDAO(DAO dao) throws Exception {
         this.open();
 
         if (dao.equals(DAO.USER)) {
@@ -80,7 +80,7 @@ public class DAOManager {
             return new ContractDAO(this.con);
         }
 
-        throw new SQLException("Trying to link to an nonexistent dao.");
+        throw new Exception("Trying to link to an nonexistent dao.");
 
     }
 

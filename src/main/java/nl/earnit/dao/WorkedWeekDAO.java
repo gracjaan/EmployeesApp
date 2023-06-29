@@ -64,7 +64,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
     }
 
     @Override
-    public int count() throws SQLException {
+    public int count() throws Exception {
         // Create query
         String query = """
              SELECT COUNT(DISTINCT ww.id) AS count FROM "%s" ww
@@ -86,9 +86,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param userContractId the user contract id
      * @param year           the year
      * @param week           the week
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public void confirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
+    public void confirmWorkedWeek(String userContractId, String year, String week) throws Exception {
         String query = "UPDATE worked_week SET status = 'CONFIRMED' WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, userContractId);
@@ -104,9 +104,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param year           the year
      * @param week           the week
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public boolean removeConfirmWorkedWeek(String userContractId, String year, String week) throws SQLException {
+    public boolean removeConfirmWorkedWeek(String userContractId, String year, String week) throws Exception {
         if (hasDatePassed(year, week)) {
             return false;
         }
@@ -128,9 +128,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param year           the year
      * @param week           the week
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public boolean addWorkedWeekNote(String note, String userContractId, String year, String week) throws SQLException {
+    public boolean addWorkedWeekNote(String note, String userContractId, String year, String week) throws Exception {
         String query = "UPDATE worked_week SET note = ? WHERE contract_id = ? AND year = ? AND week = ?";
         PreparedStatement statement = con.prepareStatement(query);
         statement.setString(1, note);
@@ -150,9 +150,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      *
      * @param userId The id of the user.
      * @return the int
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
-    public int countWorkedWeekForUser(String userId) throws SQLException {
+    public int countWorkedWeekForUser(String userId) throws Exception {
         String query = """
             SELECT COUNT(DISTINCT ww.id) AS count FROM "%s" ww
                         
@@ -182,9 +182,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      *
      * @param id the id
      * @return the worked week by id
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public WorkedWeekDTO getWorkedWeekById(String id) throws SQLException {
+    public WorkedWeekDTO getWorkedWeekById(String id) throws Exception {
         return getWorkedWeekById(id, false, false, false, false, false, false, "hours.day:asc");
     }
 
@@ -203,11 +203,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked weeks for user
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
     public List<WorkedWeekDTO> getWorkedWeeksForUser(String userId, String userContractId, Integer year, Integer week, boolean withCompany,
                                                      boolean withContract, boolean withUserContract,
-                                                     boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+                                                     boolean withUser, boolean withHours, boolean withTotalHours, String order) throws Exception {
         List<String> where = new ArrayList<>();
         if (userId != null) where.add("u.id");
         if (userContractId != null) where.add("uc.id");
@@ -300,11 +300,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked weeks for company
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
     public List<WorkedWeekDTO> getWorkedWeeksForCompany(String companyId, int year, int week, boolean withCompany,
                                                         boolean withContract, boolean withUserContract,
-                                                        boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+                                                        boolean withUser, boolean withHours, boolean withTotalHours, String order) throws Exception {
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
                 ww.contract_id as worked_week_contract_id,
@@ -388,11 +388,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked weeks for company for user
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
     public List<WorkedWeekDTO> getWorkedWeeksForCompanyForUser(String companyId, String userId, boolean withCompany,
                                                                boolean withContract, boolean withUserContract,
-                                                               boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+                                                               boolean withUser, boolean withHours, boolean withTotalHours, String order) throws Exception {
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
                 ww.contract_id as worked_week_contract_id,
@@ -473,14 +473,14 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked weeks to approve for staff
-     * @throws SQLException            If a database error occurs.
+     * @throws Exception            If a database error occurs.
      * @throws InvalidOrderByException the invalid order by exception
      */
     public List<WorkedWeekDTO> getWorkedWeeksToApproveForStaff(boolean withCompany,
                                                                boolean withContract,
                                                                boolean withUserContract,
                                                                boolean withUser, boolean withHours, boolean withTotalHours, String order)
-        throws SQLException, InvalidOrderByException {
+        throws Exception, InvalidOrderByException {
 
         int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
         int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
@@ -567,11 +567,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked week by id
-     * @throws SQLException If a database error occurs.
+     * @throws Exception If a database error occurs.
      */
     public WorkedWeekDTO getWorkedWeekById(String workedWeekId, boolean withCompany,
                                            boolean withContract, boolean withUserContract,
-                                           boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+                                           boolean withUser, boolean withHours, boolean withTotalHours, String order) throws Exception {
         String query = """
             SELECT DISTINCT ww.id as worked_week_id,
                 ww.contract_id as worked_week_contract_id,
@@ -650,7 +650,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked weeks to approve for company
-     * @throws SQLException            If a database error occurs.
+     * @throws Exception            If a database error occurs.
      * @throws InvalidOrderByException the invalid order by exception
      */
     public List<WorkedWeekDTO> getWorkedWeeksToApproveForCompany(String companyId,
@@ -658,7 +658,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                                                                  boolean withContract,
                                                                  boolean withUserContract,
                                                                  boolean withUser, boolean withHours, boolean withTotalHours, String order)
-        throws SQLException, InvalidOrderByException {
+        throws Exception, InvalidOrderByException {
 
         int currentWeek = LocalDate.now().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
         int currentYear = LocalDate.now().get(IsoFields.WEEK_BASED_YEAR);
@@ -740,10 +740,10 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param companyId    the company id
      * @param workedWeekId the worked week id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
     public boolean hasCompanyAccessToWorkedWeek(String companyId, String workedWeekId)
-        throws SQLException {
+        throws Exception {
         String query = """
             SELECT COUNT(DISTINCT ww.id) as count FROM "%s" ww
                         
@@ -769,13 +769,13 @@ public class WorkedWeekDAO extends GenericDAO<User> {
 
 
     /**
-     * Update worked week worked week dto.
+     * Update worked week dto.
      *
      * @param workedWeek the worked week
      * @return the worked week dto
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public WorkedWeekDTO updateWorkedWeek(WorkedWeek workedWeek) throws SQLException {
+    public WorkedWeekDTO updateWorkedWeek(WorkedWeek workedWeek) throws Exception {
         // Create query
         String query = "UPDATE \"" + tableName +
             "\" SET note = ?, status = ? WHERE \"id\" = ? RETURNING id";
@@ -811,11 +811,11 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param withTotalHours   the with total hours
      * @param order            the order
      * @return the worked week status
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
     public WorkedWeekDTO setWorkedWeekStatus(String workedWeekId, String status, boolean withCompany,
                                              boolean withContract, boolean withUserContract,
-                                             boolean withUser, boolean withHours, boolean withTotalHours, String order) throws SQLException {
+                                             boolean withUser, boolean withHours, boolean withTotalHours, String order) throws Exception {
         // Create query
         String query = """
             UPDATE "%s" ww SET status = ?
@@ -837,7 +837,7 @@ public class WorkedWeekDAO extends GenericDAO<User> {
         return getWorkedWeekById(res.getString("id"), withCompany, withContract, withUserContract, withUser, withHours, withTotalHours, order);
     }
 
-    private WorkedWeekDTO getWorkedWeekFromRow(ResultSet res, String prefix, boolean withCompany, boolean withContract, boolean withUserContract, boolean withUser, boolean withHours, boolean withTotalHours) throws SQLException {
+    private WorkedWeekDTO getWorkedWeekFromRow(ResultSet res, String prefix, boolean withCompany, boolean withContract, boolean withUserContract, boolean withUser, boolean withHours, boolean withTotalHours) throws Exception {
         List<Worked> hours = new ArrayList<>();
 
         if (withHours) {
@@ -896,9 +896,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param contractId the contract id
      * @param year       the year
      * @param week       the week
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public void addWorkedWeek(String contractId, String year, String week) throws SQLException {
+    public void addWorkedWeek(String contractId, String year, String week) throws Exception {
         String query = "INSERT INTO \"" + tableName + "\" (contract_id, year, week) " +
             "VALUES (?, ?, ?) RETURNING id";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -939,9 +939,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      *
      * @param workedWeekId the worked week id
      * @param note         the note
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public void setCompanyNote(String workedWeekId, CreateNote note) throws SQLException {
+    public void setCompanyNote(String workedWeekId, CreateNote note) throws Exception {
         String query = "UPDATE \"" + tableName + "\" SET company_note = ? WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         statement.setString(1, note.getNote());
@@ -955,9 +955,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      *
      * @param workedWeekId the worked week id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public boolean isWorkedWeekConfirmed(String workedWeekId) throws SQLException {
+    public boolean isWorkedWeekConfirmed(String workedWeekId) throws Exception {
         String query = "SELECT status FROM worked_week WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
@@ -972,9 +972,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param userId       the user id
      * @param workedWeekId the worked week id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public boolean hasStudentAccessToWorkedWeek(String userId, String workedWeekId) throws SQLException {
+    public boolean hasStudentAccessToWorkedWeek(String userId, String workedWeekId) throws Exception {
         String query = """
             SELECT COUNT(DISTINCT ww.id) as count FROM "%s" ww
                 JOIN user_contract uc ON uc.id = ww.contract_id
@@ -1002,9 +1002,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      * @param year           the year
      * @param week           the week
      * @return the worked week id by date
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public String getWorkedWeekIdByDate(String userContractId, int year, int week) throws SQLException {
+    public String getWorkedWeekIdByDate(String userContractId, int year, int week) throws Exception {
         String query = """
             SELECT ww.id FROM "%s" ww
                 JOIN user_contract uc ON uc.id = ww.contract_id
@@ -1031,9 +1031,9 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      *
      * @param workedWeekId the worked week id
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws Exception the sql exception
      */
-    public boolean isWorkedWeekSuggested(String workedWeekId) throws SQLException {
+    public boolean isWorkedWeekSuggested(String workedWeekId) throws Exception {
         String query = "SELECT status FROM worked_week WHERE id = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, workedWeekId);
