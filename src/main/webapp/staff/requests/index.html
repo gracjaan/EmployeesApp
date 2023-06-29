@@ -27,29 +27,25 @@
     </div>
 </div>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto">
-    <header class="px-6 w-full relative">
+    <header class="px-2 w-full relative">
         <nav class="flex gap-2 flex-col sm:flex-row sm:gap-4 md:gap-8 overflow-x-auto scrollbar-none px-2 sm:px-0 justify-between">
             <div class="w-full mt-6 md-0">
                 <h2 class="text-text text-4xl font-bold">Requests</h2>
             </div>
         </nav>
     </header>
-    <main class="gap-8 md:gap-8 my-8 flex-col px-2 sm:px-0 gap-4 flex p-4">
-        <section class="w-full h-full gap-2 flex flex-col px-6">
+    <main class="gap-4 md:gap-8 my-8 flex-col sm:flex-row px-2 sm:px-0">
+        <section class="w-full h-full gap-2 flex flex-col px-2">
             <div class="rounded-2xl bg-secondary p-4 flex flex-col gap-2">
-                <div class="flex justify-between">
                     <div class="overflow-x-auto flex gap-2 scrollbar-none">
                         <order-selector id="date" group="1" title="Date"></order-selector>
                         <order-selector id="contract" group="1" title="Contract"></order-selector>
                         <order-selector id="hours" group="1" title="Hours"></order-selector>
                     </div>
-                    <!--        This will list the different students-->
-                    <ol id="rejected-weeks" class="pr-2 flex flex-col gap-2 overflow-y-auto max-h-[15rem] scrollbar-custom scrollbar-rounded-xl scrollbar-thumb-primary">
+                    <!--        This will list the different weeks -->
+                    <ol class="flex flex-col gap-2" id="rejected-weeks">
                     </ol>
-
-                </div>
             </div>
-
         </section>
     </main>
 </div>

@@ -85,12 +85,11 @@ function createRejectedWeek(rejectedWeek) {
     listElement.append(linkElement);
 
     const weekDiv = document.createElement("div");
-    weekDiv.setAttribute("data-selected", '0')
-    weekDiv.classList.add("justify-between", "flex", "flex-row", "data-[selected='1']:border-white", "border-2", "border-primary", "block", "bg-primary", "rounded-xl", "w-full", "px-4", "py-2", "overflow-y-auto", "scrollbar-custom", "scrollbar-track-text", "scrollbar-rounded-xl", "scrollbar-thumb-background", "max-h-[5rem]");
+    weekDiv.classList.add("rounded-xl", "bg-primary", "px-4", "py-2", "flex", "w-full", "grid-cols-[1fr_1fr]", "sm:grid-cols-[2fr_2fr_2fr_1fr_1fr]", "grid", "items-center");
     linkElement.append(weekDiv);
 
     const employee = document.createElement("p")
-    employee.classList.add("text-text");
+    employee.classList.add("text-text", "sm:col-span-1", "col-span-2");
     employee.innerText = getName(rejectedWeek.user.firstName, rejectedWeek.user.lastName, rejectedWeek.user.lastNamePrefix);
     weekDiv.append(employee);
 

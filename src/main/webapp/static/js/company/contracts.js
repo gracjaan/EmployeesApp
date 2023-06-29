@@ -47,7 +47,7 @@ function createContractItem(contract) {
     contractInformation.append(contractInformationDescription);
 
     const contractUsersContainer = document.createElement("div");
-    contractUsersContainer.classList.add("flex", "flex-col", "gap-2", "overflow-y-auto", "max-h-40", "h-full", "w-full", "scrollbar-custom", "scrollbar-rounded-xl", "scrollbar-track-secondary", "scrollbar-thumb-text");
+    contractUsersContainer.classList.add("flex", "flex-col", "gap-2", "sm:items-end", "overflow-y-auto", "max-h-40", "h-full", "w-full", "scrollbar-custom", "scrollbar-rounded-xl", "scrollbar-track-secondary", "scrollbar-thumb-text");
     contractContainer.append(contractUsersContainer);
     
     for (const userContract of contract.userContracts) {

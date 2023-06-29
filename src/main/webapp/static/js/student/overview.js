@@ -76,7 +76,6 @@ function fetchSheet(userid, contract) {
 
 async function updatePage(contracts) {
     const entries = document.getElementById("entries");
-    entries.innerText = "";
 
     const workEntries = [];
 
