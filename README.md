@@ -196,7 +196,7 @@ The dependencies that we use are:**
 * openhtmltopdf-pdfbox, version: variable, [https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-pdfbox]()
 * openhtmltopdf-svg-support, version: variable, [https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-svg-support]()
 
-* jsoup, version: 1.16.1, h[ttps://mvnrepository.com/artifact/org.jsoup/jsoup/1.16.1]()
+* jsoup, version: 1.16.1, [https://mvnrepository.com/artifact/org.jsoup/jsoup/1.16.1]()
 
 ---
 
@@ -205,10 +205,10 @@ The dependencies that we use are:**
 ---
 
 ## Contact Information <a name="contact-information"></a>
-**This project was produced by:**
-Thomas Brants, s2997894, t.hansult@student.utwente.nl
-Razvan Stefan, s2957868, r.stefan@student.utwente.nl
-Gracjan Chmielnicki, s3077489, g.s.chmielnicki@student.utwente.nl
-Tom Hansult, s2993074, t.hansult@student.utwente.nl
+**This project was produced by:**  
+Thomas Brants s2997894 t.g.a.brants@student.utwente.nl,  
+Razvan Stefan, s2957868, r.stefan@student.utwente.nl  
+Gracjan Chmielnicki s3077489 g.s.chmielnicki@student.utwente.nl  
+Tom Hansult, s2993074, t.hansult@student.utwente.nl  
 Pepijn Meijer, s2957566, p.j.meijer@student.utwente.nl
 
