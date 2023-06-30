@@ -1,9 +1,10 @@
-package nl.earnit;
+package nl.earnit.helpers;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.StreamingOutput;
+import nl.earnit.Constants;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.resources.companies.ISOWeek;
 import org.jsoup.Jsoup;

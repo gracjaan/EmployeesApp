@@ -2,7 +2,7 @@ package nl.earnit.resources.companies;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.InvoicePDFHandler;
+import nl.earnit.helpers.InvoicePDFHandler;
 import nl.earnit.dao.*;
 import nl.earnit.dto.NotificationDTO;
 import nl.earnit.dto.company.CreateNoteDTO;

@@ -2,7 +2,7 @@ package nl.earnit.resources.users;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.InvoicePDFHandler;
+import nl.earnit.helpers.InvoicePDFHandler;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
 import nl.earnit.dao.UserDAO;
