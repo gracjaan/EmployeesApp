@@ -113,7 +113,7 @@ window.addEventListener("helpersLoaded", () => {
             }
 
             if (res.status === 404) {
-                error.innerText = "Account not found";
+                error.innerText = "Account disabled";
                 error.classList.remove("hidden");
                 companyDialog.classList.add("hidden");
                 return;
@@ -171,7 +171,7 @@ window.addEventListener("helpersLoaded", () => {
             }
 
             if (res.status === 404) {
-                error.innerText = "Account not found";
+                error.innerText = "Account disabled";
                 error.classList.remove("hidden");
                 return;
             }

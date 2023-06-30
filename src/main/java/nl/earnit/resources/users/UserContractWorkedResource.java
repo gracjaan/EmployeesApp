@@ -151,7 +151,6 @@ public class UserContractWorkedResource {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
         } catch (Exception e) {
-            System.out.println(e);
             return Response.serverError().build();
         }
         return Response.ok().build();

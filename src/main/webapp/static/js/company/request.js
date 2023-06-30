@@ -211,11 +211,11 @@ function createEntry(year, week, contract, entry, sent, approved) {
         hoursDiv.append(arrow);
 
         const suggestedHours = document.createElement("div");
-        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal", "hour-input");
+        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal", "hour-input", "data-[editing=\"true\"]:bg-white", "data-[editing=\"true\"]:text-black", "data-[editing=\"true\"]:px-2", "data-[editing=\"true\"]:w-fit", "data-[editing=\"true\"]:rounded");
         suggestedHours.innerText = `${entry.suggestion / 60}H`;
         hoursDiv.append(suggestedHours);
     } else {
-        hours.classList.add("hour-input");
+        hours.classList.add("hour-input", "data-[editing=\"true\"]:bg-white", "data-[editing=\"true\"]:text-black", "data-[editing=\"true\"]:px-2", "data-[editing=\"true\"]:w-fit", "data-[editing=\"true\"]:rounded");
     }
 
     const role = document.createElement("div");
@@ -265,6 +265,7 @@ function toggleEditIcon(entryElement, editButton, hourElement) {
     // Toggle editable element
     const isEditable = hourElement.contentEditable === 'true';
     hourElement.contentEditable = !isEditable;
+    hourElement.setAttribute("data-editing", !isEditable ? "true" : "false");
 
     // Update icon
     const isEditing = entryElement.classList.contains('editing');

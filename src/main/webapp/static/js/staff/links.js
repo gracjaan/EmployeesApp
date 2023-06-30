@@ -342,9 +342,7 @@ function searchUser() {
 
     for (let i = 0; i < li.length; i++) {
         let p = li[i].getElementsByTagName("p")[0];
-        console.log(p)
         let txtValue = p.textContent || p.innerText;
-        console.log(txtValue)
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {
@@ -362,10 +360,8 @@ function searchCompany(){
 
     for (let i = 0; i < li.length; i++) {
         let p = li[i].getElementsByTagName("p")[0];
-        console.log(p)
 
         let txtValue = p.textContent || p.innerText;
-        console.log(txtValue)
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {
@@ -383,10 +379,8 @@ function searchRole(){
 
     for (let i = 0; i < li.length; i++) {
         let p = li[i].getElementsByTagName("p")[0];
-        console.log(p)
 
         let txtValue = p.textContent || p.innerText;
-        console.log(txtValue)
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {

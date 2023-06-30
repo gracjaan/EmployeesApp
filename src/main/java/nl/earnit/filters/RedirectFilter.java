@@ -27,8 +27,6 @@ public class RedirectFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
 
-        System.out.println(req.getServletPath());
-
         // Do not redirect static content, error or api
         if (req.getServletPath().startsWith("/static") || req.getServletPath().startsWith("/error") || req.getServletPath().startsWith("/api")) {
             filterChain.doFilter(servletRequest, servletResponse);

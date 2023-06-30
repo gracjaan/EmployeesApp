@@ -3,6 +3,7 @@ package nl.earnit.test;
 import io.zonky.test.db.postgres.junit5.EmbeddedPostgresExtension;
 import io.zonky.test.db.postgres.junit5.SingleInstancePostgresExtension;
 import nl.earnit.Auth;
+import nl.earnit.TestDB;
 import nl.earnit.dao.*;
 import nl.earnit.dto.NotificationDTO;
 import nl.earnit.dto.contracts.ContractDTO;

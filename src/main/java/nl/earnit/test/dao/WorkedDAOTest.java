@@ -11,7 +11,7 @@ import nl.earnit.models.Company;
 import nl.earnit.models.User;
 import nl.earnit.models.UserContract;
 import nl.earnit.models.Worked;
-import nl.earnit.test.TestDB;
+import nl.earnit.TestDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -47,7 +47,7 @@ public class WorkedDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
         WorkedDAO workedDAO = new WorkedDAO(con);
         Worked worked = new Worked(UUID.randomUUID().toString(), workedWeekId, 2, 240, "did something cool");
