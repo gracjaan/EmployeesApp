@@ -322,16 +322,18 @@ function downloadAllInvoices() {
             'authorization': `token ${getJWTCookie()}`,
         }
     })
-        .then(async res =>  ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] }))
+        .then(async res =>  {
+            if (res.status !== 200) throw new Error();
+            return ({ data: await res.blob(), filename: res.headers.get("content-disposition").split('filename = ')[1] });
+        })
         .then(({ data, filename }) => {
             const a = document.createElement("a");
             a.href = window.URL.createObjectURL(data);
             a.download = filename;
             a.click();
-        });
+        }).catch(() => {
+            const editError = document.getElementById("edit-error");
+            editError.innerText='Make sure the selected week is approved'
+            editError.classList.remove("hidden");
+    });
 }
-
-
-// todo deletbutton and edit button should not exist
-// todo filtering buttons (position, week)
-// todo make the chart working
