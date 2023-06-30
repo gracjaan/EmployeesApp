@@ -179,7 +179,7 @@ function createContract(contract) {
 
     const userDiv = document.createElement("div");
     userDiv.setAttribute("data-selected", '0')
-    userDiv.classList.add("data-[selected='1']:border-white", "hover:border-text","border-2", "border-primary", "block", "columns-2", "bg-primary", "rounded-xl", "w-full", "p-2", "pl-4");
+    userDiv.classList.add("data-[selected='1']:border-white", "hover:border-text","border-2", "border-primary", "block", "columns-2", "bg-primary", "rounded-xl", "w-full", "px-4", "py-3");
     const role = document.createElement("p")
     role.classList.add("text-text");
     role.innerText = contract.role;
