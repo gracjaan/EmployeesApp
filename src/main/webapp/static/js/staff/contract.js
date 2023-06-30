@@ -1,7 +1,7 @@
 window.addEventListener("helpersLoaded", async () => {
     //we get all the companies
     const companies = await getCompanies();
-    //the dropdown element taht will contain the companies
+    //the dropdown element that will contain the companies
     const companiesElement = document.getElementById("dropdown-company-content");
     companiesElement.innerText = ""
     //if there are no companies, we want to display that there are no results
@@ -55,7 +55,7 @@ function createCompany(company) {
     return div;
 }
 
-//makes sure that when you click on the dropdown, it shows, and when you click somewhere else, it dissapears
+//makes sure that when you click on the dropdown, it shows, and when you click somewhere else, it disappears
 function toggleCompany() {
     const dropdown = document.getElementById("dropdown-company-content");
     dropdown.classList.toggle("hidden");
@@ -119,7 +119,7 @@ function submitForm () {
             }
         })
         .then (response => alertPopUp("Created contract successfully", true))
-        .catch(e => console.error(e))
+        .catch(e => alertPopUp("Unable to make contract"))
 }
 //When it successfully created a paragraph or got an error, we display an alert for 2 seconds
 function alertPopUp(message, positive) {
