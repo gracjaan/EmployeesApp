@@ -1,5 +1,16 @@
 // When page is loaded it waits for a list of users and companies
 window.addEventListener("helpersLoaded", async () => {
+    document.getElementById("name-user").addEventListener("change", () => {
+        updatePage()
+    })
+    document.getElementById("name-company").addEventListener("change", () => {
+        updatePage()
+    })
+
+    await updatePage();
+});
+
+async function updatePage() {
     const companies = await getCompanies();
     const users = await getStudents();
 
@@ -9,7 +20,7 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     const usersElement = document.getElementById("users");
-    //usersElement.innerText = "";
+    usersElement.innerText = "";
 
     const companiesElement = document.getElementById("companies");
     companiesElement.innerText = "";
@@ -34,7 +45,7 @@ window.addEventListener("helpersLoaded", async () => {
     for (const company of companies) {
         companiesElement.append(createCompany(company));
     }
-});
+}
 
 //Formats user element
 function createUser(user) {
@@ -331,7 +342,7 @@ function disableCompany(company){
 
 //Fetches students
 async function getStudents() {
-    return await fetch(`/api/users${getQueryParamsUsers()}`,
+    return await fetch(`/api/users?${getQueryParamsUsers()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -342,7 +353,7 @@ async function getStudents() {
 
 //Fetches companies
 async function getCompanies() {
-    return await fetch(`/api/companies${getQueryParamsCompany()}`,
+    return await fetch(`/api/companies?${getQueryParamsCompany()}`,
         {method: "GET",
             headers: {
                 "accept-type" : "application/json",
@@ -358,8 +369,8 @@ function getOrderCompany() {
     const companySelected = nameCompany.getAttribute("data-selected");
 
     let order = "";
-    if (name > 0) {
-        order += "company.id:" + (nameSelected === "1" ? "asc" : "desc");
+    if (companySelected > 0) {
+        order += "company.name:" + (companySelected === "1" ? "asc" : "desc");
     }
     return order;
 }
@@ -368,7 +379,7 @@ function getOrderUsers() {
     const nameUser = document.getElementById("name-user");
     const nameSelected = nameUser.getAttribute("data-selected");
     let order = "";
-    if (name > 0) {
+    if (nameSelected > 0) {
         order += "user.last_name:" + (nameSelected === "1" ? "asc" : "desc");
     }
     return order;
