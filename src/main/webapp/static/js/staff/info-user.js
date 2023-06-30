@@ -55,8 +55,6 @@ async function updateInvoices(companies, user) {
 
         if (workedWeeks === null) return;
 
-        console.log(workedWeeks)
-
         if (workedWeeks.length === 0) {
             const noInvoices = document.createElement("div");
             noInvoices.classList.add("text-text", "font-bold", "w-full", "flex", "my-2");
@@ -219,8 +217,7 @@ function createUserContractItem(userContract) {
 }
 
 function disableUserContract(contract){
-    console.log(contract)
-    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + getIdUser(),
+    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + contract.id,
         {
             method: "DELETE",
             headers: {
@@ -232,8 +229,7 @@ function disableUserContract(contract){
         .catch(e => alertPopUp("Unable to disable the contract"))
 }
 function enableUserContract(contract){
-    console.log(contract)
-    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + getIdUser(),
+    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + contract.id,
         {
             method: "POST",
             headers: {

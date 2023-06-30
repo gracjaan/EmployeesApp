@@ -3,6 +3,7 @@ package nl.earnit.resources.companies;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import jakarta.xml.bind.JAXBElement;
+import javassist.expr.Instanceof;
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
@@ -266,6 +267,12 @@ public class CompanyContractResource {
         }
 
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             System.out.println("The user contract is being enabled");
             userContractDAO.enableUserContract(userContractId);
@@ -298,6 +305,8 @@ public class CompanyContractResource {
             }
 
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            System.out.println("The user contract is being enabled");
+            System.out.println(contractId.getClass().getName());
             userContractDAO.disableUserContract(userContractId);
         } catch (Exception e) {
             return Response.serverError().build();
