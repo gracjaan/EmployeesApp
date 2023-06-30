@@ -16,8 +16,9 @@ import java.sql.SQLException;
 public class TestDB {
     private final SingleInstancePostgresExtension pg;
 
-    public TestDB(SingleInstancePostgresExtension pg) {
+    public TestDB(SingleInstancePostgresExtension pg) throws Exception {
         this.pg = pg;
+        setupDB();
     }
 
     public Connection getConnection() throws SQLException {

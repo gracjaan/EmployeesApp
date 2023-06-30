@@ -24,7 +24,6 @@ public class UserDAOTest {
 
     public void setupUserDAOTest() throws Exception {
         db = new TestDB(pg);
-        db.setupDB();
     }
 
     @Test
