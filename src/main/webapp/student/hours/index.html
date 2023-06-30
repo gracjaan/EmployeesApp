@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/static/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body class="bg-black flex flex-col w-full font-montserrat">
+<body class="bg-black flex flex-col w-full font-montserrat relative">
 <back data-home></back>
 <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4 px-2 relative">
     <header class="w-full">
@@ -120,7 +120,8 @@
     </div>
 </div>
 
-<div id="suggestion" class="absolute z-[100] top-0 left-0 h-full right-0 bg-black backdrop-blur bg-opacity-60 hidden ">
+<div id="suggestion" class="absolute z-[100] top-0 left-0 bottom-0 right-0 bg-black backdrop-blur bg-opacity-60 hidden ">
+    <back data-hide="suggestion"></back>
     <div class="lg:max-w-5xl md:max-w-3xl w-full mx-auto mt-4 relative gap-4 flex flex-col px-2 sm:px-0">
         <header class="w-full flex justify-between items-end">
             <h2 class="text-text text-4xl font-bold cursor-pointer" id="suggestion-role"></h2>
@@ -194,6 +195,19 @@
                 <div id="suggestion-error" class="rounded-xl flex items-center justify-center py-2 px-4 bg-accent-fail text-text hidden"></div>
                 <div class="flex flex-col gap-2" id="suggestion-entries">
                     <!-- entries -->
+                </div>
+            </div>
+        </section>
+        <section class="w-full h-full gap-2 flex flex-col">
+            <p class="font-bold font-montserrat text-4xl text-text">Comments</p>
+            <div id="comments" class="rounded-2xl bg-secondary p-6 flex flex-col gap-6 sm:flex-row">
+                <!--          comments for the company-->
+                <div class="bg-primary rounded-xl w-full w-full p-4 pl-4">
+                    <div class="items-center gap-4 flex flex-row">
+                        <img class="h-14" src="/static/icons/building.svg" alt="user logo">
+                        <p id="company-name" class="text-text font-bold font-montserrat text-2xl"></p>
+                    </div>
+                    <p id="company-note" class="text-text mt-4 font-montserrat text-justify"></p>
                 </div>
             </div>
         </section>

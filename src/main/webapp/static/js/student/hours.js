@@ -282,6 +282,9 @@ async function updatePage(contracts) {
         } else {
             suggestionDialog.classList.toggle("hidden", true);
         }
+
+        document.getElementById("company-note").innerText = workedHours.companyNote;
+        document.getElementById("company-name").innerText = workedHours.company.name;
     }
 
     const workEntries = [];
@@ -487,7 +490,7 @@ function fetchSheet(userid, contract, year, week, suggestion = false) {
 
 function getQueryParams(suggestion = false) {
     const order = getOrder(suggestion);
-    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}` : ""}`
+    return `user=true&contract=true&hours=true&company=true${order.length > 0 ? `&order=${order}` : ""}`
 }
 
 function getOrder(suggestion = false) {
