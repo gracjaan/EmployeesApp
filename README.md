@@ -78,7 +78,7 @@ For the installation of the application we do the following:
    ```sql
    insert into "user" (email, first_name, last_name_prefix, last_name, password, type) VALUES ('staff@example.com', 'Firstname', NULL, 'Lastname', '<password hash>', 'ADMINISTRATOR');
    ```
-- make sure to update the enviormenet variables of tomcat to your postgresql db
+- make sure to update the environment variables of tomcat to your postgresql db
 
 ---
 
