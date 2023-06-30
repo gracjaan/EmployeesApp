@@ -40,15 +40,15 @@ function createRequestCard(workedWeek) {
     name.innerHTML = getName(escapeHtml(workedWeek.user.firstName), escapeHtml(workedWeek.user.lastName), escapeHtml(workedWeek.user.lastNamePrefix), "<br />");
     container.appendChild(name);
 
+    const week = document.createElement("p");
+    week.classList.add("text-text");
+    week.innerText = "Week " + workedWeek.week + ", " + workedWeek.year;
+    container.append(week)
+
     const role = document.createElement("p");
     role.classList.add("text-text");
     role.innerText = workedWeek.contract.role;
     container.appendChild(role);
-
-    const week = document.createElement("p");
-    week.classList.add("text-text");
-    week.innerText = "Week " + workedWeek.week;
-    container.appendChild(week);
 
     return container;
 }
