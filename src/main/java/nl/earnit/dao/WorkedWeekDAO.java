@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -902,16 +901,13 @@ public class WorkedWeekDAO extends GenericDAO<User> {
      */
     public void addWorkedWeek(String contractId, String year, String week) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (contract_id, year, week) " +
-            "VALUES (?, ?, ?) RETURNING id";
+            "VALUES (?, ?, ?)";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, contractId);
         statement.setInt(2, Integer.parseInt(year));
         statement.setInt(3, Integer.parseInt(week));
 
-        ResultSet resultSet = statement.executeQuery();
-
-        resultSet.next();
-
+        statement.executeUpdate();
     }
 
     /**
