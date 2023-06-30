@@ -155,10 +155,8 @@ public class UserContractDAO extends GenericDAO<User> {
      * @throws SQLException the sql SQLException
      */
     public void disableUserContract(String id) throws SQLException {
-        System.out.println("got in the disable user DAO");
         String query = "UPDATE " + tableName + " SET active = FALSE WHERE id = ?";
-        System.out.println(query);
-        System.out.println(id);
+
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
 

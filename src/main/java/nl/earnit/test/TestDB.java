@@ -54,7 +54,7 @@ public class TestDB {
         ResultSet res = statement.executeQuery();
 
         if (!res.next()) throw new Exception("Could not load db schema into db");
-        System.out.println(res.getInt("count"));
+        System.out.println("Successfully loaded db: " + res.getInt("count") + " rows in db");
 
         con.close();
     }
