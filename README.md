@@ -1,7 +1,6 @@
 # EarnIt4
-The Earn It application is the application that will take care of 
-the hour administration of the employees who work for 
-the companies. The companies will have a good insight in the hours of their students.
+This platform facilitates
+the administration of the work of students who are hired by companies for specific projects via the earnit platform. Students can submit their hours on a daily basis, view their past submissions and contracts. Companies can amongst other things view, accept or resuggest the hours submitted by the student. The earnit staff is provided with administrative tools like linking a student and company for a job, disabling users or resolving conflicts.
 
 * [Introduction](#introduction)
    * [Installation](#installation)
@@ -33,12 +32,12 @@ the companies. The companies will have a good insight in the hours of their stud
 ---
 
 ## Introduction <a name="introduction"></a>
-This application was made for the **Earn it start up company**. This company handles hiring of students for short term periods
-Taking care of their visa if they're from abroad. The students can then be hired in periods that they might have vacation or spare time.
-Our application will take care of the hour administration of the students that are hired by the companies. The companies are able to see all
-the hours their students have worked and can consider to agree on the hours or to flag them and sent them to the staff side of the application
+This application was made for the **Earn it start up company**. Earnit allows companies to hire student workers for short-term projects without having to provide a long-term commitment.
+The students can then be hired in periods that they might have vacation or spare time.
+This platform takes care of the time recording of the students that are hired by the companies. The companies are able to see all
+the hours their students have worked and can consider to agree on the hours or to propose alternative hours to the student.
 
-The Staff Is able to manage the whole system and see all it's users. All conflicts can be resolved by the staff in this way.
+The Staff can manage the whole system and see all it's users. All conflicts can be resolved by the staff in this way.
 
 ---
 ## Installation <a name="installation"></a> 
@@ -71,8 +70,8 @@ enable a dropdown menu for the user, displaying other weeks to fill in hours for
 the day on which the hours were worked, how many hours were worked, the position the student was in during execution of the task (A student can work in multiple positions, at multiple companies), and a description of what the task entailed
 The hours are submitted by pressing on the submit button. The hours will then be displayed on the page and can be sorted on hours and date.
 
-When the week is over, the student can send the hours for confirmation by clicking on the checkmark next to the week (after that a red cross will appear). The student is allowed to roll back the confirmation by clicking on the red cross.
-If the current week is not over yet. When the week is over, the student is not allowed to change their hours.
+When the week is over, the student can confirm the submission of the hours by clicking on the checkmark next to the week (after that a red cross will appear). The student is allowed to roll back the confirmation by clicking on the red cross only 
+if the current week is not over yet. When the week is over, the student is not allowed to change their hours.
 
 >The hours of a student might be flagged by the company. The student will get a notification of this, and it will show next to the hours of the flagged week
 The Student then also is allowed to accept the newly suggested hours by the company or can decide not to agree.
@@ -80,7 +79,7 @@ The student accepts the suggested hours of the company by pressing on the checkm
 
 ###### Overview <a name="overview"></a>
 The overview shows the statistics of the students executed work. This is displayed in a graph which has the amount of hours on the y-axis
-and the week on the x-axis. A student may have different contracts with different companies. This is displayed by the different colors in the graph
+and the week on the x-axis. A student may have different contracts with different companies. This is represented by the different colors in the graph
 
 Below the graph we have an overview of all invoices for the student. This can be sorted on the week, date and hours. 
 A student can then download an invoice to see the details of that particular week. There also is the option for the student to
@@ -134,9 +133,9 @@ The notifications that are displayed onn the dashboard will appear when one of t
  ---
 ### Staff <a name="staff"></a>
 In order to be on the application as a Staff, we first have to make an account for an Administrator. An administrator cannot be created through the
-application due to safety reasons. This is why we insert the Administrator into the database by hand
+application to enhance security. This is why we insert the Administrator into the database by hand
 
->If the administrator is inserted, the credentials can just be filled in, in the login. A pre-inserted administrator is:
+>If the administrator is inserted, the credentials can just be filled in, in the loginDTO. A pre-inserted administrator is:
 email: user3@example.com   , password: test
 #### Dashboard <a name="dashboard-2"></a>
 ###### Requests <a name="requests-1"></a>
@@ -162,7 +161,7 @@ The notifications that are displayed onn the dashboard will appear when one of t
 ---
 
 ## Extra Features <a name="extra-features"></a>
-**Extra features are added to the application in order to make the user experience more efficient**:
+**Extra features are added to the application in order to make the user experience more enjoyable**:
 1. **Search bars**, for the pages that display a list of either users, contracts or weeks, searchbars are added so that the right entry can be found fast
 2. **filters**, The same accounts for filters. The filters can either go in descending or ascending order, and they can be disabled
 3. **Graphs**, The user is able to see their progress in the graph which allows them to improve on their performance
@@ -211,6 +210,12 @@ The dependencies that we use are:**
 ---
 
 ## Testing <a name="testing"></a>
+In order to make an admin account type the following SQL command:  
+
+insert into "user"(id, email, first_name, last_name, type, password, active)  
+values(gen_random_uuid(), 'staff@example.com', 'Staff', 'Member', 'ADMINISTRATOR', '$2a$12$gurI9FM61ELngKHe2/OnxuZOnWsLnXCLIUO3Fd4hkUhCA36UXeKWe', true)  
+
+When logging out of one account type, and logging in with a different one, make sure to refresh cache in order to properly load the page
 
 ---
 
@@ -219,13 +224,12 @@ The dependencies that we use are:**
 In the current system, when a user has forgotten their password, they are not able to retrieve their account without the help of staff.
 A new version should contain the functionality for the user to be able to request a new password via email so that they can log in again.
 
-### start and end date to a user contract
+### Start and end date to a user contract
 User contracts are now terminated by staff. In the future this should be handled by the company.
 The company can then create link between a user and a contract, with a start and end date associated to it.
 
 ### Emails
-In the current system, emails can't be sent to users. This improvement also needs to be done for 'forgot password' to work.
-This feature needs to be implemented by linking the application to a mail server.
+The current system is not integrated with an email server, therefore emails cannot be sent to the user. This improvement would also enable the implementatoin of the 'forgot password' feature.
 Emails would allow us to not only display the notifications in the application,
 but also email them to the user.
 

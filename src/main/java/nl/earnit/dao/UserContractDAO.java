@@ -1,17 +1,18 @@
 package nl.earnit.dao;
 
-import nl.earnit.dto.workedweek.ContractDTO;
-import nl.earnit.dto.workedweek.UserContractDTO;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.dto.user.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.resource.companies.CompanyCounts;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.models.UserContract;
+import nl.earnit.dto.company.CompanyCountsDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class UserContractDAO extends GenericDAO<User> {
      * @param userId         the user id
      * @param userContractId the user contract id
      * @return the user contract
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public UserContract getUserContract(String userId, String userContractId) throws SQLException {
         String query = "SELECT contract_id, hourly_wage FROM user_contract WHERE id=?;";
@@ -111,13 +112,13 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
     /**
-     * Add new user contract user contract.
+     * Add new user contract.
      *
      * @param user_id     the user id
      * @param contract_id the contract id
      * @param hourly_wage the hourly wage
      * @return the user contract
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public UserContract addNewUserContract(String user_id, String contract_id, int hourly_wage) throws SQLException {
         String query = "INSERT INTO " + tableName + " (contract_id, user_id, hourly_wage) " +
@@ -155,7 +156,7 @@ public class UserContractDAO extends GenericDAO<User> {
      * Disable user contract.
      *
      * @param id the id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void disableUserContract(String id) throws SQLException {
 
@@ -172,7 +173,7 @@ public class UserContractDAO extends GenericDAO<User> {
      *
      * @param id         the id
      * @param hourlyWage the hourly wage
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void changeHourlyWage(String id, int hourlyWage) throws SQLException {
         String query = "UPDATE " + tableName + " SET hourly_wage = ? WHERE id = ?";
@@ -188,7 +189,7 @@ public class UserContractDAO extends GenericDAO<User> {
      *
      * @param id the id
      * @return the user contract by id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public UserContract getUserContractById(String id) throws SQLException {
         String query = "SELECT id, contract_id, user_id, hourly_wage, active FROM " + tableName + " WHERE id = ?";
@@ -207,7 +208,7 @@ public class UserContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @return the user contracts by contract id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public List<UserContract> getUserContractsByContractId(String contractId) throws SQLException {
         List<UserContract> result = new ArrayList<>();
@@ -236,7 +237,7 @@ public class UserContractDAO extends GenericDAO<User> {
      * Disable user contracts by user id.
      *
      * @param userId the user id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void disableUserContractsByUserId(String userId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = false WHERE user_id = ?";
@@ -251,17 +252,17 @@ public class UserContractDAO extends GenericDAO<User> {
      * Gets number of employees by company.
      *
      * @return the number of employees by company
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public List<CompanyCounts> getNumberOfEmployeesByCompany() throws SQLException {
+    public List<CompanyCountsDTO> getNumberOfEmployeesByCompany() throws SQLException {
 
-        List<CompanyCounts> result = new ArrayList<>();
+        List<CompanyCountsDTO> result = new ArrayList<>();
         String query = "SELECT COUNT(uc.id) as count, c.company_id, cy.name   FROM user_contract uc JOIN contract c ON c.id = uc.contract_id JOIN company cy ON cy.id = c.company_id  WHERE  uc.active = true GROUP BY c.company_id, cy.name";
         PreparedStatement statement = this.con.prepareStatement(query);
 
         ResultSet res = statement.executeQuery();
         while(res.next()) {
-            CompanyCounts count = new CompanyCounts();
+            CompanyCountsDTO count = new CompanyCountsDTO();
             count.setId(res.getString("company_id"));
             count.setName(res.getString("name"));
             count.setCount(res.getInt("count"));
@@ -271,5 +272,7 @@ public class UserContractDAO extends GenericDAO<User> {
         }
         return result;
     }
+
+
 }
 

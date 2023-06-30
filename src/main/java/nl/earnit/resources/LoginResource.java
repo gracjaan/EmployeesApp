@@ -11,10 +11,10 @@ import nl.earnit.Constants;
 import nl.earnit.dao.CompanyUserDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.login.Login;
-import nl.earnit.models.resource.login.Token;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.dto.login.LoginDTO;
+import nl.earnit.dto.login.TokenDTO;
 
 import java.util.List;
 
@@ -26,19 +26,19 @@ public class LoginResource {
     /**
      * Login response.
      *
-     * @param login the login
+     * @param loginDTO the login
      * @return the response
      */
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public Response login(Login login) {
+    public Response login(LoginDTO loginDTO) {
         UserDAO userDAO;
         User user;
 
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            user = userDAO.getUserByEmail(login.getEmail().toLowerCase());
+            user = userDAO.getUserByEmail(loginDTO.getEmail().toLowerCase());
 
             // User does not exist
             if (user == null) {
@@ -53,7 +53,7 @@ public class LoginResource {
         }
 
         // Check password
-        if (!Auth.validatePassword(login.getPassword(), user.getPassword())) {
+        if (!Auth.validatePassword(loginDTO.getPassword(), user.getPassword())) {
             // Password incorrect
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -68,10 +68,10 @@ public class LoginResource {
                 List<Company> companies = companyUserDAO.getCompaniesUserIsWorkingFor(user.getId());
 
                 if (!companies.isEmpty()) {
-                    if (companies.stream().noneMatch(x -> x.getId().equals(login.getCompanyId()))) {
+                    if (companies.stream().noneMatch(x -> x.getId().equals(loginDTO.getCompanyId()))) {
                         companyId = companies.get(0).getId();
                     } else {
-                        companyId = login.getCompanyId();
+                        companyId = loginDTO.getCompanyId();
                     }
                 }
             } catch (Exception e) {
@@ -79,6 +79,6 @@ public class LoginResource {
             }
         }
 
-        return Response.ok(new Token(Auth.createJWT(user, companyId, expiresAt), expiresAt)).build();
+        return Response.ok(new TokenDTO(Auth.createJWT(user, companyId, expiresAt), expiresAt)).build();
     }
 }

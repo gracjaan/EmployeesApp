@@ -57,6 +57,9 @@ window.addEventListener("helpersLoaded", async () => {
             window.history.pushState({path:newurl},'',newurl);
         }
 
+        document.getElementById("edit-error").classList.toggle("hidden", true);
+        document.getElementById("confirm-error").classList.toggle("hidden", true);
+
         const range = document.getElementById("dropdown-range")
         range.innerText = getWeekDateRange(e.detail.week, e.detail.year);
     })
@@ -146,7 +149,7 @@ async function confirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
+        fetch("/api/users/" + getUserId() + "/contracts/" + c.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/note",
             {
                 method: "PUT",
                 body: document.getElementById("note").value.toString(),
@@ -160,7 +163,7 @@ async function confirmWorkedWeek() {
                     throw new Error();
                 }
 
-                fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+                fetch("/api/users/" + getUserId() + "/contracts/" + c.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
                     {
                         method: "POST",
                         headers: {
@@ -202,7 +205,7 @@ async function unconfirmWorkedWeek() {
     }
 
     contracts.forEach(c => {
-        fetch("/api/users/" + getUserId() + "/contracts/" + c.contract.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
+        fetch("/api/users/" + getUserId() + "/contracts/" + c.id + "/worked/" + getSelectedYear() + "/" + getSelectedWeek() + "/confirm",
             {
                 method: "DELETE",
                 headers: {
@@ -273,7 +276,7 @@ async function updatePage(contracts) {
             suggestionRole.innerText = workedHours.contract.role;
 
             for (const hour of workedHours.hours) {
-                suggestionEntries.append(createEntry(hour, workedHours.contract, workedHours.status !== "NOT_CONFIRMED", workedHours.status === "APPROVED", workedHours.status, getSuggestionYear(), getSuggestionWeek(), true))
+                suggestionEntries.append(createEntry(hour, workedHours.workedWeek.contract, workedHours.status !== "NOT_CONFIRMED", workedHours.status === "APPROVED", workedHours.status, getSuggestionYear(), getSuggestionWeek(), true))
             }
         } else {
             suggestionDialog.classList.toggle("hidden", true);
@@ -291,7 +294,7 @@ async function updatePage(contracts) {
         if (workedHours.status === "NOT_CONFIRMED") confirmed = false;
 
         for (const hour of workedHours.hours) {
-            workEntries.push({hour, contract: contract.contract, workedWeek: workedHours });
+            workEntries.push({hour, contract, workedWeek: workedHours });
         }
     }
 
@@ -336,10 +339,10 @@ async function updatePage(contracts) {
     }
 }
 
-function createEntry(entry, contract, confirmed, approved, status, week, year, forSuggestion = false) {
+function createEntry(entry, userContract, confirmed, approved, status, week, year, forSuggestion = false) {
     const entryContainer = document.createElement("div");
     entryContainer.classList.add("rounded-xl", "bg-primary", "px-4", status === "NOT_CONFIRMED" || status === "CONFIRMED" ? "py-3" : "py-2", "relative", "flex", "justify-between");
-    entryContainer.setAttribute("contract-id", entry.userContractId)
+    entryContainer.setAttribute("contract-id", userContract.id)
     entryContainer.setAttribute("data-id", entry.id)
     entryContainer.setAttribute("data-week", week)
     entryContainer.setAttribute("data-year", year)
@@ -382,7 +385,7 @@ function createEntry(entry, contract, confirmed, approved, status, week, year, f
 
     const role = document.createElement("div");
     role.classList.add("text-text", "sm:col-span-1", "col-span-2");
-    role.innerText = contract.role;
+    role.innerText = userContract.contract.role;
     entryInfo.appendChild(role);
 
     const description = document.createElement("div");
@@ -408,7 +411,7 @@ function createEntry(entry, contract, confirmed, approved, status, week, year, f
         if (status === "SUGGESTED" && !forSuggestion) {
             entryContainer.classList.add("cursor-pointer");
             entryContainer.addEventListener("click", async () => {
-                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?suggestion=' + contract.id + `!${getSelectedYear()}!${getSelectedWeek()}`;
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?suggestion=' + userContract.id + `!${getSelectedYear()}!${getSelectedWeek()}`;
 
                 if (history.pushState) {
                     window.history.pushState({ path: newUrl }, '', newUrl);
@@ -589,6 +592,12 @@ function sendFormDataToServer(uid, ucid, formData) {
             const contracts = await updateContracts();
             await updatePage(contracts);
 
+            const descriptionInput = document.getElementById('description-input');
+            const hoursInput = document.getElementById('hours-input');
+
+            descriptionInput.value = "";
+            hoursInput.value = "";
+
             if (!response.ok) throw new Error();
         })
         .catch(() => {
@@ -663,7 +672,7 @@ function validateForm(formData, position) {
 }
 
 function validateEdittedForm(formData) {
-    if (formData.minutes === '' || formData.work === '' || parseFloat(formData.minutes) < 0) {
+    if (formData.minutes === '' || formData.work === '' || Number.isNaN(parseFloat(formData.minutes)) || parseFloat(formData.minutes) < 0) {
         const error = document.getElementById("edit-error");
         error.classList.remove("hidden");
         error.innerText = "Please fill in all inputs"
@@ -718,7 +727,8 @@ async function toggleEdit(button) {
         } else {
             const error = document.getElementById("edit-error");
             error.classList.add("hidden");
-            textElements[1].innerText = parseFloat(textElements[1].textContent) + "H";
+            const hours = parseFloat(textElements[1].textContent);
+            textElements[1].innerText = (Number.isNaN(hours) ? 0 : hours) + "H";
         }
     } else {
         const error = document.getElementById("edit-error");

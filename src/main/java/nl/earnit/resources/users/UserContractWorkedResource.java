@@ -6,7 +6,7 @@ import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
 import nl.earnit.dao.WorkedWeekDAO;
 import nl.earnit.dto.workedweek.WorkedWeekDTO;
-import nl.earnit.models.db.Worked;
+import nl.earnit.models.Worked;
 
 import java.util.List;
 

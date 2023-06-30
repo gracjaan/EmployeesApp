@@ -26,7 +26,7 @@
 </div>
 <div class="lg:max-w-5xl md:max-w-3xl w-full h-fit mx-auto h-full mb-16">
     <main class="gap-4 flex flex-col p-4">
-        <div class="flex gap-8 mt-8 w-full">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-8 mt-8 w-full items-center sm:items-start ">
             <section class="w-full gap-2 flex flex-col">
                 <!--            dropdown menu for the name of the student you want to link-->
                 <div class="py-4 space-y-4">
@@ -36,12 +36,12 @@
                             <div id="user" class="text-text">Choose user</div>
                             <img src="/static/icons/arrow-down.svg" alt="arrow down"/>
                         </button>
-                        <div id="dropdown-user-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
+                        <div id="dropdown-user-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full z-40 max-h-[196px] overflow-y-auto scrollbar-custom scrollbar-rounded-xl ">
                             <div id="searchbarUser"class="p-1 mt-2 w-full flex flex-row justify-between">
                                 <input id="searchUsers" onkeyup="searchUser()" type="text" class="border-b border-b-1 border-background w-full p-1 text-background placeholder-primary outline-0" placeholder="Search User...">
                                 <img src="/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                             </div>
-                            <ol id="searchUser" class="mt-2 w-full">
+                            <ol id="searchUser" class="mt-2 w-full max-h-[120px] overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
                                 <!-- Dropdown options -->
                             </ol>
                         </div>
@@ -56,7 +56,7 @@
             <!--        the switch button section-->
             <section class="flex">
                 <div class="justify-center">
-                    <img class="object-scale-down h-24" src="/static/icons/arrows-both-ways.svg" alt="both way arrow">
+                    <img class="object-scale-down h-12 rotate-90 sm:rotate-0 sm:h-24" src="/static/icons/arrows-both-ways.svg" alt="both way arrow">
                 </div>
             </section>
 
@@ -71,12 +71,12 @@
                             <div id="company" class="text-text">Choose company</div>
                             <img src="/static/icons/arrow-down.svg" alt="arrow down" class=""/>
                         </button>
-                        <div id="dropdown-company-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full">
+                        <div id="dropdown-company-content" class="absolute p-2 hidden bg-white rounded-xl dropdown-content shadow-lg mt-2 w-full z-40">
                             <div id="searchbarCompany" class="p-1 mt-2 w-full flex flex-row justify-between">
                                 <input id="searchCompanies" onkeyup="searchCompany()" type="text" class="border-b border-b-1 border-background w-full p-1 text-background placeholder-primary outline-0" placeholder="Search Company...">
                                 <img src="/static/icons/search-grey-white.svg"class="p-1 h-8 aspect-square">
                             </div>
-                            <ol id="searchCompany" class="mt-2 w-full">
+                            <ol id="searchCompany" class="mt-2 w-full max-h-[120px] overflow-y-auto scrollbar-custom scrollbar-rounded-xl">
                                 <!-- Dropdown options -->
                             </ol>
                         </div>
@@ -86,14 +86,7 @@
                         <div class="flex items-center">
                             <p class="text-text font-bold text-2xl">Select A Company</p>
                         </div>
-<!--                        <div class="flex items-center">-->
-<!--                            <img class="h-14 mr-8" src="/static/icons/building.svg" alt="company logo">-->
-<!--                            <p class="text-text font-bold text-2xl">Amazon</p>-->
-<!--                        </div>-->
-<!--                        <div>-->
-<!--                            <p class="text-text font-bold text-2xl">Software Engineer II</p>-->
-<!--                            <p class="text-text"> Part - time</p>-->
-<!--                        </div>-->
+
                     </div>
                 </div>
             </section>
@@ -110,22 +103,6 @@
 <!--            now comes all the different positions for the employees to have-->
             <div class="h-full overflow-auto max-h-96 scrollbar-custom scrollbar-rounded-xl pr-2">
                 <ol id="contract-list" class="gap-2 flex flex-col">
-<!--                    <li>-->
-<!--                        <a href="" class="hover:border-2 hover:color-color-text block columns-2 bg-primary  rounded-xl w-full p-2 pl-4">-->
-<!--                            <p class="text-text">Software Engineer II</p>-->
-<!--                            <div class="block columns-1">-->
-<!--                                <p class="text-text">Part - Time</p>-->
-<!--                            </div>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a href="" class="hover:border-2 hover:color-color-text block columns-2 bg-primary  rounded-xl w-full p-2 pl-4">-->
-<!--                            <p class="text-text">Software Engineer II</p>-->
-<!--                            <div class="block columns-1">-->
-<!--                                <p class="text-text">Full - Time</p>-->
-<!--                            </div>-->
-<!--                        </a>-->
-<!--                    </li>-->
                 </ol>
             </div>
         </div>

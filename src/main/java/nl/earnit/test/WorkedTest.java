@@ -2,7 +2,7 @@ package nl.earnit.test;
 
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.WorkedDAO;
-import nl.earnit.models.db.Worked;
+import nl.earnit.models.Worked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ public class WorkedTest {
      * @throws SQLException the sql exception
      */
     @Test
-    void count_ShouldReturnCorrectRowCount() throws SQLException {
+    void count_ShouldReturnCorrectRowCount() throws Exception {
         int preCount = workedDAO.count();
         // Prepare test data
         insertDummyWorkedEntries(3);
@@ -57,7 +57,7 @@ public class WorkedTest {
      * @throws SQLException the sql exception
      */
     @Test
-    void addWorkedWeekTask_ShouldAddNewWorkedWeekTask() throws SQLException {
+    void addWorkedWeekTask_ShouldAddNewWorkedWeekTask() throws Exception {
         // Prepare test data
         Worked worked = createDummyWorked();
         String userContractId = "3a9cfee3-443f-46e4-a2ae-06c456c071c9";
@@ -78,7 +78,7 @@ public class WorkedTest {
      * @throws SQLException the sql exception
      */
     @Test
-    void updateWorkedWeekTask_ShouldUpdateExistingWorkedWeekTask() throws SQLException {
+    void updateWorkedWeekTask_ShouldUpdateExistingWorkedWeekTask() throws Exception {
         // Prepare test data
         Worked worked = createDummyWorked();
         insertDummyWorkedEntry(worked);
@@ -98,7 +98,7 @@ public class WorkedTest {
      * @throws SQLException the sql exception
      */
     @Test
-    void deleteWorkedWeekTask_ShouldDeleteExistingWorkedWeekTask() throws SQLException {
+    void deleteWorkedWeekTask_ShouldDeleteExistingWorkedWeekTask() throws Exception {
         // Prepare test data
         Worked worked = createDummyWorked();
         insertDummyWorkedEntry(worked);
@@ -117,7 +117,7 @@ public class WorkedTest {
      * @throws SQLException the sql exception
      */
     @Test
-    void isWorkedWeekConfirmed_ShouldReturnCorrectConfirmationStatus() throws SQLException {
+    void isWorkedWeekConfirmed_ShouldReturnCorrectConfirmationStatus() throws Exception {
         // Prepare test data
         Worked worked = createDummyWorked();
         insertDummyWorkedEntry(worked);
@@ -131,7 +131,7 @@ public class WorkedTest {
 
     // Helper methods for test data setup
 
-    private void insertDummyWorkedEntries(int count) throws SQLException {
+    private void insertDummyWorkedEntries(int count) throws Exception {
         String userContractId = "3a9cfee3-443f-46e4-a2ae-06c456c071c9";
         String workedWeekId = "15abeea2-ea1d-4b4c-a8d2-4d325e458211";
         String year = "2023";
@@ -143,7 +143,7 @@ public class WorkedTest {
         }
     }
 
-    private void insertDummyWorkedEntry(Worked worked) throws SQLException {
+    private void insertDummyWorkedEntry(Worked worked) throws Exception {
         String userContractId = "3a9cfee3-443f-46e4-a2ae-06c456c071c9";
         String workedWeekId = "15abeea2-ea1d-4b4c-a8d2-4d325e458211";
         String year = "2023";

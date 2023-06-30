@@ -3,6 +3,7 @@ package nl.earnit.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
 /**
  * The type Generic dao.
  *

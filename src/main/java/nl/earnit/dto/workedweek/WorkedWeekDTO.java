@@ -2,11 +2,11 @@ package nl.earnit.dto.workedweek;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.db.Worked;
-import nl.earnit.models.resource.contracts.Contract;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.models.Company;
+import nl.earnit.models.UserContract;
+import nl.earnit.models.Worked;
+import nl.earnit.dto.user.UserResponseDTO;
 
 import java.util.List;
 
@@ -23,13 +23,13 @@ public class WorkedWeekDTO {
     private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private UserResponse user;
+    private UserResponseDTO user;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Company company;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserContract userContract;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Contract contract;
+    private ContractDTO contract;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Worked> hours;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,8 +56,8 @@ public class WorkedWeekDTO {
     public WorkedWeekDTO(String id, String contractId, Integer year, Integer week,
                          String note,
                          String status,
-                         UserResponse user, Company company, UserContract userContract,
-                         Contract contract, List<Worked> hours, Integer totalHours) {
+                         UserResponseDTO user, Company company, UserContract userContract,
+                         ContractDTO contract, List<Worked> hours, Integer totalHours) {
         this.id = id;
         this.contractId = contractId;
         this.year = year;
@@ -190,7 +190,7 @@ public class WorkedWeekDTO {
      *
      * @return the user
      */
-    public UserResponse getUser() {
+    public UserResponseDTO getUser() {
         return user;
     }
 
@@ -199,7 +199,7 @@ public class WorkedWeekDTO {
      *
      * @param user the user
      */
-    public void setUser(UserResponse user) {
+    public void setUser(UserResponseDTO user) {
         this.user = user;
     }
 
@@ -244,7 +244,7 @@ public class WorkedWeekDTO {
      *
      * @return the contract
      */
-    public Contract getContract() {
+    public ContractDTO getContract() {
         return contract;
     }
 
@@ -253,7 +253,7 @@ public class WorkedWeekDTO {
      *
      * @param contract the contract
      */
-    public void setContract(Contract contract) {
+    public void setContract(ContractDTO contract) {
         this.contract = contract;
     }
 

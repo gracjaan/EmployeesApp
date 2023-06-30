@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nl.earnit.Auth;
 import nl.earnit.Constants;
-import nl.earnit.models.db.User;
+import nl.earnit.models.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class RedirectFilter implements Filter {
 
         if (!req.getServletPath().startsWith(path)) {
             RequestDispatcher dispatcher = servletRequest.getServletContext()
-                .getRequestDispatcher(path + req.getServletPath());
+                .getRequestDispatcher(path + (req.getServletPath().equals("/") ? req.getServletPath() + "home" : req.getServletPath()));
             dispatcher.forward(servletRequest, servletResponse);
             return;
         }

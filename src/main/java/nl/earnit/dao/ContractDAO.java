@@ -1,12 +1,11 @@
 package nl.earnit.dao;
 
-import nl.earnit.dto.workedweek.ContractDTO;
-import nl.earnit.dto.workedweek.UserContractDTO;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.dto.user.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.contracts.Contract;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.dto.user.UserResponseDTO;
 import org.postgresql.util.PGobject;
 
 import java.sql.*;
@@ -130,7 +129,7 @@ public class ContractDAO extends GenericDAO<User> {
                             String lastNamePrefix = dataStrings[8];
                             if (lastNamePrefix.startsWith("\"") && lastNamePrefix.endsWith("\"")) lastNamePrefix = lastNamePrefix.substring(1, lastNamePrefix.length() - 1);
 
-                            userContract.setUser(new UserResponse(dataStrings[4], dataStrings[5], firstName, lastName, lastNamePrefix, dataStrings[9], dataStrings[10], dataStrings[11], dataStrings[12]));
+                            userContract.setUser(new UserResponseDTO(dataStrings[4], dataStrings[5], firstName, lastName, lastNamePrefix, dataStrings[9], dataStrings[10], dataStrings[11], dataStrings[12]));
                         }
 
                         userContracts.add(userContract);
@@ -152,7 +151,7 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId  the contract id
      * @param description the description
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void updateContractDescription(String contractId, String description) throws SQLException {
         String query = "UPDATE " + tableName + " SET description = ? WHERE id = ?";
@@ -169,7 +168,7 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @param role       the role
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void updateContractRole(String contractId, String role) throws SQLException {
         String query = "UPDATE " + tableName + " SET role = ? WHERE id = ?";
@@ -187,7 +186,7 @@ public class ContractDAO extends GenericDAO<User> {
      * @param company_id the id of the company where the contract is for
      * @throws SQLException
      */
-    public void createContract(Contract contract, String company_id) throws SQLException {
+    public void createContract(ContractDTO contract, String company_id) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, role, description) "+
                 "VALUES (?, ?, ?) RETURNING id";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -202,9 +201,9 @@ public class ContractDAO extends GenericDAO<User> {
      *
      * @param contractId the contract id
      * @return the contract
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
-    public Contract getContract(String contractId) throws SQLException {
+    public ContractDTO getContract(String contractId) throws SQLException {
         String query = "GET description, role FROM " + tableName + " WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -216,7 +215,7 @@ public class ContractDAO extends GenericDAO<User> {
             return null;
         }
 
-        return new Contract(contractId, res.getString("description"), res.getString("role"));
+        return new ContractDTO(contractId, res.getString("description"), res.getString("role"));
     }
 
     /**
@@ -237,7 +236,7 @@ public class ContractDAO extends GenericDAO<User> {
      * Renable contract.
      *
      * @param contractId the contract id
-     * @throws SQLException the sql exception
+     * @throws SQLException the sql SQLException
      */
     public void renableContract(String contractId) throws SQLException {
         String query = "UPDATE " + tableName + " SET active = true WHERE id = ?";
@@ -262,4 +261,28 @@ public class ContractDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
     }
 
+    /**
+     * Shows whether a contract has access to a user contract.
+     * @param contractId The id of the contract
+     * @param userContractId The id of the user contract
+     * @return whether the user contract is for the contract ? true : false
+     * @throws SQLException
+     */
+    public boolean hasContractAccessToUserContract(String contractId, String userContractId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as contracts FROM user_contract uc
+            WHERE uc.id = ? and uc.contract_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        PostgresJDBCHelper.setUuid(statement, 2, contractId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
 }

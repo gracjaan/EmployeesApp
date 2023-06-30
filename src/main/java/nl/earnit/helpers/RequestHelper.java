@@ -1,12 +1,12 @@
 package nl.earnit.helpers;
 
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.core.HttpHeaders;
 import nl.earnit.Auth;
-import nl.earnit.exceptions.BadRequestException;
-import nl.earnit.exceptions.ForbiddenException;
 import nl.earnit.exceptions.UnauthorizedException;
-import nl.earnit.models.db.User;
+import nl.earnit.models.User;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -55,8 +55,8 @@ public class RequestHelper {
      */
     public static void handleAccessToCompany(String companyId, User user) {
         try {
-            if (!Auth.hasAccessToCompany(companyId, user)) throw new nl.earnit.exceptions.ForbiddenException();
-        } catch (nl.earnit.exceptions.ForbiddenException e) {
+            if (!Auth.hasAccessToCompany(companyId, user)) throw new ForbiddenException();
+        } catch (ForbiddenException e) {
             throw new ForbiddenException();
         } catch (Exception e) {
             throw new InternalServerErrorException();
@@ -70,8 +70,8 @@ public class RequestHelper {
      */
     public static void handleAccessToStaff(User user) {
         try {
-            if (!Auth.hasAccessToStaff(user)) throw new nl.earnit.exceptions.ForbiddenException();
-        } catch (nl.earnit.exceptions.ForbiddenException e) {
+            if (!Auth.hasAccessToStaff(user)) throw new ForbiddenException();
+        } catch (ForbiddenException e) {
             throw new ForbiddenException();
         } catch (Exception e) {
             throw new InternalServerErrorException();
@@ -86,8 +86,8 @@ public class RequestHelper {
      */
     public static void handleAccessToUser(String userId, User user) {
         try {
-            if (!Auth.hasAccessToUser(userId, user)) throw new nl.earnit.exceptions.ForbiddenException();
-        } catch (nl.earnit.exceptions.ForbiddenException e) {
+            if (!Auth.hasAccessToUser(userId, user)) throw new ForbiddenException();
+        } catch (ForbiddenException e) {
             throw new ForbiddenException();
         } catch (Exception e) {
             throw new InternalServerErrorException();

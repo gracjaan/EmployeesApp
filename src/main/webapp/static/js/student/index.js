@@ -58,7 +58,22 @@ function createEntries (notifications) {
         container.appendChild(cont)
     }
 
-    notifications.forEach(notification => {
+    
+    let validNotifications = [];
+    let validHoursNotification = [];
+    for (const notification of notifications) {
+
+        if (notification.type === 'HOURS') {
+            if (validHoursNotification.some(x => x.workedWeekId === notification.workedWeekId && x.date === notification.date)) {
+                continue;
+            }
+            validHoursNotification.push(notification);
+        }
+            validNotifications.push(notification);
+
+    }
+
+    validNotifications.forEach(notification => {
         const outer = document.createElement("div");
         outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2", "cursor-pointer");
         outer.addEventListener('click', () => {
@@ -167,9 +182,7 @@ async function getData() {
     let week5 = 0;
 
     arrayOfInvoices.forEach(invoice => {
-        console.log(invoice)
         invoice.forEach(i => {
-            console.log(i)
             if (i.week === getCurrentWeek() - 5) {
                 week0 += i.totalMinutes;
             } else if (i.week === getCurrentWeek() - 4) {
@@ -185,7 +198,6 @@ async function getData() {
             }
         })
     })
-    console.log([week0 / 60, week1 / 60, week2 / 60, week3 / 60, week4 / 60, week5 / 60])
     return [week0 / 60, week1 / 60, week2 / 60, week3 / 60, week4 / 60, week5 / 60]
 }
 

@@ -6,10 +6,10 @@ import nl.earnit.Auth;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.helpers.RequestHelper;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.InvalidEntry;
-import nl.earnit.models.resource.users.CreateUser;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.User;
+import nl.earnit.dto.InvalidEntryDTO;
+import nl.earnit.dto.user.CreateUserDTO;
+import nl.earnit.dto.user.UserResponseDTO;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -46,7 +46,7 @@ public class UsersResource {
 
         try {
             UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
-            List<UserResponse> users = userDAO.getAllUsers(order);
+            List<UserResponseDTO> users = userDAO.getAllUsers(order);
             return Response.ok(users).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -56,36 +56,36 @@ public class UsersResource {
     /**
      * Create user response.
      *
-     * @param createUser the create user
+     * @param createUserDTO the create user
      * @return the response
      */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response createUser(CreateUser createUser) {
+    public Response createUser(CreateUserDTO createUserDTO) {
         // Validate create user
-        if (createUser == null || createUser.getEmail() == null || createUser.getFirstName() == null || createUser.getLastName() == null || createUser.getPassword() == null) {
+        if (createUserDTO == null || createUserDTO.getEmail() == null || createUserDTO.getFirstName() == null || createUserDTO.getLastName() == null || createUserDTO.getPassword() == null) {
             return Response.status(400).build();
         }
 
         // Validate user
-        if (createUser.getFirstName().length() <= 2) {
-            return Response.status(422).entity(new InvalidEntry("firstName")).build();
+        if (createUserDTO.getFirstName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntryDTO("firstName")).build();
         }
 
-        if (createUser.getLastName().length() <= 2) {
-            return Response.status(422).entity(new InvalidEntry("lastName")).build();
+        if (createUserDTO.getLastName().length() <= 2) {
+            return Response.status(422).entity(new InvalidEntryDTO("lastName")).build();
         }
 
         String emailRegex = "([-!#-'*+/-9=?A-Z^-~]+(\\.[-!#-'*+/-9=?A-Z^-~]+)*|\"(\\[]!#-[^-~ \\t]|(\\\\[\\t -~]))+\")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+";
         Pattern emailPattern = Pattern.compile(emailRegex);
-        if (!emailPattern.matcher(createUser.getEmail()).matches()) {
-            return Response.status(422).entity(new InvalidEntry("email")).build();
+        if (!emailPattern.matcher(createUserDTO.getEmail()).matches()) {
+            return Response.status(422).entity(new InvalidEntryDTO("email")).build();
         }
 
         Pattern passwordPattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$");
-        if (!passwordPattern.matcher(createUser.getPassword()).matches()) {
-            return Response.status(422).entity(new InvalidEntry("password")).build();
+        if (!passwordPattern.matcher(createUserDTO.getPassword()).matches()) {
+            return Response.status(422).entity(new InvalidEntryDTO("password")).build();
         }
 
         UserDAO userDAO;
@@ -94,18 +94,18 @@ public class UsersResource {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
 
             // Make sure no other user with this email
-            User currentUser = userDAO.getUserByEmail(createUser.getEmail().toLowerCase());
+            User currentUser = userDAO.getUserByEmail(createUserDTO.getEmail().toLowerCase());
             if (currentUser != null) {
                 return Response.status(409).build();
             }
 
             // Hash password
-            String passwordHash = Auth.hashPassword(createUser.getPassword());
+            String passwordHash = Auth.hashPassword(createUserDTO.getPassword());
 
             // Create user
-            user = userDAO.createUser(createUser.getEmail().toLowerCase(), createUser.getFirstName(),
-                createUser.getLastNamePrefix(), createUser.getLastName(), passwordHash,
-                "STUDENT", createUser.getKvk(), createUser.getBtw(), createUser.getAddress()); // Make user student by default
+            user = userDAO.createUser(createUserDTO.getEmail().toLowerCase(), createUserDTO.getFirstName(),
+                createUserDTO.getLastNamePrefix(), createUserDTO.getLastName(), passwordHash,
+                "STUDENT", createUserDTO.getKvk(), createUserDTO.getBtw(), createUserDTO.getAddress()); // Make user student by default
         } catch (Exception e) {
             return Response.serverError().build();
         }
@@ -116,7 +116,7 @@ public class UsersResource {
         }
 
         // Return user without password
-        return Response.ok(new UserResponse(user)).build();
+        return Response.ok(new UserResponseDTO(user)).build();
     }
 
     /**

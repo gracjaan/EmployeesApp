@@ -6,10 +6,10 @@ import jakarta.xml.bind.JAXBElement;
 import nl.earnit.dao.ContractDAO;
 import nl.earnit.dao.DAOManager;
 import nl.earnit.dao.UserContractDAO;
-import nl.earnit.models.db.UserContract;
-import nl.earnit.models.resource.companies.AddUserToContract;
+import nl.earnit.models.UserContract;
+import nl.earnit.dto.company.AddUserToContractDTO;
 
-import nl.earnit.models.resource.contracts.DescriptionRole;
+import nl.earnit.dto.contracts.ContractInformationDTO;
 
 
 import java.util.List;
@@ -59,8 +59,8 @@ public class CompanyContractResource {
      */
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public DescriptionRole getContract(@PathParam("contractId") String contractId) {
-        DescriptionRole result = new DescriptionRole();
+    public ContractInformationDTO getContract(@PathParam("contractId") String contractId) {
+        ContractInformationDTO result = new ContractInformationDTO();
 
         if (contractId == null) {
             return null;
@@ -87,7 +87,7 @@ public class CompanyContractResource {
      */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response updateContract(@PathParam("contractId") String contractId, JAXBElement<DescriptionRole> descriptionRole ) {
+    public Response updateContract(@PathParam("contractId") String contractId, JAXBElement<ContractInformationDTO> descriptionRole ) {
         if (contractId == null) {
             return Response.status(400).build();
         }
@@ -161,15 +161,15 @@ public class CompanyContractResource {
     /**
      * Add employee response.
      *
-     * @param addUserToContract the add user to contract
+     * @param addUserToContractDTO the add user to contract
      * @return the response
      */
     @POST
     @Path("/employees")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response addEmployee(AddUserToContract addUserToContract) {
+    public Response addEmployee(AddUserToContractDTO addUserToContractDTO) {
 
-        if (addUserToContract == null || addUserToContract.getHourlyWage() <= 0 || addUserToContract.getUserId() == null) {
+        if (addUserToContractDTO == null || addUserToContractDTO.getHourlyWage() <= 0 || addUserToContractDTO.getUserId() == null) {
             return Response.status(400).build();
         }
 
@@ -177,7 +177,7 @@ public class CompanyContractResource {
         try {
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
 
-            return Response.ok(userContractDAO.addNewUserContract(addUserToContract.getUserId(), contractId, addUserToContract.getHourlyWage())).build();
+            return Response.ok(userContractDAO.addNewUserContract(addUserToContractDTO.getUserId(), contractId, addUserToContractDTO.getHourlyWage())).build();
         } catch (Exception e) {
             return Response.serverError().build();
         }
@@ -199,7 +199,12 @@ public class CompanyContractResource {
 
         UserContract result;
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                throw new ForbiddenException();
+            }
 
             result = userContractDAO.getUserContractById(userContractId);
 
@@ -228,6 +233,12 @@ public class CompanyContractResource {
         int hourlyWage = userContractJAXBElement.getValue().getHourlyWage();
 
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
 
             userContractDAO.changeHourlyWage(userContractId, hourlyWage);
@@ -278,9 +289,14 @@ public class CompanyContractResource {
         }
 
         try {
+            ContractDAO contractDAO = (ContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.CONTRACT);
+
+            if (!contractDAO.hasContractAccessToUserContract(contractId, userContractId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             userContractDAO.disableUserContract(userContractId);
-
         } catch (Exception e) {
             return Response.serverError().build();
         }

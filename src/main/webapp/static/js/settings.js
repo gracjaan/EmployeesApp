@@ -49,6 +49,9 @@ window.addEventListener("helpersLoaded", async () => {
             address.value = user.address;
             kvk.value = user.kvk;
             btw.value = user.btw;
+
+            const studentInfo = document.getElementById("student-info");
+            studentInfo.classList.toggle("hidden", user.type === "ADMINISTRATOR");
         }
 
         if (company !== null && company !== undefined) {
@@ -71,7 +74,9 @@ window.addEventListener("helpersLoaded", async () => {
 
     updatePage(await getUser(), await getCompany());
 
-    function updateUser(user) {
+    async function updateUser(user) {
+        const type = (await getUser()).type;
+
         const email = document.getElementById("email").value.trim();
         if (!validateEmail(email)) {
             document.getElementById("user-error").innerText = "Invalid email format";
@@ -94,24 +99,30 @@ window.addEventListener("helpersLoaded", async () => {
         }
 
         const address = document.getElementById("address").value.trim();
-        if (!validateAddress1(address)) {
+        if (type !== "ADMINISTRATOR" && !validateAddress1(address)) {
             document.getElementById("user-error").innerText = "Address needs to be at least 6 characters";
             document.getElementById("user-error").classList.remove("hidden");
             return;
         }
 
         const kvk = document.getElementById("kvk").value.trim();
-        if (!validateKVK(kvk)) {
+        if (type !== "ADMINISTRATOR" && !validateKVK(kvk)) {
             document.getElementById("user-error").innerText = "Invalid KVK format";
             document.getElementById("user-error").classList.remove("hidden");
             return;
         }
 
         const btw = document.getElementById("btw").value.trim();
-        if (!validateBTW(btw)) {
+        if (type !== "ADMINISTRATOR" && !validateBTW(btw)) {
             document.getElementById("user-error").innerText = "Invalid BTW format";
             document.getElementById("user-error").classList.remove("hidden");
             return;
+        }
+
+        if (type === "ADMINISTRATOR") {
+            user.btw = null;
+            user.kvk = null;
+            user.address = null;
         }
 
         return fetch("/api/users/" + getUserId(), {

@@ -1,18 +1,19 @@
 package nl.earnit.dao;
 
-import nl.earnit.dto.workedweek.ContractDTO;
-import nl.earnit.dto.workedweek.NotificationDTO;
-import nl.earnit.dto.workedweek.UserContractDTO;
-import nl.earnit.dto.workedweek.UserDTO;
+import nl.earnit.dto.contracts.ContractDTO;
+import nl.earnit.dto.NotificationDTO;
+import nl.earnit.dto.user.UserContractDTO;
+import nl.earnit.dto.user.UserDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
-import nl.earnit.models.db.Company;
-import nl.earnit.models.db.User;
-import nl.earnit.models.resource.users.UserResponse;
+import nl.earnit.models.Company;
+import nl.earnit.models.User;
+import nl.earnit.dto.user.UserResponseDTO;
 import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -222,7 +223,8 @@ public class CompanyDAO extends GenericDAO<User> {
 
         ResultSet res = statement.executeQuery();
 
-        return res.next();
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
     }
 
     /**
@@ -231,15 +233,15 @@ public class CompanyDAO extends GenericDAO<User> {
      * @return A list of Users formatted as a UserResponse object
      * @throws SQLException
      */
-    public List<UserResponse> getStudentsForCompany(String companyId) throws SQLException {
+    public List<UserResponseDTO> getStudentsForCompany(String companyId) throws SQLException {
         String query = """
             SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.btw, u.kvk, u.address FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         ResultSet resultSet = statement.executeQuery();
-        List<UserResponse> users = new ArrayList<>();
+        List<UserResponseDTO> users = new ArrayList<>();
         while (resultSet.next()) {
-            UserResponse user = new UserResponse(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("btw"), resultSet.getString("kvk"), resultSet.getString("address"));
+            UserResponseDTO user = new UserResponseDTO(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("btw"), resultSet.getString("kvk"), resultSet.getString("address"));
             users.add(user);
         }
         return users;
@@ -386,6 +388,56 @@ public class CompanyDAO extends GenericDAO<User> {
             notifications.add(notification);
         }
         return notifications;
+    }
+
+    /**
+     * Shows whether a company has access to a contract. If the contract is for the company, then the company has access to the contract
+     * @param companyId The id of the company
+     * @param contractId The id of the user contract
+     * @return whether the contract is from the company ? true : false
+     * @throws SQLException
+     */
+    public boolean hasCompanyAccessToContract(String companyId, String contractId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as contracts FROM contract c
+            WHERE c.id = ? and c.company_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
+
+    /**
+     * Shows whether a company has access to a notification. If the notification is for the company, then the company has access to the notification
+     * @param companyId The id of the company
+     * @param notificationId The id of the notification
+     * @return whether the notification is for the company ? true : false
+     * @throws SQLException
+     */
+    public boolean hasCompanyAccessToNotification(String companyId, String notificationId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as notifications FROM notification n
+            WHERE n.id = ? and n.company_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, notificationId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("notifications") > 0;
     }
 }
 
