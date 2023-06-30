@@ -239,7 +239,6 @@ public class CompanyDAOTest {
     @Test
     public void testHasCompanyAccessToContract() throws Exception{
         setupCompanyDAOTest();
-
         Connection con = db.getConnection();
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany", "NL845838", "Finkenstraat 42, 7544NM Amsterdam");

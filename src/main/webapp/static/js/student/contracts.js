@@ -119,7 +119,7 @@ function createEntry(userContract, invoices) {
 
     for (const i of invoices) {
         const ei = document.createElement("div");
-        ei.classList.add("bg-primary", "rounded-lg", "mt-2", "p-4", "flex", "flex-row", "justify-between");
+        ei.classList.add("bg-primary", "rounded-lg", "mt-2", "px-4","py-3", "flex", "flex-row", "justify-between");
 
         const eo = document.createElement("div");
         eo.classList.add("text-text", "font-bold")

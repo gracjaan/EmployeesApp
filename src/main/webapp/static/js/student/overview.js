@@ -124,7 +124,7 @@ async function updatePage(contracts) {
 
 function createEntry(entry, contract, week, year) {
     const entryContainer = document.createElement("div");
-    entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
+    entryContainer.classList.add("rounded-xl", "bg-primary", "px-4", "py-3", "relative", "flex", "justify-between");
     entryContainer.setAttribute("contract-id", contract.id)
     entryContainer.setAttribute("data-week", week)
     entryContainer.setAttribute("data-year", year)
