@@ -58,7 +58,22 @@ function createEntries (notifications) {
         container.appendChild(cont)
     }
 
-    notifications.forEach(notification => {
+    
+    let validNotifications = [];
+    let validHoursNotification = [];
+    for (const notification of notifications) {
+
+        if (notification.type === 'HOURS') {
+            if (validHoursNotification.some(x => x.workedWeekId === notification.workedWeekId && x.date === notification.date)) {
+                continue;
+            }
+            validHoursNotification.push(notification);
+        }
+            validNotifications.push(notification);
+
+    }
+
+    validNotifications.forEach(notification => {
         const outer = document.createElement("div");
         outer.classList.add("rounded-2xl", "bg-primary", "mx-2", "mt-2", "p-4", "relative", "last:mb-2", "cursor-pointer");
         outer.addEventListener('click', () => {
