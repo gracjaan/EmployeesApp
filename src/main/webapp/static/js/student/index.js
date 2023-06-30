@@ -215,7 +215,7 @@ async function initializeChart() {
                 "Week " + getCurrentWeek()
             ],
             datasets: [{
-                label: 'Weekly worked hours from all contracts',
+                label: 'Approved worked hours from all contracts',
                 data: data, // Use the fetched data
                 fill: false,
                 borderColor: 'rgb(237, 76, 76)',
