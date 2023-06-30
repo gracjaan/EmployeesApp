@@ -86,7 +86,7 @@ function createRejectedWeek(rejectedWeek) {
     listElement.append(linkElement);
 
     const weekDiv = document.createElement("div");
-    weekDiv.classList.add("rounded-xl", "bg-primary", "px-4", "py-2", "flex", "w-full", "grid-cols-[1fr_1fr]", "sm:grid-cols-[2fr_2fr_2fr_1fr_1fr]", "grid", "items-center");
+    weekDiv.classList.add("rounded-xl", "bg-primary", "px-4", "py-3", "flex", "w-full", "grid-cols-[1fr_1fr]", "sm:grid-cols-[2fr_2fr_2fr_1fr_1fr]", "grid", "items-center");
     linkElement.append(weekDiv);
 
     const employee = document.createElement("p")
