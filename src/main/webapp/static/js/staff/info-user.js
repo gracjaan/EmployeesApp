@@ -178,6 +178,7 @@ function createUserContractItem(userContract) {
     userContractContainer.append(userContractWage);
 
     const buttonStatusDiv = document.createElement("div")
+    buttonStatusDiv.classList.add("mt-1")
 
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("hidden", "flex", "flex-row", "space-between", "bg-accent-success", "p-2", "gap-2", "cursor-pointer", "items-center", "justify-center", "rounded-xl");
