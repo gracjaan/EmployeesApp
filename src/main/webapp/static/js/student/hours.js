@@ -276,7 +276,7 @@ async function updatePage(contracts) {
             suggestionRole.innerText = workedHours.contract.role;
 
             for (const hour of workedHours.hours) {
-                suggestionEntries.append(createEntry(hour, workedHours.workedWeek.contract, workedHours.status !== "NOT_CONFIRMED", workedHours.status === "APPROVED", workedHours.status, getSuggestionYear(), getSuggestionWeek(), true))
+                suggestionEntries.append(createEntry(hour, contracts.find(x => x.id === workedHours.contractId), workedHours.status !== "NOT_CONFIRMED", workedHours.status === "APPROVED", workedHours.status, getSuggestionYear(), getSuggestionWeek(), true))
             }
         } else {
             suggestionDialog.classList.toggle("hidden", true);

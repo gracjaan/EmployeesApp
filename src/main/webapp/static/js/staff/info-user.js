@@ -175,7 +175,82 @@ function createUserContractItem(userContract) {
     userContractWage.innerText = userContract.hourlyWage / 100 + " €";
     userContractContainer.append(userContractWage);
 
+    const buttonStatusDiv = document.createElement("div")
+
+    const enableDiv = document.createElement("div");
+    enableDiv.classList.add("hidden", "flex", "flex-row", "space-between", "bg-accent-success", "p-2", "gap-2", "cursor-pointer", "items-center", "justify-center", "rounded-xl");
+    const checkmarkImage = document.createElement("img");
+    checkmarkImage.src = "/static/icons/checkmark.svg";
+    checkmarkImage.classList.add("h-4", "w-4")
+    checkmarkImage.alt = "enable contract"
+    enableDiv.append(checkmarkImage)
+    const enableText = document.createElement("p");
+    enableText.innerText = "Enable Contract";
+    enableText.classList.add("text-text");
+    enableDiv.append(enableText);
+    buttonStatusDiv.append(enableDiv)
+
+    const disableDiv = document.createElement("div");
+    disableDiv.classList.add("hidden", "flex", "flex-row", "space-between", "bg-accent-fail", "p-2", "gap-2", "cursor-pointer", "items-center", "justify-center", "rounded-xl");
+    const crossImage = document.createElement("img");
+    crossImage.src = "/static/icons/white-cross.svg";
+    crossImage.classList.add("h-4", "w-4")
+    crossImage.alt = "disable contract"
+    disableDiv.append(crossImage)
+    const disableText = document.createElement("p");
+    disableText.innerText = "Disable Contract";
+    disableText.classList.add("text-text");
+    disableDiv.append(disableText);
+    buttonStatusDiv.append(disableDiv)
+
+    userContractContainer.append(buttonStatusDiv)
+
+    disableDiv.addEventListener("click", async () => {
+        await disableUserContract(userContract)
+        enableDiv.classList.remove("hidden");
+        disableDiv.classList.add("hidden");
+    })
+    enableDiv.addEventListener("click", async () => {
+        await enableUserContract(userContract)
+            enableDiv.classList.add("hidden");
+            disableDiv.classList.remove("hidden");
+    })
+    if(userContract.active === true) {
+        enableDiv.classList.add("hidden");
+        disableDiv.classList.remove("hidden");
+    } else {
+        disableDiv.classList.add("hidden");
+        enableDiv.classList.remove("hidden");
+    }
+
     return userContractContainer;
+}
+
+function disableUserContract(contract){
+    console.log(contract)
+    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + getIdUser(),
+        {
+            method: "DELETE",
+            headers: {
+                "accept-type" : "application/json",
+                'authorization': `token ${getJWTCookie()}`,
+            }
+        })
+        .then (response => alertPopUp("Disabled contract successfully", true))
+        .catch(e => alertPopUp("Unable to disable the contract"))
+}
+function enableUserContract(contract){
+    console.log(contract)
+    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + getIdUser(),
+        {
+            method: "POST",
+            headers: {
+                "accept-type" : "application/json",
+                'authorization': `token ${getJWTCookie()}`,
+            }
+        })
+        .then (response => alertPopUp("Enabled contract successfully", true))
+        .catch(e => alertPopUp("Unable to enable the contract"))
 }
 
 //Formats user invoices element
@@ -234,4 +309,30 @@ function getCompanies(userId) {
     )
         .then(res => res.json())
         .catch(() => null)
+}
+
+function alertPopUp(message, positive) {
+    let confirmation = document.getElementById("alertPopup");
+    let accent = document.getElementById("accent")
+    let image = document.getElementById("confirmationIcon")
+    let p = document.getElementById("popUpAlertParagraph")
+    p.innerText = message
+
+    if (positive) {
+        accent.classList.add("bg-accent-success")
+        image.src = "/static/icons/checkmark.svg"
+    } else {
+        accent.classList.add("bg-[#FD8E28]")
+        image.src = "/static/icons/light-white.svg"
+    }
+    confirmation.classList.remove("hidden");
+    setTimeout(function () {
+            confirmation.classList.add("hidden");
+            if (positive) {
+                accent.classList.remove("bg-accent-success")
+            } else {
+                accent.classList.remove("bg-[#FD8E28]")
+            }
+        }, 2000
+    );
 }

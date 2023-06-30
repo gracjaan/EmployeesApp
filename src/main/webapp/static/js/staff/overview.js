@@ -242,12 +242,12 @@ function displayPopUpUser(user, enabling, enableDiv, disableDiv) {
 
     confirmButton.addEventListener("click", async () => {
         if (enabling) {
-            enableUser(user)
+            await enableUser(user)
             enableDiv.classList.add("hidden")
             disableDiv.classList.remove("hidden")
         }
         else{
-            disableUser(user)
+            await disableUser(user)
             disableDiv.classList.add("hidden")
             enableDiv.classList.remove("hidden")
         }
