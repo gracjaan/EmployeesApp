@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -850,13 +851,12 @@ public class WorkedWeekDAO extends GenericDAO<User> {
                 if (data == null) continue;
 
                 data = data.substring(1, data.length() - 1);
-                String[] dataStrings = data.split(",");
-
+                String[] dataStrings = data.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", -1);
                 String note = dataStrings[4];
                 if (note.startsWith("\"") && note.endsWith("\"")) note = note.substring(1, note.length() - 1);
 
                 Worked worked = new Worked(dataStrings[0], dataStrings[1], Integer.parseInt(dataStrings[2]), Integer.parseInt(dataStrings[3]), note);
-                worked.setSuggestion(dataStrings.length > 5 ? Integer.parseInt(dataStrings[5]) : null);
+                worked.setSuggestion(dataStrings.length > 5 && dataStrings[5].trim().length() > 0 ? Integer.parseInt(dataStrings[5]) : null);
                 hours.add(worked);
             }
         }
