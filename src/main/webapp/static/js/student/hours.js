@@ -380,11 +380,11 @@ function createEntry(entry, userContract, confirmed, approved, status, week, yea
         hoursDiv.append(arrow);
 
         const suggestedHours = document.createElement("div");
-        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal", "hour-input");
+        suggestedHours.classList.add("text-[#FD8E28]", "font-bold", "sm:font-normal", "hour-input", "data-[editing=\"true\"]:bg-white", "data-[editing=\"true\"]:text-black", "data-[editing=\"true\"]:px-2", "data-[editing=\"true\"]:w-fit", "data-[editing=\"true\"]:rounded");
         suggestedHours.innerText = `${entry.suggestion / 60}H`;
         hoursDiv.append(suggestedHours);
     } else {
-        hours.classList.add("hour-input");
+        hours.classList.add("hour-input", "data-[editing=\"true\"]:bg-white", "data-[editing=\"true\"]:text-black", "data-[editing=\"true\"]:px-2", "data-[editing=\"true\"]:w-fit", "data-[editing=\"true\"]:rounded");
     }
 
     const role = document.createElement("div");
@@ -393,7 +393,7 @@ function createEntry(entry, userContract, confirmed, approved, status, week, yea
     entryInfo.appendChild(role);
 
     const description = document.createElement("div");
-    description.classList.add("text-text", "sm:col-span-1", "col-span-2");
+    description.classList.add("text-text", "sm:col-span-1", "col-span-2", "data-[editing=\"true\"]:bg-white", "data-[editing=\"true\"]:text-black", "data-[editing=\"true\"]:px-2", "data-[editing=\"true\"]:w-fit", "data-[editing=\"true\"]:rounded");
     description.innerText = entry.work;
     entryInfo.appendChild(description);
 
@@ -694,6 +694,7 @@ async function toggleEdit(button) {
         if (index !== 2 && index !== 0) {
             const isEditable = element.contentEditable === 'true';
             element.contentEditable = !isEditable;
+            element.setAttribute("data-editing", !isEditable ? "true" : "false");
         }
     });
 
@@ -721,6 +722,7 @@ async function toggleEdit(button) {
                 if (index !== 2 && index !== 0) {
                     const isEditable = element.contentEditable === 'true';
                     element.contentEditable = !isEditable;
+                    element.setAttribute("data-editing", !isEditable ? "true" : "false");
                 }
             });
 
