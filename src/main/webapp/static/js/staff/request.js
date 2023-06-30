@@ -164,7 +164,7 @@ function createEntry(year, week, contract, entry, approved) {
     entryInfo.appendChild(date);
 
     const hoursDiv = document.createElement("div");
-    hoursDiv.classList.add("flex", "gap-1", "justify-center", "items-center", "sm:justify-start")
+    hoursDiv.classList.add("flex", "gap-1", "h-fit", "items-center", "justify-start")
     entryInfo.appendChild(hoursDiv);
 
     const hasSuggestion = entry.suggestion !== undefined && entry.suggestion !== null && !approved;
