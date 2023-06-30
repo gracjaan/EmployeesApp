@@ -101,7 +101,19 @@ public class UserContractResource {
      */
     @Path("/worked/{weekId}")
     public UserContractWorkedResource getWorkedWeek(@PathParam("weekId") String weekId) {
-        return new UserContractWorkedResource(uriInfo, request, userId, userContractId, weekId);
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+
+            if (!userContractDAO.hasUserContractAccessToWorked(userContractId, weekId)) {
+                throw new ForbiddenException();
+            }
+
+            return new UserContractWorkedResource(uriInfo, request, userId, userContractId, weekId);
+        } catch (ForbiddenException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

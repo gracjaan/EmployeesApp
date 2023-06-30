@@ -419,5 +419,77 @@ public class UserDAO extends GenericDAO<User> {
         ResultSet res = statement.executeQuery();
         return res;
     }
+
+    public boolean hasUserAccessToUserContract(String userId, String userContractId)
+        throws SQLException {
+        String query = """
+            SELECT COUNT(*) as contracts FROM user_contract uc
+            WHERE uc.id = ? AND uc.user_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
+        PostgresJDBCHelper.setUuid(statement, 2, userId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
+
+    /**
+     * Shows whether a user has access to a notification. If the notification is for the user, then the user has access to the notification
+     * @param userId The id of the user
+     * @param notificationId The id of the notification
+     * @return whether the notification is for the user ? true : false
+     * @throws SQLException
+     */
+    public boolean hasUserAccessToNotification(String userId, String notificationId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as notifications FROM notification n
+            WHERE n.id = ? and n.user_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, notificationId);
+        PostgresJDBCHelper.setUuid(statement, 2, userId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("notifications") > 0;
+    }
+
+
+    /**
+     * Shows whether a user has access to a company. If the user works for the company, then the user has access to the company
+     * @param companyId The id of the company
+     * @param studentId The id of the Student
+     * @return whether the student has a contract with the company ? true : false
+     * @throws SQLException
+     */
+    public boolean hasUserAccessToCompany(String companyId, String studentId) throws SQLException {
+        String query = """
+            SELECT uc.id, COUNT(*) as contracts FROM user_contract uc
+            JOIN contract c ON c.id = uc.contract_id
+            WHERE uc.user_id = ? AND c.company_id = ?
+            GROUP BY uc.id
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, studentId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
 }
 

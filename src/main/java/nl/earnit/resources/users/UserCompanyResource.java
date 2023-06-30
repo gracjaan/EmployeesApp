@@ -1,11 +1,11 @@
 package nl.earnit.resources.users;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import nl.earnit.dao.*;
+import nl.earnit.dao.CompanyDAO;
+import nl.earnit.dao.DAOManager;
+import nl.earnit.dao.UserContractDAO;
+import nl.earnit.dao.WorkedDAO;
 import nl.earnit.models.Company;
 import nl.earnit.models.UserContract;
 
@@ -96,8 +96,16 @@ public class UserCompanyResource {
         UserContractDAO userContractDAO;
         UserContract uc;
         try {
+            CompanyDAO companyDAO = (CompanyDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.COMPANY);
+
+            if (!companyDAO.hasCompanyAccessToUserContract(companyId, userContractId)) {
+                throw new ForbiddenException();
+            }
+
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
             uc = userContractDAO.getUserContract(this.userId, userContractId);
+        } catch (ForbiddenException e) {
+            throw e;
         } catch (Exception e) {
             return Response.serverError().build();
         }
