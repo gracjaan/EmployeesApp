@@ -40,7 +40,7 @@ window.addEventListener("helpersLoaded", async () => {
 function createUser(user) {
     const li = document.createElement("li");
     const itemContainer = document.createElement("div");
-    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
+    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center", "gap-2");
     const nameDiv = document.createElement("a");
     nameDiv.href = "/info-user?id=" + user.id
     // nameDiv.addEventListener("click", () => {
@@ -48,7 +48,7 @@ function createUser(user) {
     // })
 
     const name = document.createElement("p");
-    name.classList.add("break-all", "text-text", "font-montserrat");
+    name.classList.add("text-text", "font-montserrat");
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     nameDiv.append(name);
     const statusDiv = document.createElement("div");
@@ -56,7 +56,7 @@ function createUser(user) {
     buttonDiv.classList.add("flex", "flex-row", "gap-2");
 
     const disableDiv = document.createElement("div");
-    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "ml-2", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    disableDiv.classList.add("w-[128px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-fail", "p-2",  "rounded-xl", "cursor-pointer");
 
     const crossImage = document.createElement("img");
     crossImage.src = "/static/icons/white-cross.svg";
@@ -65,7 +65,7 @@ function createUser(user) {
     disableDiv.append(crossImage);
 
     const disableTextDiv = document.createElement("div");
-    disableTextDiv.classList.add("cursor-pointer", "justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    disableTextDiv.classList.add("flex",  "flex-row", "justify-between", "items-center", "text-text", "text-sm");
     const disableText = document.createElement("p");
     disableText.innerText = "Disable User";
     disableText.classList.add("whitespace-nowrap");
@@ -75,14 +75,14 @@ function createUser(user) {
     itemContainer.append(disableDiv);
 
     const enableDiv = document.createElement("div");
-    enableDiv.classList.add("cursor-pointer", "rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    enableDiv.classList.add("w-[128px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-success", "p-2",  "rounded-xl", "cursor-pointer");
     const checkmarkImage = document.createElement("img");
     checkmarkImage.src = "/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
     const enableTextDiv = document.createElement("div");
-    enableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    enableTextDiv.classList.add("flex",  "flex-row", "justify-between", "items-center", "text-text", "text-sm");
     const enableText = document.createElement("p");
     enableText.innerText = "Enable User";
     enableText.classList.add("whitespace-nowrap");
@@ -157,20 +157,20 @@ function createCompany(company) {
     const li = document.createElement("li");
 
     const itemContainer = document.createElement("div");
-    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center");
+    itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center", "gap-2");
 
     const nameDiv = document.createElement("a");
     nameDiv.href = "/info-company?id=" + company.id;
 
     const name = document.createElement("p");
-    name.classList.add("break-all", "text-text", "font-montserrat");
+    name.classList.add("text-text", "font-montserrat");
     name.innerText = company.name;
 
     nameDiv.append(name);
     itemContainer.append(nameDiv)
 
     const disableDiv = document.createElement("div");
-    disableDiv.classList.add("rounded-xl", "bg-accent-fail", "p-2", "ml-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    disableDiv.classList.add("w-[164px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-fail", "p-2",  "rounded-xl", "cursor-pointer");
 
     const crossImage = document.createElement("img");
     crossImage.src = "/static/icons/white-cross.svg";
@@ -179,7 +179,7 @@ function createCompany(company) {
     disableDiv.append(crossImage);
 
     const disableTextDiv = document.createElement("div");
-    disableTextDiv.classList.add("cursor-pointer", "justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    disableTextDiv.classList.add("flex",  "flex-row", "justify-between", "items-center", "text-text", "text-sm");
     const disableText = document.createElement("p");
     disableText.innerText = "Disable Company";
     disableText.classList.add("whitespace-nowrap");
@@ -189,14 +189,14 @@ function createCompany(company) {
     itemContainer.append(disableDiv);
 
     const enableDiv = document.createElement("div");
-    enableDiv.classList.add("cursor-pointer","rounded-xl", "bg-accent-success", "p-2", "items-center", "text-white", "w-fit", "flex", "justify-center", "gap-2", "group");
+    enableDiv.classList.add("w-[164px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-success", "p-2",  "rounded-xl", "cursor-pointer");
     const checkmarkImage = document.createElement("img");
     checkmarkImage.src = "/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
     checkmarkImage.alt = "enable"
     enableDiv.append(checkmarkImage)
     const enableTextDiv = document.createElement("div");
-    enableTextDiv.classList.add("justify-center", "items-center", "group-hover:flex", "hidden", "text-sm", "text-text");
+    enableTextDiv.classList.add("flex",  "flex-row", "justify-between", "items-center", "text-text", "text-sm");
     const enableText = document.createElement("p");
     enableText.innerText = "Enable Company";
     enableText.classList.add("whitespace-nowrap");

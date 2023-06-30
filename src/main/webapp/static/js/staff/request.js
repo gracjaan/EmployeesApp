@@ -13,7 +13,7 @@ rejectButton.addEventListener("click", () => reject(getWorkedWeekId(), getJWTCoo
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     name.addEventListener("click", () => {
-        location.href = "/user?id=" + name.getAttribute("data-user-id")
+        location.href = "/info-user?id=" + name.getAttribute("data-user-id")
     })
 
     await updateHours();

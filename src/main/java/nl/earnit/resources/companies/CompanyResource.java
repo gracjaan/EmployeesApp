@@ -264,6 +264,8 @@ public class CompanyResource {
             }
 
             return new CompanyContractResource(uriInfo, request, companyId, contractId);
+        } catch (ForbiddenException e) {
+            throw e;
         } catch (Exception e) {
             throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
         }

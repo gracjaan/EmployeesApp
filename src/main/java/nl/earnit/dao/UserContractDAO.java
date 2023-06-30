@@ -274,5 +274,29 @@ public class UserContractDAO extends GenericDAO<User> {
     }
 
 
+    /**
+     * Shows whether a user contract has access to a worked.
+     * @param userContractId The id of the user contract
+     * @param workedId The id of the worked
+     * @return whether the user contract has access to worked ? true : false
+     * @throws SQLException
+     */
+    public boolean hasUserContractAccessToWorked(String userContractId, String workedId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as workedEntries FROM worked w
+            JOIN worked_week ww ON ww.id = w.worked_week_id
+            WHERE w.id = ? AND ww.contract_id = ?
+        """;
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, workedId);
+        PostgresJDBCHelper.setUuid(statement, 2, userContractId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("workedEntries") > 0;
+    }
 }
 
