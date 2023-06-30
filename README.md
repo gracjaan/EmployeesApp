@@ -44,6 +44,42 @@ The Staff can manage the whole system and see all it's users. All conflicts can 
 ## Installation <a id="installation"></a> 
 For the installation of the application we do the following:
 
+### Opening the project
+- install intellij idea
+- clone repository
+- open project with intellij
+- if necessary add a java jre, the project is java 17+
+
+### Setting up tomcat
+- go into edit configurations
+- add a new tomcat local server
+- go to the tomcat deployment tab
+- add a new artifact and select the `:war` version
+- change the application context to `/`
+
+- go to the tomcat start/connection tab
+- add the following environment variables, changes the values depending on your db:
+   - DB_HOST: `localhost`
+   - DB_PORT: `5432`
+   - DB_NAME: `earnit`
+   - DB_SCHEMA: `public`
+   - DB_USER: `postgres`
+   - DB_PASS: `postgres`
+   - JWT_ISSUER: `earnit`
+   - JWT_SECRET: `very-secure-secret`
+
+### Setting up postgresql
+- install [postgresql](https://www.postgresql.org/download/) locally
+- create a new database
+- create a schema or use the default public schema
+- run the sql for the earnit db. This can be found under `src/main/assets/`. Make sure to use the latest version.
+- to add an administrator adapt the following sql:
+   a password can be generated [here](https://bcrypt-generator.com/) and copy the hash into password field.
+   ```sql
+   insert into "user" (email, first_name, last_name_prefix, last_name, password, type) VALUES ('staff@example.com', 'Firstname', NULL, 'Lastname', '<password hash>', 'ADMINISTRATOR');
+   ```
+- make sure to update the enviormenet variables of tomcat to your postgresql db
+
 ---
 
 ## Packaging <a id=""></a>

@@ -30,7 +30,7 @@ public class TestDB {
 
         // Load db schema
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL dbSchema = classLoader.getResource("db-structure-v2.4.sql");
+        URL dbSchema = classLoader.getResource("db-structure-v2.5.sql");
         if (dbSchema == null) throw new Exception("Could not load db schema file");
         System.out.println("Loaded db schema");
 

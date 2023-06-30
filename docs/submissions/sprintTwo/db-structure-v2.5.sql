@@ -62,7 +62,8 @@ CREATE TABLE "worked"(
     "worked_week_id" UUID NOT NULL,
     "day" SMALLINT NOT NULL,
     "minutes" BIGINT NOT NULL,
-    "work" TEXT NOT NULL
+    "work" TEXT NOT NULL,
+    "suggestion" BIGINT DEFAULT NULL
 );
 ALTER TABLE
     "worked" ADD PRIMARY KEY("id");
@@ -179,7 +180,7 @@ $BODY$ LANGUAGE plpgsql;
 CREATE TRIGGER disableUserContractsFromContractTrigger
 AFTER UPDATE ON contract
 FOR EACH ROW
-EXECUTE FUNCTION disableUserContractsFromContract()
+EXECUTE FUNCTION disableUserContractsFromContract();
 
 
 CREATE FUNCTION get_user_id_from_worked_week("value" UUID) 
@@ -350,7 +351,10 @@ BEGIN
     INSERT INTO notification (id, user_id, company_id, worked_week_id, date, seen, type)
     VALUES (gen_random_uuid(), user_id, company_id, OLD.id, CURRENT_DATE, FALSE, 'SUGGESTION REJECTED');
   END IF;
-
+  
+RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
 
 CREATE FUNCTION notification_student_company_conflict()
 RETURNS TRIGGER AS $BODY$
