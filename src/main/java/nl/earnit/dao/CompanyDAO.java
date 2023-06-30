@@ -65,7 +65,7 @@ public class CompanyDAO extends GenericDAO<User> {
     public Company getCompanyById(String id) throws SQLException {
         // Create query
         String query =
-            "SELECT id, name, kvk, address FROM \"" + tableName + "\" WHERE \"id\" = ?";
+            "SELECT id, name, kvk, address, active FROM \"" + tableName + "\" WHERE \"id\" = ?";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
 
@@ -76,7 +76,9 @@ public class CompanyDAO extends GenericDAO<User> {
         if(!res.next()) return null;
 
         // Return Company
-        return new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
+        Company company = new Company(res.getString("id"), res.getString("name"), res.getString("kvk"), res.getString("address"));
+        company.setActive(res.getBoolean("active"));
+        return company;
     }
 
     /**
@@ -235,13 +237,13 @@ public class CompanyDAO extends GenericDAO<User> {
      */
     public List<UserResponseDTO> getStudentsForCompany(String companyId) throws SQLException {
         String query = """
-            SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.btw, u.kvk, u.address FROM "user" u, company_user c WHERE u.id = c.user_id AND c.company_id = ?""";
+            SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.btw, u.kvk, u.address FROM "user" u, user_contract uc, contract c WHERE u.id = uc.user_id AND uc.contract_id = c.id AND c.company_id = ?""";
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, companyId);
         ResultSet resultSet = statement.executeQuery();
         List<UserResponseDTO> users = new ArrayList<>();
         while (resultSet.next()) {
-            UserResponseDTO user = new UserResponseDTO(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("btw"), resultSet.getString("kvk"), resultSet.getString("address"));
+            UserResponseDTO user = new UserResponseDTO(resultSet.getString("id"), resultSet.getString("email"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("last_name_prefix"), resultSet.getString("type"), resultSet.getString("kvk"), resultSet.getString("btw"), resultSet.getString("address"));
             users.add(user);
         }
         return users;

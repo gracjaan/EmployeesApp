@@ -54,7 +54,7 @@ public class UserContractResource {
         UserContract uc;
         try {
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
-            uc = userContractDAO.getUserContract(this.userId, this.userContractId);
+            uc = userContractDAO.getUserContract(this.userContractId);
         } catch (Exception e) {
             return Response.serverError().build();
         }

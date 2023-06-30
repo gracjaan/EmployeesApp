@@ -2,15 +2,14 @@ package nl.earnit.dao;
 
 import nl.earnit.dto.contracts.ContractDTO;
 import nl.earnit.dto.user.UserContractDTO;
+import nl.earnit.dto.user.UserResponseDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.Company;
 import nl.earnit.models.User;
-import nl.earnit.dto.user.UserResponseDTO;
 import org.postgresql.util.PGobject;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -161,7 +160,7 @@ public class ContractDAO extends GenericDAO<User> {
         statement.setString(1, description);
         PostgresJDBCHelper.setUuid(statement, 2, contractId);
 
-        statement.executeQuery();
+        statement.executeUpdate();
     }
 
     /**
@@ -178,7 +177,7 @@ public class ContractDAO extends GenericDAO<User> {
         statement.setString(1, role);
         PostgresJDBCHelper.setUuid(statement, 2, contractId);
 
-        statement.executeQuery();
+        statement.executeUpdate();
     }
 
     /**
@@ -211,7 +210,7 @@ public class ContractDAO extends GenericDAO<User> {
      * @throws SQLException the sql SQLException
      */
     public ContractDTO getContract(String contractId) throws SQLException {
-        String query = "GET description, role FROM " + tableName + " WHERE id = ?";
+        String query = "SELECT description, role FROM " + tableName + " WHERE id = ?";
 
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, contractId);
@@ -222,7 +221,7 @@ public class ContractDAO extends GenericDAO<User> {
             return null;
         }
 
-        return new ContractDTO(contractId, res.getString("description"), res.getString("role"));
+        return new ContractDTO(contractId, res.getString("role"), res.getString("description"));
     }
 
     /**

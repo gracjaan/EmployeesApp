@@ -103,7 +103,7 @@ public class UserCompanyResource {
             }
 
             userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
-            uc = userContractDAO.getUserContract(this.userId, userContractId);
+            uc = userContractDAO.getUserContract(userContractId);
         } catch (ForbiddenException e) {
             throw e;
         } catch (Exception e) {
