@@ -1,4 +1,4 @@
-package nl.earnit.test;
+package nl.earnit;
 
 
 import io.zonky.test.db.postgres.junit5.SingleInstancePostgresExtension;

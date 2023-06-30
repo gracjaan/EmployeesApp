@@ -8,14 +8,12 @@ import nl.earnit.dao.CompanyUserDAO;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.models.Company;
 import nl.earnit.models.User;
-import nl.earnit.test.TestDB;
-import org.junit.jupiter.api.Assertions;
+import nl.earnit.TestDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 

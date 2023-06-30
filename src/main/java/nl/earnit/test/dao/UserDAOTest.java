@@ -6,7 +6,7 @@ import nl.earnit.Auth;
 import nl.earnit.dao.UserDAO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.User;
-import nl.earnit.test.TestDB;
+import nl.earnit.TestDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

@@ -10,7 +10,7 @@ import nl.earnit.models.Company;
 import nl.earnit.models.User;
 import nl.earnit.models.UserContract;
 import nl.earnit.models.Worked;
-import nl.earnit.test.TestDB;
+import nl.earnit.TestDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
