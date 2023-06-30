@@ -3,6 +3,8 @@ window.addEventListener("helpersLoaded", async () => {
     const userId = getIdUser();
     const user = await getUser(userId);
     const userContracts = await getUserContracts(userId)
+    console.log("These are all the user contracts")
+    console.log(userContracts)
     const companies = await getCompanies(userId)
 
     const hours = document.getElementById("hours");
@@ -228,7 +230,7 @@ function createUserContractItem(userContract) {
 
 function disableUserContract(contract){
     console.log(contract)
-    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + getIdUser(),
+    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + contract.id,
         {
             method: "DELETE",
             headers: {
@@ -236,12 +238,16 @@ function disableUserContract(contract){
                 'authorization': `token ${getJWTCookie()}`,
             }
         })
-        .then (response => alertPopUp("Disabled contract successfully", true))
-        .catch(e => alertPopUp("Unable to disable the contract"))
+        .then (response => console.log(response))
+
+        // .then (response => alertPopUp("Disabled contract successfully", true))
+        .catch(e => console.log(e))
+
+    // .catch(e => alertPopUp("Unable to disable the contract"))
 }
 function enableUserContract(contract){
     console.log(contract)
-    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + getIdUser(),
+    fetch ("/api/companies/"+ contract.contract.company.id + "/contracts/" + contract.contract.id + "/employees/" + contract.id,
         {
             method: "POST",
             headers: {

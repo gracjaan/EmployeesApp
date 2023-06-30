@@ -8,10 +8,7 @@ import nl.earnit.models.User;
 import nl.earnit.models.UserContract;
 import nl.earnit.dto.company.CompanyCountsDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,9 +156,10 @@ public class UserContractDAO extends GenericDAO<User> {
      * @throws SQLException the sql SQLException
      */
     public void disableUserContract(String id) throws SQLException {
-
+        System.out.println("got in the disable user DAO");
         String query = "UPDATE " + tableName + " SET active = FALSE WHERE id = ?";
-
+        System.out.println(query);
+        System.out.println(id);
         PreparedStatement statement = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(statement, 1, id);
 
