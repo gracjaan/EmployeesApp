@@ -172,8 +172,7 @@ The notifications that are displayed onn the dashboard will appear when one of t
 In order to be on the application as a Staff, we first have to make an account for an Administrator. An administrator cannot be created through the
 application to enhance security. This is why we insert the Administrator into the database by hand
 
->If the administrator is inserted, the credentials can just be filled in, in the loginDTO. A pre-inserted administrator is:
-email: user3@example.com   , password: test
+>If the administrator is inserted, the credentials can just be filled in, in the login. To insert an administrator look at the [installation](#installation) guide
 #### Dashboard <a id="dashboard-2"></a>
 ###### Requests <a id="requests-1"></a>
 The requests page contains all the flagged requests. If a company and a student couldn't agree on the hours that were filled in
