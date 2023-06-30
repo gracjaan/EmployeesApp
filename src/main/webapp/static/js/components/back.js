@@ -5,7 +5,9 @@ window.addEventListener("helpersLoaded", () => {
         const header = document.createElement("header");
         header.classList.add("flex", "bg-primary", "w-fit", "p-2", "rounded-br-lg", "cursor-pointer");
         header.addEventListener("click", () => {
-            if (backElement.hasAttribute("data-home")) {
+            if (backElement.hasAttribute("data-hide")) {
+                document.getElementById(backElement.getAttribute("data-hide")).classList.add("hidden");
+            } else if (backElement.hasAttribute("data-home")) {
                 location.href = "/"
             } else {
                 history.back();
