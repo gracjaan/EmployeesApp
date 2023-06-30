@@ -314,7 +314,7 @@ public class UserDAO extends GenericDAO<User> {
             LEFT JOIN worked_week ww ON ww.id = n.worked_week_id
             LEFT JOIN user_contract uc ON uc.id = ww.contract_id 
             LEFT JOIN contract c ON c.id = uc.contract_id 
-            WHERE u.id = ? AND n.type != 'SUGGESTION REJECTED' AND n.type != 'CONFLICT'
+            WHERE u.id = ? AND n.type != 'SUGGESTION REJECTED' AND n.type != 'SUGGESTION ACCEPTED' AND n.type != 'CONFLICT'
             ORDER BY n.date DESC, n.seen
             """;
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -326,6 +326,9 @@ public class UserDAO extends GenericDAO<User> {
             String type = res.getString("type");
             String title = convertToTitle(type);
             String description = convertToDescription(type, res.getString("company_name"), res.getString("role"), name, res.getString("week"));
+
+            if (title == null) continue;
+
             NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), type, title, description, res.getString("user_id"), res.getString("company_id"), res.getString("user_contract_id"), res.getString("contract_id"), res.getString("worked_week_id"), res.getInt("week"));
             notifications.add(notification);
         }
@@ -354,6 +357,9 @@ public class UserDAO extends GenericDAO<User> {
             String type = res.getString("type");
             String title = convertToTitle(type);
             String description = convertToDescription(type, res.getString("company_name"), res.getString("role"), name, res.getString("week"));
+
+            if (title == null) continue;
+
             NotificationDTO notification = new NotificationDTO(res.getString("id"), res.getString("date"), res.getBoolean("seen"), type, title, description, res.getString("user_id"), res.getString("company_id"), res.getString("user_contract_id"), res.getString("contract_id"), res.getString("worked_week_id"), res.getInt("week"));
             notifications.add(notification);
         }

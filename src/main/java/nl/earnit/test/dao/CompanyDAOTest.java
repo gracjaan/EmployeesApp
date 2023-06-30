@@ -88,6 +88,7 @@ public class CompanyDAOTest {
 
         Company company = companyDAO.createCompany("TestCompany", "NL845838", "Finkenstraat 42, 7544NM Amsterdam");
         company.setName("TestCompanyUpdate");
+        company.setActive(true);
         Company updCompany = companyDAO.updateCompany(company);
 
         assertEquals(company.getId(), updCompany.getId());
@@ -148,18 +149,23 @@ public class CompanyDAOTest {
         setupCompanyDAOTest();
 
         Connection con = db.getConnection();
+
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany", "NL845838", "Finkenstraat 42, 7544NM Amsterdam");
+
         UserDAO userDAO = new UserDAO(con);
         User user1 = userDAO.createUser("student@example.com", "John", null, "Smith", Auth.hashPassword("test"), "STUDENT",
                 "12345678", "NL000099998B57", "Street 2 7522AZ");
         User user2 = userDAO.createUser("studentexample@gmail.com", "Jay", null, "Mayers", Auth.hashPassword("test"), "STUDENT",
                 "12745678", "NL000095698B57", "Street 42 7522AZ");
+
         ContractDAO contractDAO = new ContractDAO(con);
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
+
         UserContractDAO userContractDAO = new UserContractDAO(con);
-        UserContract userContract1 = userContractDAO.addNewUserContract(user1.getId(), contractDTO.getId(), 12);
-        UserContract userContract2 = userContractDAO.addNewUserContract(user2.getId(), contractDTO.getId(), 15);
+
+        UserContract userContract1 = userContractDAO.addNewUserContract(user1.getId(), contractDTO.getId(), 1200);
+        UserContract userContract2 = userContractDAO.addNewUserContract(user2.getId(), contractDTO.getId(), 1500);
 
         List<UserResponseDTO> users = companyDAO.getStudentsForCompany(company.getId());
 
@@ -177,7 +183,7 @@ public class CompanyDAOTest {
         assertNull(users.get(1).getLastNamePrefix());
         assertEquals(users.get(1).getLastName(), "Mayers");
         assertEquals(users.get(1).getType(), "STUDENT");
-        assertEquals(users.get(1).getKvk(), "1274568");
+        assertEquals(users.get(1).getKvk(), "12745678");
         assertEquals(users.get(1).getBtw(), "NL000095698B57");
         assertEquals(users.get(1).getAddress(), "Street 42 7522AZ");
 
@@ -233,7 +239,6 @@ public class CompanyDAOTest {
     @Test
     public void testHasCompanyAccessToContract() throws Exception{
         setupCompanyDAOTest();
-
         Connection con = db.getConnection();
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany", "NL845838", "Finkenstraat 42, 7544NM Amsterdam");

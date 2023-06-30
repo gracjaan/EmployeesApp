@@ -150,7 +150,7 @@ function updatePage(request) {
 //Creates request element
 function createEntry(year, week, contract, entry, approved) {
     const entryContainer = document.createElement("div");
-    entryContainer.classList.add("rounded-xl", "bg-primary", "p-4", "relative", "flex", "justify-between");
+    entryContainer.classList.add("rounded-xl", "bg-primary", "px-4", "py-3", "relative", "flex", "justify-between");
 
     const entryInfo = document.createElement("div");
     entryInfo.classList.add("w-full", "grid-cols-[1fr_1fr_1fr]", "sm:grid-cols-[1fr_1fr_2fr_5fr]", "grid");

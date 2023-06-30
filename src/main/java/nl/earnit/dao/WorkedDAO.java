@@ -50,18 +50,18 @@ public class WorkedDAO extends GenericDAO<User> {
      */
     public List<Worked> getWorkedHours(String userContractId) throws SQLException {
         // Create query
-        String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=?";
+        String query = "SELECT t.id, t.worked_week_id, t.day, t.minutes, t.work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=?";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
-        res.next();
         List<Worked> list = new ArrayList<>();
         while (res.next()) {
             Worked w = new Worked(res.getString("id"), res.getString("worked_week_id"), res.getInt("day"), res.getInt("minutes"), res.getString("work"));
             list.add(w);
         }
+
         return list;
     }
 
@@ -74,16 +74,15 @@ public class WorkedDAO extends GenericDAO<User> {
      * @return the worked week
      * @throws SQLException the sql SQLException
      */
-    public List<Worked> getWorkedWeek(String userContractId, String year, String week) throws SQLException {
-        String query = "SELECT id, worked_week_id, day, minutes, work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.year=? AND ww.week=?";
+    public List<Worked> getWorkedWeek(String userContractId, Integer year, Integer week) throws SQLException {
+        String query = "SELECT t.id, t.worked_week_id, t.day, t.minutes, t.work  FROM  \"" + tableName + "\" t JOIN worked_week ww ON ww.id=t.worked_week_id WHERE ww.contract_id=? AND ww.year=? AND ww.week=?";
         PreparedStatement counter = this.con.prepareStatement(query);
         PostgresJDBCHelper.setUuid(counter, 1, userContractId);
-        counter.setString(2, year);
-        counter.setString(3, week);
+        counter.setInt(2, year);
+        counter.setInt(3, week);
         // Execute query
         ResultSet res = counter.executeQuery();
         // Return count
-        res.next();
         List<Worked> list = new ArrayList<>();
         while (res.next()) {
             Worked w = new Worked(res.getString("id"), res.getString("worked_week_id"), res.getInt("day"), res.getInt("minutes"), res.getString("work"));
@@ -125,7 +124,7 @@ public class WorkedDAO extends GenericDAO<User> {
      * @throws SQLException
      */
     public boolean addWorkedWeekTask(Worked worked, String userContractId, String year, String week) throws Exception {
-            WorkedWeekDAO wwDao = (WorkedWeekDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.WORKED_WEEK);
+            WorkedWeekDAO wwDao = new WorkedWeekDAO(con);
             List<WorkedWeekDTO> workedWeeks = wwDao.getWorkedWeeksForUser(null, userContractId, Integer.parseInt(year), Integer.parseInt(week), false, false, false, false, false, false, "hours.day:asc");
 
             WorkedWeekDTO ww = null;

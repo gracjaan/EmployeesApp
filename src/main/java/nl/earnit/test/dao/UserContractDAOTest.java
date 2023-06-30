@@ -3,16 +3,17 @@ package nl.earnit.test.dao;
 import io.zonky.test.db.postgres.junit5.EmbeddedPostgresExtension;
 import io.zonky.test.db.postgres.junit5.SingleInstancePostgresExtension;
 import nl.earnit.Auth;
-import nl.earnit.dao.*;
+import nl.earnit.dao.CompanyDAO;
+import nl.earnit.dao.ContractDAO;
+import nl.earnit.dao.UserContractDAO;
+import nl.earnit.dao.UserDAO;
 import nl.earnit.dto.contracts.ContractDTO;
 import nl.earnit.dto.user.UserContractDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.Company;
 import nl.earnit.models.User;
 import nl.earnit.models.UserContract;
-import nl.earnit.models.Worked;
 import nl.earnit.test.TestDB;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class UserContractDAOTest {
     @RegisterExtension
@@ -91,13 +91,13 @@ public class UserContractDAOTest {
         User user = userDAO.createUser("student@example.com", "John", null, "Smith", Auth.hashPassword("test"), "STUDENT",
                 "12345678", "NL000099998B57", "Street 2 7522AZ");
         ContractDAO contractDAO = new ContractDAO(con);
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         userContractDAO.disableUserContract(userContract.getId());
 
         PreparedStatement statement = con.prepareStatement("SELECT c.active FROM user_contract c WHERE c.id = ?");
-        PostgresJDBCHelper.setUuid(statement, 1, contractDTO.getId());
+        PostgresJDBCHelper.setUuid(statement, 1, userContract.getId());
         ResultSet res = statement.executeQuery();
         assertTrue(res.next());
         assertFalse(res.getBoolean("active"));
@@ -121,7 +121,7 @@ public class UserContractDAOTest {
 
         userContractDAO.changeHourlyWage(userContract.getId(), 15);
 
-        UserContract updUserContract = userContractDAO.getUserContract(user.getId(), userContract.getId());
+        UserContract updUserContract = userContractDAO.getUserContract(userContract.getId());
         assertEquals(userContract.getContractId(), updUserContract.getContractId());
         assertEquals(15, updUserContract.getHourlyWage());
 

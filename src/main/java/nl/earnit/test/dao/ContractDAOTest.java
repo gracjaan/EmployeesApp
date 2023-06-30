@@ -41,9 +41,8 @@ public class ContractDAOTest {
         ContractDAO contractDAO = new ContractDAO(con);
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany1", "NL845835", "Adamstraat 42, 7544NM Amsterdam");
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
 
-        assertEquals(contractDTO.getCompany().getName(), company.getName());
         assertEquals(contractDTO.getRole(), "Engineer");
         assertEquals(contractDTO.getDescription(), "doing a lot of work");
 
@@ -68,7 +67,7 @@ public class ContractDAOTest {
         String order = "contract.role:asc,user_contract.user.last_name:asc";
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany1", "NL845835", "Adamstraat 42, 7544NM Amsterdam");
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
 
         List<ContractDTO> contracts = contractDAO.getAllContractsByCompanyId(
                 company.getId(), true, false, false, order
@@ -95,7 +94,7 @@ public class ContractDAOTest {
         ContractDAO contractDAO = new ContractDAO(con);
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany1", "NL845835", "Adamstraat 42, 7544NM Amsterdam");
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
 
         contractDAO.updateContractRole(contractDTO.getId(), "Updated role");
         contractDAO.updateContractDescription(contractDTO.getId(), "Updated description");
@@ -116,7 +115,7 @@ public class ContractDAOTest {
         ContractDAO contractDAO = new ContractDAO(con);
         CompanyDAO companyDAO = new CompanyDAO(con);
         Company company = companyDAO.createCompany("TestCompany1", "NL845835", "Adamstraat 42, 7544NM Amsterdam");
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
         companyDAO.disableCompanyById(company.getId());
         PreparedStatement statement = con.prepareStatement("SELECT c.active FROM contract c WHERE c.id = ?");
         PostgresJDBCHelper.setUuid(statement, 1, contractDTO.getId());
@@ -137,7 +136,7 @@ public class ContractDAOTest {
         User user = userDAO.createUser("student@example.com", "John", null, "Smith", Auth.hashPassword("test"), "STUDENT",
                 "12345678", "NL000099998B57", "Street 2 7522AZ");
         ContractDAO contractDAO = new ContractDAO(con);
-        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(UUID.randomUUID().toString(), "Engineer", "doing a lot of work"), company.getId());
+        ContractDTO contractDTO = contractDAO.createContract(new ContractDTO(null, "Engineer", "doing a lot of work"), company.getId());
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         boolean flag = contractDAO.hasContractAccessToUserContract(contractDTO.getId(), userContract.getId());

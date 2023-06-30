@@ -74,6 +74,9 @@ document.addEventListener("click", function(event) {
 
 //When a company is chosen from the dropdown menu, the company is displayed in the right div
 async function editCompanyInfo(company){
+    const h = document.getElementById("company-header")
+    h.innerText = company.name;
+
     const companyDiv = document.getElementById("company-name-display");
     companyDiv.innerText = "";
     companyDiv.setAttribute("company-id", company.id)
@@ -83,7 +86,7 @@ async function editCompanyInfo(company){
 
     const companyImage = document.createElement("img");
     companyImage.alt = "company logo"
-    companyImage.classList.add("h-14", "mx-8");
+    companyImage.classList.add("h-14", "mr-4");
     companyImage.src = "/static/icons/building.svg"
 
     const companyName = document.createElement("p");
