@@ -27,6 +27,16 @@ window.addEventListener("helpersLoaded", async () => {
 
         if (confirmButton.getAttribute("data-enabling") === "1") {
             if (isCompany) {
+                await enableCompany(companyId)
+            } else {
+                await enableUser(userId)
+            }
+
+            disableDiv.classList.remove("hidden")
+            enableDiv.classList.add("hidden")
+        }
+        else{
+            if (isCompany) {
                 await disableCompany(companyId)
             } else {
                 await disableUser(userId)
@@ -34,15 +44,6 @@ window.addEventListener("helpersLoaded", async () => {
 
             enableDiv.classList.remove("hidden")
             disableDiv.classList.add("hidden")
-        }
-        else{
-            if (isCompany) {
-                await enableCompany(companyId)
-            } else {
-                await enableUser(userId)
-            }
-            disableDiv.classList.remove("hidden")
-            enableDiv.classList.add("hidden")
         }
         popUpElement.classList.add("hidden")
 
