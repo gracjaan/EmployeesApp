@@ -661,7 +661,6 @@ async function submitEdittedForm(data) {
 }
 
 function validateForm(formData, position) {
-    console.log(formData, position)
     if (formData.day < 0 || formData.day > 6 || formData.minutes === '' || formData.work === '' || position === null) {
         const error = document.getElementById("submit-error");
         error.classList.remove("hidden");

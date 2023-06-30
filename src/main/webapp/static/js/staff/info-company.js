@@ -4,6 +4,7 @@ window.addEventListener("helpersLoaded", async () => {
     const company = await getCompany(companyId);
     const roles = await getCompanyRoles(company.id)
     let employees = await getEmployees(company.id)
+    console.log(employees)
 
     const name = document.getElementById("name");
     const roleList = document.getElementById("roles");

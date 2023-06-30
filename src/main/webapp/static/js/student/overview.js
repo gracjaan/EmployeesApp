@@ -275,9 +275,6 @@ async function getData() {
         arrayOfInvoices.push(await obtainInvoices(contract))
     }
 
-    console.log(arrayOfInvoices)
-    console.log(contracts)
-
     const defined = [{borderColor: 'rgb(237, 76, 76)', name: "My first data"}, {borderColor: 'rgb(255, 172, 28)', name: "My second data"}, {borderColor: 'rgb(231,226,95)', name: "My third data"}, {borderColor: 'rgb(75, 192, 192)', name: "My fourth data"}];
 
     let index = 0;
@@ -316,7 +313,6 @@ async function getData() {
 
         index ++;
     })
-    console.log(data)
     return data;
 }
 
