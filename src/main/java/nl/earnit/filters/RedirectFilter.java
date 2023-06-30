@@ -73,7 +73,7 @@ public class RedirectFilter implements Filter {
 
         if (!req.getServletPath().startsWith(path)) {
             RequestDispatcher dispatcher = servletRequest.getServletContext()
-                .getRequestDispatcher(path + req.getServletPath());
+                .getRequestDispatcher(path + (req.getServletPath().equals("/") ? req.getServletPath() + "home" : req.getServletPath()));
             dispatcher.forward(servletRequest, servletResponse);
             return;
         }

@@ -98,7 +98,7 @@ function rejectConfirm() {
                 .then(async (res) => await res.json())
                 .then((request) => {
                     updatePage(request);
-                    alertPopUp("rejected the week. Request will be considered soon", false)
+                    alertPopUp("Rejected the week. Request will be considered soon", false)
                 })
                 .catch(() => null);
         })
@@ -125,7 +125,7 @@ function undo(companyId, workedWeekId, token) {
         .then(async (res) => await res.json())
         .then((request) => {
             updatePage(request);
-            alertPopUp("undid the previous action", true)
+            alertPopUp("Undid the previous action", true)
         })
         .catch(() => null);
 }

@@ -251,6 +251,31 @@ public class CompanyContractResource {
     }
 
     /**
+     * Enable user contract response.
+     *
+     * @param userContractId the user contract id
+     * @return the response
+     */
+    @POST
+    @Path("/employees/{userContractId}")
+    public Response enableUserContract(@PathParam("userContractId") String userContractId) {
+        if (userContractId == null) {
+            return Response.status(400).build();
+        }
+
+        try {
+            UserContractDAO userContractDAO = (UserContractDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER_CONTRACT);
+            System.out.println("The user contract is being enabled");
+            userContractDAO.enableUserContract(userContractId);
+
+        } catch (Exception e) {
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
+    }
+
+    /**
      * Disable user contract response.
      *
      * @param userContractId the user contract id
