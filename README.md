@@ -49,6 +49,7 @@ For the installation of the application we do the following:
 - clone repository
 - open project with intellij
 - if necessary add a java jre, the project is java 17+
+- make sure to reload maven
 
 ### Setting up tomcat
 - go into edit configurations
@@ -78,12 +79,31 @@ For the installation of the application we do the following:
    ```sql
    insert into "user" (email, first_name, last_name_prefix, last_name, password, type) VALUES ('staff@example.com', 'Firstname', NULL, 'Lastname', '<password hash>', 'ADMINISTRATOR');
    ```
-- make sure to update the enviormenet variables of tomcat to your postgresql db
+- make sure to update the environment variables of tomcat to your postgresql db
 
 ---
 
 ## Packaging <a id=""></a>
-The project is packaged as follows
+The project is packaged as follows:
+- `docs` contains all assignments for the university
+- `tailwind.config.js` only exists for autocompletion
+- `pom.xml` contains all the project and library information for maven
+- `earnit.iml` contains the project information for intellij
+- `src` contains the source code for the project
+  - `assets` contains assets for the tests
+  - `java` contains the java code for the project
+    - `dao` contains all dao's to interact with the database
+    - `dto` contains all dto's to interact between js and java
+    - `exceptions` contains all custom exceptions
+    - `filters` contains the redirect filter for the servlets
+    - `helpers` contains helpers methods for the database and servlets
+    - `models` contains all database models for jaxb
+    - `resources` contains all servlet resources
+    - `test` contains all tests
+    - `Auth.java` contains authentication helper methods
+    - `Contains.java` contains constants to easily change basic configurations
+    - `TestDB.java` contains methods to set up the dynamic database for the tests
+  - `webapp` contains html, js, css and other files for the web server
 
 ---
 
@@ -249,8 +269,9 @@ The dependencies that we use are:**
 ---
 
 ## Testing <a id="testing"></a>
-All tests are unit tests. These can be run inside an idea or command line. The tests use a dynamic database. Because of this dynamic database some tests may take a bit of time. Sadly, this dynamic database doesn't seem to work on any apple operating system.
-
+All tests are unit tests. These can be run inside an idea or command line. The tests use a dynamic database. Because of this dynamic database some tests may take a bit of time. 
+Sadly, this dynamic database doesn't seem to work on any apple operating system.
+If you encounter the following error `Could not load db schema file`. Mark the `src/main/assets` as sources.
 ---
 
 ## Further improvements <a id="further-improvements"></a>  
