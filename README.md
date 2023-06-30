@@ -46,7 +46,7 @@ For the installation of the application we do the following:
 ---
 
 ## Packaging <a name=""></a>
-For the installation of the application we do the following:
+The project is packaged as follows
 
 ---
 
@@ -215,7 +215,6 @@ In order to make an admin account type the following SQL command:
 insert into "user"(id, email, first_name, last_name, type, password, active)  
 values(gen_random_uuid(), 'staff@example.com', 'Staff', 'Member', 'ADMINISTRATOR', '$2a$12$gurI9FM61ELngKHe2/OnxuZOnWsLnXCLIUO3Fd4hkUhCA36UXeKWe', true)  
 
-When logging out of one account type, and logging in with a different one, make sure to refresh cache in order to properly load the page
 
 ---
 
