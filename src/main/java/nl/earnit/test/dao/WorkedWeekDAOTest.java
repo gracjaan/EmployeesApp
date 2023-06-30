@@ -11,7 +11,6 @@ import nl.earnit.models.User;
 import nl.earnit.models.UserContract;
 import nl.earnit.models.Worked;
 import nl.earnit.test.TestDB;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -45,7 +44,7 @@ public class WorkedWeekDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
         workedWeekDAO.confirmWorkedWeek(userContract.getId(), "2023", "30");
         assertTrue(workedWeekDAO.isWorkedWeekConfirmed(workedWeekId));
@@ -67,7 +66,7 @@ public class WorkedWeekDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
         assertNull(workedWeekDAO.getWorkedWeekById(workedWeekId).getNote());
         workedWeekDAO.addWorkedWeekNote("update", userContract.getId(), "2023", "30");
@@ -89,7 +88,7 @@ public class WorkedWeekDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
         WorkedDAO workedDAO = new WorkedDAO(con);
         Worked first = new Worked(UUID.randomUUID().toString(), workedWeekId, 2, 240, "did something cool");
@@ -97,11 +96,11 @@ public class WorkedWeekDAOTest {
         Worked second = new Worked(UUID.randomUUID().toString(), workedWeekId, 2, 180, "did something cool");
         assertTrue(workedDAO.addWorkedWeekTask(second, userContract.getId(), "2023", "30"));
 
-        List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(user.getId(), userContract.getId(), 2023, 30, true, true, true,true,false, false, "worked_week.year:asc,worked_week.week:asc");
+        List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForUser(user.getId(), userContract.getId(), 2023, 30, true, true, true,true,false, true, "worked_week.year:asc,worked_week.week:asc");
         WorkedWeekDTO ww = workedWeeks.get(0);
         assertEquals(ww.getUser().getId(), user.getId());
         assertEquals(ww.getCompany().getId(), company.getId());
-        assertEquals(ww.getUserContract(), userContract.getId());
+        assertEquals(ww.getUserContract().getId(), userContract.getId());
         assertEquals(ww.getYear(), 2023);
         assertEquals(ww.getWeek(), 30);
         assertEquals(ww.getTotalMinutes(), 420);
@@ -123,7 +122,7 @@ public class WorkedWeekDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
         WorkedDAO workedDAO = new WorkedDAO(con);
         Worked first = new Worked(UUID.randomUUID().toString(), workedWeekId, 2, 240, "did something cool");
@@ -131,11 +130,13 @@ public class WorkedWeekDAOTest {
         Worked second = new Worked(UUID.randomUUID().toString(), workedWeekId, 2, 180, "did something cool");
         assertTrue(workedDAO.addWorkedWeekTask(second, userContract.getId(), "2023", "30"));
 
+        workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", false, false, false, false, false, false, "");
+
         List<WorkedWeekDTO> workedWeeks = workedWeekDAO.getWorkedWeeksForCompany(company.getId(), 2023, 30, true, true, true,true,false, false, "worked_week.year:asc,worked_week.week:asc");
         WorkedWeekDTO ww = workedWeeks.get(0);
         assertEquals(ww.getCompany().getId(), company.getId());
         assertEquals(ww.getContract().getId(), contractDTO.getId());
-        assertEquals(ww.getUserContract(), userContract.getId());
+        assertEquals(ww.getUserContract().getId(), userContract.getId());
         assertEquals(ww.getYear(), 2023);
         assertEquals(ww.getWeek(), 30);
         assertNull(ww.getHours());
@@ -157,7 +158,7 @@ public class WorkedWeekDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
 
         WorkedWeekDTO ww = workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
@@ -184,7 +185,7 @@ public class WorkedWeekDAOTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
         assertFalse(workedWeekDAO.isWorkedWeekSuggested(workedWeekId));
         WorkedWeekDTO ww = workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
