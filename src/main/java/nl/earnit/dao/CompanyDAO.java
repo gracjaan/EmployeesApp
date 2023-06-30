@@ -300,7 +300,7 @@ public class CompanyDAO extends GenericDAO<User> {
                 if (data == null) continue;
 
                 data = data.substring(1, data.length() - 1);
-                String[] dataStrings = data.split(",");
+                String[] dataStrings = data.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", -1);
 
                 UserContractDTO userContract = new UserContractDTO(dataStrings[0], dataStrings[1], dataStrings[2], Integer.parseInt(dataStrings[3]), dataStrings[4].equals("t"));
 
@@ -393,7 +393,7 @@ public class CompanyDAO extends GenericDAO<User> {
     /**
      * Shows whether a company has access to a contract. If the contract is for the company, then the company has access to the contract
      * @param companyId The id of the company
-     * @param contractId The id of the user contract
+     * @param contractId The id of the contract
      * @return whether the contract is from the company ? true : false
      * @throws SQLException
      */
@@ -407,6 +407,31 @@ public class CompanyDAO extends GenericDAO<User> {
         PreparedStatement statement = this.con.prepareStatement(query);
 
         PostgresJDBCHelper.setUuid(statement, 1, contractId);
+        PostgresJDBCHelper.setUuid(statement, 2, companyId);
+
+        ResultSet res = statement.executeQuery();
+
+        if (!res.next()) return false;
+        return res.getInt("contracts") > 0;
+    }
+
+    /**
+     * Shows whether a company has access to a user contract. If the user contract is for the company, then the company has access to the user contract
+     * @param companyId The id of the company
+     * @param userContractId The id of the user contract
+     * @return whether the user contract is from the company ? true : false
+     * @throws SQLException
+     */
+    public boolean hasCompanyAccessToUserContract(String companyId, String userContractId) throws SQLException {
+        String query = """
+            SELECT COUNT(*) as contracts FROM user_contract uc
+            WHERE uc.id = ? and uc.company_id = ?
+        """;
+
+
+        PreparedStatement statement = this.con.prepareStatement(query);
+
+        PostgresJDBCHelper.setUuid(statement, 1, userContractId);
         PostgresJDBCHelper.setUuid(statement, 2, companyId);
 
         ResultSet res = statement.executeQuery();

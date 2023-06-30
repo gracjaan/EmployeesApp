@@ -125,7 +125,7 @@ function editUserInfo(user){
     userIMage.src = "/static/icons/user.svg"
 
     const userName = document.createElement("p");
-    userName.classList.add("break-all", "text-text", "font-bold", "text-2xl");
+    userName.classList.add("text-text", "font-bold", "text-2xl");
     userName.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
 
     encapsulatingDiv.append(userIMage);
@@ -149,7 +149,7 @@ async function editCompanyInfo(company) {
     companyImage.src = "/static/icons/building.svg"
 
     const companyName = document.createElement("p");
-    companyName.classList.add("break-all", "text-text", "font-bold", "text-2xl");
+    companyName.classList.add("text-text", "font-bold", "text-2xl");
     companyName.innerText = company.name;
     encapsulatingDiv.append(companyImage);
     encapsulatingDiv.append(companyName);

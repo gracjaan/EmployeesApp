@@ -13,7 +13,7 @@ rejectButton.addEventListener("click", () => reject(getWorkedWeekId(), getJWTCoo
 window.addEventListener("helpersLoaded", async () => {
     const name = document.getElementById("name");
     name.addEventListener("click", () => {
-        location.href = "/user?id=" + name.getAttribute("data-user-id")
+        location.href = "/info-user?id=" + name.getAttribute("data-user-id")
     })
 
     await updateHours();
@@ -90,6 +90,12 @@ function updatePage(request) {
     const name = document.getElementById("name");
     name.innerHTML = getName(escapeHtml(request.user.firstName), escapeHtml(request.user.lastName), escapeHtml(request.user.lastNamePrefix), "<br />");
     name.setAttribute("data-user-id", request.user.id);
+
+    const studentName = document.getElementById("student-name");
+    studentName.innerText= getName(request.user.firstName, request.user.lastName, request.user.lastNamePrefix);
+
+    const companyName = document.getElementById("company-name");
+    companyName.innerText = request.company.name;
 
     const entries = document.getElementById("entries");
     entries.innerHTML = "";
@@ -194,7 +200,7 @@ function createEntry(year, week, contract, entry, approved) {
 
 function getQueryParams() {
     const order = getOrder();
-    return `user=true&contract=true&hours=true${order.length > 0 ? `&order=${order}`: ""}`
+    return `user=true&contract=true&hours=true&company=true${order.length > 0 ? `&order=${order}`: ""}`
 }
 
 function getRequestForStaff(workedWeekId, token) {

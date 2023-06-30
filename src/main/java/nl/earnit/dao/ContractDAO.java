@@ -10,6 +10,7 @@ import org.postgresql.util.PGobject;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -115,7 +116,7 @@ public class ContractDAO extends GenericDAO<User> {
                         if (data == null) continue;
 
                         data = data.substring(1, data.length() - 1);
-                        String[] dataStrings = data.split(",");
+                        String[] dataStrings = data.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", -1);
 
                         UserContractDTO userContract = new UserContractDTO(dataStrings[0], dataStrings[1], dataStrings[2], Integer.parseInt(dataStrings[3]), true);
 
@@ -186,7 +187,7 @@ public class ContractDAO extends GenericDAO<User> {
      * @param company_id the id of the company where the contract is for
      * @throws SQLException
      */
-    public void createContract(ContractDTO contract, String company_id) throws SQLException {
+    public ContractDTO createContract(ContractDTO contract, String company_id) throws SQLException {
         String query = "INSERT INTO \"" + tableName + "\" (company_id, role, description) "+
                 "VALUES (?, ?, ?) RETURNING id";
         PreparedStatement statement = this.con.prepareStatement(query);
@@ -194,6 +195,12 @@ public class ContractDAO extends GenericDAO<User> {
         statement.setString(2, contract.getRole());
         statement.setString(3, contract.getDescription());
         ResultSet res = statement.executeQuery();
+
+        // None found
+        if(!res.next()) return null;
+
+        // Return company
+        return getContract(res.getString("id"));
     }
 
     /**

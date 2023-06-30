@@ -163,7 +163,19 @@ public class UserResource {
      */
     @Path("/companies/{companyId}")
     public UserCompanyResource getCompany(@PathParam("companyId") String companyId) {
-        return new UserCompanyResource(uriInfo, request, userId, companyId);
+        try {
+            UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+
+            if (!userDAO.hasUserAccessToUserContract(userId, companyId)) {
+                throw new ForbiddenException();
+            }
+
+            return new UserCompanyResource(uriInfo, request, userId, companyId);
+        } catch (ForbiddenException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -194,7 +206,19 @@ public class UserResource {
      */
     @Path("/contracts/{userContractId}")
     public UserContractResource getContract(@PathParam("userContractId") String userContractId) {
-        return new UserContractResource(uriInfo, request, userId, userContractId);
+        try {
+            UserDAO userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+
+            if (!userDAO.hasUserAccessToUserContract(userId, userContractId)) {
+                throw new ForbiddenException();
+            }
+
+            return new UserContractResource(uriInfo, request, userId, userContractId);
+        } catch (ForbiddenException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -289,6 +313,11 @@ public class UserResource {
         UserDAO userDAO;
         try {
             userDAO = (UserDAO) DAOManager.getInstance().getDAO(DAOManager.DAO.USER);
+
+            if (!userDAO.hasUserAccessToNotification(userId, notificationId)) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
             userDAO.changeNotificationToSeen(notificationId);
         } catch (Exception e) {
             return Response.serverError().build();

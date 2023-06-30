@@ -209,6 +209,8 @@ public class CompanyContractResource {
 
             result = userContractDAO.getUserContractById(userContractId);
 
+        } catch (ForbiddenException e) {
+            throw e;
         } catch (Exception e) {
             return null;
         }

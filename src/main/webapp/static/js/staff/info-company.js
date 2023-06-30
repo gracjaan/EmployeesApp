@@ -5,9 +5,7 @@ window.addEventListener("helpersLoaded", async () => {
     const roles = await getCompanyRoles(company.id)
     let employees = await getEmployees(company.id)
 
-
     const name = document.getElementById("name");
-    const status = document.getElementById("status")
     const roleList = document.getElementById("roles");
     const employeeList = document.getElementById("employeeList");
     roleList.innerText = "";
@@ -19,12 +17,6 @@ window.addEventListener("helpersLoaded", async () => {
     }
 
     name.innerText = company.name;
-    if (company.active){
-        status.innerText = "Enabled";
-    }
-    else {
-        status.innerText = "Disabled";
-    }
 
     if (roles !== null) {
 
@@ -130,15 +122,16 @@ async function getUser(userId){
 //Formats a role element
 function createRoleElement(role) {
     const userRoleContainer = document.createElement("div");
-    userRoleContainer.classList.add("text-text", "whitespace-nowrap", "bg-primary", "py-6", "px-6", "rounded-xl", "cursor-pointer", "flex", "w-fit", "flex-col", "items-center", "justify-center")
+    userRoleContainer.classList.add("text-text", "min-w-[200px]", "max-w-xs", "bg-primary", "py-6", "px-6", "rounded-xl", "cursor-pointer", "flex", "w-fit", "flex-col", "items-center", "justify-center")
 
 
     const roleName = document.createElement("div");
-    roleName.classList.add("font-bold");
+    roleName.classList.add("font-bold", "whitespace-nowrap");
     roleName.innerText = role.role;
     userRoleContainer.append(roleName);
 
     const roleDescription = document.createElement("div");
+    roleDescription.classList.add("text-center");
     roleDescription.innerText = role.description;
     userRoleContainer.append(roleDescription);
 
@@ -152,23 +145,13 @@ function createEmployeeElement(user) {
     entryContainer.classList.add("rounded-xl", "bg-primary", "py-2", "pl-4", "pr-2", "relative", "flex", "justify-between");
     entryContainer.href = "/info-user?id=" + user.id
     const entryInfo = document.createElement("div");
-    entryInfo.classList.add("w-full", "grid-cols-[3fr_2fr_2fr_1fr]", "grid", "items-center");
+    entryInfo.classList.add("w-full", "grid-cols-[2fr_1fr]", "grid", "items-center");
     entryContainer.appendChild(entryInfo);
 
     const name = document.createElement("div");
     name.classList.add("text-text", "font-bold", "uppercase");
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     entryInfo.appendChild(name);
-
-    const status = document.createElement("div");
-    status.classList.add("text-text");
-    if (user.active){
-        status.innerText = "Status: Enabled";
-    }
-    else{
-        status.innerText = "Status: Disabled";
-    }
-    entryInfo.appendChild(status);
 
     const role = document.createElement("div");
     role.classList.add("text-text");

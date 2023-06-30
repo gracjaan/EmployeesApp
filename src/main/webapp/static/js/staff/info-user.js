@@ -16,7 +16,6 @@ window.addEventListener("helpersLoaded", async () => {
 
     const name = document.getElementById("name");
     const email = document.getElementById("email");
-    const status = document.getElementById("status")
     const contracts = document.getElementById("contracts");
 
     if (user === null) {
@@ -26,12 +25,6 @@ window.addEventListener("helpersLoaded", async () => {
 
     name.innerText = getName(user.firstName, user.lastName, user.lastNamePrefix);
     email.innerText = user.email;
-    if (user.active){
-        status.innerText = "Enabled";
-    }
-    else {
-        status.innerText = "Disabled";
-    }
 
     if (userContracts.length === 0) {
         const noContracts = document.createElement("div");
@@ -173,7 +166,6 @@ function createUserContractItem(userContract) {
     userContractContainer.append(userContractWage);
 
     const buttonStatusDiv = document.createElement("div")
-    buttonStatusDiv.classList.add("mt-1")
 
     const enableDiv = document.createElement("div");
     enableDiv.classList.add("hidden", "flex", "flex-row", "space-between", "bg-accent-success", "p-2", "gap-2", "cursor-pointer", "items-center", "justify-center", "rounded-xl");

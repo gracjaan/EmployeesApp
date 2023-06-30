@@ -358,6 +358,8 @@ public class UserContractWorkedResource {
             }
 
             return workedWeekId;
+        } catch (ServerErrorException e) {
+            throw e;
         } catch (Exception e) {
             throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
         }
