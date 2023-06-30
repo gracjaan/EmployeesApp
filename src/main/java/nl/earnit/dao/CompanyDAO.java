@@ -272,7 +272,7 @@ public class CompanyDAO extends GenericDAO<User> {
             SELECT u.id, u.first_name, u.last_name, u.last_name_prefix, u.type, u.email, u.kvk, u.btw, u.address, uc.user_contracts FROM "user" u
             JOIN (select c.company_id, uc.user_id, array_agg((uc.*, c.*)%s) as user_contracts from user_contract uc
                     join contract c on c.id = uc.contract_id
-                    group by c.id, uc.user_id
+                    group by c.company_id, uc.user_id
                 ) uc on uc.user_id = u.id AND uc.company_id = ?
             WHERE u.id = ?
         """.formatted(orderByContracts.getSQLOrderBy(order, true));
