@@ -221,7 +221,12 @@ public class CompanyDAOTest {
         Company company = companyDAO.createCompany("TestCompany", "NL845838", "Finkenstraat 42, 7544NM Amsterdam");
         assertTrue(company.getActive());
         companyDAO.disableCompanyById(company.getId());
-        assertFalse(company.getActive());
+        PreparedStatement statement = con.prepareStatement("SELECT c.active FROM company c WHERE c.id = ?");
+        PostgresJDBCHelper.setUuid(statement, 1, company.getId());
+        ResultSet res = statement.executeQuery();
+        assertTrue(res.next());
+        assertFalse(res.getBoolean("active"));
+        res.close();
         con.close();
     }
 
