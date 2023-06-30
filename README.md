@@ -27,11 +27,12 @@ the administration of the work of students who are hired by companies for specif
    * [Documentation](#documentation)
    * [Dependencies](#dependencies)
    * [Testing](#testing)
+   * [Further improvements](#further-improvements)
    * [Contact Information](#contact-information)
 
 ---
 
-## Introduction <a name="introduction"></a>
+## Introduction <a id="introduction"></a>
 This application was made for the **Earn it start up company**. Earnit allows companies to hire student workers for short-term projects without having to provide a long-term commitment.
 The students can then be hired in periods that they might have vacation or spare time.
 This platform takes care of the time recording of the students that are hired by the companies. The companies are able to see all
@@ -40,18 +41,18 @@ the hours their students have worked and can consider to agree on the hours or t
 The Staff can manage the whole system and see all it's users. All conflicts can be resolved by the staff in this way.
 
 ---
-## Installation <a name="installation"></a> 
+## Installation <a id="installation"></a> 
 For the installation of the application we do the following:
 
 ---
 
-## Packaging <a name=""></a>
+## Packaging <a id=""></a>
 The project is packaged as follows
 
 ---
 
 
-## Usage <a name="usage"></a>
+## Usage <a id="usage"></a>
 The application has three different dashboards for different roles within the system. The Three roles being: Student, Company, Staff
 ### Student
 In order to be on the application as a student, we first have to make an account for a student. This can be done by:
@@ -63,8 +64,8 @@ In order to be on the application as a student, we first have to make an account
 
 >If all the inputs have been filled in, you are allowed to log in to the system. **The dashboard** page will appear when logged in. This page contains
 the following actions to proceed with:
-#### Dashboard <a name="dashboard"></a>
-###### Week XX <a name="week-xx"></a>
+#### Dashboard <a id="dashboard"></a>
+###### Week XX <a id="week-xx"></a>
 Students can fill in their hours in the week tab. When landing on the page, the displayed week is always the current week. Clicking on the week will 
 enable a dropdown menu for the user, displaying other weeks to fill in hours for. The user can then start to fill in their hours. This is done by choosing 
 the day on which the hours were worked, how many hours were worked, the position the student was in during execution of the task (A student can work in multiple positions, at multiple companies), and a description of what the task entailed
@@ -77,7 +78,7 @@ if the current week is not over yet. When the week is over, the student is not a
 The Student then also is allowed to accept the newly suggested hours by the company or can decide not to agree.
 The student accepts the suggested hours of the company by pressing on the checkmark, and rejects them by clicking on the lamp.
 
-###### Overview <a name="overview"></a>
+###### Overview <a id="overview"></a>
 The overview shows the statistics of the students executed work. This is displayed in a graph which has the amount of hours on the y-axis
 and the week on the x-axis. A student may have different contracts with different companies. This is represented by the different colors in the graph
 
@@ -85,10 +86,10 @@ Below the graph we have an overview of all invoices for the student. This can be
 A student can then download an invoice to see the details of that particular week. There also is the option for the student to
 download all the invoices at once. This will create a zip-file containing all the invoices in PDF format.
 
-###### Contracts <a name="contracts"></a>
+###### Contracts <a id="contracts"></a>
 The contract page shows a carousel which contains all the contracts that the user is currently engaged in.
 
-###### Notifications <a name="notifications"></a>
+###### Notifications <a id="notifications"></a>
 The notifications that are displayed on the dashboard will appear when one of the following scenarios occur:
 * Forgot to confirm hours
 * A week is approved
@@ -96,7 +97,7 @@ The notifications that are displayed on the dashboard will appear when one of th
 * A link has been created between the company and a student
 ---
 
-### Company <a name="company"></a>
+### Company <a id="company"></a>
 In order to be on the application as a Company, we first have to make an account for a Company. This can be done by:
 1. Go to the /signup page
 2. On this page you are prompted with whether you want a student or company account. You need to click on the Company and continue.
@@ -106,8 +107,8 @@ In order to be on the application as a Company, we first have to make an account
 
 >If all the inputs have been filled in, you are allowed to log in to the system. A dropdown menu will appear when the company user is logged in. A company can be chosen here, since a company user might work for different companies. When a company is chosen, **the dashboard** page will show. This page contains
 the following actions to proceed with:
-#### Dashboard <a name="dashboard-1"></a>
-###### Requests <a name="requests"></a>
+#### Dashboard <a id="dashboard-1"></a>
+###### Requests <a id="requests"></a>
 The Requests page contains all the requests that the Student posted. These requests contain their worked week with the according hours.
 The Requests can then be clicked on. This will show the week of the Student who submitted it. The name of the Student from whom the request is, will appear on the top. Clicking on this name will lead you to the info page of the Student. 
 
@@ -116,51 +117,51 @@ the hours of the students(click on the checkmark), or to reject the hours filled
 If the hours are rejected, the company needs to make a new suggestion by clicking on the pencil sign next to the hours, and filling in the new hours.
 The rejected hours are sent back to the student again (If the Student decides to reject the suggestion of hours by the company, it goes to the staff)
 
-###### Invoices <a name="invoices"></a>
+###### Invoices <a id="invoices"></a>
 The Invoices tab shows all the invoices for all the employees of the company. This can be sorted by week, contract, hours, and user.
 The company can decide to download all invoices by clicking on the download icon on the top, or to download only particular invoices.
 Downloading particular invoice can be done by clicking on the download icon in an invoice row
 
-###### Contracts <a name="contracts-1"></a>
+###### Contracts <a id="contracts-1"></a>
 The contract page shows all the contracts that the company has. Within the contract, the students who are linked to the contract are displayed.
 Students which are displayed within the contract, can be clicked on. This will lead you to a page that shows information about the Student.
 
-###### Notifications <a name="notifications-1"></a>
+###### Notifications <a id="notifications-1"></a>
 The notifications that are displayed onn the dashboard will appear when one of the following scenarios occur:
 * Student accepted the suggestion new of hours
 * Student rejects the suggestion of new hours
 * A link has been created between the company and a student
  ---
-### Staff <a name="staff"></a>
+### Staff <a id="staff"></a>
 In order to be on the application as a Staff, we first have to make an account for an Administrator. An administrator cannot be created through the
 application to enhance security. This is why we insert the Administrator into the database by hand
 
 >If the administrator is inserted, the credentials can just be filled in, in the loginDTO. A pre-inserted administrator is:
 email: user3@example.com   , password: test
-#### Dashboard <a name="dashboard-2"></a>
-###### Requests <a name="requests-1"></a>
+#### Dashboard <a id="dashboard-2"></a>
+###### Requests <a id="requests-1"></a>
 The requests page contains all the flagged requests. If a company and a student couldn't agree on the hours that were filled in
 The request will be handled by the staff. When on the requests page, you can click on a single request. This displays the week
 with all the hours that the student suggested and the hours that the company suggested. The Student and the company both have added
 comments to their suggestion so that the company gets context on why the request was flagged. 
 
 The Staff then gets to decide to accept the hours of the Company or the Student.
-###### Create Links <a name="create-links"></a>
+###### Create Links <a id="create-links"></a>
 The links page is used to creat links between the Students and the Companies. First the Student can be chosen by clicking on the dropdown menu: "choose user". 
 Then the company is chosen by clicking on the dropdown menu: "choose company". Contracts that belong to the selected company will appear.
 Select the contract that you want to associate to the user. The last thing that needs to be done is to fill in the associated pay with the contract. The link can then be created by clicking on: "create link"
 
-###### Overview <a name="overview-1"></a>
+###### Overview <a id="overview-1"></a>
 The overview page will show all the Students and Companies who are on the platform. Students and Companies can be disabled by clicking on the red cross or the green checkmark.
 When the there is a green checkmark, it means that the entry is disabled, and when there is a cross, the user is enabled. Clicking on the Student or Company
 prompts you with another page which shows you all the information about the user.
 
-###### Notifications <a name="notifications-2"></a>
+###### Notifications <a id="notifications-2"></a>
 The notifications that are displayed onn the dashboard will appear when one of the following scenarios occur:
 * There is a conflict between a Student and a Company
 ---
 
-## Extra Features <a name="extra-features"></a>
+## Extra Features <a id="extra-features"></a>
 **Extra features are added to the application in order to make the user experience more enjoyable**:
 1. **Search bars**, for the pages that display a list of either users, contracts or weeks, searchbars are added so that the right entry can be found fast
 2. **filters**, The same accounts for filters. The filters can either go in descending or ascending order, and they can be disabled
@@ -172,7 +173,7 @@ Alerts are also replaced with nice formatted pop-ups
 
 ---
 
-## Documentation <a name="documentation"></a>
+## Documentation <a id="documentation"></a>
 **The documentation for the code is the following:**
 * Java: all the documentation for the Java is in the JavaDoc
 * JavaScript: all the documentation is done by comments in the JavaScript
@@ -180,7 +181,7 @@ Alerts are also replaced with nice formatted pop-ups
 
 ---
 
-## Dependencies <a name="dependencies"></a>
+## Dependencies <a id="dependencies"></a>
 **For the dependencies we use Maven to update and install all the dependencies immediately.
 The dependencies that we use are:**
 * jakarta.servlet-api, version: 6.0.0, [https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api/6.0.0]()
@@ -209,16 +210,12 @@ The dependencies that we use are:**
 
 ---
 
-## Testing <a name="testing"></a>
-In order to make an admin account type the following SQL command:  
-
-insert into "user"(id, email, first_name, last_name, type, password, active)  
-values(gen_random_uuid(), 'staff@example.com', 'Staff', 'Member', 'ADMINISTRATOR', '$2a$12$gurI9FM61ELngKHe2/OnxuZOnWsLnXCLIUO3Fd4hkUhCA36UXeKWe', true)  
-
+## Testing <a id="testing"></a>
+All tests are unit tests. These can be run inside an idea or command line. The tests use a dynamic database. Because of this dynamic database some tests may take a bit of time. Sadly, this dynamic database doesn't seem to work on any apple operating system.
 
 ---
 
-## Further improvements <a name=""></a>  
+## Further improvements <a id="further-improvements"></a>  
 ### Forgot password (restore question)
 In the current system, when a user has forgotten their password, they are not able to retrieve their account without the help of staff.
 A new version should contain the functionality for the user to be able to request a new password via email so that they can log in again.
@@ -235,7 +232,7 @@ but also email them to the user.
 ---
 
 
-## Contact Information <a name="contact-information"></a>
+## Contact Information <a id="contact-information"></a>
 **This project was produced by:**  
 Thomas Brants s2997894 t.g.a.brants@student.utwente.nl,  
 Razvan Stefan, s2957868, r.stefan@student.utwente.nl  
