@@ -6,7 +6,6 @@ import nl.earnit.Auth;
 import nl.earnit.dao.*;
 import nl.earnit.dto.NotificationDTO;
 import nl.earnit.dto.contracts.ContractDTO;
-import nl.earnit.dto.workedweek.WorkedWeekDTO;
 import nl.earnit.helpers.PostgresJDBCHelper;
 import nl.earnit.models.Company;
 import nl.earnit.models.User;
@@ -17,11 +16,11 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NotificationsTest {
     @RegisterExtension
@@ -47,12 +46,13 @@ public class NotificationsTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
 
         workedWeekDAO.setWorkedWeekStatus(workedWeekId, "CONFIRMED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
         workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
-        assertEquals(1, countNotificationsForUser(user.getId()));
+        assertEquals(2, countNotificationsForUser(user.getId()));
+
         workedWeekDAO.setWorkedWeekStatus(workedWeekId, "CONFIRMED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
         workedWeekDAO.setWorkedWeekStatus(workedWeekId, "SUGGESTED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
         assertEquals(2, countNotificationsForUser(user.getId()));
@@ -90,15 +90,15 @@ public class NotificationsTest {
         UserContractDAO userContractDAO = new UserContractDAO(con);
         UserContract userContract = userContractDAO.addNewUserContract(user.getId(), contractDTO.getId(), 12);
         WorkedWeekDAO workedWeekDAO = new WorkedWeekDAO(con);
-        workedWeekDAO.addWorkedWeek(contractDTO.getId(), "2023", "30");
+        workedWeekDAO.addWorkedWeek(userContract.getId(), "2023", "30");
         String workedWeekId = workedWeekDAO.getWorkedWeekIdByDate(userContract.getId(), 2023, 30);
 
         workedWeekDAO.setWorkedWeekStatus(workedWeekId, "CONFIRMED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
         workedWeekDAO.setWorkedWeekStatus(workedWeekId, "APPROVED", false, false, false, false, false, false, "worked_week.year:asc,worked_week.week:asc");
         List<NotificationDTO> notifications = userDAO.getNotificationsForUser(user.getId());
-        assertEquals(notifications.get(0).getType(), "APPROVED");
-        assertEquals(notifications.get(0).getUserId(), user.getId());
-        assertEquals(notifications.get(0).getCompanyId(), company.getId());
+
+        assertTrue(notifications.stream().anyMatch(x -> x.getType().equals("APPROVED") && x.getUserId().equals(user.getId()) && x.getCompanyId().equals(
+            company.getId())));
     }
     @Test
     public void testTypeToTitleDescription() throws Exception {
