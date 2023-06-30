@@ -7,6 +7,46 @@ window.addEventListener("helpersLoaded", async () => {
         updatePage()
     })
 
+    const cancelButton = document.getElementById("cancelButton")
+    const popUpElement = document.getElementById("popUp");
+    const confirmButton = document.getElementById("confirmButton")
+
+    cancelButton.addEventListener("click", async () => {
+        popUpElement.classList.add("hidden")
+    })
+
+    confirmButton.addEventListener("click", async () => {
+        const userId = confirmButton.getAttribute("data-user-id");
+        const companyId = confirmButton.getAttribute("data-company-id");
+
+        const isCompany = (userId === null || userId === "") && companyId !== null;
+
+        const parent = document.getElementById(isCompany ? "company-" + companyId : "user-" + userId)
+        const enableDiv = parent.querySelector(`.enable`)
+        const disableDiv = parent.querySelector(`.disable`)
+
+        if (confirmButton.getAttribute("data-enabling") === "1") {
+            if (isCompany) {
+                await disableCompany(companyId)
+            } else {
+                await disableUser(userId)
+            }
+
+            enableDiv.classList.remove("hidden")
+            disableDiv.classList.add("hidden")
+        }
+        else{
+            if (isCompany) {
+                await enableCompany(companyId)
+            } else {
+                await enableUser(userId)
+            }
+            disableDiv.classList.remove("hidden")
+            enableDiv.classList.add("hidden")
+        }
+        popUpElement.classList.add("hidden")
+
+    })
     await updatePage();
 });
 
@@ -50,6 +90,7 @@ async function updatePage() {
 //Formats user element
 function createUser(user) {
     const li = document.createElement("li");
+    li.id = "user-" + user.id;
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center", "gap-2");
     const nameDiv = document.createElement("a");
@@ -67,7 +108,7 @@ function createUser(user) {
     buttonDiv.classList.add("flex", "flex-row", "gap-2");
 
     const disableDiv = document.createElement("div");
-    disableDiv.classList.add("w-[128px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-fail", "p-2",  "rounded-xl", "cursor-pointer");
+    disableDiv.classList.add("w-[128px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center", "disable","bg-accent-fail", "p-2",  "rounded-xl", "cursor-pointer");
 
     const crossImage = document.createElement("img");
     crossImage.src = "/static/icons/white-cross.svg";
@@ -86,7 +127,7 @@ function createUser(user) {
     itemContainer.append(disableDiv);
 
     const enableDiv = document.createElement("div");
-    enableDiv.classList.add("w-[128px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-success", "p-2",  "rounded-xl", "cursor-pointer");
+    enableDiv.classList.add("w-[128px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-success", "enable", "p-2",  "rounded-xl", "cursor-pointer");
     const checkmarkImage = document.createElement("img");
     checkmarkImage.src = "/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
@@ -103,12 +144,12 @@ function createUser(user) {
     itemContainer.append(enableDiv);
 
     enableDiv.addEventListener("click", async () => {
-        displayPopUpUser(user, true, enableDiv, disableDiv)
+        displayPopUpUser(user, true)
     })
     buttonDiv.append(enableDiv);
 
     disableDiv.addEventListener("click", async () => {
-        displayPopUpUser(user, false, enableDiv, disableDiv)
+        displayPopUpUser(user, false)
     })
     buttonDiv.append(disableDiv);
 
@@ -129,43 +170,41 @@ function createUser(user) {
 }
 
 //Post request to enable user called when staff click on the green tick
-function enableUser(user){
-    user.active = true;
-    return fetch("/api/users/" + user.id, {
+async function enableUser(userId){
+    return fetch("/api/users/" + userId, {
         method: 'put',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user)
-    }).then(async res => ({
-        status: res.status,
-        json: await res.json()
-    }))
+        body: JSON.stringify({...(await getStudents()).find(x => x.id === userId), active: true})
+    }).then(async res => {
+        if (res.status !== 200) throw new Error();
+        return await res.json()
+    })
         .catch(() => null)
 }
 
 //Post request to disable user when staff click on the red cross
-function disableUser(user){
-    user.active = false;
-    return fetch("/api/users/" + user.id, {
+function disableUser(userId){
+    return fetch("/api/users/" + userId, {
         method: 'delete',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
-    }).then(async res => ({
-        status: res.status,
-        json: await res.json()
-    })
-        .catch(() => null))
+    }).then(async res => {
+        if (res.status !== 200) throw new Error();
+        return await res.json()
+    }).catch(() => null)
 }
 
 //Formats company element
 function createCompany(company) {
     const li = document.createElement("li");
+    li.id = "company-" + company.id;
 
     const itemContainer = document.createElement("div");
     itemContainer.classList.add("flex", "flex-row", "justify-between", "bg-primary", "rounded-xl", "w-full", "h-fit", "p-2", "pl-4", "my-2", "items-center", "gap-2");
@@ -181,7 +220,7 @@ function createCompany(company) {
     itemContainer.append(nameDiv)
 
     const disableDiv = document.createElement("div");
-    disableDiv.classList.add("w-[164px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-fail", "p-2",  "rounded-xl", "cursor-pointer");
+    disableDiv.classList.add("w-[164px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center", "disable","bg-accent-fail", "p-2",  "rounded-xl", "cursor-pointer");
 
     const crossImage = document.createElement("img");
     crossImage.src = "/static/icons/white-cross.svg";
@@ -200,7 +239,7 @@ function createCompany(company) {
     itemContainer.append(disableDiv);
 
     const enableDiv = document.createElement("div");
-    enableDiv.classList.add("w-[164px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center","bg-accent-success", "p-2",  "rounded-xl", "cursor-pointer");
+    enableDiv.classList.add("w-[164px]", "h-[36px]", "flex", "flex-row", "justify-between", "items-center", "enable","bg-accent-success", "p-2",  "rounded-xl", "cursor-pointer");
     const checkmarkImage = document.createElement("img");
     checkmarkImage.src = "/static/icons/checkmark.svg";
     checkmarkImage.classList.add("h-4", "w-4")
@@ -217,11 +256,11 @@ function createCompany(company) {
     itemContainer.append(enableDiv);
 
     disableDiv.addEventListener("click", async () => {
-        displayPopUpCompany(company, false, enableDiv, disableDiv)
+        displayPopUpCompany(company, false)
     })
 
     enableDiv.addEventListener("click", async () => {
-        displayPopUpCompany(company, true, enableDiv, disableDiv)
+        displayPopUpCompany(company, true)
     })
 
     if(company.active === true) {
@@ -237,10 +276,9 @@ function createCompany(company) {
     return li;
 }
 
-function displayPopUpUser(user, enabling, enableDiv, disableDiv) {
+function displayPopUpUser(user, enabling) {
     const popUpElement = document.getElementById("popUp");
     const confirmButton = document.getElementById("confirmButton")
-    const cancelButton = document.getElementById("cancelButton")
     popUpElement.classList.remove("hidden");
 
     const paragraph = document.getElementById("popUpParagraph");
@@ -251,30 +289,15 @@ function displayPopUpUser(user, enabling, enableDiv, disableDiv) {
         paragraph.innerText = "Are you sure you want to disable " + getName(user.firstName, user.lastName, user.lastNamePrefix) + "'s account?";
     }
 
-    confirmButton.addEventListener("click", async () => {
-        if (enabling) {
-            await enableUser(user)
-            enableDiv.classList.add("hidden")
-            disableDiv.classList.remove("hidden")
-        }
-        else{
-            await disableUser(user)
-            disableDiv.classList.add("hidden")
-            enableDiv.classList.remove("hidden")
-        }
-        popUpElement.classList.add("hidden")
+    confirmButton.setAttribute("data-enabling", enabling ? "1" : "0");
+    confirmButton.setAttribute("data-user-id", user.id);
+    confirmButton.removeAttribute("data-company-id");
 
-    })
-
-    cancelButton.addEventListener("click", async () => {
-        popUpElement.classList.add("hidden")
-    })
 }
 
-function displayPopUpCompany(company, enabling, enableDiv, disableDiv) {
+function displayPopUpCompany(company, enabling) {
     const popUpElement = document.getElementById("popUp");
     const confirmButton = document.getElementById("confirmButton")
-    const cancelButton = document.getElementById("cancelButton")
     popUpElement.classList.remove("hidden");
 
     const paragraph = document.getElementById("popUpParagraph");
@@ -285,37 +308,21 @@ function displayPopUpCompany(company, enabling, enableDiv, disableDiv) {
         paragraph.innerText = "Are you sure you want to disable " + company.name + "'s account?";
     }
 
-    confirmButton.addEventListener("click", async () => {
-        if (enabling) {
-            enableCompany(company)
-            enableDiv.classList.add("hidden")
-            disableDiv.classList.remove("hidden")
-        }
-        else{
-            disableCompany(company)
-            disableDiv.classList.add("hidden")
-            enableDiv.classList.remove("hidden")
-        }
-        popUpElement.classList.add("hidden")
-
-    })
-
-    cancelButton.addEventListener("click", async () => {
-        popUpElement.classList.add("hidden")
-    })
+    confirmButton.setAttribute("data-enabling", enabling ? "1" : "0");
+    confirmButton.setAttribute("data-company-id", company.id);
+    confirmButton.removeAttribute("data-user-id");
 }
 
 //Post request to enable company called when staff click on the green tick
-function enableCompany(company){
-    company.active = true;
-    return fetch("/api/companies/" + company.id, {
+async function enableCompany(companyId){
+    return fetch("/api/companies/" + companyId, {
         method: 'put',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(company)
+        body: JSON.stringify({...(await getCompanies()).find(x => x.id === companyId), active: true})
     }).then(async res => ({
         status: res.status,
         json: await res.json()
@@ -324,9 +331,8 @@ function enableCompany(company){
 }
 
 //Post request to disable company called when staff click on the red cross
-function disableCompany(company){
-    company.active = false;
-    return fetch("/api/companies/" + company.id, {
+function disableCompany(companyId){
+    return fetch("/api/companies/" + companyId, {
         method: 'delete',
         headers: {
             'authorization': `token ${getJWTCookie()}`,
