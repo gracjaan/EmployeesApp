@@ -189,6 +189,7 @@ The dependencies that we use are:**
 * jackson-jakarta-rs-json-provider, version: 2.15.0, [https://mvnrepository.com/artifact/com.fasterxml.jackson.jakarta.rs/jackson-jakarta-rs-json-provider/2.15.0]()
 
 * junit-jupiter-api, version: 5.9.2, [https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api/5.9.2]()
+* junit-jupiter-migrationsupport, 5.9.2, [https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-migration-support ](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-migration-support)
 
 * jersey-container-servlet, version 3.1.1, [https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet/3.1.1]()
 * jersey-container-servlet-core, version 3.1.1 [https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core/3.1.1]()
@@ -206,6 +207,8 @@ The dependencies that we use are:**
 * openhtmltopdf-svg-support, version: variable, [https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-svg-support]()
 
 * jsoup, version: 1.16.1, [https://mvnrepository.com/artifact/org.jsoup/jsoup/1.16.1]()
+
+* embedded-postgres, 2.0.4, [https://mvnrepository.com/artifact/io.zonky.test/embedded-postgres]()
 
 ---
 
