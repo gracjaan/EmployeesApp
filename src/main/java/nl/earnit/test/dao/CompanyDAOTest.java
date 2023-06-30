@@ -107,7 +107,7 @@ public class CompanyDAOTest {
         Company company1 = companyDAO.createCompany("TestCompany1", "NL845835", "Adamstraat 42, 7544NM Amsterdam");
         Company company2 = companyDAO.createCompany("TestCompany2", "NL845838", "Finkenstraat 42, 7544NM Amsterdam");
 
-        List<Company> companies = companyDAO.getAllCompanies("company.id:asc");
+        List<Company> companies = companyDAO.getAllCompanies("company.name:asc");
 
         assertEquals(company1.getId(), companies.get(0).getId());
         assertEquals(company1.getName(), companies.get(0).getName());
